@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { OpsCenter } from "@/features/ops/OpsCenter";
+import { OpsIntl } from "@/features/ops/OpsIntl";
 
-export default function Adminopspage() {
-  return <PlaceholderPage descriptionKey="page.ops.description" route="/ops" titleKey="page.ops.title" />;
+export default function OpsPage() {
+  return (
+    <OpsIntl>
+      <OpsCenter />
+    </OpsIntl>
+  );
 }

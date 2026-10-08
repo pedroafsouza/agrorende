@@ -1,3 +1,5 @@
-import { notImplemented } from "@/server/withApi";
+import * as ops from "@agrorende/core/modules/ops/service";
 
-export const GET = notImplemented("GET", "/api/v1/attention");
+import { OFFICE, route } from "@/lib/core.server";
+
+export const GET = route(OFFICE, (_request, ctx) => ops.listAttention(ctx));

@@ -1,7 +1,4 @@
-import { notImplemented } from "../../errors.js";
-import type { Ctx } from "../../context.js";
-import type { SyncTx } from "../../sync/types.js";
-
-export async function ensureCostsService(_tx: SyncTx, _ctx: Ctx): Promise<void> {
-  return notImplemented("modules.costs.service.ensure");
-}
+/** Costs module service surface (F5, ARCHITECTURE §8 Costs). Read-only reporting. */
+export { costRollup, noneLabel, parseGroupBy, type CostsCtx, type CostsDeps } from "./queries.js";
+export type * from "./dto.js";
+export { COST_GROUP_BYS, COST_NONE_KEY } from "./dto.js";

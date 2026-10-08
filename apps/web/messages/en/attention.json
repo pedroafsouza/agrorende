@@ -1,0 +1,56 @@
+{
+  "title": "Needs attention",
+  "subtitle": "Problems from the field that need someone in the office.",
+  "refresh": "Refresh",
+  "resolved": "Marked as resolved.",
+  "unknownUser": "Unknown user",
+  "ref": "Reference: {ref}",
+  "empty": {
+    "title": "Nothing needs attention",
+    "body": "Rejected changes, stuck photos, phones with unsent data and diagnostics show up here."
+  },
+  "kinds": {
+    "REJECTED_MUTATION": {
+      "title": "Rejected changes",
+      "hint": "The phone kept these changes but the server did not accept them.",
+      "item": "{user}: change \"{name}\" was not accepted",
+      "detail": "{at} · reason {code}"
+    },
+    "MEDIA_PENDING": {
+      "title": "Photos and files not uploaded",
+      "hint": "Captured more than 24 hours ago and still on the phone.",
+      "item": "{user}: {mediaKind, select, PHOTO {photo} VIDEO {video} AUDIO {audio} SIGNATURE {signature} DOCUMENT {document} other {file}} waiting to upload",
+      "detail": "Captured {at}"
+    },
+    "STALE_DEVICE": {
+      "title": "Phones with unsent data",
+      "hint": "The phone has data that has not reached the office for a while.",
+      "item": "{user}: phone {model} has unsent data",
+      "detail": "{pendingMutations} changes and {pendingUploads} files waiting since {at}"
+    },
+    "DIAGNOSTIC": {
+      "title": "Diagnostics sent",
+      "hint": "Someone in the field sent a diagnostics report from the app.",
+      "item": "{user} sent a diagnostics report",
+      "detail": "{at} · app version {appVersion}"
+    }
+  },
+  "actions": {
+    "resolve": "Resolve",
+    "device": "Open phone health",
+    "openRecord": "Open record",
+    "user": "Open team member"
+  },
+  "alreadyResolved": {
+    "title": "This item was already resolved",
+    "body": "There is nothing else to do. We refreshed the queue for you.",
+    "by": "Resolved by {name} at {at}"
+  },
+  "resolveForm": {
+    "label": "Resolve item",
+    "note": "How was it resolved?",
+    "noteRequired": "Add how this was resolved. Nothing was closed yet.",
+    "submit": "Save and resolve",
+    "cancel": "Cancel"
+  }
+}

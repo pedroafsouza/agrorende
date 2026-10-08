@@ -1,3 +1,8 @@
-import { notImplemented } from "@/server/withApi";
+import * as ops from "@agrorende/core/modules/ops/service";
 
-export const GET = notImplemented("GET", "/api/v1/ops/operators/:userId/trail");
+import { OFFICE, param, query, route } from "@/lib/core.server";
+
+export const GET = route(OFFICE, (request, ctx, params) => {
+  const q = query(request);
+  return ops.getOperatorTrail(ctx, param(params, "userId"), { from: q.from ?? null, to: q.to ?? null });
+});

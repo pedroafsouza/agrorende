@@ -1,1 +1,49 @@
-{}
+{
+  "title": "Costs",
+  "subtitle": "What each machine, site and season cost, and what rentals brought in.",
+  "filters": {
+    "label": "Cost filters",
+    "groupBy": "Group by",
+    "from": "From",
+    "to": "To",
+    "season": "Season",
+    "site": "Site",
+    "asset": "Machine ID",
+    "assetPlaceholder": "All machines",
+    "all": "All"
+  },
+  "groupBy": {
+    "asset": "Machine",
+    "site": "Site",
+    "plot": "Plot",
+    "season": "Season",
+    "category": "Category",
+    "crop": "Crop"
+  },
+  "noSeason": "No season",
+  "noSite": "No site",
+  "laborHidden": "Labour cost is hidden for managers in this organisation. Totals exclude labour.",
+  "seasonMissing": {
+    "title": "Some costs have no season",
+    "body": "They are counted under \"No season\". Older records may show \"Choose a season for this cost\"; you can set the season on the job or rental."
+  },
+  "empty": {
+    "title": "No costs in this period",
+    "body": "Completed jobs and closed rentals appear here. Try a wider date range."
+  },
+  "table": {
+    "caption": "Costs grouped by {groupBy}",
+    "totals": "Total"
+  },
+  "columns": {
+    "laborCents": "Labour",
+    "partsCents": "Parts",
+    "externalCents": "External services",
+    "fuelCents": "Fuel",
+    "rentInCostCents": "Rented-in machines",
+    "totalCostCents": "Total cost",
+    "rentalRevenueCents": "Rental revenue",
+    "soon": "Coming soon"
+  },
+  "counts": "{workOrders} jobs and {rentals} rentals counted."
+}

@@ -1,1 +1,180 @@
-{}
+{
+  "title": "Operations Center",
+  "subtitle": "Live map, team, alerts and today's numbers in one place.",
+  "map": {
+    "label": "Live operations map"
+  },
+  "errors": {
+    "MAP_TILES_UNAVAILABLE": {
+      "title": "Map unavailable right now",
+      "body": "The list and alerts still work. Your data is safe.",
+      "action": "Try again"
+    },
+    "OPS_NO_LIVE_OPERATORS": {
+      "title": "No one is live right now",
+      "body": "Jobs and alerts are still visible. When someone goes on duty, the map updates."
+    },
+    "ALERTS_COLLAPSED": {
+      "title": "Similar alerts were grouped",
+      "body": "No alert was hidden. Open the group to handle them one by one."
+    },
+    "OPERATOR_STALE": {
+      "title": "Location is out of date",
+      "body": "We are showing the last known position. The operator's work is safe."
+    },
+    "REALTIME_DISCONNECTED": {
+      "title": "Live updates paused",
+      "body": "We are showing the last received data. Reconnection is automatic."
+    }
+  },
+  "realtime": {
+    "lastUpdate": "Last update: {at}",
+    "never": "No live update received yet."
+  },
+  "kpi": {
+    "label": "Today's indicators",
+    "range": "Period",
+    "ranges": {
+      "today": "Today",
+      "7d": "7 days",
+      "30d": "30 days"
+    },
+    "slaCompliance": "SLA met: {value}",
+    "mttr": "Average repair time: {value} h",
+    "utilization": "Fleet utilisation: {value}",
+    "keys": {
+      "open_reports": "Open reports",
+      "unassigned_wos": "Unassigned jobs",
+      "in_progress": "In progress",
+      "done_today": "Done",
+      "sla_at_risk": "SLA at risk",
+      "active_rentals": "Active rentals",
+      "overdue_rentals": "Overdue rentals",
+      "on_duty": "On duty"
+    }
+  },
+  "alerts": {
+    "title": "Alerts",
+    "empty": "No alerts right now.",
+    "expand": "Show all {count}",
+    "collapse": "Hide",
+    "range": "From {oldest} to {newest}",
+    "types": {
+      "SLA_BREACHED": "SLA breached",
+      "SLA_AT_RISK": "SLA at risk",
+      "OVERDUE_RENTAL": "Rental overdue",
+      "CRITICAL_UNASSIGNED_REPORT": "Critical report without a technician",
+      "STALE_DEVICE": "Phone with unsent data"
+    },
+    "since": {
+      "SLA_BREACHED": "Due {at}",
+      "SLA_AT_RISK": "Due {at}",
+      "OVERDUE_RENTAL": "Should have returned {at}",
+      "CRITICAL_UNASSIGNED_REPORT": "Received {at}",
+      "STALE_DEVICE": "Waiting since {at}"
+    }
+  },
+  "activity": {
+    "title": "Live feed",
+    "empty": "Nothing happened yet today.",
+    "system": "System",
+    "action": "{action} · {entity, select, WORK_ORDER {work order} FIELD_REPORT {field report} RENTAL {rental} ASSET {machine} USER {user} DEVICE {phone} other {record}}",
+    "to": "changed to",
+    "more": "Load older events"
+  },
+  "operators": {
+    "title": "Team on the map ({count})",
+    "staleTag": "Out of date",
+    "state": {
+      "OFFLINE": "Offline",
+      "IDLE": "Available",
+      "EN_ROUTE": "On the way",
+      "ON_SITE": "On site",
+      "WORKING": "Working",
+      "ON_HOLD": "Paused"
+    },
+    "duty": {
+      "ON_DUTY": "On duty",
+      "OFF_DUTY": "Off duty"
+    },
+    "lastUpdate": "Last update: {at}",
+    "lastFix": "Position from {at}",
+    "deviceHealth": "See phone sync health",
+    "close": "Close operator panel",
+    "activeWorkOrder": "Open current job",
+    "trail": "Today's route",
+    "trailEmpty": "No route recorded today.",
+    "trailPoints": "{count, plural, one {# position recorded.} other {# positions recorded.}}",
+    "trailGaps": "Breaks in the line mean the phone sent no position for a while."
+  },
+  "layers": {
+    "label": "Map layers",
+    "operators": "Team",
+    "reports": "Reports",
+    "workOrders": "Jobs",
+    "assets": "Machines",
+    "rentals": "Rentals"
+  },
+  "legend": {
+    "label": "Map legend",
+    "glyph": {
+      "operators": "◯",
+      "operatorsStale": "◌",
+      "reports": "●",
+      "reportsCritical": "⬤",
+      "workOrders": "■",
+      "workOrdersRisk": "▣",
+      "assets": "◆",
+      "rentals": "▲"
+    },
+    "items": {
+      "operators": "Team member (ring colour shows status, initials inside)",
+      "operatorsStale": "Team member with an out-of-date position (greyed)",
+      "reports": "Field report (circle)",
+      "reportsCritical": "Critical report (red circle)",
+      "workOrders": "Job (square)",
+      "workOrdersRisk": "Job with SLA at risk (yellow) or breached (red)",
+      "assets": "Machine (diamond)",
+      "rentals": "Rental with the customer (triangle, red when overdue)"
+    }
+  },
+  "gettingStarted": {
+    "title": "Get started with AgroRende",
+    "assets": "Register your machines",
+    "team": "Invite your team",
+    "qr": "Print the machine QR codes",
+    "app": "Install the field app"
+  },
+  "exports": {
+    "title": "Export to CSV",
+    "hint": "Files use ; as separator and open in Excel with accents intact.",
+    "button": "Export CSV",
+    "entity": {
+      "field-reports": "Field reports",
+      "work-orders": "Jobs",
+      "rentals": "Rentals",
+      "assets": "Machines",
+      "costs": "Costs",
+      "location-pings": "GPS history"
+    },
+    "status": {
+      "QUEUED": "Waiting",
+      "RUNNING": "Preparing",
+      "READY": "Ready",
+      "FAILED": "Failed",
+      "EXPIRED": "Expired"
+    },
+    "started": {
+      "title": "We are preparing the file",
+      "body": "You can keep working. We will notify you when the CSV is ready."
+    },
+    "ready": "Your CSV is ready to download.",
+    "download": "Download CSV",
+    "preview": "Preview first rows",
+    "previewTitle": "First rows of the file",
+    "previewCaption": "Preview of the exported CSV",
+    "expiresAt": "Available until {at}",
+    "failed": "We could not prepare this file. Nothing was changed. Try the export again.",
+    "expired": "This link expired after 7 days. Export again to get a new file."
+  }
+}

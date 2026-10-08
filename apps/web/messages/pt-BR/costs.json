@@ -1,1 +1,49 @@
-{}
+{
+  "title": "Custos",
+  "subtitle": "Quanto cada máquina, local e safra custou, e quanto as locações renderam.",
+  "filters": {
+    "label": "Filtros de custos",
+    "groupBy": "Agrupar por",
+    "from": "De",
+    "to": "Até",
+    "season": "Safra",
+    "site": "Local",
+    "asset": "ID da máquina",
+    "assetPlaceholder": "Todas as máquinas",
+    "all": "Todas"
+  },
+  "groupBy": {
+    "asset": "Máquina",
+    "site": "Local",
+    "plot": "Talhão",
+    "season": "Safra",
+    "category": "Categoria",
+    "crop": "Cultura"
+  },
+  "noSeason": "Sem safra",
+  "noSite": "Sem local",
+  "laborHidden": "O custo de mão de obra está oculto para gestores nesta organização. Os totais não incluem mão de obra.",
+  "seasonMissing": {
+    "title": "Alguns custos estão sem safra",
+    "body": "Eles entram em \"Sem safra\". Registros antigos podem mostrar \"Defina uma safra para este custo\"; você pode definir a safra na OS ou na locação."
+  },
+  "empty": {
+    "title": "Nenhum custo neste período",
+    "body": "OS concluídas e locações encerradas aparecem aqui. Tente um período maior."
+  },
+  "table": {
+    "caption": "Custos agrupados por {groupBy}",
+    "totals": "Total"
+  },
+  "columns": {
+    "laborCents": "Mão de obra",
+    "partsCents": "Peças",
+    "externalCents": "Serviços de terceiros",
+    "fuelCents": "Combustível",
+    "rentInCostCents": "Máquinas alugadas de terceiros",
+    "totalCostCents": "Custo total",
+    "rentalRevenueCents": "Receita de locação",
+    "soon": "Em breve"
+  },
+  "counts": "{workOrders} OS e {rentals} locações contabilizadas."
+}

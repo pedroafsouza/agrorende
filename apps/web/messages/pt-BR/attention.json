@@ -1,0 +1,56 @@
+{
+  "title": "Precisa de atenção",
+  "subtitle": "Problemas do campo que precisam de alguém no escritório.",
+  "refresh": "Atualizar",
+  "resolved": "Marcado como resolvido.",
+  "unknownUser": "Usuário desconhecido",
+  "ref": "Referência: {ref}",
+  "empty": {
+    "title": "Nada precisa de atenção",
+    "body": "Alterações recusadas, fotos presas, celulares com dados não enviados e diagnósticos aparecem aqui."
+  },
+  "kinds": {
+    "REJECTED_MUTATION": {
+      "title": "Alterações recusadas",
+      "hint": "O celular guardou estas alterações, mas o servidor não aceitou.",
+      "item": "{user}: alteração \"{name}\" não foi aceita",
+      "detail": "{at} · motivo {code}"
+    },
+    "MEDIA_PENDING": {
+      "title": "Fotos e arquivos não enviados",
+      "hint": "Capturados há mais de 24 horas e ainda no celular.",
+      "item": "{user}: {mediaKind, select, PHOTO {foto} VIDEO {vídeo} AUDIO {áudio} SIGNATURE {assinatura} DOCUMENT {documento} other {arquivo}} aguardando envio",
+      "detail": "Capturado em {at}"
+    },
+    "STALE_DEVICE": {
+      "title": "Celulares com dados não enviados",
+      "hint": "O celular tem dados que não chegam ao escritório há algum tempo.",
+      "item": "{user}: celular {model} tem dados não enviados",
+      "detail": "{pendingMutations} alterações e {pendingUploads} arquivos aguardando desde {at}"
+    },
+    "DIAGNOSTIC": {
+      "title": "Diagnósticos enviados",
+      "hint": "Alguém no campo enviou um diagnóstico pelo app.",
+      "item": "{user} enviou um diagnóstico",
+      "detail": "{at} · versão do app {appVersion}"
+    }
+  },
+  "actions": {
+    "resolve": "Resolver",
+    "device": "Abrir saúde do celular",
+    "openRecord": "Abrir registro",
+    "user": "Abrir membro da equipe"
+  },
+  "alreadyResolved": {
+    "title": "Este item já foi resolvido",
+    "body": "Nada mais precisa ser feito. Atualizamos a fila para você.",
+    "by": "Resolvido por {name} em {at}"
+  },
+  "resolveForm": {
+    "label": "Resolver item",
+    "note": "Como foi resolvido?",
+    "noteRequired": "Informe como foi resolvido. Nada foi fechado ainda.",
+    "submit": "Salvar e resolver",
+    "cancel": "Cancelar"
+  }
+}

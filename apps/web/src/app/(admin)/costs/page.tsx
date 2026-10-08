@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { CostsPage } from "@/features/costs/CostsPage";
+import { OpsIntl } from "@/features/ops/OpsIntl";
 
-export default function Admincostspage() {
-  return <PlaceholderPage descriptionKey="page.costs.description" route="/costs" titleKey="page.costs.title" />;
+export default function CostsRoute() {
+  return (
+    <OpsIntl>
+      <CostsPage />
+    </OpsIntl>
+  );
 }

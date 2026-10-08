@@ -1,1 +1,180 @@
-{}
+{
+  "title": "Central de Operações",
+  "subtitle": "Mapa ao vivo, equipe, alertas e os números do dia em um só lugar.",
+  "map": {
+    "label": "Mapa de operações ao vivo"
+  },
+  "errors": {
+    "MAP_TILES_UNAVAILABLE": {
+      "title": "Mapa indisponível agora",
+      "body": "A lista e os alertas continuam funcionando. Seus dados estão seguros.",
+      "action": "Tentar de novo"
+    },
+    "OPS_NO_LIVE_OPERATORS": {
+      "title": "Ninguém aparece ao vivo agora",
+      "body": "Os trabalhos e alertas continuam visíveis. Quando alguém entrar em serviço, o mapa atualiza."
+    },
+    "ALERTS_COLLAPSED": {
+      "title": "Alertas parecidos agrupados",
+      "body": "Nenhum alerta foi escondido. Abra o grupo para resolver um por vez."
+    },
+    "OPERATOR_STALE": {
+      "title": "Localização desatualizada",
+      "body": "Mostramos a última posição conhecida. O trabalho do operador continua seguro."
+    },
+    "REALTIME_DISCONNECTED": {
+      "title": "Atualizações ao vivo pausadas",
+      "body": "Mostramos os últimos dados recebidos. A reconexão é automática."
+    }
+  },
+  "realtime": {
+    "lastUpdate": "Última atualização: {at}",
+    "never": "Nenhuma atualização ao vivo recebida ainda."
+  },
+  "kpi": {
+    "label": "Indicadores do dia",
+    "range": "Período",
+    "ranges": {
+      "today": "Hoje",
+      "7d": "7 dias",
+      "30d": "30 dias"
+    },
+    "slaCompliance": "SLA cumprido: {value}",
+    "mttr": "Tempo médio de reparo: {value} h",
+    "utilization": "Uso da frota: {value}",
+    "keys": {
+      "open_reports": "Relatos abertos",
+      "unassigned_wos": "OS sem técnico",
+      "in_progress": "Em andamento",
+      "done_today": "Concluídas",
+      "sla_at_risk": "SLA em risco",
+      "active_rentals": "Locações ativas",
+      "overdue_rentals": "Locações atrasadas",
+      "on_duty": "Em serviço"
+    }
+  },
+  "alerts": {
+    "title": "Alertas",
+    "empty": "Nenhum alerta agora.",
+    "expand": "Mostrar os {count}",
+    "collapse": "Ocultar",
+    "range": "De {oldest} até {newest}",
+    "types": {
+      "SLA_BREACHED": "SLA estourado",
+      "SLA_AT_RISK": "SLA em risco",
+      "OVERDUE_RENTAL": "Locação atrasada",
+      "CRITICAL_UNASSIGNED_REPORT": "Relato crítico sem técnico",
+      "STALE_DEVICE": "Celular com dados não enviados"
+    },
+    "since": {
+      "SLA_BREACHED": "Prazo {at}",
+      "SLA_AT_RISK": "Prazo {at}",
+      "OVERDUE_RENTAL": "Deveria ter voltado {at}",
+      "CRITICAL_UNASSIGNED_REPORT": "Recebido {at}",
+      "STALE_DEVICE": "Aguardando desde {at}"
+    }
+  },
+  "activity": {
+    "title": "Acontecendo agora",
+    "empty": "Nada aconteceu ainda hoje.",
+    "system": "Sistema",
+    "action": "{action} · {entity, select, WORK_ORDER {ordem de serviço} FIELD_REPORT {relato} RENTAL {locação} ASSET {máquina} USER {usuário} DEVICE {celular} other {registro}}",
+    "to": "mudou para",
+    "more": "Carregar eventos anteriores"
+  },
+  "operators": {
+    "title": "Equipe no mapa ({count})",
+    "staleTag": "Desatualizado",
+    "state": {
+      "OFFLINE": "Offline",
+      "IDLE": "Disponível",
+      "EN_ROUTE": "A caminho",
+      "ON_SITE": "No local",
+      "WORKING": "Trabalhando",
+      "ON_HOLD": "Pausado"
+    },
+    "duty": {
+      "ON_DUTY": "Em serviço",
+      "OFF_DUTY": "Fora de serviço"
+    },
+    "lastUpdate": "Última atualização: {at}",
+    "lastFix": "Posição de {at}",
+    "deviceHealth": "Ver sincronização do celular",
+    "close": "Fechar painel do operador",
+    "activeWorkOrder": "Abrir OS atual",
+    "trail": "Trajeto de hoje",
+    "trailEmpty": "Nenhum trajeto registrado hoje.",
+    "trailPoints": "{count, plural, one {# posição registrada.} other {# posições registradas.}}",
+    "trailGaps": "Interrupções na linha indicam que o celular ficou um tempo sem enviar posição."
+  },
+  "layers": {
+    "label": "Camadas do mapa",
+    "operators": "Equipe",
+    "reports": "Relatos",
+    "workOrders": "OS",
+    "assets": "Máquinas",
+    "rentals": "Locações"
+  },
+  "legend": {
+    "label": "Legenda do mapa",
+    "glyph": {
+      "operators": "◯",
+      "operatorsStale": "◌",
+      "reports": "●",
+      "reportsCritical": "⬤",
+      "workOrders": "■",
+      "workOrdersRisk": "▣",
+      "assets": "◆",
+      "rentals": "▲"
+    },
+    "items": {
+      "operators": "Membro da equipe (a cor do anel mostra a situação, iniciais no centro)",
+      "operatorsStale": "Membro da equipe com posição desatualizada (acinzentado)",
+      "reports": "Relato de campo (círculo)",
+      "reportsCritical": "Relato crítico (círculo vermelho)",
+      "workOrders": "Ordem de serviço (quadrado)",
+      "workOrdersRisk": "OS com SLA em risco (amarelo) ou estourado (vermelho)",
+      "assets": "Máquina (losango)",
+      "rentals": "Locação com o cliente (triângulo, vermelho quando atrasada)"
+    }
+  },
+  "gettingStarted": {
+    "title": "Comece a usar o AgroRende",
+    "assets": "Cadastre suas máquinas",
+    "team": "Convide sua equipe",
+    "qr": "Imprima os QR codes das máquinas",
+    "app": "Instale o app de campo"
+  },
+  "exports": {
+    "title": "Exportar CSV",
+    "hint": "Os arquivos usam ; como separador e abrem no Excel com acentos corretos.",
+    "button": "Exportar CSV",
+    "entity": {
+      "field-reports": "Relatos de campo",
+      "work-orders": "Ordens de serviço",
+      "rentals": "Locações",
+      "assets": "Máquinas",
+      "costs": "Custos",
+      "location-pings": "Histórico de GPS"
+    },
+    "status": {
+      "QUEUED": "Na fila",
+      "RUNNING": "Preparando",
+      "READY": "Pronto",
+      "FAILED": "Falhou",
+      "EXPIRED": "Expirado"
+    },
+    "started": {
+      "title": "Estamos preparando o arquivo",
+      "body": "Você pode continuar trabalhando. Avisaremos quando o CSV estiver pronto."
+    },
+    "ready": "Seu CSV está pronto para baixar.",
+    "download": "Baixar CSV",
+    "preview": "Ver primeiras linhas",
+    "previewTitle": "Primeiras linhas do arquivo",
+    "previewCaption": "Prévia do CSV exportado",
+    "expiresAt": "Disponível até {at}",
+    "failed": "Não conseguimos preparar este arquivo. Nada foi alterado. Exporte de novo.",
+    "expired": "Este link expirou após 7 dias. Exporte de novo para gerar um arquivo novo."
+  }
+}

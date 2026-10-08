@@ -1,7 +1,8 @@
-import { notImplemented } from "../../errors.js";
-import type { Ctx } from "../../context.js";
-import type { SyncTx } from "../../sync/types.js";
-
-export async function ensureOpsService(_tx: SyncTx, _ctx: Ctx): Promise<void> {
-  return notImplemented("modules.ops.service.ensure");
-}
+/**
+ * Ops module service surface (F4 Operations Center, ARCHITECTURE §8 Ops and §21.2 Needs attention).
+ * The module is read-only reporting except for attention resolutions.
+ */
+export { getAlerts, getKpis, getLive, getOperatorTrail, listActivity, loadOpsSettings, parseKpiRange, type OpsCtx, type OpsDeps } from "./queries.js";
+export { listAttention, parseAttentionKind, resolveAttention, resolutionId, ATTENTION_RESOLVED_ACTION, type AttentionCtx } from "./attention.js";
+export { slaStateOf, isRentalOverdue, isOperatorStale, opsSettingsOf, startOfZonedDay, type OpsSettings } from "./rules.js";
+export type * from "./dto.js";

@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { AttentionPage } from "@/features/attention/AttentionPage";
+import { OpsIntl } from "@/features/ops/OpsIntl";
 
-export default function Adminattentionpage() {
-  return <PlaceholderPage descriptionKey="page.attention.description" route="/attention" titleKey="page.attention.title" />;
+export default function AttentionRoute() {
+  return (
+    <OpsIntl>
+      <AttentionPage />
+    </OpsIntl>
+  );
 }
