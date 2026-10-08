@@ -13,7 +13,7 @@ import { PageHeader } from "@/components/shell/PageHeader";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
 import { useMe } from "@/features/shell/useMe";
-import { GettingStartedCard } from "@/features/tenancy/GettingStartedCard";
+import { GettingStartedPanel } from "@/features/onboarding/GettingStartedPanel";
 import { formatDateTime } from "@/lib/format";
 import { useUrlState } from "@/lib/url-state";
 
@@ -33,20 +33,6 @@ const URL_KEYS = ["kpi", "range", "operator"] as const;
 const URL_DEFAULTS = { range: "today" };
 const LIVE_ACTIVITY_MAX = 50;
 const STALE_CHECK_MS = 30_000;
-
-const ONBOARDING_STEPS = ["assets", "team", "qr", "app"] as const;
-
-/** Reads `settings.onboarding` leniently: the shape is written by the T03 tenancy flow. */
-export function onboardingOf(settings: Readonly<Record<string, unknown>> | null | undefined): { readonly dismissed: boolean; readonly steps: Readonly<Record<string, boolean>> } {
-  const raw = settings?.onboarding;
-  if (raw === null || typeof raw !== "object") return { dismissed: false, steps: {} };
-  const onboarding = raw as { dismissedAt?: unknown; steps?: unknown };
-  const steps = onboarding.steps !== null && typeof onboarding.steps === "object" ? (onboarding.steps as Record<string, unknown>) : {};
-  return {
-    dismissed: typeof onboarding.dismissedAt === "string" && onboarding.dismissedAt.length > 0,
-    steps: Object.fromEntries(ONBOARDING_STEPS.map((k) => [k, steps[k] === true || (typeof steps[k] === "string" && (steps[k] as string).length > 0)])),
-  };
-}
 
 function toActivityItem(payload: unknown): OpsActivityItemDTO | null {
   const parsed = ActivityEventDTOSchema.safeParse(payload);
@@ -145,8 +131,6 @@ export function OpsCenter({ socketFactory = createOpsSocket, store: injected }: 
   const noLiveOperators = live.data !== undefined && operators.every((o) => o.stale || o.state === "OFFLINE" || o.dutyStatus !== "ON_DUTY");
 
   const role = me.data?.user.role ?? "MANAGER";
-  const onboarding = onboardingOf(me.data?.settings);
-  const showOnboarding = role === "ADMIN" && !onboarding.dismissed && ONBOARDING_STEPS.some((k) => onboarding.steps[k] !== true);
 
   const toggleLayer = (layer: MapLayerKey) =>
     setLayers((current) => {
@@ -159,7 +143,7 @@ export function OpsCenter({ socketFactory = createOpsSocket, store: injected }: 
   return (
     <div className="flex flex-col gap-4">
       <PageHeader actions={<RealtimeStatus state={realtime.state} />} subtitle={t("subtitle")} title={t("title")} />
-      {showOnboarding ? <GettingStartedCard steps={ONBOARDING_STEPS.map((id) => ({ id, label: t(`gettingStarted.${id}`), completed: onboarding.steps[id] === true }))} title={t("gettingStarted.title")} /> : null}
+      <GettingStartedPanel />
       {realtime.paused ? (
         <div className="flex items-start gap-3 rounded-cards border-2 border-[var(--ar-warning)] bg-[var(--ar-warning-bg)] p-4 text-[var(--ar-text)]" data-testid="realtime-paused" role="status">
           <PauseCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0" />

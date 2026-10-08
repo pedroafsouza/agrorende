@@ -2,6 +2,7 @@ import { AppError, ERROR_META, getErrorHttpStatus, type AppErrorEnvelope, type E
 import type { HealthResponse } from "@agrorende/contracts/sync";
 import type { MutationPayload } from "@agrorende/contracts/mutations";
 import { verifyAccessToken, type Ctx, type DomainError } from "@agrorende/core";
+import { assertOrganizationWritable } from "@agrorende/core/tenancy";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -162,6 +163,35 @@ function toErrorResponse(error: unknown, ref: string): NextResponse<AppErrorEnve
   return NextResponse.json(internal.toEnvelope(), { status: getErrorHttpStatus(internal.code) });
 }
 
+/**
+ * Routes that stay writable while the organisation is SUSPENDED or CANCELLED (EC-OPS-29, EC-PLT-40):
+ * sign-in, exports, the organisation's own subscription and terms routes, and the field paths
+ * (sync push applies its own grace-period gate, media, locations, devices and telemetry).
+ */
+const WRITABLE_WHEN_READ_ONLY = [
+  "/api/v1/auth",
+  "/api/v1/exports",
+  "/api/v1/org",
+  "/api/v1/sync",
+  "/api/v1/media",
+  "/api/v1/locations",
+  "/api/v1/devices",
+  "/api/v1/telemetry",
+  "/api/v1/notifications/read",
+  "/api/v1/me",
+  "/api/v1/assets/qr-sheet",
+  "/api/v1/platform",
+  "/api/v1/signup",
+] as const;
+
+const READ_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
+/** True when an office write must first pass `assertOrganizationWritable` (TEN-03, TEN-04). */
+export function requiresWritableOrg(method: string, pathname: string): boolean {
+  if (READ_METHODS.has(method.toUpperCase())) return false;
+  return !WRITABLE_WHEN_READ_ONLY.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`));
+}
+
 export function withApi(handler: ApiHandler, options: WithApiOptions = {}) {
   return async function routeHandler(request: NextRequest, nextContext: unknown): Promise<NextResponse> {
     const routeContext = routeContextOf(nextContext);
@@ -170,6 +200,9 @@ export function withApi(handler: ApiHandler, options: WithApiOptions = {}) {
       const roles = options.roles ?? ["any"];
       const { session, core } = isPublic(roles) ? { session: { authenticated: false }, core: undefined } : await readSession(request, ref);
       assertSession(session, roles, ref);
+      if (core !== undefined && requiresWritableOrg(request.method, request.nextUrl.pathname)) {
+        await assertOrganizationWritable(core);
+      }
       const result = await handler(request, { requestId: ref, session, ...(core === undefined ? {} : { core }) }, routeContext);
       if (result instanceof NextResponse) {
         return result;

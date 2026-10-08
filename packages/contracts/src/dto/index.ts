@@ -23,3 +23,5 @@ export * from "./stockLocations.js";
 export * from "./stockLevels.js";
 export * from "./maintenancePlans.js";
 export * from "./fuelLogs.js";
+export * from "./ops.js";
+export * from "./costs.js";

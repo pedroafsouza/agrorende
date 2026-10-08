@@ -9,7 +9,7 @@ import { api } from "@/lib/api";
 /** `GET /auth/me` (T02). Fields are optional because the shell must render while the endpoint evolves. */
 export interface MeResponse {
   readonly user: { readonly id: string; readonly name: string; readonly email?: string | null; readonly role: Role; readonly locale?: string | null };
-  readonly org?: { readonly id: string; readonly name: string; readonly status?: OrgStatus; readonly timezone?: string; readonly trialEndsAt?: string | null } | null;
+  readonly org?: { readonly id: string; readonly name: string; readonly status?: OrgStatus; readonly timezone?: string; readonly trialEndsAt?: string | null; readonly pastDueAt?: string | null; readonly purgeAfter?: string | null } | null;
   readonly signInMethods?: readonly string[];
   readonly settings?: Readonly<Record<string, unknown>> | null;
 }

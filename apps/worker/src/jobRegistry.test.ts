@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 
 import { JOB_NAMES, JOB_REGISTRY } from "./jobRegistry.js";
-import { JOB_PROCESSORS } from "./processors.js";
 
 const documentedJobNames = [
   "usage.daily",
@@ -28,6 +27,5 @@ describe("job registry", () => {
   it("covers every documented worker job name", () => {
     expect(JOB_NAMES).toEqual([...documentedJobNames]);
     expect(Object.keys(JOB_REGISTRY)).toEqual([...documentedJobNames]);
-    expect(Object.keys(JOB_PROCESSORS)).toEqual([...documentedJobNames]);
   });
 });

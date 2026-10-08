@@ -191,7 +191,7 @@ async function checkMeter(tx: Tx, wo: WorkOrderDoc, payload: WorkOrderCompletePa
   if (reading < current) reject("METER_READING_LOWER", { assetId: wo.assetId, current, reading });
   const since = await lastReadingAt(tx, wo.assetId, asset.createdAt);
   const elapsedHours = Math.max(1, (at.getTime() - since.getTime()) / 3_600_000);
-  if (reading - current > elapsedHours * 24) reject("METER_READING_JUMP", { assetId: wo.assetId, current, reading, elapsedHours: Math.round(elapsedHours) });
+  if (payload.confirmMeterJump !== true && reading - current > elapsedHours * 24) reject("METER_READING_JUMP", { assetId: wo.assetId, current, reading, elapsedHours: Math.round(elapsedHours) });
 }
 
 /** `workOrder.complete`: guards, times, costs, readings and damages (A§6.4, WO-10). */
@@ -267,6 +267,7 @@ export async function complete(tx: Tx, ctx: Ctx, payload: WorkOrderCompletePaylo
       travelMinutes: times.travelMinutes,
       workMinutes: times.workMinutes,
       ...(payload.meterReplaced === true ? { meterReplaced: true, meterPhotoMediaId: payload.meterPhotoMediaId ?? null } : {}),
+      ...(payload.confirmMeterJump === true ? { meterJumpConfirmed: true, attention: true } : {}),
       ...(meta.clockSkewed === true ? { clockSkewed: true } : {}),
     },
   });

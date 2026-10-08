@@ -19,6 +19,7 @@ import { socketIoFactory } from "../../realtime/socketIo";
 import { registerBackgroundSync, setBackgroundSyncEngine } from "../../sync/backgroundTask";
 import { enqueueDiagnostic, uploadDiagnostics } from "../../sync/diagnostics";
 import { createSyncEngine, type SyncEngine } from "../../sync/engine";
+import "../../sync/mutators";
 import { nativeTriggerSources } from "../../sync/nativeTriggers";
 import { createSyncRuntime, setSyncRuntime, type SyncRuntime } from "../../sync/runtime";
 import { readSyncState, SYNC_STATE_KEYS } from "../../sync/state";

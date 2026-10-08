@@ -1,10 +1,15 @@
 import { render, screen } from "@testing-library/react-native";
 
+import { authStore } from "../../src/auth/session";
+import { TodayScreen } from "../../src/features/home/TodayScreen";
 import { OrgStatusBanner } from "../../src/features/tenancy";
 import { initI18n } from "../../src/i18n";
 
 jest.mock("expo-router", () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn(), back: jest.fn() }) }));
-jest.mock("expo-haptics", () => ({ notificationAsync: jest.fn(), impactAsync: jest.fn(), selectionAsync: jest.fn(), NotificationFeedbackType: {}, ImpactFeedbackStyle: {} }));
+jest.mock("../../src/features/home/widgets", () => {
+  const Empty = () => null;
+  return { DutyCard: Empty, MyReportsCard: Empty, NextJobCard: Empty, QuickReportCard: Empty, RentalsTodayCard: Empty, SyncCard: Empty };
+});
 
 describe("OrgStatusBanner", () => {
   afterAll(() => {
@@ -29,5 +34,24 @@ describe("OrgStatusBanner", () => {
     await render(<OrgStatusBanner status="CANCELLED" />);
     expect(screen.getByText("Company access paused")).toBeTruthy();
     expect(screen.getByText("Keep recording: everything stays saved and will send when the company is back.")).toBeTruthy();
+  });
+});
+
+describe("Today screen organisation banner", () => {
+  afterEach(() => {
+    authStore.setState({ status: "signedOut", needsReauth: false }, true);
+  });
+
+  test("shows the paused banner on Home while the company is suspended (EC-PLT-40)", async () => {
+    initI18n("en");
+    authStore.setState({ status: "signedIn", needsReauth: false, org: { status: "SUSPENDED" } as never });
+    await render(<TodayScreen />);
+    expect(screen.getByTestId("org-status-banner")).toBeTruthy();
+  });
+
+  test("hides the banner for an active company", async () => {
+    authStore.setState({ status: "signedIn", needsReauth: false, org: { status: "ACTIVE" } as never });
+    await render(<TodayScreen />);
+    expect(screen.queryByTestId("org-status-banner")).toBeNull();
   });
 });

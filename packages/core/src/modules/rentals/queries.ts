@@ -4,11 +4,7 @@ import { z } from "zod";
 
 import type { Ctx } from "../../context.js";
 import { reject } from "../../errors.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- TS6142 only where `jsx` is unset (core); apps with `jsx` resolve it (change request T08-001).
-// @ts-ignore
 import { renderRentalCheckin } from "../../pdf/rentalCheckin.js";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment -- TS6142 only where `jsx` is unset (core); apps with `jsx` resolve it (change request T08-001).
-// @ts-ignore
 import { renderRentalCheckout } from "../../pdf/rentalCheckout.js";
 import type { PdfLocale, RentalPdfData } from "./pdf.js";
 import { getSummary } from "../assets/service.js";

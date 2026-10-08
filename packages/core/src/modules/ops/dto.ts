@@ -1,27 +1,17 @@
 import type { DutyStatus, Priority, RentalDirection, WorkOrderStatus, FieldReportStatus, AssetCondition, EntityType } from "@agrorende/contracts/enums";
+import { AlertTypeEnum, AttentionKindEnum, KpiKeyEnum, KpiRangeEnum, type AlertType, type AttentionKind, type KpiKey, type KpiRange, type SlaState } from "@agrorende/contracts/dto";
 import type { OperatorState } from "@agrorende/contracts/realtime";
 
 /**
- * Ops Center read models (ARCHITECTURE §8 Ops, §14.3). Contracts has no `dto/ops.ts` yet, so the
- * wire shapes live here until change request T09-001 lands them in `@agrorende/contracts`.
+ * Ops Center read models (ARCHITECTURE §8 Ops, §14.3). The zod schemas live in
+ * `@agrorende/contracts/dto` (`dto/ops.ts`, change request T09-001); these readonly interfaces
+ * mirror them field for field for the core services.
  */
 
-export type SlaState = "OK" | "AT_RISK" | "BREACHED";
+export type { AlertType, AttentionKind, KpiKey, KpiRange, SlaState };
 
-export const KPI_KEYS = [
-  "open_reports",
-  "unassigned_wos",
-  "in_progress",
-  "done_today",
-  "sla_at_risk",
-  "active_rentals",
-  "overdue_rentals",
-  "on_duty",
-] as const;
-export type KpiKey = (typeof KPI_KEYS)[number];
-
-export const KPI_RANGES = ["today", "7d", "30d"] as const;
-export type KpiRange = (typeof KPI_RANGES)[number];
+export const KPI_KEYS = KpiKeyEnum.options;
+export const KPI_RANGES = KpiRangeEnum.options;
 
 export interface OpsKpisDTO {
   readonly range: KpiRange;
@@ -113,8 +103,7 @@ export interface OpsLiveDTO {
   readonly assets: readonly LiveAssetDTO[];
 }
 
-export const ALERT_TYPES = ["SLA_BREACHED", "SLA_AT_RISK", "OVERDUE_RENTAL", "CRITICAL_UNASSIGNED_REPORT", "STALE_DEVICE"] as const;
-export type AlertType = (typeof ALERT_TYPES)[number];
+export const ALERT_TYPES = AlertTypeEnum.options;
 
 export interface OpsAlertDTO {
   readonly id: string;
@@ -167,8 +156,7 @@ export interface OperatorTrailDTO {
   readonly points: readonly TrailPointDTO[];
 }
 
-export const ATTENTION_KINDS = ["REJECTED_MUTATION", "MEDIA_PENDING", "STALE_DEVICE", "DIAGNOSTIC"] as const;
-export type AttentionKind = (typeof ATTENTION_KINDS)[number];
+export const ATTENTION_KINDS = AttentionKindEnum.options;
 
 export interface AttentionItemDTO {
   readonly kind: AttentionKind;

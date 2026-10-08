@@ -1,10 +1,10 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { io, type Socket } from "socket.io-client";
 
-import { RealtimeServerEvents, type EntityChangedPayload } from "@agrorende/contracts/realtime";
+import { RealtimeServerEvents, type EntityChangedPayload, type RealtimeServerEvent } from "@agrorende/contracts/realtime";
 import type { EntityType } from "@agrorende/contracts/enums";
 
 import { api } from "@/lib/api";
@@ -28,6 +28,63 @@ export const ENTITY_QUERY_KEYS: Partial<Record<EntityType, readonly string[]>> =
   RENTAL: ["rentals"],
 };
 
+export interface RealtimeStatus {
+  readonly state: RealtimeState;
+  readonly lastMessageAt: Date | null;
+  readonly reconnectCount: number;
+}
+
+type Handler = (payload: unknown) => void;
+
+/*
+ * The tab's single socket is owned by `useRealtime` (mounted once in the admin shell). Other
+ * features subscribe through `useRealtimeEvent` and read `useRealtimeStatus` instead of opening
+ * their own socket (T09-002).
+ */
+const handlers = new Map<string, Set<Handler>>();
+const statusListeners = new Set<() => void>();
+let status: RealtimeStatus = { state: "connecting", lastMessageAt: null, reconnectCount: 0 };
+
+function setStatus(next: Partial<RealtimeStatus>): void {
+  status = { ...status, ...next };
+  for (const listener of statusListeners) listener();
+}
+
+/** Dispatches a server event to every `useRealtimeEvent` subscriber; exported for tests. */
+export function dispatchRealtimeEvent(event: string, payload: unknown): void {
+  setStatus({ lastMessageAt: new Date() });
+  for (const handler of handlers.get(event) ?? []) handler(payload);
+}
+
+/** Subscribes to one server event on the shared admin socket for the lifetime of the component. */
+export function useRealtimeEvent(event: RealtimeServerEvent, handler: Handler): void {
+  const latest = useRef(handler);
+  useEffect(() => {
+    latest.current = handler;
+  });
+  useEffect(() => {
+    const wrapped: Handler = (payload) => latest.current(payload);
+    const set = handlers.get(event) ?? new Set<Handler>();
+    set.add(wrapped);
+    handlers.set(event, set);
+    return () => {
+      set.delete(wrapped);
+    };
+  }, [event]);
+}
+
+/** Connection state, last message time and reconnect count of the shared admin socket. */
+export function useRealtimeStatus(): RealtimeStatus {
+  return useSyncExternalStore(
+    (listener) => {
+      statusListeners.add(listener);
+      return () => statusListeners.delete(listener);
+    },
+    () => status,
+    () => status,
+  );
+}
+
 export function queryKeysFor(entityType: EntityType): string[] {
   return [entityType, ...(ENTITY_QUERY_KEYS[entityType] ?? [])];
 }
@@ -36,6 +93,10 @@ export function queryKeysFor(entityType: EntityType): string[] {
 export function useRealtime(enabled: boolean): RealtimeState {
   const client = useQueryClient();
   const [state, setState] = useState<RealtimeState>("connecting");
+
+  useEffect(() => {
+    setStatus({ state });
+  }, [state]);
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -51,6 +112,8 @@ export function useRealtime(enabled: boolean): RealtimeState {
         socket.on("connect", () => setState("connected"));
         socket.on("disconnect", () => setState("reconnecting"));
         socket.io.on("reconnect_attempt", () => setState("reconnecting"));
+        socket.io.on("reconnect", () => setStatus({ reconnectCount: status.reconnectCount + 1 }));
+        socket.onAny((event: string, payload: unknown) => dispatchRealtimeEvent(event, payload));
         socket.on("connect_error", (error) => {
           setState("reconnecting");
           if (error.message === "UNAUTHENTICATED" && socket !== null) {

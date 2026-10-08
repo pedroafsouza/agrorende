@@ -14,6 +14,7 @@
     "./events": "./src/events/index.ts",
     "./jobs": "./src/jobs/index.ts",
     "./notify": "./src/notify/index.ts",
+    "./tenancy": "./src/tenancy/index.ts",
     "./auth/api": "./src/auth/api/index.ts",
     "./modules/locations": "./src/modules/locations/index.ts",
     "./modules/exports": "./src/modules/exports/index.ts",
@@ -36,6 +37,7 @@
     "csv-stringify": "^6.6.0",
     "ioredis": "catalog:",
     "jose": "catalog:",
+    "react": "catalog:",
     "sharp": "^0.35.5",
     "zod": "catalog:"
   },

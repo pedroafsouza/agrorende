@@ -35,6 +35,8 @@ export const WorkOrderCompletePayloadSchema = z.object({
   hourMeterReading: z.number().nonnegative().optional(),
   meterReplaced: z.boolean().optional(),
   meterPhotoMediaId: UuidSchema.optional(),
+  /** The technician confirmed an unusually large hour-meter jump (EC-WO-14); the server accepts the reading. */
+  confirmMeterJump: z.boolean().optional(),
   customerSignerName: z.string().min(1).optional(),
   signatureStatus: SignatureStatusEnum.optional(),
   signatureReason: z.string().optional(),

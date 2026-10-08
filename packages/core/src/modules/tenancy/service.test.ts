@@ -204,15 +204,21 @@ describe("lifecycle", () => {
   });
 
   it("makes SUSPENDED organisations read-only (EC-OPS-29) and reactivation writes sync:poke", async () => {
-    const { orgId } = await newTrialOrg("Reativar");
+    const { assertOrganizationWritable } = await import("../../tenancy/index.js");
+    const { orgId, adminId } = await newTrialOrg("Reativar");
+    const ctx = seedCtx(adminId, "ADMIN", orgId);
+    await expect(assertOrganizationWritable(ctx)).resolves.toBeUndefined();
     const now = new Date();
     await applyStatusChange(orgId, { status: "SUSPENDED", suspendedAt: now }, { now, dispatch: noDispatch });
     const error = await assertOrgWritable(orgId).catch((caught: unknown) => caught);
     expect(error).toBeInstanceOf(AppError);
     expect((error as AppError).code).toBe("ORG_SUSPENDED");
     expect((error as AppError).details).toMatchObject({ status: "SUSPENDED", supportWhatsApp: "+5516999990001" });
+    const seamError = await assertOrganizationWritable(ctx).catch((caught: unknown) => caught);
+    expect((seamError as AppError).code).toBe("ORG_SUSPENDED");
     await applyStatusChange(orgId, { status: "ACTIVE", suspendedAt: null }, { now, dispatch: noDispatch });
     await expect(assertOrgWritable(orgId)).resolves.toBeUndefined();
+    await expect(assertOrganizationWritable(ctx)).resolves.toBeUndefined();
     const pokes = await db.raw("event_outbox").find({ organizationId: orgId, type: "sync:poke" }).toArray();
     expect(pokes).toHaveLength(1);
     expect((pokes[0]?.payload as { data: unknown }).data).toEqual({ reason: "org_reactivated" });

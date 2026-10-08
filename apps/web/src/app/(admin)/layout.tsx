@@ -8,6 +8,7 @@ import { AdminShell } from "@/features/shell/AdminShell";
 import { EnvRibbon } from "@/features/shell/EnvRibbon";
 import { OfficeRoleRequired } from "@/features/shell/OfficeRoleRequired";
 import { OrgBanner } from "@/features/shell/OrgBanner";
+import { supportWhatsApp } from "@/features/tenancy/server";
 import { readSession } from "@/lib/session.server";
 import { serverConfig } from "@/server/config";
 
@@ -21,7 +22,7 @@ export default async function AdminLayout({ children }: { readonly children: Rea
         {session?.role === "FIELD" ? (
           <OfficeRoleRequired />
         ) : (
-          <AdminShell banner={<OrgBanner />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
+          <AdminShell banner={<OrgBanner supportWhatsApp={supportWhatsApp()} />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
             {children}
           </AdminShell>
         )}

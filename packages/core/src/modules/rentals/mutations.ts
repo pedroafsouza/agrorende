@@ -216,6 +216,7 @@ export async function checkin(tx: SyncTx, ctx: Ctx, payload: RentalCheckinPayloa
       balanceDueCents: charges.balanceDueCents,
       newDamageIds: damages.map((damage) => damage._id),
       ...(differentAgent ? { differentAgent: true, attention: true, checkOutAgentId: rental.agentId } : {}),
+      ...(p.meterJumpConfirmed === true ? { meterJumpConfirmed: true, attention: true } : {}),
     },
     occurredAt: at,
   });

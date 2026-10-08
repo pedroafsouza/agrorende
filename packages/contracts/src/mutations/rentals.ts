@@ -48,6 +48,8 @@ const InspectionBaseSchema = z.object({
   odometerKm: z.number().nonnegative().optional(),
   meterReplaced: z.boolean().optional(),
   meterPhotoMediaId: UuidSchema.optional(),
+  /** The agent confirmed an unusually large hour-meter jump (EC-RN-27); the server accepts the reading. */
+  meterJumpConfirmed: z.boolean().optional(),
   fuelPercent: z.number().min(0).max(100).optional(),
   accessories: z.array(AccessoryLineSchema),
   documentLocale: DocumentLocaleSchema,

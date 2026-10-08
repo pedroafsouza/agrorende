@@ -261,6 +261,14 @@ describe("rental.checkin", () => {
     expect(await codeOf(h.run((tx) => checkin(tx, agent, inPayload(s, checkInInspection(s.assetId, { hourMeter: 9_000 })), meta(CHECKIN_AT)), agent))).toBe("METER_READING_JUMP");
   });
 
+  it("accepts a confirmed hour meter jump and flags it for attention (T08-001)", async () => {
+    const s = await seed();
+    await doCheckout(s);
+    await h.run((tx) => checkin(tx, agent, inPayload(s, checkInInspection(s.assetId, { hourMeter: 9_000, meterJumpConfirmed: true })), meta(CHECKIN_AT)), agent);
+    const checkedIn = await h.raw("activity_events").findOne({ entityId: s.rentalId, action: "rental.checkedIn" });
+    expect(checkedIn?.meta).toMatchObject({ meterJumpConfirmed: true, attention: true });
+  });
+
   it("rejects a rental that is not ACTIVE", async () => {
     const s = await seed();
     expect(await codeOf(h.run((tx) => checkin(tx, agent, inPayload(s), meta(CHECKIN_AT)), agent))).toBe("RENTAL_NOT_ACTIVE");

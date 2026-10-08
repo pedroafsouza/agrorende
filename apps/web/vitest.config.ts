@@ -12,6 +12,7 @@ export default defineConfig({
     include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
     // Component tests opt into jsdom with a `// @vitest-environment jsdom` docblock.
     environment: "node",
+    setupFiles: ["./test/setup.ts"],
     server: { deps: { inline: [/@agrorende\//u] } },
   },
 });

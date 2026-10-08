@@ -25,8 +25,8 @@ export function TenancyOrgBanner({ supportWhatsApp = null, now }: { readonly sup
     status: org?.status,
     role: me?.user.role,
     trialEndsAt: org?.trialEndsAt ?? null,
-    pastDueAt: (org as { pastDueAt?: string | null } | null)?.pastDueAt ?? null,
-    purgeAfter: (org as { purgeAfter?: string | null } | null)?.purgeAfter ?? null,
+    pastDueAt: org?.pastDueAt ?? null,
+    purgeAfter: org?.purgeAfter ?? null,
     supportWhatsApp,
     now: now ?? new Date(),
   });

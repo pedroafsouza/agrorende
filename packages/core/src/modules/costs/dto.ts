@@ -1,11 +1,14 @@
+import { CostGroupByEnum, type CostGroupBy } from "@agrorende/contracts/dto";
+
 /**
- * Cost roll-up wire shapes (ARCHITECTURE §8 Costs). ARCHITECTURE names `CostRollupRowSchema` in
- * `contracts/dto/costs.ts`, which does not exist yet; change request T09-001 asks for it and these
- * types mirror it field for field until then.
+ * Cost roll-up wire shapes (ARCHITECTURE §8 Costs). The zod schemas (`CostRollupRowSchema`,
+ * `CostRollupDTOSchema`) live in `@agrorende/contracts/dto` (change request T09-001); these
+ * readonly interfaces mirror them field for field for the core services.
  */
 
-export const COST_GROUP_BYS = ["asset", "site", "plot", "season", "category", "crop"] as const;
-export type CostGroupBy = (typeof COST_GROUP_BYS)[number];
+export type { CostGroupBy };
+
+export const COST_GROUP_BYS = CostGroupByEnum.options;
 
 /** Key used for records without the grouped reference, shown as "Sem safra / No season" and friends. */
 export const COST_NONE_KEY = "none";

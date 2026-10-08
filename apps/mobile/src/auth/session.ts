@@ -98,8 +98,13 @@ export function createAuthSession(deps: AuthSessionDeps) {
       try {
         const response = await deps.api.refresh({ refreshToken: token });
         if (response.refreshToken !== undefined) await vault.setRefreshToken(response.user.id, response.refreshToken);
-        store.setState({ ...(response.accessToken === undefined ? {} : { accessToken: response.accessToken }), user: response.user, needsReauth: false });
         const org = response.org ?? store.getState().org;
+        store.setState({
+          ...(response.accessToken === undefined ? {} : { accessToken: response.accessToken }),
+          user: response.user,
+          ...(org === undefined ? {} : { org }),
+          needsReauth: false,
+        });
         await deps.saveProfile({ user: response.user, ...(org === undefined ? {} : { org }) });
         return true;
       } catch (error) {

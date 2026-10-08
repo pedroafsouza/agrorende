@@ -116,7 +116,7 @@ export function assertSignatures(type: "CHECK_OUT" | "CHECK_IN", inspection: Ins
  * or the check-out reading at check-in; `maxDelta` bounds the hour-meter jump.
  */
 export function assertReadings(
-  inspection: Pick<InspectionPayload, "hourMeter" | "odometerKm" | "meterReplaced" | "meterPhotoMediaId">,
+  inspection: Pick<InspectionPayload, "hourMeter" | "odometerKm" | "meterReplaced" | "meterPhotoMediaId" | "meterJumpConfirmed">,
   media: readonly InspectionMedia[],
   baseline: { hourMeter: number | null; odometerKm: number | null },
   maxHourDelta?: number,
@@ -131,7 +131,7 @@ export function assertReadings(
   if (inspection.odometerKm !== undefined && baseline.odometerKm !== null && inspection.odometerKm < baseline.odometerKm) {
     reject("METER_READING_LOWER", { field: "odometerKm", previous: baseline.odometerKm, value: inspection.odometerKm });
   }
-  if (maxHourDelta !== undefined && inspection.hourMeter !== undefined && baseline.hourMeter !== null && inspection.hourMeter - baseline.hourMeter > maxHourDelta) {
+  if (inspection.meterJumpConfirmed !== true && maxHourDelta !== undefined && inspection.hourMeter !== undefined && baseline.hourMeter !== null && inspection.hourMeter - baseline.hourMeter > maxHourDelta) {
     reject("METER_READING_JUMP", { field: "hourMeter", previous: baseline.hourMeter, value: inspection.hourMeter, maxDelta: maxHourDelta });
   }
 }

@@ -25,15 +25,18 @@ import type { CriticalWindow } from "@agrorende/contracts/checklist";
 import type { ChecklistSnapshot, CreateWorkOrderInput, EntityRef, WorkOrderBillingPart } from "@agrorende/contracts/dto";
 import type { Ctx } from "@agrorende/contracts/seams";
 
-import { notImplemented } from "./errors.js";
+import { normalizeCtx } from "./context.js";
 import * as assetsService from "./modules/assets/service.js";
 import * as checklistsService from "./modules/checklists/service.js";
 import * as customersService from "./modules/customers/service.js";
+import * as fieldReportsService from "./modules/fieldReports/service.js";
 import { locationSeamsImpl } from "./modules/locations/service.js";
 import * as mediaService from "./modules/media/service.js";
+import * as rentalsService from "./modules/rentals/service.js";
 import * as seasonsService from "./modules/seasons/service.js";
 import * as sitesService from "./modules/sites/service.js";
 import * as usersService from "./modules/users/service.js";
+import * as workOrdersService from "./modules/workOrders/service.js";
 import * as notify from "./notify/index.js";
 import { touchDependents } from "./sync/touch.js";
 import type { SyncTx } from "./sync/types.js";
@@ -163,34 +166,34 @@ export async function liveLocationSnapshot(orgId: string): Promise<LiveOperator[
 export const locationSeams = { lastFixes: lastLocationFixes, liveSnapshot: liveLocationSnapshot } satisfies LocationSeams;
 
 export async function createFieldReportFromDamage(
-  _tx: Tx,
-  _ctx: Ctx,
-  _damage: { damageId: string; rentalId: string; assetId: string },
+  tx: Tx,
+  ctx: Ctx,
+  damage: { damageId: string; rentalId: string; assetId: string },
 ): Promise<{ id: string; number: string }> {
-  return notImplemented("seams.fieldReports.createFromDamage");
+  return fieldReportsService.createFromDamage(tx, normalizeCtx(ctx), damage);
 }
 
 export const fieldReportSeams = { createFromDamage: createFieldReportFromDamage } satisfies FieldReportSeams;
 
-export async function createWorkOrderFromSource(_tx: Tx, _ctx: Ctx, _input: CreateWorkOrderInput): Promise<{ id: string; number: string }> {
-  return notImplemented("seams.workOrders.createFromSource");
+export async function createWorkOrderFromSource(tx: Tx, ctx: Ctx, input: CreateWorkOrderInput): Promise<{ id: string; number: string }> {
+  return workOrdersService.createFromSource(tx, ctx, input);
 }
 
-export async function openWorkOrderCountByAssignee(_tx: Tx, _orgId: string): Promise<Map<string, number>> {
-  return notImplemented("seams.workOrders.openCountByAssignee");
+export async function openWorkOrderCountByAssignee(tx: Tx, orgId: string): Promise<Map<string, number>> {
+  return workOrdersService.openCountByAssignee(tx, orgId);
 }
 
 export async function maintenanceStatus(
-  _tx: Tx,
-  _planId: string,
-  _assetIds: string[],
+  tx: Tx,
+  planId: string,
+  assetIds: string[],
 ): Promise<Map<string, { hasOpen: boolean; lastCompleted: { at: Date; hourMeter: number | null } | null }>> {
-  return notImplemented("seams.workOrders.maintenanceStatus");
+  return workOrdersService.maintenanceStatus(tx, planId, assetIds);
 }
 
 export async function workOrderBillingSnapshot(
-  _tx: Tx,
-  _workOrderId: string,
+  tx: Tx,
+  workOrderId: string,
 ): Promise<{
   id: string;
   number: string;
@@ -202,7 +205,7 @@ export async function workOrderBillingSnapshot(
   externalCostCents: number | null;
   externalCostNote: string | null;
 }> {
-  return notImplemented("seams.workOrders.billingSnapshot");
+  return workOrdersService.billingSnapshot(tx, workOrderId);
 }
 
 export const workOrderSeams = {
@@ -212,12 +215,12 @@ export const workOrderSeams = {
   billingSnapshot: workOrderBillingSnapshot,
 } satisfies WorkOrderSeams;
 
-export async function markRentalDamagesRepaired(_tx: Tx, _input: { workOrderId: string; damageIds: string[] }): Promise<void> {
-  return notImplemented("seams.rentals.markDamagesRepaired");
+export async function markRentalDamagesRepaired(tx: Tx, input: { workOrderId: string; damageIds: string[] }): Promise<void> {
+  return rentalsService.markDamagesRepaired(tx, input);
 }
 
-export async function activeRentalForAsset(_tx: Tx, _assetId: string): Promise<{ id: string; number: string } | null> {
-  return notImplemented("seams.rentals.activeRentalForAsset");
+export async function activeRentalForAsset(tx: Tx, assetId: string): Promise<{ id: string; number: string } | null> {
+  return rentalsService.activeRentalForAsset(tx, assetId);
 }
 
 export const rentalSeams = {

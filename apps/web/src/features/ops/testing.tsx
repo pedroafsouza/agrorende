@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render } from "@testing-library/react";
+import { render, type RenderResult } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import type { ReactElement, ReactNode } from "react";
 
@@ -26,7 +26,8 @@ export function loadAllMessages(locale: "en" | "pt-BR" = "en"): Messages {
   return messages;
 }
 
-export function renderWithProviders(ui: ReactElement, options: { readonly locale?: "en" | "pt-BR"; readonly client?: QueryClient } = {}) {
+export function renderWithProviders(ui: ReactElement, options: { readonly locale?: "en" | "pt-BR"; readonly client?: QueryClient } = {},
+): RenderResult & { readonly client: QueryClient } {
   const locale = options.locale ?? "en";
   const client = options.client ?? new QueryClient({ defaultOptions: { queries: { retry: false }, mutations: { retry: false } } });
   const Wrapper = ({ children }: { readonly children: ReactNode }) => (

@@ -3,6 +3,7 @@ import { useSyncExternalStore } from "react";
 
 import { authStore } from "../../auth/session";
 import { useServices } from "../../lib/services";
+import { OrgStatusBanner } from "../tenancy";
 import { Banner, EnvironmentRibbon, OfflineBanner, Screen, Text, useSyncSnapshot } from "../../ui";
 import { DutyCard, MyReportsCard, NextJobCard, QuickReportCard, RentalsTodayCard, SyncCard } from "./widgets";
 import { homeWidgetsFor, type HomeWidgetId } from "./registry";
@@ -34,6 +35,7 @@ export function TodayScreen() {
         <>
           <EnvironmentRibbon />
           <OfflineBanner onOpenSyncCenter={() => router.push("/sync-center")} />
+          {auth.org === undefined ? null : <OrgStatusBanner status={auth.org.status} />}
         </>
       }
     >

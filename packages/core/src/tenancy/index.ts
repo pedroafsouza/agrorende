@@ -1,6 +1,10 @@
 import type { Ctx } from "../context.js";
-import { notImplemented } from "../errors.js";
+import { assertOrgWritable } from "../modules/tenancy/service.js";
 
-export async function assertOrganizationWritable(_ctx: Ctx): Promise<void> {
-  return notImplemented("tenancy.assertOrganizationWritable");
+/**
+ * Office writes are refused with `ORG_SUSPENDED` while the organisation is SUSPENDED or CANCELLED
+ * (TEN-03, TEN-04, EC-OPS-29). Field pushes use the grace-period gate in `sync/push.ts` instead.
+ */
+export async function assertOrganizationWritable(ctx: Pick<Ctx, "organizationId">): Promise<void> {
+  await assertOrgWritable(ctx.organizationId);
 }

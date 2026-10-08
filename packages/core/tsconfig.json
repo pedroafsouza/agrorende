@@ -3,6 +3,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "noEmit": true,
+    "jsx": "react-jsx",
     "types": ["node"]
   },
   "include": ["src", "eslint.config.js", "vitest.config.ts"]

@@ -267,15 +267,10 @@ export async function buildReportModel(tx: Tx, ctx: Ctx, id: string, options: Bu
 type RenderReport = (model: WorkOrderReportModel, labels: WorkOrderReportLabels) => Promise<Uint8Array>;
 
 /**
- * Renders the PDF through `pdf/workOrderReport.tsx`. Core's tsconfig has no `jsx` option, so a static import of a
- * `.tsx` module fails with TS6142 even though the file uses no JSX; the lazy import keeps `@react-pdf/renderer` out
- * of every other code path as well (change request T07-004).
+ * Renders the PDF through `pdf/workOrderReport.tsx`. The lazy import keeps `@react-pdf/renderer` out of every other
+ * code path.
  */
 export async function renderReportPdf(model: WorkOrderReportModel, labels: WorkOrderReportLabels): Promise<Uint8Array> {
-  // TS6142 fires under core's tsconfig but not under the web app's (which has `jsx`), so `@ts-expect-error` would be
-  // unused in one of them. The literal specifier stays so bundlers can still trace the module.
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore TS6142 under packages/core only; the module itself is type-checked as part of `src`.
   const module = (await import("../../pdf/workOrderReport.js")) as { renderWorkOrderReport: RenderReport };
   return module.renderWorkOrderReport(model, labels);
 }
