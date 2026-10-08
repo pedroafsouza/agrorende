@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../auth/_platform";
 
-export const PATCH = notImplemented("PATCH", "/api/v1/me");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const PATCH = platformRoute("PATCH /me");

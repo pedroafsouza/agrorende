@@ -26,6 +26,11 @@ import type { ChecklistSnapshot, CreateWorkOrderInput, EntityRef, WorkOrderBilli
 import type { Ctx } from "@agrorende/contracts/seams";
 
 import { notImplemented } from "./errors.js";
+import * as mediaService from "./modules/media/service.js";
+import * as usersService from "./modules/users/service.js";
+import * as notify from "./notify/index.js";
+import { touchDependents } from "./sync/touch.js";
+import type { SyncTx } from "./sync/types.js";
 
 export async function getAssetSummary(_tx: Tx, _assetId: string): Promise<AssetSummary> {
   return notImplemented("seams.assets.getSummary");
@@ -108,31 +113,31 @@ export async function getCustomerForEligibility(_tx: Tx, _customerId: string): P
 
 export const customerSeams = { getForEligibility: getCustomerForEligibility } satisfies CustomerSeams;
 
-export async function listActiveTechnicians(_tx: Tx, _orgId: string): Promise<TechnicianSummary[]> {
-  return notImplemented("seams.users.listActiveTechnicians");
+export async function listActiveTechnicians(tx: Tx, orgId: string): Promise<TechnicianSummary[]> {
+  return usersService.listActiveTechnicians(tx as SyncTx, orgId);
 }
 
 export const userSeams = { listActiveTechnicians } satisfies UserSeams;
 
-export async function listMediaForParent(_tx: Tx, _parent: EntityRef): Promise<MediaRow[]> {
-  return notImplemented("seams.media.listForParent");
+export async function listMediaForParent(tx: Tx, parent: EntityRef): Promise<MediaRow[]> {
+  return mediaService.listForParent(tx as SyncTx, parent);
 }
 
-export async function markLateEvidence(_tx: Tx, _mediaIds: string[]): Promise<void> {
-  return notImplemented("seams.media.markLateEvidence");
+export async function markLateEvidence(tx: Tx, mediaIds: string[]): Promise<void> {
+  return mediaService.markLateEvidence(tx as SyncTx, mediaIds);
 }
 
 export const mediaSeams = { listForParent: listMediaForParent, markLateEvidence } satisfies MediaSeams;
 
 export async function createSeamNotification(
-  _tx: Tx,
-  _notification: { type: NotificationType; userIds: string[]; entity: EntityRef; params: Record<string, string | number> },
+  tx: Tx,
+  notification: { type: NotificationType; userIds: string[]; entity: EntityRef; params: Record<string, string | number> },
 ): Promise<void> {
-  return notImplemented("seams.notifications.create");
+  await notify.createNotification(tx as SyncTx, notification);
 }
 
-export async function notificationOfficeRecipients(_tx: Tx, _orgId: string, _roles: Role[]): Promise<string[]> {
-  return notImplemented("seams.notifications.officeRecipients");
+export async function notificationOfficeRecipients(tx: Tx, orgId: string, roles: Role[]): Promise<string[]> {
+  return notify.officeRecipients(tx as SyncTx, orgId, roles);
 }
 
 export const notificationSeams = {
@@ -140,8 +145,8 @@ export const notificationSeams = {
   officeRecipients: notificationOfficeRecipients,
 } satisfies NotificationSeams;
 
-export async function touchSyncDependents(_tx: Tx, _entity: EntityRef): Promise<void> {
-  return notImplemented("seams.sync.touchDependents");
+export async function touchSyncDependents(tx: Tx, entity: EntityRef): Promise<void> {
+  return touchDependents(tx as SyncTx, entity);
 }
 
 export const syncSeams = { touchDependents: touchSyncDependents } satisfies SyncSeams;

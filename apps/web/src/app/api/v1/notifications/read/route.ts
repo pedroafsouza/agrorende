@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../../auth/_platform";
 
-export const POST = notImplemented("POST", "/api/v1/notifications/read");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const POST = platformRoute("POST /notifications/read");

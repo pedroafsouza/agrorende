@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../auth/_platform";
 
-export const GET = notImplemented("GET", "/api/v1/devices");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const GET = platformRoute("GET /devices");

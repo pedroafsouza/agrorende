@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../../../../../auth/_platform";
 
-export const PUT = notImplemented("PUT", "/api/v1/media/:id/blob/parts/:n");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const PUT = platformRoute("PUT /media/:id/blob/parts/:n");

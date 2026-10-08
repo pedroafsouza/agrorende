@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../_platform";
 
-export const POST = notImplemented("POST", "/api/v1/auth/socket-token");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const POST = platformRoute("POST /auth/socket-token");

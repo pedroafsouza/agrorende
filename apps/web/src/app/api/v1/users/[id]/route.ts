@@ -1,4 +1,7 @@
-import { notImplemented } from "@/server/withApi";
+import { platformRoute } from "../../auth/_platform";
 
-export const GET = notImplemented("GET", "/api/v1/users/:id");
-export const PATCH = notImplemented("PATCH", "/api/v1/users/:id");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const GET = platformRoute("GET /users/:id");
+export const PATCH = platformRoute("PATCH /users/:id");

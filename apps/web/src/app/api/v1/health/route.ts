@@ -1,3 +1,6 @@
-import { withApi } from "@/server/withApi";
+import { platformRoute } from "../auth/_platform";
 
-export const GET = withApi(() => ({ ok: true, app: "agrorende" }), { roles: ["public"] });
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const GET = platformRoute("GET /health");

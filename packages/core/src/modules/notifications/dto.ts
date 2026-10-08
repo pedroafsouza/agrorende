@@ -1,4 +1,9 @@
-export interface NotificationsDTO {
-  readonly id: string;
-  readonly organizationId: string;
+import type { NotificationDTO } from "@agrorende/contracts/dto";
+
+import { toWire } from "../../sync/pull.js";
+
+export type { NotificationDTO } from "@agrorende/contracts/dto";
+
+export function toNotificationDto(doc: object): NotificationDTO {
+  return toWire(doc as Record<string, unknown>) as unknown as NotificationDTO;
 }
