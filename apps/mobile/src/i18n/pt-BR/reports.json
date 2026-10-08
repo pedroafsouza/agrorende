@@ -1,0 +1,112 @@
+{
+  "list": {
+    "emptyTitle": "Nenhum relato ainda",
+    "emptyBody": "Quando você relatar um problema em uma máquina, acompanhe aqui.",
+    "new": "Novo relato",
+    "pending": "Aguardando envio",
+    "noNumber": "Número após o envio",
+    "notOperable": "Parada"
+  },
+  "wizard": {
+    "step": {
+      "machine": "Qual máquina?",
+      "evidence": "Fotos e vídeos",
+      "details": "O que aconteceu?",
+      "review": "Revisar e enviar"
+    },
+    "send": "Enviar relato",
+    "unregisteredHint": "Escreva o que souber: marca, modelo, cor ou onde ela está.",
+    "evidenceHint": "Tire pelo menos uma foto ou vídeo do problema. Até {max} vídeos.",
+    "videoCount": "{count, plural, one {# vídeo} other {# vídeos}} de {max}",
+    "machineSelected": "Máquina: {name}",
+    "unregisteredMachine": "Máquina não cadastrada: {description}",
+    "mediaCount": "{count, plural, =0 {Nenhuma foto ou vídeo} one {# foto ou vídeo} other {# fotos ou vídeos}}",
+    "useLocation": "Usar minha localização",
+    "locationReady": "Local salvo (±{meters} m)",
+    "locationFailed": "Não foi possível pegar o local. O relato ainda pode ser enviado.",
+    "openExisting": "Ver o existente",
+    "continueNew": "Continuar novo relato",
+    "sent": "Relato salvo. Ele será enviado quando houver sinal."
+  },
+  "field": {
+    "category": "Tipo de problema",
+    "priority": "Qual a urgência?",
+    "operable": "A máquina ainda funciona?",
+    "suggestedAction": "O que deve ser feito?",
+    "title": "Título curto (opcional)",
+    "titlePlaceholder": "Exemplo: Mangueira hidráulica vazando",
+    "description": "Descrição (opcional)",
+    "descriptionPlaceholder": "O que você viu, ouviu ou sentiu de cheiro",
+    "unregistered": "Descreva a máquina"
+  },
+  "operable": {
+    "yes": "Sim, funciona",
+    "no": "Não, parou"
+  },
+  "category": {
+    "ENGINE": "Motor",
+    "HYDRAULIC": "Hidráulico",
+    "ELECTRICAL": "Elétrico",
+    "TRANSMISSION": "Transmissão",
+    "TIRES_TRACKS": "Pneus ou esteiras",
+    "BRAKES": "Freios",
+    "STRUCTURE": "Estrutura",
+    "CAB": "Cabine",
+    "IMPLEMENT": "Implemento",
+    "LEAK": "Vazamento",
+    "SAFETY": "Segurança",
+    "OTHER": "Outro"
+  },
+  "priority": {
+    "LOW": "Baixa",
+    "MEDIUM": "Média",
+    "HIGH": "Alta",
+    "CRITICAL": "Crítica"
+  },
+  "suggestedAction": {
+    "REPAIR_NOW": "Consertar agora",
+    "REPAIR_SOON": "Consertar em breve",
+    "MONITOR": "Acompanhar",
+    "INFO_ONLY": "Só informando"
+  },
+  "status": {
+    "SUBMITTED": "Enviado",
+    "IN_REVIEW": "Em análise",
+    "MARKED_FOR_REPAIR": "Conserto agendado",
+    "MONITORING": "Em acompanhamento",
+    "DISMISSED": "Encerrado"
+  },
+  "attention": {
+    "RETIRED": "Esta máquina está desativada.",
+    "IN_REPAIR": "Esta máquina já está em conserto.",
+    "OUT_OF_SERVICE": "Esta máquina está fora de serviço.",
+    "RENTED_OUT": "Esta máquina está locada."
+  },
+  "detail": {
+    "number": "Relato {number}",
+    "machine": "Máquina",
+    "unregistered": "Não cadastrada: {description}",
+    "evidence": "Fotos e vídeos",
+    "noEvidence": "Ainda não há fotos ou vídeos neste aparelho.",
+    "description": "Descrição",
+    "reported": "Relatado {when}",
+    "workOrder": "Ordem de serviço {number}",
+    "openWorkOrder": "Acompanhar a ordem de serviço",
+    "withdraw": "Retirar relato",
+    "withdrawTitle": "Retirar este relato?",
+    "withdrawBody": "A central verá que você retirou. Conte o motivo.",
+    "withdrawReason": "Motivo",
+    "withdrawReasonPlaceholder": "Exemplo: relatei a máquina errada",
+    "withdrawn": "Você retirou este relato.",
+    "notFoundTitle": "Relato não encontrado",
+    "notFoundBody": "Ele pode ainda estar baixando. Sincronize ou volte para Meus relatos."
+  },
+  "widget": {
+    "quickReport": "Relatar problema",
+    "quickReportBody": "Fotos, áudio e local em poucos toques",
+    "resumeDraft": "Continuar relato não enviado",
+    "myReports": "Meus relatos",
+    "myReportsEmpty": "Acompanhe o que você relatou",
+    "myReportsOpen": "{count, plural, =0 {Nenhum relato aberto} one {# relato aberto} other {# relatos abertos}}"
+  }
+}

@@ -1,0 +1,137 @@
+import { Stack, useRouter } from "expo-router";
+import { ClipboardList, FileQuestion, Undo2 } from "lucide-react-native";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
+
+import { MapPreview } from "../../components/MapPreview";
+import { Thumbnails, type MediaDraft } from "../../components/MediaCapture";
+import { useT } from "../../i18n/useT";
+import { errorCodeOf } from "../../lib/errors";
+import { useServices } from "../../lib/services";
+import { useLocalQuery } from "../../lib/useLocalQuery";
+import { localMediaUri } from "../../media/capture";
+import { withdrawReport } from "../../sync/mutators/reports";
+import { Banner, BottomSheet, Button, Card, EmptyState, ErrorState, ListItem, Screen, Skeleton, StatusPill, Text, TextField } from "../../ui";
+import { InlineError } from "../../ui/recovery/InlineError";
+import { formatRelative } from "../sync/format";
+import "./i18n";
+import { canWithdraw, getReportDetail, PRIORITY_TONE, reportFlags, STATUS_TONE } from "./logic";
+
+/** Report detail: status, evidence, location and the linked work order (FR-08, EC-FR-14, EC-FR-17). */
+export function ReportDetailScreen({ id }: { readonly id: string }) {
+  const router = useRouter();
+  const t = useT();
+  const { userId } = useServices();
+  const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [reason, setReason] = useState("");
+  const [withdrawError, setWithdrawError] = useState<string | undefined>();
+  const query = useLocalQuery(async (db) => {
+    const detail = await getReportDetail(db, id);
+    if (detail === undefined) return undefined;
+    const media: MediaDraft[] = [];
+    for (const row of detail.media) {
+      const uri = await localMediaUri(db, String(row.id), "thumb");
+      if (uri === undefined) continue;
+      media.push({
+        id: String(row.id),
+        kind: String(row.kind),
+        tag: String(row.tag ?? "GENERAL"),
+        mimeType: String(row.mimeType ?? ""),
+        capturedAt: String(row.capturedAt ?? ""),
+        parent: { type: "FIELD_REPORT", id },
+        localUri: uri,
+      });
+    }
+    return { ...detail, localMedia: media };
+  }, [id]);
+
+  if (query.status === "loading") return <Screen testID="report-detail-loading"><Skeleton lines={8} /></Screen>;
+  if (query.status === "error") return <Screen testID="report-detail-error"><ErrorState onRetry={query.reload} /></Screen>;
+  if (query.data === undefined) {
+    return (
+      <Screen testID="report-detail-empty">
+        <EmptyState icon={FileQuestion} titleKey="reports.detail.notFoundTitle" bodyKey="reports.detail.notFoundBody" action={{ labelKey: "routes.tabs.reports", onPress: () => router.replace("/reports") }} />
+      </Screen>
+    );
+  }
+
+  const { report, asset, workOrder, localMedia } = query.data;
+  const status = String(report.status ?? "SUBMITTED") as keyof typeof STATUS_TONE;
+  const priority = String(report.priority ?? "MEDIUM") as keyof typeof PRIORITY_TONE;
+  const flags = reportFlags(report);
+  const number = typeof report.number === "string" ? report.number : undefined;
+  const lat = typeof report.lat === "number" ? report.lat : undefined;
+  const lng = typeof report.lng === "number" ? report.lng : undefined;
+  const title = String(report.title ?? "");
+  const withdrawable = canWithdraw(report, userId);
+
+  const submitWithdraw = async () => {
+    setWithdrawError(undefined);
+    try {
+      await withdrawReport({ id, reason: reason.trim() });
+      setWithdrawOpen(false);
+      setReason("");
+    } catch (error) {
+      setWithdrawError(errorCodeOf(error));
+    }
+  };
+
+  return (
+    <Screen
+      testID="report-detail"
+      footer={
+        workOrder !== undefined ? (
+          <Button testID="report-open-wo" icon={ClipboardList} labelKey="reports.detail.openWorkOrder" onPress={() => router.push(`/jobs/${String(workOrder.id)}`)} />
+        ) : withdrawable ? (
+          <Button testID="report-withdraw" variant="secondary" icon={Undo2} labelKey="reports.detail.withdraw" onPress={() => setWithdrawOpen(true)} />
+        ) : undefined
+      }
+    >
+      <Stack.Screen options={{ title: number === undefined ? t("routes.reports.detail") : t("reports.detail.number", { number }) }} />
+      {status === "MARKED_FOR_REPAIR" ? (
+        <Banner testID="report-marked" tone="success" titleKey="errors.REPORT_MARKED_FOR_REPAIR_STATUS.title" bodyKey="errors.REPORT_MARKED_FOR_REPAIR_STATUS.body" />
+      ) : null}
+      {flags.duplicateOf !== undefined ? <Banner testID="report-merged" tone="info" titleKey="errors.REPORT_DUPLICATE_MERGED.title" bodyKey="errors.REPORT_DUPLICATE_MERGED.body" /> : null}
+      {flags.busyAsset === true ? <Banner testID="report-busy" tone="info" titleKey="errors.REPORT_ASSET_BUSY.title" bodyKey="errors.REPORT_ASSET_BUSY.body" /> : null}
+      {flags.withdrawn === true ? <Banner testID="report-withdrawn" tone="info" titleKey="reports.detail.withdrawn" /> : null}
+      <Card>
+        <Text variant="title" selectable>
+          {title}
+        </Text>
+        <View style={styles.row}>
+          <StatusPill testID="report-status" labelKey={`reports.status.${status}`} tone={STATUS_TONE[status] ?? "neutral"} />
+          <StatusPill labelKey={`reports.priority.${priority}`} tone={PRIORITY_TONE[priority] ?? "neutral"} />
+          <StatusPill labelKey={report.machineOperable === false ? "reports.operable.no" : "reports.operable.yes"} tone={report.machineOperable === false ? "danger" : "success"} />
+        </View>
+        {typeof report.category === "string" ? <Text i18nKey={`reports.category.${report.category}`} tone="secondary" /> : null}
+        {typeof report.occurredAt === "string" ? <Text i18nKey="reports.detail.reported" values={{ when: formatRelative(report.occurredAt, Date.now()) }} tone="secondary" variant="caption" /> : null}
+      </Card>
+      <Text i18nKey="reports.detail.machine" variant="heading" />
+      {asset !== undefined ? (
+        <ListItem title={String(asset.name ?? "")} subtitle={String(asset.code ?? "")} onPress={() => router.push(`/assets/${String(asset.id)}`)} />
+      ) : (
+        <Text i18nKey="reports.detail.unregistered" values={{ description: String(report.unregisteredAssetDesc ?? "") }} selectable />
+      )}
+      {workOrder !== undefined ? <ListItem icon={ClipboardList} titleKey="reports.detail.workOrder" titleValues={{ number: String(workOrder.number ?? "") }} right={<StatusPill labelKey={`assets.status.${String(workOrder.status)}`} tone="info" />} onPress={() => router.push(`/jobs/${String(workOrder.id)}`)} /> : null}
+      {typeof report.description === "string" && report.description.length > 0 ? (
+        <>
+          <Text i18nKey="reports.detail.description" variant="heading" />
+          <Text selectable>{report.description}</Text>
+        </>
+      ) : null}
+      <Text i18nKey="reports.detail.evidence" variant="heading" />
+      {localMedia.length === 0 ? <Text i18nKey="reports.detail.noEvidence" tone="secondary" /> : <Thumbnails drafts={localMedia} />}
+      {lat !== undefined && lng !== undefined ? <MapPreview destination={{ lat, lng, label: title }} markers={[{ id, lat, lng, label: title }]} /> : null}
+      <BottomSheet testID="report-withdraw-sheet" visible={withdrawOpen} onClose={() => setWithdrawOpen(false)} titleKey="reports.detail.withdrawTitle">
+        <View style={styles.sheet}>
+          <Text i18nKey="reports.detail.withdrawBody" />
+          <TextField testID="report-withdraw-reason" labelKey="reports.detail.withdrawReason" placeholderKey="reports.detail.withdrawReasonPlaceholder" value={reason} onChangeText={setReason} />
+          {withdrawError === undefined ? null : <InlineError code={withdrawError} />}
+          <Button testID="report-withdraw-confirm" variant="danger" icon={Undo2} labelKey="reports.detail.withdraw" disabled={reason.trim().length === 0} onPress={() => void submitWithdraw()} />
+        </View>
+      </BottomSheet>
+    </Screen>
+  );
+}
+
+const styles = StyleSheet.create({ row: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, sheet: { gap: 12 } });

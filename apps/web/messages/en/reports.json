@@ -1,1 +1,147 @@
-{}
+{
+  "actions": {
+    "attachExisting": "Attach to {number}",
+    "createAnyway": "Create another job",
+    "dismiss": "Dismiss",
+    "markForRepair": "Mark for repair",
+    "monitor": "Keep monitoring",
+    "openWorkOrder": "Open job {number}",
+    "startReview": "Start review",
+    "viewAsset": "View machine"
+  },
+  "activity": {
+    "fieldReport": {
+      "created": "Report sent",
+      "createdFromDamage": "Report created from a return damage",
+      "dismissed": "Report dismissed",
+      "duplicateMerged": "Duplicate report merged",
+      "markedForRepair": "Marked for repair",
+      "mergedAsDuplicate": "Merged into another case",
+      "monitoring": "Kept under monitoring",
+      "reviewStarted": "Review started",
+      "updated": "Report updated",
+      "withdrawn": "Withdrawn by the reporter"
+    }
+  },
+  "category": {
+    "BRAKES": "Brakes",
+    "CAB": "Cab",
+    "ELECTRICAL": "Electrical",
+    "ENGINE": "Engine",
+    "HYDRAULIC": "Hydraulics",
+    "IMPLEMENT": "Implement",
+    "LEAK": "Leak",
+    "OTHER": "Other",
+    "SAFETY": "Safety",
+    "STRUCTURE": "Structure",
+    "TIRES_TRACKS": "Tires and tracks",
+    "TRANSMISSION": "Transmission"
+  },
+  "detail": {
+    "accuracy": "Accuracy: ± {meters} m",
+    "activity": "History",
+    "description": "Description",
+    "location": "Report location",
+    "media": "Photos and videos",
+    "noDescription": "No description.",
+    "noLocation": "The report arrived without a location.",
+    "summary": "Summary"
+  },
+  "dialogs": {
+    "dismiss": {
+      "body": "The report leaves the queue. The reporter will see the reason.",
+      "duplicateOf": "Duplicate of (report number, optional)",
+      "reason": "Reason",
+      "title": "Dismiss report"
+    },
+    "existing": {
+      "assignee": "Assignee: {name}",
+      "body": "Nothing was lost. Attach this report to the existing job or create another job with a reason.",
+      "reason": "Why create another job?",
+      "title": "A job is already open",
+      "unassigned": "Unassigned"
+    },
+    "markForRepair": {
+      "assignee": "Assignee",
+      "noSuggestions": "No suggestions right now. Pick from the list.",
+      "scheduledFor": "Schedule for",
+      "submit": "Create job",
+      "suggested": "Suggested",
+      "suggestionMeta": "{open, plural, =0 {no open jobs} one {# open job} other {# open jobs}}",
+      "title": "Mark for repair",
+      "woTitle": "Job title"
+    },
+    "monitor": {
+      "body": "The report stays under monitoring. Write what should be followed up.",
+      "note": "Monitoring note",
+      "title": "Keep monitoring"
+    }
+  },
+  "fields": {
+    "asset": "Machine",
+    "category": "Category",
+    "machineOperable": "Machine running?",
+    "media": "Media",
+    "number": "Number",
+    "occurredAt": "When",
+    "priority": "Severity",
+    "receivedAt": "Received",
+    "rental": "Rental",
+    "reporter": "Reporter",
+    "site": "Site",
+    "status": "Status",
+    "suggestedAction": "Suggested action",
+    "title": "Title",
+    "workOrder": "Work order"
+  },
+  "flags": {
+    "assetInRepair": "The machine was already in repair when the report arrived.",
+    "assetRentedOut": "The machine was rented out when the report arrived.",
+    "assetRetired": "The machine is retired. Check that the report is about this machine.",
+    "busyAsset": "Critical report on a busy machine. Handle it first.",
+    "clockSkewed": "The phone clock was wrong. The time may not be exact.",
+    "duplicateOf": "Merged as a duplicate of another case.",
+    "fromDamage": "Created from a damage recorded at rental return.",
+    "openWorkOrder": "This machine already has an open job.",
+    "unknownAsset": "The phone sent a machine that no longer exists. Treated as an unregistered machine.",
+    "withdrawn": "Withdrawn by the reporter."
+  },
+  "inbox": {
+    "allPriorities": "All severities",
+    "allSites": "All sites",
+    "allStatuses": "All statuses",
+    "emptyBody": "When someone reports a problem in the field, it shows up here.",
+    "emptyTitle": "No reports in the queue",
+    "from": "From",
+    "needsTriage": "To triage",
+    "openCount": "{count, plural, =0 {No reports to triage} one {# report to triage} other {# reports to triage}}",
+    "searchPlaceholder": "Search by number, title or machine",
+    "title": "Field reports",
+    "to": "To"
+  },
+  "notOperable": "Down",
+  "operable": {
+    "no": "No, it is down",
+    "yes": "Yes, it is running"
+  },
+  "recovery": {
+    "locked": {
+      "body": "Your report stays saved. View the history or ask the office to review it.",
+      "title": "Report is already protected"
+    }
+  },
+  "suggestedAction": {
+    "INFO_ONLY": "Information only",
+    "MONITOR": "Monitor",
+    "REPAIR_NOW": "Repair now",
+    "REPAIR_SOON": "Repair soon"
+  },
+  "toast": {
+    "attached": "Report attached to {number}.",
+    "dismissed": "Report dismissed.",
+    "markedForRepair": "Job {number} created.",
+    "monitoring": "Report under monitoring.",
+    "reviewStarted": "Review started."
+  },
+  "unregistered": "Unregistered machine: {description}"
+}

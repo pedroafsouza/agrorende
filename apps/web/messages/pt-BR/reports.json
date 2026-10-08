@@ -1,1 +1,147 @@
-{}
+{
+  "actions": {
+    "attachExisting": "Anexar à {number}",
+    "createAnyway": "Criar outra OS",
+    "dismiss": "Dispensar",
+    "markForRepair": "Encaminhar para reparo",
+    "monitor": "Manter em observação",
+    "openWorkOrder": "Abrir OS {number}",
+    "startReview": "Iniciar análise",
+    "viewAsset": "Ver máquina"
+  },
+  "activity": {
+    "fieldReport": {
+      "created": "Relato enviado",
+      "createdFromDamage": "Relato criado a partir de avaria na devolução",
+      "dismissed": "Relato dispensado",
+      "duplicateMerged": "Relato duplicado juntado",
+      "markedForRepair": "Encaminhado para reparo",
+      "mergedAsDuplicate": "Juntado a outro atendimento",
+      "monitoring": "Mantido em observação",
+      "reviewStarted": "Análise iniciada",
+      "updated": "Relato atualizado",
+      "withdrawn": "Retirado por quem relatou"
+    }
+  },
+  "category": {
+    "BRAKES": "Freios",
+    "CAB": "Cabine",
+    "ELECTRICAL": "Elétrica",
+    "ENGINE": "Motor",
+    "HYDRAULIC": "Hidráulica",
+    "IMPLEMENT": "Implemento",
+    "LEAK": "Vazamento",
+    "OTHER": "Outro",
+    "SAFETY": "Segurança",
+    "STRUCTURE": "Estrutura",
+    "TIRES_TRACKS": "Pneus e esteiras",
+    "TRANSMISSION": "Transmissão"
+  },
+  "detail": {
+    "accuracy": "Precisão: ± {meters} m",
+    "activity": "Histórico",
+    "description": "Descrição",
+    "location": "Local do relato",
+    "media": "Fotos e vídeos",
+    "noDescription": "Sem descrição.",
+    "noLocation": "O relato chegou sem localização.",
+    "summary": "Resumo"
+  },
+  "dialogs": {
+    "dismiss": {
+      "body": "O relato sai da fila. Quem relatou verá o motivo.",
+      "duplicateOf": "Duplicado de (número do relato, opcional)",
+      "reason": "Motivo",
+      "title": "Dispensar relato"
+    },
+    "existing": {
+      "assignee": "Responsável: {name}",
+      "body": "Nada foi perdido. Anexe este relato à OS existente ou crie outra OS com motivo.",
+      "reason": "Por que criar outra OS?",
+      "title": "Já existe uma OS aberta",
+      "unassigned": "Sem responsável"
+    },
+    "markForRepair": {
+      "assignee": "Responsável",
+      "noSuggestions": "Sem sugestões agora. Escolha na lista.",
+      "scheduledFor": "Agendar para",
+      "submit": "Criar OS",
+      "suggested": "Sugeridos",
+      "suggestionMeta": "{open, plural, =0 {sem OS abertas} one {# OS aberta} other {# OS abertas}}",
+      "title": "Encaminhar para reparo",
+      "woTitle": "Título da OS"
+    },
+    "monitor": {
+      "body": "O relato fica em observação. Escreva o que deve ser acompanhado.",
+      "note": "Nota de observação",
+      "title": "Manter em observação"
+    }
+  },
+  "fields": {
+    "asset": "Máquina",
+    "category": "Categoria",
+    "machineOperable": "Máquina operando?",
+    "media": "Mídias",
+    "number": "Número",
+    "occurredAt": "Quando",
+    "priority": "Gravidade",
+    "receivedAt": "Recebido em",
+    "rental": "Locação",
+    "reporter": "Quem relatou",
+    "site": "Local",
+    "status": "Situação",
+    "suggestedAction": "Ação sugerida",
+    "title": "Título",
+    "workOrder": "Ordem de serviço"
+  },
+  "flags": {
+    "assetInRepair": "A máquina já estava em reparo quando o relato chegou.",
+    "assetRentedOut": "A máquina estava em locação quando o relato chegou.",
+    "assetRetired": "A máquina está baixada. Confira se o relato é desta máquina.",
+    "busyAsset": "Relato crítico de máquina ocupada. Trate com prioridade.",
+    "clockSkewed": "O relógio do celular estava errado. O horário pode não ser exato.",
+    "duplicateOf": "Juntado como duplicado de outro atendimento.",
+    "fromDamage": "Criado a partir de avaria registrada na devolução da locação.",
+    "openWorkOrder": "Já existe uma OS aberta para esta máquina.",
+    "unknownAsset": "O celular enviou uma máquina que não existe mais. Tratado como máquina não cadastrada.",
+    "withdrawn": "Retirado por quem relatou."
+  },
+  "inbox": {
+    "allPriorities": "Todas as gravidades",
+    "allSites": "Todos os locais",
+    "allStatuses": "Todas as situações",
+    "emptyBody": "Quando alguém relatar um problema no campo, ele aparece aqui.",
+    "emptyTitle": "Nenhum relato na fila",
+    "from": "De",
+    "needsTriage": "A triar",
+    "openCount": "{count, plural, =0 {Nenhum relato a triar} one {# relato a triar} other {# relatos a triar}}",
+    "searchPlaceholder": "Buscar por número, título ou máquina",
+    "title": "Relatos do campo",
+    "to": "Até"
+  },
+  "notOperable": "Parada",
+  "operable": {
+    "no": "Não, está parada",
+    "yes": "Sim, está operando"
+  },
+  "recovery": {
+    "locked": {
+      "body": "Seu relato continua salvo. Veja o histórico ou peça revisão à central.",
+      "title": "Relato já está protegido"
+    }
+  },
+  "suggestedAction": {
+    "INFO_ONLY": "Só informar",
+    "MONITOR": "Observar",
+    "REPAIR_NOW": "Consertar agora",
+    "REPAIR_SOON": "Consertar em breve"
+  },
+  "toast": {
+    "attached": "Relato anexado à {number}.",
+    "dismissed": "Relato dispensado.",
+    "markedForRepair": "OS {number} criada.",
+    "monitoring": "Relato em observação.",
+    "reviewStarted": "Análise iniciada."
+  },
+  "unregistered": "Máquina não cadastrada: {description}"
+}

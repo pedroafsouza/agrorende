@@ -1,3 +1,4 @@
-import { notImplemented } from "@/server/withApi";
+import { fieldReportsQueries } from "@/features/reports/server";
+import { OFFICE, query, route } from "@/lib/core.server";
 
-export const GET = notImplemented("GET", "/api/v1/field-reports");
+export const GET = route(OFFICE, (request, ctx) => fieldReportsQueries.listFieldReports(ctx, query(request)));

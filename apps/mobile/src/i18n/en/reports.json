@@ -1,0 +1,112 @@
+{
+  "list": {
+    "emptyTitle": "No reports yet",
+    "emptyBody": "When you report a problem with a machine, you can follow it here.",
+    "new": "New report",
+    "pending": "Waiting to send",
+    "noNumber": "Number after sending",
+    "notOperable": "Stopped"
+  },
+  "wizard": {
+    "step": {
+      "machine": "Which machine?",
+      "evidence": "Photos and videos",
+      "details": "What happened?",
+      "review": "Review and send"
+    },
+    "send": "Send report",
+    "unregisteredHint": "Write what you know: brand, model, color or where it is.",
+    "evidenceHint": "Take at least one photo or video of the problem. Up to {max} videos.",
+    "videoCount": "{count, plural, one {# video} other {# videos}} of {max}",
+    "machineSelected": "Machine: {name}",
+    "unregisteredMachine": "Machine not registered: {description}",
+    "mediaCount": "{count, plural, =0 {No photos or videos} one {# photo or video} other {# photos or videos}}",
+    "useLocation": "Use my location",
+    "locationReady": "Location saved (±{meters} m)",
+    "locationFailed": "Could not get the location. The report can still be sent.",
+    "openExisting": "See existing",
+    "continueNew": "Continue new report",
+    "sent": "Report saved. It will be sent when there is signal."
+  },
+  "field": {
+    "category": "Type of problem",
+    "priority": "How urgent?",
+    "operable": "Can the machine still work?",
+    "suggestedAction": "What should be done?",
+    "title": "Short title (optional)",
+    "titlePlaceholder": "Example: Hydraulic hose leaking",
+    "description": "Description (optional)",
+    "descriptionPlaceholder": "What you saw, heard or smelled",
+    "unregistered": "Describe the machine"
+  },
+  "operable": {
+    "yes": "Yes, it works",
+    "no": "No, it stopped"
+  },
+  "category": {
+    "ENGINE": "Engine",
+    "HYDRAULIC": "Hydraulic",
+    "ELECTRICAL": "Electrical",
+    "TRANSMISSION": "Transmission",
+    "TIRES_TRACKS": "Tires or tracks",
+    "BRAKES": "Brakes",
+    "STRUCTURE": "Structure",
+    "CAB": "Cab",
+    "IMPLEMENT": "Implement",
+    "LEAK": "Leak",
+    "SAFETY": "Safety",
+    "OTHER": "Other"
+  },
+  "priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "CRITICAL": "Critical"
+  },
+  "suggestedAction": {
+    "REPAIR_NOW": "Repair now",
+    "REPAIR_SOON": "Repair soon",
+    "MONITOR": "Keep an eye on it",
+    "INFO_ONLY": "Just informing"
+  },
+  "status": {
+    "SUBMITTED": "Sent",
+    "IN_REVIEW": "In review",
+    "MARKED_FOR_REPAIR": "Repair scheduled",
+    "MONITORING": "Monitoring",
+    "DISMISSED": "Closed"
+  },
+  "attention": {
+    "RETIRED": "This machine is retired.",
+    "IN_REPAIR": "This machine is already in repair.",
+    "OUT_OF_SERVICE": "This machine is out of service.",
+    "RENTED_OUT": "This machine is rented out."
+  },
+  "detail": {
+    "number": "Report {number}",
+    "machine": "Machine",
+    "unregistered": "Not registered: {description}",
+    "evidence": "Photos and videos",
+    "noEvidence": "No photos or videos on this device yet.",
+    "description": "Description",
+    "reported": "Reported {when}",
+    "workOrder": "Work order {number}",
+    "openWorkOrder": "Follow the work order",
+    "withdraw": "Withdraw report",
+    "withdrawTitle": "Withdraw this report?",
+    "withdrawBody": "The office will see that you withdrew it. Tell us why.",
+    "withdrawReason": "Reason",
+    "withdrawReasonPlaceholder": "Example: I reported the wrong machine",
+    "withdrawn": "You withdrew this report.",
+    "notFoundTitle": "Report not found",
+    "notFoundBody": "It may still be downloading. Pull to sync or go back to My reports."
+  },
+  "widget": {
+    "quickReport": "Report a problem",
+    "quickReportBody": "Photos, audio and location in a few taps",
+    "resumeDraft": "Continue unsent report",
+    "myReports": "My reports",
+    "myReportsEmpty": "Follow what you reported",
+    "myReportsOpen": "{count, plural, =0 {No open reports} one {# open report} other {# open reports}}"
+  }
+}

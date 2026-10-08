@@ -1,5 +1,11 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { ReportDetailPage } from "@/features/reports/ReportDetailPage";
+import { ReportsIntl } from "@/features/reports/ReportsIntl";
 
-export default function Adminreportsidpage() {
-  return <PlaceholderPage descriptionKey="page.reportDetail.description" route="/reports/[id]" titleKey="page.reportDetail.title" />;
+export default async function ReportPage({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <ReportsIntl>
+      <ReportDetailPage id={id} />
+    </ReportsIntl>
+  );
 }

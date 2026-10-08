@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { ReportsInboxPage } from "@/features/reports/ReportsInboxPage";
+import { ReportsIntl } from "@/features/reports/ReportsIntl";
 
-export default function Adminreportspage() {
-  return <PlaceholderPage descriptionKey="page.reports.description" route="/reports" titleKey="page.reports.title" />;
+export default function ReportsPage() {
+  return (
+    <ReportsIntl>
+      <ReportsInboxPage />
+    </ReportsIntl>
+  );
 }
