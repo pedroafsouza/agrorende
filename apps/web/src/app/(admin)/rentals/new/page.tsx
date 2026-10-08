@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { NewRentalPage } from "@/features/rentals/NewRentalPage";
+import { RentalsIntl } from "@/features/rentals/RentalsIntl";
 
-export default function Adminrentalsnewpage() {
-  return <PlaceholderPage descriptionKey="page.rentalNew.description" route="/rentals/new" titleKey="page.rentalNew.title" />;
+export default function RentalNewPage() {
+  return (
+    <RentalsIntl>
+      <NewRentalPage />
+    </RentalsIntl>
+  );
 }

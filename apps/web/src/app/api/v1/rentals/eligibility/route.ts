@@ -1,3 +1,5 @@
-import { notImplemented } from "@/server/withApi";
+import { rentalsQueries } from "@/features/rentals/server";
+import { OFFICE, query, route } from "@/lib/core.server";
 
-export const GET = notImplemented("GET", "/api/v1/rentals/eligibility");
+/** Live eligibility for the create form (RN-02): `{eligible, codes[], warnings[]}`. */
+export const GET = route(OFFICE, (request, ctx) => rentalsQueries.checkEligibility(ctx, query(request) as Parameters<typeof rentalsQueries.checkEligibility>[1]));

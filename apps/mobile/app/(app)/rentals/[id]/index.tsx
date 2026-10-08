@@ -1,6 +1,11 @@
-import { PlaceholderScreen } from "../../../../src/components";
+import { useLocalSearchParams } from "expo-router";
+
+import { RentalDetailScreen } from "../../../../src/features/rentals";
 import { routeKeys } from "../../../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.rentalDetail} />;
+  const { id } = useLocalSearchParams<{ id: string }>();
+  return <RentalDetailScreen rentalId={id} />;
 }
+
+export const titleKey = routeKeys.rentalDetail;

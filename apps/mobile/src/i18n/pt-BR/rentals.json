@@ -1,0 +1,242 @@
+{
+  "list": {
+    "new": "Nova locação",
+    "pending": "Aguardando envio",
+    "emptyTitle": "Nenhuma locação em andamento",
+    "emptyBody": "Reservas e locações ativas aparecem aqui, mesmo sem internet."
+  },
+  "section": {
+    "overdue": "Atrasadas ({count})",
+    "handOvers": "Entregas de hoje ({count})",
+    "returns": "Devoluções de hoje ({count})",
+    "active": "Em andamento ({count})",
+    "upcoming": "Próximas entregas ({count})",
+    "none": "Nada por aqui."
+  },
+  "row": {
+    "starts": "Entrega {when}",
+    "ends": "Devolução {when}",
+    "noNumber": "Locação sem número"
+  },
+  "status": {
+    "DRAFT": "Rascunho",
+    "RESERVED": "Reservada",
+    "ACTIVE": "Ativa",
+    "RETURNED": "Devolvida",
+    "CLOSED": "Encerrada",
+    "CANCELLED": "Cancelada",
+    "OVERDUE": "Atrasada"
+  },
+  "detail": {
+    "backToList": "Ver locações",
+    "backToRental": "Voltar à locação",
+    "callCustomer": "Ligar para o cliente",
+    "checkOut": "Fazer entrega (check-out)",
+    "checkIn": "Receber devolução (check-in)",
+    "checkInNow": "Receber agora",
+    "resume": "Continuar vistoria",
+    "customer": "Cliente",
+    "taxId": "CPF/CNPJ",
+    "machine": "Máquina",
+    "dates": "Datas",
+    "planned": "Período previsto",
+    "handedOver": "Entregue em",
+    "returned": "Devolvida em",
+    "returnedNote": "O escritório confere as cobranças e encerra a locação."
+  },
+  "match": {
+    "MATCHED": "Continua igual",
+    "NEW": "Avaria nova",
+    "UNCLEAR": "Não sei dizer"
+  },
+  "signature": {
+    "SIGNED": "Assinado",
+    "ABSENT": "Cliente ausente",
+    "REFUSED": "Cliente recusou assinar"
+  },
+  "zone": {
+    "FRONT": "Frente",
+    "REAR": "Traseira",
+    "LEFT": "Lado esquerdo",
+    "RIGHT": "Lado direito",
+    "TOP": "Parte de cima",
+    "CAB": "Cabine",
+    "ENGINE": "Motor",
+    "UNDERCARRIAGE": "Parte de baixo",
+    "TIRES_TRACKS": "Pneus ou esteiras",
+    "IMPLEMENT": "Implemento",
+    "OTHER": "Outro"
+  },
+  "severity": {
+    "MINOR": "Leve",
+    "MODERATE": "Média",
+    "SEVERE": "Grave"
+  },
+  "charge": {
+    "BASE": "Diárias",
+    "EXTRA_TIME": "Tempo extra",
+    "EXTRA_HOURS": "Horas extras de uso",
+    "FUEL": "Combustível",
+    "DAMAGE": "Avaria",
+    "CLEANING": "Limpeza",
+    "DELIVERY": "Frete",
+    "DISCOUNT": "Desconto",
+    "ACCESSORY": "Acessório faltando",
+    "OTHER": "Outro"
+  },
+  "new": {
+    "asset": "Máquina",
+    "customer": "Cliente",
+    "noAssets": "Nenhuma máquina para locação neste aparelho.",
+    "noCustomers": "Nenhum cliente neste aparelho.",
+    "startDate": "Data da entrega",
+    "dateHint": "Formato AAAA-MM-DD",
+    "dateInvalid": "Data inválida. Use AAAA-MM-DD.",
+    "startHour": "Hora da entrega",
+    "days": "Dias de locação",
+    "rate": "Valor da diária (opcional)",
+    "perDay": "R$/dia",
+    "deposit": "Caução (opcional)",
+    "documentLocale": "Idioma do documento",
+    "check": "Verificar disponibilidade",
+    "createReserve": "Criar e reservar",
+    "eligible": "Máquina disponível no período",
+    "officeOnlyTitle": "Só o escritório cria locações",
+    "officeOnlyBody": "Peça ao escritório para criar e reservar a locação. Você faz a entrega e a devolução.",
+    "offlineTitle": "Sem internet",
+    "offlineBody": "Criar locação precisa de internet para conferir a agenda da máquina. Tente de novo quando tiver sinal."
+  },
+  "widget": {
+    "title": "Locações de hoje",
+    "loading": "Carregando…",
+    "unavailable": "Toque para abrir as locações",
+    "handOvers": "Entregas",
+    "returns": "Devoluções",
+    "overdue": "Atrasadas"
+  },
+  "wizard": {
+    "done": "Feito",
+    "todo": "Falta",
+    "submitCheckout": "Concluir entrega",
+    "submitCheckin": "Concluir devolução",
+    "step": {
+      "locale": "Idioma",
+      "identity": "Máquina",
+      "walkaround": "Fotos ao redor",
+      "readings": "Horímetro e combustível",
+      "checklist": "Checklist",
+      "damages": "Avarias",
+      "accessories": "Acessórios",
+      "briefing": "Orientação de segurança",
+      "terms": "Termos",
+      "signatures": "Assinaturas",
+      "review": "Revisão",
+      "charges": "Cobranças"
+    },
+    "locale": {
+      "hint": "Em qual idioma o cliente recebe o termo de vistoria?",
+      "ptBR": "Português",
+      "en": "Inglês"
+    },
+    "identity": {
+      "expected": "Máquina desta locação",
+      "scan": "Escanear QR da máquina",
+      "confirmVisual": "Conferi a placa e o número",
+      "confirmed": "Máquina conferida",
+      "undo": "Conferir de novo",
+      "required": "Confirme que é a máquina certa."
+    },
+    "walkaround": {
+      "hint": "Tire uma foto de cada lado e da cabine.",
+      "missing": "Faltam fotos ao redor da máquina.",
+      "before": "Na entrega",
+      "after": "Agora",
+      "notOnDevice": "Foto não está neste aparelho"
+    },
+    "readings": {
+      "baseline": "Última leitura: {value} h",
+      "hourMeter": "Horímetro",
+      "hours": "h",
+      "hourMeterRequired": "Informe o horímetro.",
+      "hourMeterPhoto": "Tire a foto do horímetro.",
+      "fuel": "Combustível no tanque",
+      "fuelRequired": "Marque o combustível e tire a foto do marcador.",
+      "meterReplaced": "Horímetro foi trocado",
+      "meterReplacedHint": "A foto do horímetro novo vale como prova da troca."
+    },
+    "checklist": {
+      "empty": "Sem checklist para esta máquina.",
+      "incomplete": "Responda todos os itens obrigatórios do checklist.",
+      "photoTitle": "Foto do item"
+    },
+    "damages": {
+      "openTitle": "Avarias já registradas — confira cada uma",
+      "noneOpen": "Nenhuma avaria registrada nesta máquina.",
+      "confirmOpen": "Confira cada avaria já registrada.",
+      "photoRequired": "Cada avaria precisa de foto.",
+      "addNew": "Registrar avaria nova",
+      "addExisting": "Registrar avaria encontrada",
+      "newTitle": "Avaria {n}",
+      "remove": "Remover",
+      "zone": "Onde",
+      "severity": "Gravidade",
+      "description": "Descrição (opcional)",
+      "match": "Essa avaria é",
+      "cost": "Custo estimado",
+      "currency": "R$",
+      "costUnknown": "Não sei o custo",
+      "photo": "Foto da avaria"
+    },
+    "accessories": {
+      "empty": "Sem acessórios nesta locação.",
+      "expected": "Esperado: {count}",
+      "present": "Quantidade conferida",
+      "note": "O que aconteceu?",
+      "invalid": "Quantidade inválida.",
+      "noteRequired": "Explique o acessório que está faltando."
+    },
+    "briefing": {
+      "hint": "Explique ao operador como usar a máquina com segurança.",
+      "given": "Orientação de segurança feita",
+      "operatorName": "Nome do operador",
+      "operatorDocument": "Documento do operador (opcional)",
+      "notRequired": "Não é preciso nesta locação.",
+      "required": "Faça a orientação e informe o operador."
+    },
+    "terms": {
+      "version": "Termos versão {version}",
+      "default": "O cliente recebe a máquina no estado registrado nesta vistoria e devolve no prazo combinado.",
+      "accept": "Cliente aceitou os termos",
+      "required": "O cliente precisa aceitar os termos."
+    },
+    "signatures": {
+      "customer": "Cliente",
+      "agent": "Agente",
+      "signer": "Assinado por {name}",
+      "redo": "Refazer",
+      "refusedNote": "A recusa fica registrada no documento com o motivo.",
+      "agentRequired": "Falta a sua assinatura.",
+      "customerRequired": "Falta a assinatura do cliente.",
+      "reasonRequired": "Informe o motivo da recusa."
+    },
+    "review": {
+      "ready": "Tudo pronto para concluir",
+      "fix": "Corrigir",
+      "machine": "Máquina",
+      "customer": "Cliente",
+      "hourMeter": "Horímetro",
+      "fuel": "Combustível",
+      "media": "Fotos",
+      "mediaCount": "{count, plural, =0 {Nenhuma foto} one {# foto} other {# fotos}}",
+      "locale": "Idioma do documento"
+    },
+    "charges": {
+      "preview": "Prévia das cobranças",
+      "total": "Total",
+      "deposit": "Caução recebida",
+      "balance": "Saldo a pagar",
+      "lateNote": "A devolução passou do prazo; o tempo extra entra nas cobranças.",
+      "note": "Prévia calculada no aparelho. O escritório confirma o valor final."
+    }
+  }
+}

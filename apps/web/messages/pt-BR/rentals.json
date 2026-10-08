@@ -1,1 +1,234 @@
-{}
+{
+  "overdue": "Atrasada",
+  "yes": "Sim",
+  "no": "Não",
+  "tabs": {
+    "ALL": "Todas",
+    "RESERVED": "Reservadas",
+    "ACTIVE": "Ativas",
+    "OVERDUE": "Atrasadas",
+    "RETURNED": "Devolvidas",
+    "CLOSED": "Encerradas"
+  },
+  "list": {
+    "title": "Locações",
+    "tabsLabel": "Filtrar locações por situação",
+    "searchPlaceholder": "Buscar por número, cliente ou máquina",
+    "emptyTitle": "Nenhuma locação ainda",
+    "emptyBody": "Crie uma locação para reservar uma máquina para um cliente."
+  },
+  "actions": {
+    "new": "Nova locação",
+    "saveDraft": "Salvar rascunho",
+    "createAndReserve": "Criar e reservar",
+    "reserve": "Reservar",
+    "cancel": "Cancelar locação",
+    "close": "Encerrar locação",
+    "checkoutPdf": "PDF de saída",
+    "checkinPdf": "PDF de devolução"
+  },
+  "fields": {
+    "number": "Número",
+    "asset": "Máquina",
+    "customer": "Cliente",
+    "status": "Situação",
+    "period": "Período",
+    "total": "Total",
+    "plannedStart": "Início",
+    "plannedEnd": "Fim",
+    "site": "Fazenda",
+    "documentLocale": "Idioma do documento",
+    "rate": "Valor",
+    "rateUnit": "Unidade de cobrança",
+    "deposit": "Caução",
+    "deliveryMode": "Entrega",
+    "deliveryAddress": "Endereço de entrega",
+    "notes": "Observações",
+    "taxId": "CPF/CNPJ",
+    "actualStart": "Saída em",
+    "actualEnd": "Devolvida em",
+    "termsVersion": "Versão dos termos",
+    "cancelReason": "Motivo do cancelamento"
+  },
+  "documentLocale": {
+    "ptBR": "Português (Brasil)",
+    "en": "Inglês"
+  },
+  "deliveryMode": {
+    "PICKUP": "Cliente retira",
+    "DELIVERY": "Nós entregamos"
+  },
+  "new": {
+    "title": "Nova locação",
+    "draftSaved": "Rascunho salvo. Corrija os itens abaixo e reserve de novo.",
+    "timeZoneHint": "Horários no fuso da organização.",
+    "eligibilityHint": "Escolha a máquina e as duas datas para verificar a disponibilidade.",
+    "checking": "Verificando disponibilidade…",
+    "eligible": "Máquina disponível nessas datas",
+    "switchToDelivery": "Mudar para entrega",
+    "rateHint": "Deixe vazio para usar o valor da máquina.",
+    "assetDefault": "Padrão da máquina",
+    "reserveBlocked": "Não foi possível reservar a locação. Seus dados estão salvos.",
+    "completeCustomer": "Completar dados do cliente"
+  },
+  "detail": {
+    "title": "Locação {number}",
+    "summary": "Resumo",
+    "activity": "Histórico",
+    "overdueBody": "Esta locação deveria ter sido devolvida até {end}.",
+    "termsPending": "Aceitos na saída",
+    "termsVersionValue": "Versão {version}"
+  },
+  "inspections": {
+    "title": "Saída e devolução",
+    "none": "Nenhuma vistoria ainda",
+    "noneBody": "A vistoria de saída é feita no app de campo quando a máquina sai.",
+    "item": "Item",
+    "checkOut": "Saída",
+    "checkIn": "Devolução",
+    "pending": "Ainda não feita",
+    "performedAt": "Feita em",
+    "hourMeter": "Horímetro",
+    "odometerKm": "Hodômetro (km)",
+    "fuelPercent": "Combustível (%)",
+    "safetyBriefing": "Orientação de segurança dada",
+    "operator": "Operador",
+    "signature": "Assinatura",
+    "notes": "Observações",
+    "accessories": "Acessórios",
+    "accessoryLine": "{key}: {out} na saída, {back} na volta de {expected}",
+    "delta": "+{hours} h",
+    "photosOut": "Fotos da saída",
+    "photosIn": "Fotos da devolução"
+  },
+  "signatureStatus": {
+    "SIGNED": "Assinado",
+    "REFUSED": "Recusado",
+    "ABSENT": "Cliente ausente"
+  },
+  "damages": {
+    "title": "Avarias",
+    "empty": "Nenhuma avaria registrada",
+    "emptyBody": "As avarias encontradas na devolução aparecem aqui.",
+    "preExisting": "Já existente",
+    "held": "Bloqueia o encerramento",
+    "statement": "Cliente: {statement}",
+    "estimate": "Custo estimado: {amount}",
+    "openWorkOrder": "Abrir ordem de serviço do reparo",
+    "confirmNew": "Confirmar como avaria nova",
+    "dispute": "Marcar contestada",
+    "accept": "Aceitar",
+    "waive": "Isentar",
+    "createWorkOrder": "Criar ordem de serviço"
+  },
+  "damageZone": {
+    "FRONT": "Frente",
+    "REAR": "Traseira",
+    "LEFT": "Lado esquerdo",
+    "RIGHT": "Lado direito",
+    "TOP": "Parte de cima",
+    "CAB": "Cabine",
+    "ENGINE": "Motor",
+    "UNDERCARRIAGE": "Parte de baixo",
+    "TIRES_TRACKS": "Pneus ou esteiras",
+    "IMPLEMENT": "Implemento",
+    "OTHER": "Outro"
+  },
+  "damageSeverity": {
+    "MINOR": "Leve",
+    "MODERATE": "Moderada",
+    "SEVERE": "Grave"
+  },
+  "damageMatch": {
+    "MATCHED": "Já conhecida",
+    "NEW": "Nova",
+    "UNCLEAR": "Incerta"
+  },
+  "damageDispute": {
+    "NONE": "Sem contestação",
+    "DISPUTED": "Contestada",
+    "ACCEPTED": "Aceita",
+    "WAIVED": "Isenta"
+  },
+  "charges": {
+    "title": "Cobranças",
+    "type": "Tipo",
+    "description": "Descrição",
+    "quantity": "Quantidade",
+    "unitAmount": "Valor unitário",
+    "amount": "Valor",
+    "lineActions": "Ações da linha",
+    "empty": "Nenhuma cobrança ainda. Elas são calculadas na devolução.",
+    "auto": "Automática",
+    "deleteLine": "Excluir linha {description}",
+    "total": "Total",
+    "deposit": "Caução",
+    "balance": "Saldo a pagar",
+    "held": "{count, plural, one {# avaria está retida e bloqueia o encerramento.} other {# avarias estão retidas e bloqueiam o encerramento.}}",
+    "add": "Adicionar linha",
+    "discountHint": "Informe um valor positivo; ele é descontado do total.",
+    "recompute": "Recalcular cobranças",
+    "readOnly": "As cobranças podem ser editadas depois que a máquina for devolvida."
+  },
+  "chargeType": {
+    "BASE": "Locação",
+    "EXTRA_TIME": "Tempo extra",
+    "EXTRA_HOURS": "Horas extras",
+    "FUEL": "Combustível",
+    "DAMAGE": "Avaria",
+    "CLEANING": "Limpeza",
+    "DELIVERY": "Entrega",
+    "DISCOUNT": "Desconto",
+    "ACCESSORY": "Acessório",
+    "OTHER": "Outro"
+  },
+  "close": {
+    "title": "Encerrar locação",
+    "body": "Confira os totais e registre como o cliente pagou.",
+    "updatedBody": "Os valores mudaram. Confira os novos totais e confirme de novo.",
+    "confirm": "Encerrar locação",
+    "confirmUpdated": "Confirmar novos totais e encerrar",
+    "paymentNote": "Observação de pagamento",
+    "paymentNoteHint": "Por exemplo: pago por PIX na entrega.",
+    "heldBlocked": "{count, plural, one {# avaria ainda está retida. Aceite, isente ou resolva antes de encerrar.} other {# avarias ainda estão retidas. Aceite, isente ou resolva antes de encerrar.}}"
+  },
+  "cancel": {
+    "title": "Cancelar locação",
+    "body": "A máquina fica livre nessas datas. Não é possível desfazer.",
+    "reason": "Motivo"
+  },
+  "toast": {
+    "reserved": "Locação reservada",
+    "cancelled": "Locação cancelada",
+    "closed": "Locação encerrada",
+    "damageUpdated": "Avaria atualizada",
+    "workOrderCreated": "Ordem de serviço {number} criada",
+    "lineAdded": "Cobrança adicionada",
+    "lineDeleted": "Cobrança removida",
+    "recomputed": "Cobranças recalculadas"
+  },
+  "activity": {
+    "rental": {
+      "created": "Locação criada",
+      "updated": "Locação alterada",
+      "reserved": "Reservada",
+      "checkedOut": "Saída registrada",
+      "checkedIn": "Devolução registrada",
+      "cancelled": "Cancelada",
+      "extended": "Prorrogada",
+      "closed": "Encerrada",
+      "chargesRecomputed": "Cobranças recalculadas",
+      "termsOlderAccepted": "Termos antigos aceitos",
+      "damagesNotAcknowledged": "Avarias não reconhecidas pelo cliente"
+    },
+    "inspection": {
+      "submitted": "Vistoria enviada"
+    },
+    "damage": {
+      "updated": "Avaria atualizada",
+      "workOrderCreated": "Ordem de serviço da avaria criada",
+      "repaired": "Avaria reparada"
+    },
+    "update": "Alterada"
+  }
+}

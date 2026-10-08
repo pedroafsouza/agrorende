@@ -1,3 +1,8 @@
-import { notImplemented } from "@/server/withApi";
+import { rentalsCore } from "@/features/rentals/server";
+import { OFFICE, param, readJson, route, write } from "@/lib/core.server";
 
-export const POST = notImplemented("POST", "/api/v1/rentals/:id/extend");
+/** P1: body `{newPlannedEnd}`. */
+export const POST = route(OFFICE, async (request, ctx, params) => {
+  const body = (await readJson(request)) as Parameters<typeof rentalsCore.extendRental>[3];
+  return write(ctx, (tx) => rentalsCore.extendRental(tx, ctx, param(params, "id"), body));
+});

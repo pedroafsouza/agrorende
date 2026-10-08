@@ -1,1 +1,234 @@
-{}
+{
+  "overdue": "Overdue",
+  "yes": "Yes",
+  "no": "No",
+  "tabs": {
+    "ALL": "All",
+    "RESERVED": "Reserved",
+    "ACTIVE": "Active",
+    "OVERDUE": "Overdue",
+    "RETURNED": "Returned",
+    "CLOSED": "Closed"
+  },
+  "list": {
+    "title": "Rentals",
+    "tabsLabel": "Filter rentals by status",
+    "searchPlaceholder": "Search by number, customer or machine",
+    "emptyTitle": "No rentals yet",
+    "emptyBody": "Create a rental to reserve a machine for a customer."
+  },
+  "actions": {
+    "new": "New rental",
+    "saveDraft": "Save draft",
+    "createAndReserve": "Create and reserve",
+    "reserve": "Reserve",
+    "cancel": "Cancel rental",
+    "close": "Close rental",
+    "checkoutPdf": "Check-out PDF",
+    "checkinPdf": "Check-in PDF"
+  },
+  "fields": {
+    "number": "Number",
+    "asset": "Machine",
+    "customer": "Customer",
+    "status": "Status",
+    "period": "Period",
+    "total": "Total",
+    "plannedStart": "Start",
+    "plannedEnd": "End",
+    "site": "Site",
+    "documentLocale": "Document language",
+    "rate": "Rate",
+    "rateUnit": "Rate unit",
+    "deposit": "Deposit",
+    "deliveryMode": "Delivery",
+    "deliveryAddress": "Delivery address",
+    "notes": "Notes",
+    "taxId": "CPF/CNPJ",
+    "actualStart": "Checked out at",
+    "actualEnd": "Returned at",
+    "termsVersion": "Terms version",
+    "cancelReason": "Cancellation reason"
+  },
+  "documentLocale": {
+    "ptBR": "Portuguese (Brazil)",
+    "en": "English"
+  },
+  "deliveryMode": {
+    "PICKUP": "Customer picks up",
+    "DELIVERY": "We deliver"
+  },
+  "new": {
+    "title": "New rental",
+    "draftSaved": "Draft saved. Fix the items below and reserve again.",
+    "timeZoneHint": "Times use the organisation time zone.",
+    "eligibilityHint": "Choose a machine and both dates to check availability.",
+    "checking": "Checking availability…",
+    "eligible": "Machine available for these dates",
+    "switchToDelivery": "Switch to delivery",
+    "rateHint": "Leave empty to use the machine's rate.",
+    "assetDefault": "Machine default",
+    "reserveBlocked": "The rental could not be reserved. Your data is saved.",
+    "completeCustomer": "Complete customer details"
+  },
+  "detail": {
+    "title": "Rental {number}",
+    "summary": "Summary",
+    "activity": "History",
+    "overdueBody": "This rental should have been returned by {end}.",
+    "termsPending": "Accepted at check-out",
+    "termsVersionValue": "Version {version}"
+  },
+  "inspections": {
+    "title": "Check-out and check-in",
+    "none": "No inspection yet",
+    "noneBody": "The check-out inspection is done in the field app when the machine leaves.",
+    "item": "Item",
+    "checkOut": "Check-out",
+    "checkIn": "Check-in",
+    "pending": "Not done yet",
+    "performedAt": "Done at",
+    "hourMeter": "Hour meter",
+    "odometerKm": "Odometer (km)",
+    "fuelPercent": "Fuel (%)",
+    "safetyBriefing": "Safety briefing given",
+    "operator": "Operator",
+    "signature": "Signature",
+    "notes": "Notes",
+    "accessories": "Accessories",
+    "accessoryLine": "{key}: {out} out, {back} back of {expected}",
+    "delta": "+{hours} h",
+    "photosOut": "Check-out photos",
+    "photosIn": "Check-in photos"
+  },
+  "signatureStatus": {
+    "SIGNED": "Signed",
+    "REFUSED": "Refused",
+    "ABSENT": "Customer absent"
+  },
+  "damages": {
+    "title": "Damages",
+    "empty": "No damages recorded",
+    "emptyBody": "Damages found at check-in appear here.",
+    "preExisting": "Pre-existing",
+    "held": "Holds close",
+    "statement": "Customer: {statement}",
+    "estimate": "Estimated cost: {amount}",
+    "openWorkOrder": "Open repair work order",
+    "confirmNew": "Confirm as new damage",
+    "dispute": "Mark disputed",
+    "accept": "Accept",
+    "waive": "Waive",
+    "createWorkOrder": "Create work order"
+  },
+  "damageZone": {
+    "FRONT": "Front",
+    "REAR": "Rear",
+    "LEFT": "Left side",
+    "RIGHT": "Right side",
+    "TOP": "Top",
+    "CAB": "Cab",
+    "ENGINE": "Engine",
+    "UNDERCARRIAGE": "Undercarriage",
+    "TIRES_TRACKS": "Tires or tracks",
+    "IMPLEMENT": "Implement",
+    "OTHER": "Other"
+  },
+  "damageSeverity": {
+    "MINOR": "Minor",
+    "MODERATE": "Moderate",
+    "SEVERE": "Severe"
+  },
+  "damageMatch": {
+    "MATCHED": "Already known",
+    "NEW": "New",
+    "UNCLEAR": "Unclear"
+  },
+  "damageDispute": {
+    "NONE": "Not disputed",
+    "DISPUTED": "Disputed",
+    "ACCEPTED": "Accepted",
+    "WAIVED": "Waived"
+  },
+  "charges": {
+    "title": "Charges",
+    "type": "Type",
+    "description": "Description",
+    "quantity": "Quantity",
+    "unitAmount": "Unit amount",
+    "amount": "Amount",
+    "lineActions": "Line actions",
+    "empty": "No charges yet. They are computed at check-in.",
+    "auto": "Automatic",
+    "deleteLine": "Delete line {description}",
+    "total": "Total",
+    "deposit": "Deposit",
+    "balance": "Balance due",
+    "held": "{count, plural, one {# damage is held and blocks close.} other {# damages are held and block close.}}",
+    "add": "Add line",
+    "discountHint": "Enter a positive amount; it is subtracted from the total.",
+    "recompute": "Recompute charges",
+    "readOnly": "Charges can be edited once the machine is returned."
+  },
+  "chargeType": {
+    "BASE": "Rental",
+    "EXTRA_TIME": "Extra time",
+    "EXTRA_HOURS": "Extra hours",
+    "FUEL": "Fuel",
+    "DAMAGE": "Damage",
+    "CLEANING": "Cleaning",
+    "DELIVERY": "Delivery",
+    "DISCOUNT": "Discount",
+    "ACCESSORY": "Accessory",
+    "OTHER": "Other"
+  },
+  "close": {
+    "title": "Close rental",
+    "body": "Review the totals and record how the customer paid.",
+    "updatedBody": "The amounts changed. Review the new totals and confirm again.",
+    "confirm": "Close rental",
+    "confirmUpdated": "Confirm new totals and close",
+    "paymentNote": "Payment note",
+    "paymentNoteHint": "For example: paid by PIX on delivery.",
+    "heldBlocked": "{count, plural, one {# damage is still held. Accept, waive or resolve it before closing.} other {# damages are still held. Accept, waive or resolve them before closing.}}"
+  },
+  "cancel": {
+    "title": "Cancel rental",
+    "body": "The machine is released for these dates. This cannot be undone.",
+    "reason": "Reason"
+  },
+  "toast": {
+    "reserved": "Rental reserved",
+    "cancelled": "Rental cancelled",
+    "closed": "Rental closed",
+    "damageUpdated": "Damage updated",
+    "workOrderCreated": "Work order {number} created",
+    "lineAdded": "Charge added",
+    "lineDeleted": "Charge removed",
+    "recomputed": "Charges recomputed"
+  },
+  "activity": {
+    "rental": {
+      "created": "Rental created",
+      "updated": "Rental updated",
+      "reserved": "Reserved",
+      "checkedOut": "Checked out",
+      "checkedIn": "Checked in",
+      "cancelled": "Cancelled",
+      "extended": "Extended",
+      "closed": "Closed",
+      "chargesRecomputed": "Charges recomputed",
+      "termsOlderAccepted": "Older terms accepted",
+      "damagesNotAcknowledged": "Damages not acknowledged by customer"
+    },
+    "inspection": {
+      "submitted": "Inspection submitted"
+    },
+    "damage": {
+      "updated": "Damage updated",
+      "workOrderCreated": "Damage work order created",
+      "repaired": "Damage repaired"
+    },
+    "update": "Updated"
+  }
+}

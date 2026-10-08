@@ -1,0 +1,242 @@
+{
+  "list": {
+    "new": "New rental",
+    "pending": "Waiting to send",
+    "emptyTitle": "No rentals in progress",
+    "emptyBody": "Reservations and active rentals show up here, even without internet."
+  },
+  "section": {
+    "overdue": "Overdue ({count})",
+    "handOvers": "Today's hand-overs ({count})",
+    "returns": "Today's returns ({count})",
+    "active": "Active ({count})",
+    "upcoming": "Upcoming hand-overs ({count})",
+    "none": "Nothing here."
+  },
+  "row": {
+    "starts": "Hand-over {when}",
+    "ends": "Return {when}",
+    "noNumber": "Rental without number"
+  },
+  "status": {
+    "DRAFT": "Draft",
+    "RESERVED": "Reserved",
+    "ACTIVE": "Active",
+    "RETURNED": "Returned",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled",
+    "OVERDUE": "Overdue"
+  },
+  "detail": {
+    "backToList": "See rentals",
+    "backToRental": "Back to rental",
+    "callCustomer": "Call the customer",
+    "checkOut": "Hand over (check-out)",
+    "checkIn": "Receive return (check-in)",
+    "checkInNow": "Receive now",
+    "resume": "Continue inspection",
+    "customer": "Customer",
+    "taxId": "Tax ID (CPF/CNPJ)",
+    "machine": "Machine",
+    "dates": "Dates",
+    "planned": "Planned period",
+    "handedOver": "Handed over",
+    "returned": "Returned",
+    "returnedNote": "The office reviews the charges and closes the rental."
+  },
+  "match": {
+    "MATCHED": "Still the same",
+    "NEW": "New damage",
+    "UNCLEAR": "Not sure"
+  },
+  "signature": {
+    "SIGNED": "Signed",
+    "ABSENT": "Customer absent",
+    "REFUSED": "Customer refused to sign"
+  },
+  "zone": {
+    "FRONT": "Front",
+    "REAR": "Rear",
+    "LEFT": "Left side",
+    "RIGHT": "Right side",
+    "TOP": "Top",
+    "CAB": "Cab",
+    "ENGINE": "Engine",
+    "UNDERCARRIAGE": "Undercarriage",
+    "TIRES_TRACKS": "Tyres or tracks",
+    "IMPLEMENT": "Implement",
+    "OTHER": "Other"
+  },
+  "severity": {
+    "MINOR": "Minor",
+    "MODERATE": "Moderate",
+    "SEVERE": "Severe"
+  },
+  "charge": {
+    "BASE": "Base rate",
+    "EXTRA_TIME": "Extra time",
+    "EXTRA_HOURS": "Extra usage hours",
+    "FUEL": "Fuel",
+    "DAMAGE": "Damage",
+    "CLEANING": "Cleaning",
+    "DELIVERY": "Delivery",
+    "DISCOUNT": "Discount",
+    "ACCESSORY": "Missing accessory",
+    "OTHER": "Other"
+  },
+  "new": {
+    "asset": "Machine",
+    "customer": "Customer",
+    "noAssets": "No rentable machines on this device.",
+    "noCustomers": "No customers on this device.",
+    "startDate": "Hand-over date",
+    "dateHint": "Format YYYY-MM-DD",
+    "dateInvalid": "Invalid date. Use YYYY-MM-DD.",
+    "startHour": "Hand-over hour",
+    "days": "Rental days",
+    "rate": "Daily rate (optional)",
+    "perDay": "R$/day",
+    "deposit": "Deposit (optional)",
+    "documentLocale": "Document language",
+    "check": "Check availability",
+    "createReserve": "Create and reserve",
+    "eligible": "Machine available for the period",
+    "officeOnlyTitle": "Only the office creates rentals",
+    "officeOnlyBody": "Ask the office to create and reserve the rental. You handle the hand-over and the return.",
+    "offlineTitle": "No internet",
+    "offlineBody": "Creating a rental needs internet to check the machine's schedule. Try again when you have signal."
+  },
+  "widget": {
+    "title": "Today's rentals",
+    "loading": "Loading…",
+    "unavailable": "Tap to open rentals",
+    "handOvers": "Hand-overs",
+    "returns": "Returns",
+    "overdue": "Overdue"
+  },
+  "wizard": {
+    "done": "Done",
+    "todo": "To do",
+    "submitCheckout": "Finish hand-over",
+    "submitCheckin": "Finish return",
+    "step": {
+      "locale": "Language",
+      "identity": "Machine",
+      "walkaround": "Walkaround photos",
+      "readings": "Hour meter and fuel",
+      "checklist": "Checklist",
+      "damages": "Damages",
+      "accessories": "Accessories",
+      "briefing": "Safety briefing",
+      "terms": "Terms",
+      "signatures": "Signatures",
+      "review": "Review",
+      "charges": "Charges"
+    },
+    "locale": {
+      "hint": "Which language should the customer's inspection document use?",
+      "ptBR": "Portuguese",
+      "en": "English"
+    },
+    "identity": {
+      "expected": "Machine for this rental",
+      "scan": "Scan the machine QR",
+      "confirmVisual": "I checked the plate and number",
+      "confirmed": "Machine confirmed",
+      "undo": "Check again",
+      "required": "Confirm this is the right machine."
+    },
+    "walkaround": {
+      "hint": "Take one photo of each side and of the cab.",
+      "missing": "Walkaround photos are missing.",
+      "before": "At hand-over",
+      "after": "Now",
+      "notOnDevice": "Photo not on this device"
+    },
+    "readings": {
+      "baseline": "Last reading: {value} h",
+      "hourMeter": "Hour meter",
+      "hours": "h",
+      "hourMeterRequired": "Enter the hour meter.",
+      "hourMeterPhoto": "Take the hour meter photo.",
+      "fuel": "Fuel in the tank",
+      "fuelRequired": "Set the fuel level and take the gauge photo.",
+      "meterReplaced": "Hour meter was replaced",
+      "meterReplacedHint": "The photo of the new hour meter is the proof of replacement."
+    },
+    "checklist": {
+      "empty": "No checklist for this machine.",
+      "incomplete": "Answer every required checklist item.",
+      "photoTitle": "Item photo"
+    },
+    "damages": {
+      "openTitle": "Damages already recorded — check each one",
+      "noneOpen": "No damages recorded on this machine.",
+      "confirmOpen": "Check each recorded damage.",
+      "photoRequired": "Each damage needs a photo.",
+      "addNew": "Record new damage",
+      "addExisting": "Record damage found",
+      "newTitle": "Damage {n}",
+      "remove": "Remove",
+      "zone": "Where",
+      "severity": "Severity",
+      "description": "Description (optional)",
+      "match": "This damage is",
+      "cost": "Estimated cost",
+      "currency": "R$",
+      "costUnknown": "I don't know the cost",
+      "photo": "Damage photo"
+    },
+    "accessories": {
+      "empty": "No accessories on this rental.",
+      "expected": "Expected: {count}",
+      "present": "Quantity checked",
+      "note": "What happened?",
+      "invalid": "Invalid quantity.",
+      "noteRequired": "Explain the missing accessory."
+    },
+    "briefing": {
+      "hint": "Explain to the operator how to use the machine safely.",
+      "given": "Safety briefing given",
+      "operatorName": "Operator name",
+      "operatorDocument": "Operator document (optional)",
+      "notRequired": "Not needed for this rental.",
+      "required": "Give the briefing and enter the operator."
+    },
+    "terms": {
+      "version": "Terms version {version}",
+      "default": "The customer receives the machine in the condition recorded in this inspection and returns it on the agreed date.",
+      "accept": "Customer accepted the terms",
+      "required": "The customer must accept the terms."
+    },
+    "signatures": {
+      "customer": "Customer",
+      "agent": "Agent",
+      "signer": "Signed by {name}",
+      "redo": "Redo",
+      "refusedNote": "The refusal is recorded in the document with the reason.",
+      "agentRequired": "Your signature is missing.",
+      "customerRequired": "The customer's signature is missing.",
+      "reasonRequired": "Enter the reason for refusal."
+    },
+    "review": {
+      "ready": "Everything is ready to finish",
+      "fix": "Fix",
+      "machine": "Machine",
+      "customer": "Customer",
+      "hourMeter": "Hour meter",
+      "fuel": "Fuel",
+      "media": "Photos",
+      "mediaCount": "{count, plural, =0 {No photos} one {# photo} other {# photos}}",
+      "locale": "Document language"
+    },
+    "charges": {
+      "preview": "Charges preview",
+      "total": "Total",
+      "deposit": "Deposit received",
+      "balance": "Balance due",
+      "lateNote": "The return is past the due date; extra time is charged.",
+      "note": "Preview calculated on the device. The office confirms the final amount."
+    }
+  }
+}
