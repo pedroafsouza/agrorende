@@ -1,0 +1,392 @@
+{
+  "ACCOUNT_DISABLED": {
+    "title": "Your access was turned off",
+    "body": "Your items are still saved. See what is pending or send diagnostics.",
+    "action": "Ver itens pendentes"
+  },
+  "ACCOUNT_IN_OTHER_ORG": {
+    "title": "This account is already in another company",
+    "body": "Use another Google/Apple account or ask the other company to remove you.",
+    "action": "Use another account"
+  },
+  "ACCOUNT_NOT_INVITED": {
+    "title": "This account isn't in a team yet",
+    "body": "Ask your office for an invite or create your company. Email used: {email}.",
+    "action": "Tenho um código de convite"
+  },
+  "ALREADY_RESOLVED": {
+    "title": "This item was already resolved",
+    "body": "There is nothing else to do. We refreshed the queue for you.",
+    "action": "Try again"
+  },
+  "APP_UPDATE_REQUIRED": {
+    "title": "Update AgroRende",
+    "body": "The update keeps your local data. Then come back to send what is pending.",
+    "action": "Open store or reload update"
+  },
+  "ASSET_DOUBLE_BOOKED": {
+    "title": "Machine already booked then",
+    "body": "Your data is saved. Choose another time or another machine.",
+    "action": "change dates or asset"
+  },
+  "ASSET_HAS_CRITICAL_REPORT": {
+    "title": "This machine has a critical report",
+    "body": "The reservation is saved. Review the report and choose another machine or ask the office to review it.",
+    "action": "choose another asset/review report"
+  },
+  "ASSET_NOT_OPERATIONAL": {
+    "title": "Machine is not operational",
+    "body": "The reservation is saved. Choose an operational machine or ask the office to review it.",
+    "action": "choose another asset"
+  },
+  "ASSET_NOT_RENTABLE": {
+    "title": "This machine cannot go out now",
+    "body": "Your data is saved. Check the reason and choose another machine.",
+    "action": "pick another asset"
+  },
+  "ASSET_REPAIR_ALREADY_OPEN": {
+    "title": "A job is already open",
+    "body": "Nothing was lost. Attach this report to the existing job or create another job with a reason.",
+    "action": "Attach to the existing job"
+  },
+  "ASSIGNEE_UNAVAILABLE": {
+    "title": "Choose another assignee",
+    "body": "The work order was not changed. This user is inactive or has not joined yet.",
+    "action": "Try again"
+  },
+  "CONFLICT": {
+    "title": "This record changed",
+    "body": "Review the newer changes before saving. Your typed fields were kept.",
+    "action": "Try again"
+  },
+  "COST_SEASON_MISSING": {
+    "title": "Choose a season for this cost",
+    "body": "The cost was not posted. Pick a season to keep reports correct.",
+    "action": "Try again"
+  },
+  "CSV_ENCODING_UNSUPPORTED": {
+    "title": "Could not read this CSV",
+    "body": "No data was imported. Save it again and upload the file once more.",
+    "action": "Try again"
+  },
+  "CSV_FORMAT_UNSUPPORTED": {
+    "title": "Review the CSV format",
+    "body": "No rows were imported. Use the expected columns and numbers like 1.234,56 or 1234,56.",
+    "action": "Try again"
+  },
+  "CUSTOMER_INCOMPLETE": {
+    "title": "Customer details are missing",
+    "body": "The reservation is saved. Add tax ID and phone to continue.",
+    "action": "edit customer in place"
+  },
+  "DIAGNOSTICS_UNAVAILABLE": {
+    "title": "Diagnostic unavailable",
+    "body": "The queue is still safe. Ask for a new diagnostic if you still need to investigate.",
+    "action": "Try again"
+  },
+  "FORBIDDEN": {
+    "title": "You do not have access to this page",
+    "body": "Nothing changed. Go back to a page available for your role.",
+    "action": "Try again"
+  },
+  "GUARD_AFTER_PHOTO_REQUIRED": {
+    "title": "After-repair photo needed",
+    "body": "The job is saved. Take one final photo of the machine to complete it.",
+    "action": "Open camera with AFTER tag"
+  },
+  "GUARD_CHECKIN_INCOMPLETE": {
+    "title": "A return step is missing",
+    "body": "Your data is saved. Open the marked step and add what is missing.",
+    "action": "highlight missing step"
+  },
+  "GUARD_CHECKLIST_INCOMPLETE": {
+    "title": "Checklist incomplete",
+    "body": "The job is saved. Answer the highlighted items and add the required photos.",
+    "action": "focus first missing item"
+  },
+  "GUARD_CHECKOUT_INCOMPLETE": {
+    "title": "A hand-over step is missing",
+    "body": "Your data is saved. Open the marked step and add what is missing.",
+    "action": "highlight missing step"
+  },
+  "GUARD_RESOLUTION_REQUIRED": {
+    "title": "Add how this was resolved",
+    "body": "Nothing was closed yet. Choose the resolution and save the note.",
+    "action": "focus missing resolution fields"
+  },
+  "GUARD_SIGNATURE_REQUIRED": {
+    "title": "Signature required",
+    "body": "The inspection is saved. Collect the signature or record the allowed alternative.",
+    "action": "open signature step"
+  },
+  "IMPORT_ROW_ERRORS": {
+    "title": "Some rows need review",
+    "body": "Valid rows are not imported yet. Download the report, fix the file or confirm a partial import.",
+    "action": "Try again"
+  },
+  "INBOUND_RENTAL_INCOMPLETE": {
+    "title": "Partner rental details are missing",
+    "body": "The draft is saved. Complete partner, machine, and site to continue.",
+    "action": "complete partner/asset/site"
+  },
+  "INTERNAL": {
+    "title": "Sending paused for instability",
+    "body": "Your data is safe. The app will try again by itself.",
+    "action": "backoff"
+  },
+  "INVALID_CREDENTIALS": {
+    "title": "Email or password did not match",
+    "body": "Check the details and try again. Your drafts on this device stay saved.",
+    "action": "focus password"
+  },
+  "INVALID_TRANSITION": {
+    "title": "Step is no longer valid",
+    "body": "Your work stayed saved. Review the current state and try the next available step.",
+    "action": "View latest state"
+  },
+  "INVITE_EMAIL_MISMATCH": {
+    "title": "Use the invited email",
+    "body": "This {role} invite is for {emailHint}. Sign in with that account or ask for a new invite.",
+    "action": "Use that account"
+  },
+  "INVITE_EXPIRED": {
+    "title": "Invite expired or already used",
+    "body": "Ask whoever invited you for a new one.",
+    "action": "ask for a new invite"
+  },
+  "LAST_ADMIN": {
+    "title": "The company needs an Admin",
+    "body": "Make someone else an Admin first.",
+    "action": "promote another active person first"
+  },
+  "LOCATION_CONSENT_REQUIRED": {
+    "title": "Confirm location use",
+    "body": "The office sees your location only while you are on duty. Without accepting, you stay off duty and your data stays saved.",
+    "action": "Read and accept consent"
+  },
+  "MEDIA_LOCKED": {
+    "title": "File is already protected",
+    "body": "The original attachment stays saved. View the sent item or ask the office to review it.",
+    "action": "View sent item/read-only"
+  },
+  "MEDIA_NOT_IN_STORAGE": {
+    "title": "Original video is still uploading",
+    "body": "The original video is still being sent. We show the preview and let you know when it finishes.",
+    "action": "show thumbnail/poster"
+  },
+  "MEDIA_PART_MISSING": {
+    "title": "A piece of the file is missing",
+    "body": "The file is safe. We’ll resend only the missing part.",
+    "action": "request missing part URLs"
+  },
+  "MEDIA_TOO_LARGE": {
+    "title": "File is too large",
+    "body": "Your report is safe. Record a smaller video or send photos.",
+    "action": "Record/trim smaller"
+  },
+  "MEDIA_TYPE_MISMATCH": {
+    "title": "File format does not match",
+    "body": "Your report is safe. Choose another file or record again.",
+    "action": "Choose/record another"
+  },
+  "METER_READING_JUMP": {
+    "title": "Check the hour meter",
+    "body": "The job is saved. Fix the reading, confirm the jump or mark that the meter was replaced with a photo.",
+    "action": "Edit reading"
+  },
+  "METER_READING_LOWER": {
+    "title": "Check the hour meter",
+    "body": "The job is saved. Fix the reading, confirm the jump or mark that the meter was replaced with a photo.",
+    "action": "Edit reading"
+  },
+  "NOT_FOUND": {
+    "title": "Record not found",
+    "body": "It may have been removed or archived. Your filters and current work are safe.",
+    "action": "Try again"
+  },
+  "OAUTH_PROVIDER_ERROR": {
+    "title": "Google/Apple didn't respond",
+    "body": "Try again shortly or sign in with email and password.",
+    "action": "try provider sign-in again"
+  },
+  "OAUTH_STATE_EXPIRED": {
+    "title": "Sign-in took too long",
+    "body": "Tap to try again.",
+    "action": "start sign-in again"
+  },
+  "OFFICE_ROLE_REQUIRED": {
+    "title": "The office is for Admins and Managers",
+    "body": "Use the AgroRende app on your phone. Need access? Talk to your admin.",
+    "action": "store badges + QR"
+  },
+  "ORG_SUSPENDED": {
+    "title": "Company access paused",
+    "body": "Keep recording: everything stays saved and will send when the company is back.",
+    "action": "keep working read/offline"
+  },
+  "PASSWORD_CHANGE_REQUIRED": {
+    "title": "Change your password to continue",
+    "body": "This change needs internet only this time. What you already did stays saved.",
+    "action": "Change password in place"
+  },
+  "PLOT_GEOMETRY_INVALID": {
+    "title": "Review the plot on the map",
+    "body": "Nothing was saved. Adjust the area or mark the correct point.",
+    "action": "Try again"
+  },
+  "RATE_LIMITED": {
+    "title": "We’ll send in small groups",
+    "body": "Your data is safe. There are many requests right now, so the app will wait a little.",
+    "action": "respect `Retry-After`"
+  },
+  "RECORD_IN_USE": {
+    "title": "This record has history",
+    "body": "Nothing was deleted. Archive it to hide it without losing reports, costs or rentals.",
+    "action": "Archive instead"
+  },
+  "REFRESH_REUSED": {
+    "title": "Session protected",
+    "body": "For safety, sign in again on this device. Your local data stays saved.",
+    "action": "Sign in in place"
+  },
+  "RENTAL_ASSET_MISMATCH": {
+    "title": "This is not the rental machine",
+    "body": "The inspection is saved. Scan the right machine or type the code.",
+    "action": "type code or search asset"
+  },
+  "RENTAL_BILLING_DOCUMENT_FAILED": {
+    "title": "Billing is not ready",
+    "body": "The rental is saved. Try again or let the office finish it.",
+    "action": "Try again"
+  },
+  "RENTAL_CHARGES_UPDATED": {
+    "title": "Totals updated by the office",
+    "body": "Your inspection is saved. Review the updated amounts before closing.",
+    "action": "open charges review"
+  },
+  "RENTAL_DAMAGE_REPORT_FAILED": {
+    "title": "Damage saved for review",
+    "body": "The return is saved. The office will create the report if needed.",
+    "action": "idempotent retry"
+  },
+  "RENTAL_DATES_INVALID": {
+    "title": "Check the rental dates",
+    "body": "Your data is saved. Use a future date and an end after the start.",
+    "action": "focus date fields"
+  },
+  "RENTAL_NOT_ACTIVE": {
+    "title": "Rental is not active",
+    "body": "The return inspection was kept. The office was notified.",
+    "action": "Try again"
+  },
+  "RENTAL_NOT_FOUND": {
+    "title": "Rental not found",
+    "body": "Your local data stays saved. Refresh the list or ask the office for help.",
+    "action": "return to list/refresh"
+  },
+  "RENTAL_NOT_RESERVED": {
+    "title": "Rental is no longer reserved",
+    "body": "Your photos and signatures were kept. The office was notified.",
+    "action": "keep inspection locally"
+  },
+  "RENTAL_SITE_MISMATCH": {
+    "title": "Machine is at another site",
+    "body": "Your data is saved. Choose delivery, change the site, or ask the office.",
+    "action": "switch to delivery or pick current site"
+  },
+  "REPORT_LOCKED": {
+    "title": "Report is already protected",
+    "body": "Your report stays saved. View the history or ask the office to review it.",
+    "action": "View history/read-only"
+  },
+  "RESET_LINK_EXPIRED": {
+    "title": "Link expired",
+    "body": "Request a new link and try again. No device data was deleted.",
+    "action": "Solicitar novo link"
+  },
+  "RESET_REQUIRED": {
+    "title": "Your access changed",
+    "body": "We will update what you can see. What you already recorded stays saved.",
+    "action": "Refresh local data"
+  },
+  "SEASON_OVERLAP": {
+    "title": "Season dates overlap",
+    "body": "Nothing was saved. Adjust the dates or choose a different crop.",
+    "action": "Try again"
+  },
+  "STORAGE_FULL": {
+    "title": "File sending paused",
+    "body": "Your files are safe on this device. We’ll try again when there is room.",
+    "action": "retry with long backoff"
+  },
+  "TEMPLATE_VERSION_IN_USE": {
+    "title": "The new version applies from now on",
+    "body": "Work already in progress stays safe on the old version.",
+    "action": "Try again"
+  },
+  "TOKEN_EXPIRED": {
+    "title": "Sign in again to send",
+    "body": "You can keep working. Your items stay saved until you sign in.",
+    "action": "same-user sign-in in place with password"
+  },
+  "UNAUTHENTICATED": {
+    "title": "Sign in to continue",
+    "body": "Your drafts on this device stay saved. Sign in with the same account to send.",
+    "action": "Sign in"
+  },
+  "UNKNOWN_MUTATION": {
+    "title": "Update to send this action",
+    "body": "The action stayed saved. Update AgroRende and send diagnostics if it continues.",
+    "action": "Try again"
+  },
+  "UPLOAD_URL_EXPIRED": {
+    "title": "Sending took too long",
+    "body": "The file is safe. The app will ask for a new path and continue.",
+    "action": "request fresh URL"
+  },
+  "VALIDATION_FAILED": {
+    "title": "Update to send this item",
+    "body": "The item is saved. Update AgroRende and try sending again.",
+    "action": "store/OTA for schema updates"
+  },
+  "WO_ALREADY_VERIFIED": {
+    "title": "This job was already verified",
+    "body": "Your work is saved as extra evidence. The office will review it if needed.",
+    "action": "View verified job"
+  },
+  "WO_ASSET_RETIRED": {
+    "title": "Asset is retired",
+    "body": "The job is saved. The office received the review request; go back to Today for now.",
+    "action": "Office review queued"
+  },
+  "WO_ASSIGNEE_OFF_DUTY": {
+    "title": "Assignee is off duty",
+    "body": "The job was not lost. Choose someone on duty or confirm the assignment with a warning.",
+    "action": "Choose an on-duty person"
+  },
+  "WO_CANCELLED": {
+    "title": "This job was cancelled",
+    "body": "Your photos and notes are safe and were sent to the office as evidence.",
+    "action": "View read-only job"
+  },
+  "WO_DESTINATION_MISSING": {
+    "title": "Job location missing",
+    "body": "The job is saved. Call the customer or ask the office for the location.",
+    "action": "Call customer"
+  },
+  "WO_PART_NOT_IN_VAN_STOCK": {
+    "title": "Part is not in your van",
+    "body": "The job is saved. Use free text, put the job on hold for parts or request a transfer.",
+    "action": "Free-text part"
+  },
+  "WO_REASSIGNED": {
+    "title": "This job went to another assignee",
+    "body": "Your work is saved and the office was notified.",
+    "action": "View read-only job"
+  },
+  "WO_SAFETY_STOP_REQUIRED": {
+    "title": "Stop for safety",
+    "body": "The job is saved. Put it on hold for safety and notify the office.",
+    "action": "On hold · safety"
+  }
+}

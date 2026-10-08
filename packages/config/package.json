@@ -1,0 +1,32 @@
+{
+  "name": "@agrorende/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./eslint": "./eslint/index.js",
+    "./eslint/node": "./eslint/node.js",
+    "./eslint/react": "./eslint/react.js",
+    "./prettier": "./prettier/index.js",
+    "./tsconfig/base.json": "./tsconfig/base.json",
+    "./tsconfig/node.json": "./tsconfig/node.json",
+    "./tsconfig/react.json": "./tsconfig/react.json"
+  },
+  "files": ["eslint", "prettier", "tsconfig"],
+  "scripts": {
+    "lint": "eslint eslint prettier --max-warnings 0",
+    "typecheck": "echo \"@agrorende/config has no TypeScript sources\"",
+    "test": "echo \"@agrorende/config has no tests\""
+  },
+  "dependencies": {
+    "@eslint/js": "^10.0.1",
+    "eslint-plugin-i18next": "^6.1.5",
+    "globals": "^17.13.0",
+    "typescript-eslint": "^8.53.0"
+  },
+  "peerDependencies": {
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "typescript": "catalog:"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "workOrder": {
+    "assigned": {
+      "title": "Novo serviço atribuído",
+      "body": "{assetName} em {siteName}. Abra o serviço para ver o próximo passo."
+    },
+    "reassigned": {
+      "title": "Serviço atualizado",
+      "body": "{assetName} foi atribuído a {assigneeName}. Seus dados foram mantidos."
+    }
+  },
+  "sync": {
+    "attention": {
+      "title": "Sincronização precisa de atenção",
+      "body": "{count, plural, one {# item precisa de ação} other {# itens precisam de ação}}. Abra a Central de sincronização."
+    },
+    "sent": {
+      "title": "Dados enviados",
+      "body": "{count, plural, one {# item foi enviado} other {# itens foram enviados}} com segurança."
+    }
+  },
+  "rental": {
+    "returnDue": {
+      "title": "Devolução hoje",
+      "body": "{customerName} devolve {assetName} hoje. Abra a locação para preparar a vistoria."
+    }
+  }
+}

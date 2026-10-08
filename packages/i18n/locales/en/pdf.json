@@ -1,0 +1,21 @@
+{
+  "labels": {
+    "documentNumber": "Document {number}",
+    "generatedAt": "Generated on {date}",
+    "customer": "Customer",
+    "asset": "Machine",
+    "site": "Site",
+    "signature": "Signature",
+    "total": "Total"
+  },
+  "rental": {
+    "checkoutTitle": "Check-out document",
+    "checkinTitle": "Return document",
+    "chargesTitle": "Charges summary",
+    "keptCopy": "A copy stays available for the office and the customer."
+  },
+  "workOrder": {
+    "completionTitle": "Job receipt",
+    "evidenceCount": "{count, plural, one {# evidence item} other {# evidence items}} attached"
+  }
+}

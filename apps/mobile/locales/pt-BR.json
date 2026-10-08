@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "name": "AgroRende",
+    "cameraPermission": "Permita que o AgroRende use a câmera para registrar fotos, vídeos e códigos dos equipamentos.",
+    "microphonePermission": "Permita que o AgroRende use o microfone para gravar notas de voz.",
+    "locationAlwaysAndWhenInUsePermission": "Permita que o AgroRende acompanhe sua localização durante o serviço, mesmo em segundo plano.",
+    "locationAlwaysPermission": "Permita que o AgroRende acompanhe sua localização em segundo plano durante o serviço.",
+    "locationWhenInUsePermission": "Permita que o AgroRende use sua localização para encontrar máquinas, talhões e rotas.",
+    "notificationsPermission": "Permita que o AgroRende envie avisos de serviço, sincronização e locação.",
+    "photosPermission": "Permita que o AgroRende selecione fotos e vídeos para evidências."
+  }
+}

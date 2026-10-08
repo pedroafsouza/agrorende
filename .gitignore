@@ -1,5 +1,28 @@
 # Generated agent and local artifacts: review reports, screenshots, local media, caches.
 .data/
+.data/reviews/
+
+# Dependencies and build output
+node_modules/
+dist/
+.next/
+out/
+coverage/
+junit.xml
+*.tsbuildinfo
+
+# Expo prebuild output (continuous native generation, never committed)
+apps/mobile/android/
+apps/mobile/ios/
+.expo/
+
+# Local environment
+.env
+.env.local
+apps/*/.env
+apps/*/.env.local
+!.env.example
+!apps/mobile/.env.staging
 
 # OS noise
 .DS_Store

@@ -1,0 +1,28 @@
+{
+  "actions": {
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "learnMore": "Saiba mais",
+    "askOffice": "Falar com o escritório",
+    "updateApp": "Atualizar aplicativo"
+  },
+  "states": {
+    "loading": "Carregando…",
+    "emptyTitle": "Nada por aqui ainda",
+    "emptyBody": "Crie o primeiro item para começar.",
+    "offline": "Sem conexão — os dados podem estar desatualizados",
+    "saved": "Salvo"
+  },
+  "navigation": {
+    "home": "Início",
+    "jobs": "Serviços",
+    "rentals": "Locações",
+    "assets": "Máquinas",
+    "settings": "Ajustes"
+  },
+  "format": {
+    "updatedAt": "Atualizado {time}",
+    "count": "{count, plural, one {# item} other {# itens}}"
+  }
+}

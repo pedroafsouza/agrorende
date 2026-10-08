@@ -1,0 +1,21 @@
+{
+  "labels": {
+    "documentNumber": "Documento {number}",
+    "generatedAt": "Gerado em {date}",
+    "customer": "Cliente",
+    "asset": "Máquina",
+    "site": "Local",
+    "signature": "Assinatura",
+    "total": "Total"
+  },
+  "rental": {
+    "checkoutTitle": "Termo de entrega",
+    "checkinTitle": "Termo de devolução",
+    "chargesTitle": "Resumo de cobranças",
+    "keptCopy": "Uma cópia fica disponível para o escritório e para o cliente."
+  },
+  "workOrder": {
+    "completionTitle": "Comprovante de serviço",
+    "evidenceCount": "{count, plural, one {# evidência} other {# evidências}} anexadas"
+  }
+}

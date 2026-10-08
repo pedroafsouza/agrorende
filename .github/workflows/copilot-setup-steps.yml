@@ -1,0 +1,46 @@
+name: Copilot setup steps
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  copilot-setup-steps:
+    name: copilot-setup-steps
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      APP_ENV: ci
+      MONGODB_URI: mongodb://localhost:27017/?directConnection=true
+      MONGODB_DB: agrorende_copilot
+      REDIS_URL: redis://localhost:6379
+      MEDIA_DRIVER: local
+      MEDIA_ROOT: ./.data/media-copilot
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Chromium for Playwright
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Start local services
+        run: docker compose up -d --wait mongo redis
+
+      - name: Run migrations
+        run: pnpm db:migrate

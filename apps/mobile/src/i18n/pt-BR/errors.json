@@ -1,0 +1,942 @@
+{
+  "ACCOUNT_DELETE_PENDING_DATA": {
+    "title": "Há itens para enviar",
+    "body": "Envie agora ou salve uma cópia antes de excluir a conta. Nada será descartado neste aparelho.",
+    "action": "Enviar agora"
+  },
+  "ACCOUNT_DISABLED": {
+    "title": "Seu acesso foi desativado",
+    "body": "Seus itens continuam salvos. Veja o que está pendente ou envie um diagnóstico.",
+    "action": "Falar com o escritório"
+  },
+  "ACCOUNT_IN_OTHER_ORG": {
+    "title": "Esta conta já está em outra empresa",
+    "body": "Use outra conta Google/Apple ou peça para a outra empresa remover você.",
+    "action": "Corrigir agora"
+  },
+  "ACCOUNT_NOT_INVITED": {
+    "title": "Esta conta ainda não está em uma equipe",
+    "body": "Peça um convite ao escritório ou crie sua empresa. E-mail usado: {email}.",
+    "action": "Corrigir agora"
+  },
+  "ALERTS_COLLAPSED": {
+    "title": "Alertas parecidos agrupados",
+    "body": "Nenhum alerta foi escondido. Abra o grupo para resolver um por vez.",
+    "action": "Continuar com opção segura"
+  },
+  "ALREADY_RESOLVED": {
+    "title": "Este item já foi resolvido",
+    "body": "Nada mais precisa ser feito. Atualizamos a fila para você.",
+    "action": "Continuar com opção segura"
+  },
+  "APP_UPDATE_REQUIRED": {
+    "title": "Atualize o AgroRende",
+    "body": "A atualização mantém seus dados locais. Depois, volte para enviar o que está pendente.",
+    "action": "Atualizar aplicativo"
+  },
+  "ASSET_DOUBLE_BOOKED": {
+    "title": "Máquina já reservada nesse horário",
+    "body": "Seus dados estão salvos. Escolha outro horário ou outra máquina.",
+    "action": "Corrigir agora"
+  },
+  "ASSET_HAS_CRITICAL_REPORT": {
+    "title": "Há relato crítico nesta máquina",
+    "body": "A reserva está salva. Veja o relato e escolha outra máquina ou peça revisão ao escritório.",
+    "action": "Corrigir agora"
+  },
+  "ASSET_LOOKUP_UNAVAILABLE": {
+    "title": "Máquina não encontrada aqui",
+    "body": "Seu rascunho está salvo. Busque pelo código ou toque em Máquina não cadastrada.",
+    "action": "Escolher outro caminho"
+  },
+  "ASSET_NOT_OPERATIONAL": {
+    "title": "Máquina fora de operação",
+    "body": "A reserva está salva. Escolha uma máquina operacional ou peça revisão ao escritório.",
+    "action": "Corrigir agora"
+  },
+  "ASSET_NOT_RENTABLE": {
+    "title": "Esta máquina não pode sair agora",
+    "body": "Seus dados estão salvos. Veja o motivo e escolha outra máquina.",
+    "action": "Corrigir agora"
+  },
+  "ASSET_QR_OTHER_ORG": {
+    "title": "Etiqueta de outra empresa",
+    "body": "Procure a máquina pelo código ou nome no AgroRende. O rascunho continua salvo.",
+    "action": "Escolher outro caminho"
+  },
+  "ASSET_REPAIR_ALREADY_OPEN": {
+    "title": "Já existe uma OS aberta",
+    "body": "Nada foi perdido. Anexe este relato à OS existente ou crie outra OS com motivo.",
+    "action": "Escolher outro caminho"
+  },
+  "ASSIGNEE_UNAVAILABLE": {
+    "title": "Escolha outro responsável",
+    "body": "A OS não foi alterada. Este usuário está inativo ou ainda não entrou.",
+    "action": "Corrigir agora"
+  },
+  "BATTERY_BACKGROUND_RESTRICTED": {
+    "title": "O celular está limitando o app",
+    "body": "Abra as configurações para manter envios e localização funcionando. O que já foi feito está salvo.",
+    "action": "Abrir bateria"
+  },
+  "BROWSER_OFFLINE": {
+    "title": "Sem conexão",
+    "body": "Você pode continuar preenchendo. Os dados ficam nesta tela até a conexão voltar.",
+    "action": "Continuar com opção segura"
+  },
+  "BULK_PARTIAL_FAILURE": {
+    "title": "Parte da ação foi concluída",
+    "body": "Os itens concluídos estão seguros. Revise os itens com aviso e tente só eles de novo.",
+    "action": "Tentar novamente"
+  },
+  "CAPTIVE_PORTAL": {
+    "title": "O Wi‑Fi pede login",
+    "body": "Seus dados estão guardados. Abra a página do Wi‑Fi ou use dados móveis para enviar.",
+    "action": "Escolher outro caminho"
+  },
+  "CONFLICT": {
+    "title": "Este registro mudou",
+    "body": "Compare as alterações antes de salvar. Seus campos digitados foram mantidos.",
+    "action": "Corrigir agora"
+  },
+  "COST_SEASON_MISSING": {
+    "title": "Defina uma safra para este custo",
+    "body": "O custo não foi lançado. Escolha uma safra para manter os relatórios corretos.",
+    "action": "Corrigir agora"
+  },
+  "CSV_ENCODING_UNSUPPORTED": {
+    "title": "Não consegui ler este CSV",
+    "body": "Nenhum dado foi importado. Salve novamente e envie o arquivo de novo.",
+    "action": "Corrigir agora"
+  },
+  "CSV_FORMAT_UNSUPPORTED": {
+    "title": "Revise o formato do CSV",
+    "body": "Nenhuma linha foi importada. Use colunas esperadas e números como 1.234,56 ou 1234,56.",
+    "action": "Corrigir agora"
+  },
+  "CUSTOMER_INCOMPLETE": {
+    "title": "Falta dado do cliente",
+    "body": "A reserva está salva. Informe CPF/CNPJ e telefone para continuar.",
+    "action": "Corrigir agora"
+  },
+  "DEVICE_CLOCK_SKEWED": {
+    "title": "Horário do celular diferente",
+    "body": "Ajuste para horário automático quando puder. Seus registros ficam salvos com segurança.",
+    "action": "Abrir data e hora"
+  },
+  "DEVICE_MEMORY_LOW": {
+    "title": "O celular fechou a etapa",
+    "body": "Reabrimos de onde parou. O rascunho e os arquivos já salvos estão seguros.",
+    "action": "Continuar rascunho"
+  },
+  "DEVICE_STORAGE_FULL": {
+    "title": "Pouco espaço no aparelho",
+    "body": "Libere espaço para continuar. O rascunho e os arquivos já salvos estão seguros.",
+    "action": "Abrir armazenamento"
+  },
+  "DEVICE_UNSYNCED_STALE": {
+    "title": "Nada enviado há mais de um dia",
+    "body": "Seus dados estão guardados neste aparelho. Tente enviar agora ou mande um diagnóstico.",
+    "action": "Enviar agora"
+  },
+  "DIAGNOSTICS_SEND_FAILED": {
+    "title": "Diagnóstico guardado",
+    "body": "Vamos tentar enviar depois. Ele não inclui conteúdo dos formulários nem dados pessoais.",
+    "action": "Aguardar envio"
+  },
+  "DIAGNOSTICS_UNAVAILABLE": {
+    "title": "Diagnóstico indisponível",
+    "body": "A fila continua segura. Peça um novo diagnóstico se ainda precisar investigar.",
+    "action": "Continuar com opção segura"
+  },
+  "EXPORT_JOB_STARTED": {
+    "title": "Estamos preparando o arquivo",
+    "body": "Você pode continuar trabalhando. Avisaremos quando o CSV estiver pronto.",
+    "action": "Ver exportação"
+  },
+  "FIRST_LOGIN_ONLINE_REQUIRED": {
+    "title": "Entre uma vez com internet",
+    "body": "Depois de baixar os dados pela primeira vez, o AgroRende abre sem sinal. Nada foi perdido.",
+    "action": "Abrir configurações"
+  },
+  "FIRST_SYNC_LARGE": {
+    "title": "Baixando dados para trabalhar offline",
+    "body": "Seus dados locais estão seguros. Mantenha o app aberto; isso pode demorar na primeira vez.",
+    "action": "Acompanhar envio"
+  },
+  "FORBIDDEN": {
+    "title": "Você não tem acesso a esta página",
+    "body": "Nada foi alterado. Volte para uma página disponível para o seu perfil.",
+    "action": "Escolher outro caminho"
+  },
+  "GPS_UNAVAILABLE": {
+    "title": "Sem localização agora",
+    "body": "Escolha a fazenda ou busque a máquina pelo código. Seu trabalho fica salvo.",
+    "action": "Escolher outro caminho"
+  },
+  "GUARD_AFTER_PHOTO_REQUIRED": {
+    "title": "Falta foto depois do reparo",
+    "body": "A OS está salva. Tire uma foto final da máquina para concluir.",
+    "action": "Corrigir agora"
+  },
+  "GUARD_CHECKIN_INCOMPLETE": {
+    "title": "Falta uma etapa da devolução",
+    "body": "Seus dados estão salvos. Abra a etapa marcada e complete o que falta.",
+    "action": "Corrigir agora"
+  },
+  "GUARD_CHECKLIST_INCOMPLETE": {
+    "title": "Checklist incompleto",
+    "body": "A OS está salva. Responda os itens destacados e adicione as fotos pedidas.",
+    "action": "Corrigir agora"
+  },
+  "GUARD_CHECKOUT_INCOMPLETE": {
+    "title": "Falta uma etapa da entrega",
+    "body": "Seus dados estão salvos. Abra a etapa marcada e complete o que falta.",
+    "action": "Corrigir agora"
+  },
+  "GUARD_RESOLUTION_REQUIRED": {
+    "title": "Informe como foi resolvido",
+    "body": "Nada foi fechado ainda. Escolha a resolução e salve a observação.",
+    "action": "Corrigir agora"
+  },
+  "GUARD_SIGNATURE_REQUIRED": {
+    "title": "Assinatura obrigatória",
+    "body": "A vistoria está salva. Colete a assinatura ou registre a alternativa permitida.",
+    "action": "Corrigir agora"
+  },
+  "IMPORT_ROW_ERRORS": {
+    "title": "Algumas linhas precisam de revisão",
+    "body": "As linhas válidas ainda não foram importadas. Baixe o relatório, corrija ou confirme a importação parcial.",
+    "action": "Corrigir agora"
+  },
+  "INBOUND_RENTAL_INCOMPLETE": {
+    "title": "Falta dado da locação de parceiro",
+    "body": "O rascunho está salvo. Complete parceiro, máquina e local para continuar.",
+    "action": "Corrigir agora"
+  },
+  "INTERNAL": {
+    "title": "Envio pausado por instabilidade",
+    "body": "Seus dados estão guardados. O app vai tentar de novo sozinho.",
+    "action": "Acompanhar envio"
+  },
+  "INVALID_CREDENTIALS": {
+    "title": "E-mail ou senha não conferem",
+    "body": "Confira os dados e tente de novo. Seus rascunhos deste aparelho continuam salvos.",
+    "action": "Tentar novamente"
+  },
+  "INVALID_LOCALE_NUMBER": {
+    "title": "Número não entendido",
+    "body": "Use vírgula ou ponto para decimal, por exemplo 12,5. O valor digitado fica na tela.",
+    "action": "Corrigir agora"
+  },
+  "INVALID_TRANSITION": {
+    "title": "Etapa não vale mais",
+    "body": "Seu trabalho ficou salvo. Veja o estado atual e tente o próximo passo disponível.",
+    "action": "Continuar com opção segura"
+  },
+  "INVITE_EMAIL_MISMATCH": {
+    "title": "Use o e-mail do convite",
+    "body": "Este convite de {role} é para {emailHint}. Entre com essa conta ou peça outro convite.",
+    "action": "Corrigir agora"
+  },
+  "INVITE_EXPIRED": {
+    "title": "Convite vencido ou já usado",
+    "body": "Peça um convite novo a quem te chamou.",
+    "action": "Pedir novo convite"
+  },
+  "JS_DISABLED": {
+    "title": "Você pode ler sem JavaScript",
+    "body": "Os links principais continuam funcionando. Alguns atalhos ficam mais simples.",
+    "action": "Continuar com opção segura"
+  },
+  "LAST_ADMIN": {
+    "title": "A empresa precisa de um Administrador",
+    "body": "Promova outra pessoa a Administrador antes.",
+    "action": "Corrigir agora"
+  },
+  "LOCALE_FALLBACK_USED": {
+    "title": "Idioma ajustado",
+    "body": "Mostramos o melhor idioma disponível no aparelho. Seus dados não mudam.",
+    "action": "Continuar com opção segura"
+  },
+  "LOCAL_DB_REPAIR_REQUIRED": {
+    "title": "Precisamos reparar os dados do app",
+    "body": "Não apague o app. Tente reparar, envie diagnóstico ou salve uma cópia protegida quando ela puder ser lida.",
+    "action": "Reparar agora"
+  },
+  "LOCAL_MEDIA_CORRUPT": {
+    "title": "Arquivo não abre",
+    "body": "Seu relato está guardado. Grave outra vez ou escolha outro arquivo.",
+    "action": "Escolher outro caminho"
+  },
+  "LOCAL_MEDIA_MISSING": {
+    "title": "Arquivo saiu do aparelho",
+    "body": "Seu relato está guardado. Escolha o arquivo de novo ou remova só este anexo.",
+    "action": "Escolher outro caminho"
+  },
+  "LOCAL_MIGRATION_FAILED": {
+    "title": "Atualização local não terminou",
+    "body": "Seus dados estão guardados. Tente de novo; não desinstale o app.",
+    "action": "Tentar atualizar de novo"
+  },
+  "LOCATION_BUFFER_TRIMMED": {
+    "title": "Muitas posições guardadas",
+    "body": "Seu trabalho está seguro. O app mantém as posições mais recentes e avisa a central se faltar trecho.",
+    "action": "Acompanhar envio"
+  },
+  "LOCATION_CONSENT_REQUIRED": {
+    "title": "Confirme o uso da localização",
+    "body": "A central só vê sua localização enquanto você estiver em serviço. Sem aceitar, você fica fora de serviço e seus dados ficam salvos.",
+    "action": "Ler e aceitar"
+  },
+  "LOGOUT_PENDING_DATA": {
+    "title": "Há itens para enviar",
+    "body": "Eles ficam salvos neste aparelho e só serão enviados quando você entrar de novo. Nada será apagado.",
+    "action": "Continuar conectado"
+  },
+  "MAIL_CLIENT_UNAVAILABLE": {
+    "title": "E-mail não abriu",
+    "body": "Copie o e-mail público da AgroRende e escreva pelo app que preferir. Nada foi enviado ainda.",
+    "action": "Copiar contato"
+  },
+  "MAP_TILES_UNAVAILABLE": {
+    "title": "Mapa indisponível agora",
+    "body": "A lista e os alertas continuam funcionando. Seus dados estão seguros.",
+    "action": "Tentar novamente"
+  },
+  "MEDIA_CAPTURE_FAILED": {
+    "title": "Não consegui gravar agora",
+    "body": "Seu formulário está guardado. Tente de novo ou escolha um arquivo da galeria.",
+    "action": "Tentar novamente"
+  },
+  "MEDIA_DEVICE_STORAGE_LOW": {
+    "title": "Sem espaço para gravar",
+    "body": "Seu formulário está guardado. Libere espaço ou continue com fotos já salvas.",
+    "action": "Abrir armazenamento"
+  },
+  "MEDIA_LOCKED": {
+    "title": "Arquivo já está protegido",
+    "body": "O anexo original continua salvo. Veja o item enviado ou peça revisão à central.",
+    "action": "Continuar com opção segura"
+  },
+  "MEDIA_NOT_IN_STORAGE": {
+    "title": "Vídeo original ainda enviando",
+    "body": "O vídeo original ainda está sendo enviado. Mostramos a prévia e avisamos quando terminar.",
+    "action": "Enviar diagnóstico"
+  },
+  "MEDIA_PART_MISSING": {
+    "title": "Faltou um pedaço do arquivo",
+    "body": "O arquivo está guardado. Vamos reenviar só a parte que faltou.",
+    "action": "Acompanhar envio"
+  },
+  "MEDIA_PENDING_STALE": {
+    "title": "Anexo parado há mais de um dia",
+    "body": "Seu relato está guardado. Tente reenviar; se continuar, a central verá o pedido de ajuda.",
+    "action": "Reenviar anexo"
+  },
+  "MEDIA_TOO_LARGE": {
+    "title": "Arquivo grande demais",
+    "body": "Seu relato está guardado. Grave um vídeo menor ou mande fotos.",
+    "action": "Diminuir arquivo"
+  },
+  "MEDIA_TYPE_MISMATCH": {
+    "title": "Formato do arquivo não combina",
+    "body": "Seu relato está guardado. Escolha outro arquivo ou grave de novo.",
+    "action": "Escolher outro caminho"
+  },
+  "METER_READING_JUMP": {
+    "title": "Confira o horímetro",
+    "body": "A OS está salva. Corrija a leitura, confirme o salto ou marque troca de medidor com foto.",
+    "action": "Editar leitura"
+  },
+  "METER_READING_LOWER": {
+    "title": "Confira o horímetro",
+    "body": "A OS está salva. Corrija a leitura, confirme o salto ou marque troca de medidor com foto.",
+    "action": "Editar leitura"
+  },
+  "NAV_APP_MISSING": {
+    "title": "Nenhum app de mapas encontrado",
+    "body": "A OS está salva. Copie as coordenadas ou abra no navegador.",
+    "action": "Copiar coordenadas"
+  },
+  "NAV_DESTINATION_DOUBTFUL": {
+    "title": "Parece ser o local errado",
+    "body": "A OS está salva. Use as coordenadas, ligue para o cliente ou avise a central.",
+    "action": "Escolher outro caminho"
+  },
+  "NETWORK_RESTRICTED": {
+    "title": "A conexão está bloqueada",
+    "body": "Você pode continuar trabalhando. Libere dados móveis para o app ou use outra rede para enviar.",
+    "action": "Abrir configurações"
+  },
+  "NOT_FOUND": {
+    "title": "Registro não encontrado",
+    "body": "Ele pode ter sido removido ou arquivado. Seus filtros e trabalho atual estão seguros.",
+    "action": "Escolher outro caminho"
+  },
+  "OAUTH_CANCELLED": {
+    "title": "Login cancelado",
+    "body": "Escolha uma forma de entrar.",
+    "action": "Escolher método de entrada"
+  },
+  "OAUTH_PROVIDER_ERROR": {
+    "title": "Google/Apple não respondeu",
+    "body": "Tente de novo em instantes ou entre com e-mail e senha.",
+    "action": "Tentar entrar de novo"
+  },
+  "OAUTH_STATE_EXPIRED": {
+    "title": "O login demorou demais",
+    "body": "Toque para tentar de novo.",
+    "action": "Começar entrada de novo"
+  },
+  "OFFICE_CONTACT_MISSING": {
+    "title": "Contato da central não configurado",
+    "body": "Use Enviar diagnóstico ou fale pelo canal que sua equipe já usa. Seus dados estão salvos.",
+    "action": "Enviar diagnóstico"
+  },
+  "OFFICE_ROLE_REQUIRED": {
+    "title": "O escritório é para Administrador e Gestor",
+    "body": "Use o app AgroRende no celular. Precisa de acesso? Fale com o administrador.",
+    "action": "Continuar com opção segura"
+  },
+  "OFFLINE_SEARCH_NO_RESULTS": {
+    "title": "Nada encontrado neste aparelho",
+    "body": "Revise o texto ou use Recentes. Os dados que você já colocou continuam salvos.",
+    "action": "Corrigir agora"
+  },
+  "OPERATOR_STALE": {
+    "title": "Localização desatualizada",
+    "body": "Mostramos a última posição conhecida. O trabalho do operador continua seguro.",
+    "action": "Continuar com opção segura"
+  },
+  "OPS_NO_LIVE_OPERATORS": {
+    "title": "Ninguém aparece ao vivo agora",
+    "body": "Os trabalhos e alertas continuam visíveis. Quando alguém entrar em serviço, o mapa atualiza.",
+    "action": "Continuar com opção segura"
+  },
+  "ORG_SUSPENDED": {
+    "title": "Acesso da empresa pausado",
+    "body": "Continue registrando: tudo fica salvo e será enviado quando a empresa voltar.",
+    "action": "Continuar com opção segura"
+  },
+  "OTA_UPDATE_FAILED": {
+    "title": "Atualização não instalou",
+    "body": "Tente de novo ou continue na versão atual por enquanto. Seus dados estão seguros.",
+    "action": "Tentar novamente"
+  },
+  "OUTBOX_BACKLOG": {
+    "title": "Muitos itens esperando envio",
+    "body": "Seus dados estão guardados neste aparelho. O app vai enviar em partes; deixe aberto quando tiver sinal.",
+    "action": "Acompanhar envio"
+  },
+  "OUTBOX_ITEM_STUCK": {
+    "title": "Um item está parado",
+    "body": "Seus dados estão guardados. Tente enviar de novo ou mande um diagnóstico para a central.",
+    "action": "Tentar enviar de novo"
+  },
+  "PASSWORD_CHANGE_REQUIRED": {
+    "title": "Troque a senha para continuar",
+    "body": "A troca precisa de internet só desta vez. O que você já fez fica salvo.",
+    "action": "Trocar senha"
+  },
+  "PDF_SHARE_UNAVAILABLE": {
+    "title": "Relatório ainda não pode ser compartilhado",
+    "body": "Ele ficará disponível depois do envio ou quando houver um app para compartilhar. Os dados estão salvos.",
+    "action": "Continuar com opção segura"
+  },
+  "PERMISSION_LOCATION_LIMITED": {
+    "title": "Localização limitada",
+    "body": "Você pode liberar a localização exata ou escolher a fazenda manualmente. Seus registros continuam salvos.",
+    "action": "Abrir localização"
+  },
+  "PERMISSION_MEDIA_BLOCKED": {
+    "title": "Câmera ou áudio bloqueado",
+    "body": "Você pode liberar nas configurações ou continuar de outro jeito. O rascunho está salvo.",
+    "action": "Abrir configurações"
+  },
+  "PERMISSION_NOTIFICATIONS_OFF": {
+    "title": "Alertas desligados",
+    "body": "Você ainda vê seus serviços ao abrir o app. Ative os alertas para não perder mudanças.",
+    "action": "Abrir notificações"
+  },
+  "PLOT_GEOMETRY_INVALID": {
+    "title": "Revise o talhão no mapa",
+    "body": "Nada foi salvo. Ajuste a área ou marque o ponto correto.",
+    "action": "Corrigir agora"
+  },
+  "PULL_FAILED": {
+    "title": "Novidades ainda não chegaram",
+    "body": "Seus dados enviados estão seguros. Você pode continuar com a última cópia salva.",
+    "action": "Atualizar dados"
+  },
+  "PUSH_PARTIAL_RETRY": {
+    "title": "Alguns itens ainda estão na fila",
+    "body": "O que já foi enviado está seguro. O restante ficou guardado e vai continuar na ordem certa.",
+    "action": "Acompanhar envio"
+  },
+  "RATE_LIMITED": {
+    "title": "Vamos enviar em pequenos grupos",
+    "body": "Seus dados estão guardados. Há muitos pedidos agora, então o app vai esperar um pouco.",
+    "action": "Acompanhar envio"
+  },
+  "REALTIME_DISCONNECTED": {
+    "title": "Atualizações ao vivo pausadas",
+    "body": "Mostramos os últimos dados recebidos. A reconexão é automática.",
+    "action": "Acompanhar envio"
+  },
+  "RECORD_IN_USE": {
+    "title": "Este registro tem histórico",
+    "body": "Nada foi apagado. Arquive para esconder sem perder relatórios, custos ou locações.",
+    "action": "Escolher outro caminho"
+  },
+  "REFRESH_REUSED": {
+    "title": "Sessão protegida",
+    "body": "Por segurança, entre de novo neste aparelho. Seus dados locais continuam salvos.",
+    "action": "Entrar de novo"
+  },
+  "RENTAL_ACCESSORIES_MISSING": {
+    "title": "Confira os acessórios",
+    "body": "A vistoria está salva. Ajuste a quantidade ou registre o que não será entregue.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_ACCESSORY_RETURN_MISSING": {
+    "title": "Confira os itens da devolução",
+    "body": "A devolução está salva. Marque o item faltante e adicione foto ou observação.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_ASSET_MISMATCH": {
+    "title": "Esta não é a máquina da locação",
+    "body": "A vistoria está salva. Escaneie a máquina correta ou digite o código.",
+    "action": "Escolher outro caminho"
+  },
+  "RENTAL_BILLING_DOCUMENT_FAILED": {
+    "title": "Cobrança não ficou pronta",
+    "body": "A locação está salva. Tente de novo ou deixe para o escritório concluir.",
+    "action": "Tentar novamente"
+  },
+  "RENTAL_BREAKDOWN_REPORTED": {
+    "title": "Máquina com problema na locação",
+    "body": "O relato será ligado à locação. Registre fotos para o escritório agir.",
+    "action": "Escolher outro caminho"
+  },
+  "RENTAL_CHARGES_UPDATED": {
+    "title": "Valores atualizados pela central",
+    "body": "Sua vistoria está salva. Revise os valores atualizados antes de fechar.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DAMAGE_COST_UNKNOWN": {
+    "title": "Valor do dano em aberto",
+    "body": "A vistoria está salva. Você pode marcar sem valor e o escritório revisa depois.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DAMAGE_DISPUTED": {
+    "title": "Dano contestado",
+    "body": "A vistoria está salva. Registre a versão do cliente e continue sem finalizar a cobrança.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DAMAGE_MATCH_UNCLEAR": {
+    "title": "Não deu para comparar o dano",
+    "body": "A vistoria está salva. Tire outra foto ou marque como dúvida para revisão.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DAMAGE_REPORT_FAILED": {
+    "title": "Dano guardado para revisão",
+    "body": "A devolução está salva. O escritório vai criar o relato se precisar.",
+    "action": "Acompanhar envio"
+  },
+  "RENTAL_DATES_INVALID": {
+    "title": "Revise as datas da locação",
+    "body": "Seus dados estão salvos. Use uma data futura e um fim depois do início.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DIFFERENT_AGENT_CHECKIN": {
+    "title": "Devolução por outra pessoa",
+    "body": "A locação está salva. Confira a vistoria de entrega antes de continuar.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_DOCUMENT_UNAVAILABLE": {
+    "title": "Comprovante indisponível agora",
+    "body": "A entrega foi salva. Tente de novo ou compartilhe quando o documento ficar pronto.",
+    "action": "Tentar novamente"
+  },
+  "RENTAL_DRAFT_INTERRUPTED": {
+    "title": "Entrega salva como rascunho",
+    "body": "Você pode continuar do mesmo passo. Nada foi perdido.",
+    "action": "Continuar rascunho"
+  },
+  "RENTAL_EARLY_RETURN": {
+    "title": "Devolução antecipada",
+    "body": "A vistoria está salva. Confira as cobranças antes de confirmar.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_FUEL_READING_INVALID": {
+    "title": "Confira o combustível",
+    "body": "A vistoria está salva. Ajuste o nível ou tire outra foto do marcador.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_LOCATION_CHANGED": {
+    "title": "Local da máquina mudou",
+    "body": "A locação está salva. Atualize o local atual ou avise o escritório.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_NOT_ACTIVE": {
+    "title": "Locação não está ativa",
+    "body": "A vistoria de devolução foi guardada. O escritório foi avisado.",
+    "action": "Enviar para a central"
+  },
+  "RENTAL_NOT_FOUND": {
+    "title": "Locação não encontrada",
+    "body": "Seus dados locais continuam salvos. Atualize a lista ou peça ajuda ao escritório.",
+    "action": "Continuar com opção segura"
+  },
+  "RENTAL_NOT_RESERVED": {
+    "title": "Locação não está mais reservada",
+    "body": "Suas fotos e assinaturas foram guardadas. O escritório foi avisado.",
+    "action": "Enviar para a central"
+  },
+  "RENTAL_OVERDUE": {
+    "title": "Locação em atraso",
+    "body": "Os dados estão salvos. Faça a devolução agora ou combine o próximo passo.",
+    "action": "Escolher outro caminho"
+  },
+  "RENTAL_PHOTO_UNUSABLE": {
+    "title": "Refaça esta foto",
+    "body": "Sua vistoria está salva. Tire uma foto clara desta parte da máquina.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_SAFETY_BRIEFING_MISSING": {
+    "title": "Falta a orientação de segurança",
+    "body": "A entrega está salva. Confirme a orientação e informe o operador.",
+    "action": "Corrigir agora"
+  },
+  "RENTAL_SIGNER_UNAVAILABLE": {
+    "title": "Assinatura pendente na entrega",
+    "body": "A entrega fica salva como rascunho até o cliente ou representante assinar.",
+    "action": "Tentar novamente"
+  },
+  "RENTAL_SITE_MISMATCH": {
+    "title": "Máquina em outro local",
+    "body": "Seus dados estão salvos. Escolha entrega, ajuste o local ou peça ajuda ao escritório.",
+    "action": "Escolher outro caminho"
+  },
+  "RENTAL_TERMS_OLDER_ACCEPTED": {
+    "title": "Termos antigos assinados",
+    "body": "A entrega está salva com a versão assinada. A central recebeu um aviso para revisar.",
+    "action": "Enviar para a central"
+  },
+  "REPORT_ASSET_ATTENTION": {
+    "title": "Vamos receber o relato com aviso",
+    "body": "Seu rascunho está salvo. O relato será aceito e a central verá a situação da máquina.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_ASSET_BUSY": {
+    "title": "A central vai tratar com prioridade",
+    "body": "Seu relato foi salvo. A máquina já está em locação ou reparo, e a central foi avisada.",
+    "action": "Enviar para a central"
+  },
+  "REPORT_DETAILS_INCOMPLETE": {
+    "title": "Complete os detalhes do relato",
+    "body": "Seu rascunho está salvo. Escolha a categoria e preencha os campos destacados.",
+    "action": "Corrigir agora"
+  },
+  "REPORT_DRAFT_RESTORED": {
+    "title": "Relato recuperado",
+    "body": "Está tudo salvo. Continue de onde parou ou revise antes de enviar.",
+    "action": "Continuar rascunho"
+  },
+  "REPORT_DUPLICATE_HINT": {
+    "title": "Já existe relato para esta máquina",
+    "body": "Seu rascunho está salvo. Adicione informações ao relato existente ou continue com um novo.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_DUPLICATE_MERGED": {
+    "title": "Relato juntado a outro",
+    "body": "Seu relato está seguro. A central aproveitou suas fotos e notas no atendimento existente.",
+    "action": "Continuar com opção segura"
+  },
+  "REPORT_EVIDENCE_REQUIRED": {
+    "title": "Falta uma foto ou vídeo",
+    "body": "Seu relato está salvo. Adicione uma foto ou vídeo do problema para enviar.",
+    "action": "Corrigir agora"
+  },
+  "REPORT_LOCATION_WEAK": {
+    "title": "Localização pouco precisa",
+    "body": "Seu relato está salvo. Escolha a fazenda ou continue com local aproximado.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_LOCKED": {
+    "title": "Relato já está protegido",
+    "body": "Seu relato continua salvo. Veja o histórico ou peça revisão à central.",
+    "action": "Continuar com opção segura"
+  },
+  "REPORT_MACHINE_CHANGED": {
+    "title": "Esta é outra máquina",
+    "body": "Seu rascunho está salvo. Troque a máquina do relato ou mantenha a anterior.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_MACHINE_NOT_FOUND": {
+    "title": "Não encontrei essa máquina",
+    "body": "Seu rascunho está salvo. Busque pelo código ou registre como máquina não cadastrada.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_MARKED_FOR_REPAIR_STATUS": {
+    "title": "Relato virou ordem de serviço",
+    "body": "Seu relato está seguro. A central abriu a OS e você pode acompanhar o andamento.",
+    "action": "Continuar com opção segura"
+  },
+  "REPORT_MEDIA_METADATA_MISSING": {
+    "title": "Falta data ou local nessa mídia",
+    "body": "Seu relato está salvo. Use a data/local de agora ou tire uma nova foto.",
+    "action": "Escolher outro caminho"
+  },
+  "REPORT_NO_PLOTS_AVAILABLE": {
+    "title": "Sem talhões cadastrados aqui",
+    "body": "Seu relato está salvo. Continue sem talhão ou escolha outro local.",
+    "action": "Continuar com opção segura"
+  },
+  "REPORT_UNREGISTERED_MACHINE_INCOMPLETE": {
+    "title": "Falta identificar a máquina",
+    "body": "Seu rascunho está salvo. Escreva o que souber e tire uma foto da placa ou do chassi.",
+    "action": "Corrigir agora"
+  },
+  "REPORT_VIDEO_LIMIT_EXCEEDED": {
+    "title": "Limite de vídeos atingido",
+    "body": "Seu relato está salvo. Apague um vídeo ou tire fotos do restante.",
+    "action": "Apagar um vídeo"
+  },
+  "RESET_LINK_EXPIRED": {
+    "title": "Link vencido",
+    "body": "Solicite um novo link e tente novamente. Nenhum dado do aparelho foi apagado.",
+    "action": "Solicitar novo link"
+  },
+  "RESET_REQUIRED": {
+    "title": "Seu acesso mudou",
+    "body": "Vamos atualizar o que aparece para você. O que você já registrou fica salvo.",
+    "action": "Atualizar dados locais"
+  },
+  "SAME_USER_MULTIPLE_DEVICES": {
+    "title": "Há dados em outro aparelho",
+    "body": "Os dados deste aparelho estão guardados. Abra o outro aparelho para enviar o que ficou lá.",
+    "action": "Escolher outro caminho"
+  },
+  "SCAN_UNREADABLE": {
+    "title": "Não deu para ler o QR",
+    "body": "Limpe a etiqueta, mude o ângulo ou digite o código. O rascunho está salvo.",
+    "action": "Escolher outro caminho"
+  },
+  "SCREEN_CRASHED": {
+    "title": "Algo falhou nesta tela",
+    "body": "Recarregue a tela ou volte para Hoje. Seus dados e rascunhos estão salvos.",
+    "action": "Recarregar tela"
+  },
+  "SEASON_OPEN_WORK_WARNING": {
+    "title": "Ainda há trabalho nesta safra",
+    "body": "Nada foi fechado ainda. Revise os itens abertos e confirme se quiser fechar mesmo assim.",
+    "action": "Corrigir agora"
+  },
+  "SEASON_OVERLAP": {
+    "title": "Safras com datas sobrepostas",
+    "body": "Nada foi salvo. Ajuste as datas ou escolha uma cultura diferente.",
+    "action": "Corrigir agora"
+  },
+  "SERIAL_OCR_FAILED": {
+    "title": "Número de série não lido",
+    "body": "Digite o número ou procure pelo nome da máquina. O rascunho está salvo.",
+    "action": "Escolher outro caminho"
+  },
+  "SHARED_DEVICE_PENDING_DATA": {
+    "title": "Há dados de outro usuário",
+    "body": "Eles ficam separados e protegidos. Entre com a outra conta para enviar esses itens.",
+    "action": "Voltar para esse usuário"
+  },
+  "SITE_COORDS_MISSING": {
+    "title": "Local sem ponto no mapa",
+    "body": "Os dados do local estão seguros. Marque o ponto para usar mapa e distância.",
+    "action": "Corrigir agora"
+  },
+  "SITE_ERROR_CODE_UNKNOWN": {
+    "title": "Código de ajuda não encontrado",
+    "body": "Procure o código novamente ou fale com a AgroRende.",
+    "action": "Buscar ajuda"
+  },
+  "SITE_LOCALE_UNSUPPORTED": {
+    "title": "Idioma ainda não disponível",
+    "body": "Você foi levado para Português. O conteúdo continua disponível.",
+    "action": "Escolher outro caminho"
+  },
+  "SITE_PAGE_NOT_FOUND": {
+    "title": "Página não encontrada",
+    "body": "Nada foi perdido. Use a busca de ajuda ou volte para a página inicial.",
+    "action": "Escolher outro caminho"
+  },
+  "SITE_SLOW_NETWORK": {
+    "title": "Carregando versão leve",
+    "body": "O texto aparece primeiro. Imagens podem entrar depois sem travar a página.",
+    "action": "Continuar com opção segura"
+  },
+  "SLOW_CONNECTION": {
+    "title": "Conexão muito lenta",
+    "body": "Seus dados estão guardados. Fotos e prévias vão primeiro; vídeos podem esperar por Wi‑Fi.",
+    "action": "Acompanhar envio"
+  },
+  "STORAGE_FULL": {
+    "title": "Envio de arquivos pausado",
+    "body": "Seus arquivos estão guardados no aparelho. Vamos tentar de novo quando houver espaço.",
+    "action": "Acompanhar envio"
+  },
+  "TEMPLATE_VERSION_IN_USE": {
+    "title": "A nova versão vale daqui para frente",
+    "body": "Trabalhos em andamento continuam seguros com a versão antiga.",
+    "action": "Escolher outro caminho"
+  },
+  "THUMBNAIL_FAILED": {
+    "title": "Prévia não apareceu",
+    "body": "O arquivo original está guardado. Vamos tentar criar a prévia de novo.",
+    "action": "Acompanhar envio"
+  },
+  "TOKEN_EXPIRED": {
+    "title": "Entre de novo para enviar",
+    "body": "Você pode continuar trabalhando. Seus itens ficam salvos até você entrar.",
+    "action": "Entrar de novo"
+  },
+  "UNAUTHENTICATED": {
+    "title": "Entre para continuar",
+    "body": "Seus rascunhos deste aparelho continuam salvos. Entre com a mesma conta para enviar.",
+    "action": "Entrar"
+  },
+  "UNKNOWN_MUTATION": {
+    "title": "Atualize para enviar esta ação",
+    "body": "A ação ficou salva. Atualize o AgroRende e envie um diagnóstico se continuar.",
+    "action": "Atualizar aplicativo"
+  },
+  "UNSUPPORTED_BROWSER": {
+    "title": "Atualize o navegador",
+    "body": "Seus dados estão seguros. Use uma versão recente do Chrome, Edge, Safari ou Firefox.",
+    "action": "Atualizar aplicativo"
+  },
+  "UPLOAD_FILE_INVALID": {
+    "title": "Arquivo não aceito",
+    "body": "Nada foi enviado. Escolha um arquivo no formato indicado e tente de novo.",
+    "action": "Escolher outro arquivo"
+  },
+  "UPLOAD_INTERRUPTED": {
+    "title": "Envio do arquivo pausado",
+    "body": "O arquivo está guardado no aparelho. Vamos continuar do ponto em que parou.",
+    "action": "Acompanhar envio"
+  },
+  "UPLOAD_RESUME_AFTER_RESTART": {
+    "title": "Envio continua ao reabrir",
+    "body": "O arquivo está guardado. Ao abrir o app, ele continua de onde parou.",
+    "action": "Acompanhar envio"
+  },
+  "UPLOAD_URL_EXPIRED": {
+    "title": "Envio demorou demais",
+    "body": "O arquivo está guardado. O app vai pedir um novo caminho e continuar.",
+    "action": "Acompanhar envio"
+  },
+  "VALIDATION_FAILED": {
+    "title": "Atualize para enviar este item",
+    "body": "O item está salvo. Atualize o AgroRende e tente enviar de novo.",
+    "action": "Atualizar aplicativo"
+  },
+  "VIDEO_TOO_LONG": {
+    "title": "Vídeo longo demais",
+    "body": "Seu formulário está guardado. Grave até 60 segundos ou mande fotos.",
+    "action": "Gravar menor"
+  },
+  "VOICE_NOTE_FAILED": {
+    "title": "Não gravei o áudio",
+    "body": "Seu relato está salvo. Tente gravar de novo ou escreva a observação.",
+    "action": "Gravar de novo"
+  },
+  "WHATSAPP_UNAVAILABLE": {
+    "title": "WhatsApp não abriu",
+    "body": "Copie o telefone público da AgroRende ou envie e-mail. Nenhum dado foi enviado automaticamente.",
+    "action": "Copiar contato"
+  },
+  "WIFI_ONLY_MEDIA_WAITING": {
+    "title": "Vídeo esperando Wi‑Fi",
+    "body": "Seu relato já está guardado. Use Wi‑Fi ou libere dados móveis só para este envio.",
+    "action": "Escolher outro caminho"
+  },
+  "WO_ALREADY_VERIFIED": {
+    "title": "A OS já foi conferida",
+    "body": "Seu trabalho está salvo como evidência extra. A central vai revisar se precisar.",
+    "action": "Continuar com opção segura"
+  },
+  "WO_ARRIVAL_PROMPT_MISMATCH": {
+    "title": "Você está no local?",
+    "body": "A OS está salva. Confirme chegada, escolha 'ainda não' ou ajuste o ponto para a central.",
+    "action": "Escolher outro caminho"
+  },
+  "WO_ASSET_RETIRED": {
+    "title": "Máquina aposentada",
+    "body": "A OS está salva. A central recebeu o pedido de revisão; volte para Hoje enquanto isso.",
+    "action": "Enviar para a central"
+  },
+  "WO_ASSIGNED_STALE": {
+    "title": "Nova OS recebida",
+    "body": "A OS está no aparelho. Abra para aceitar ou recusar quando estiver pronto.",
+    "action": "Continuar com opção segura"
+  },
+  "WO_ASSIGNEE_OFF_DUTY": {
+    "title": "Responsável fora de serviço",
+    "body": "A OS não foi perdida. Escolha alguém em serviço ou confirme a atribuição com aviso.",
+    "action": "Corrigir agora"
+  },
+  "WO_CANCELLED": {
+    "title": "Esta OS foi cancelada",
+    "body": "Suas fotos e anotações estão seguras e foram enviadas para a central como evidência.",
+    "action": "Continuar com opção segura"
+  },
+  "WO_CHANGED_STALE": {
+    "title": "A OS foi atualizada",
+    "body": "Seu progresso está salvo. Revise as mudanças antes do próximo passo.",
+    "action": "Corrigir agora"
+  },
+  "WO_CONCURRENT_TECHNICIAN": {
+    "title": "Outra pessoa também está nesta OS",
+    "body": "Seu trabalho está salvo. Volte para Hoje ou continue só com fotos e notas quando for seguro.",
+    "action": "Falar com o escritório"
+  },
+  "WO_DECLINE_REASON_REQUIRED": {
+    "title": "Informe o motivo",
+    "body": "Nada foi enviado ainda. Escolha um motivo rápido ou escreva uma observação curta.",
+    "action": "Corrigir agora"
+  },
+  "WO_DESTINATION_MISSING": {
+    "title": "Falta o local da OS",
+    "body": "A OS está salva. Ligue para o cliente ou peça a localização para a central.",
+    "action": "Falar com o escritório"
+  },
+  "WO_PART_NOT_IN_VAN_STOCK": {
+    "title": "Peça não está na sua viatura",
+    "body": "A OS está salva. Use texto livre, coloque em espera por peças ou peça transferência.",
+    "action": "Escolher outro caminho"
+  },
+  "WO_REASSIGNED": {
+    "title": "Esta OS foi para outra pessoa",
+    "body": "Seu trabalho está salvo e a central foi avisada.",
+    "action": "Continuar com opção segura"
+  },
+  "WO_REOPENED_BY_OFFICE": {
+    "title": "OS reaberta pela central",
+    "body": "Seus dados estão salvos. Veja o motivo e continue a partir do serviço em andamento.",
+    "action": "Continuar com opção segura"
+  },
+  "WO_SAFETY_STOP_REQUIRED": {
+    "title": "Pare por segurança",
+    "body": "A OS está salva. Coloque em espera por segurança e avise a central.",
+    "action": "Escolher outro caminho"
+  },
+  "WO_SIGNATURE_EXCEPTION": {
+    "title": "Assinatura não concluída",
+    "body": "A OS está salva. Registre ausência ou recusa, tire foto final e conclua sem assinatura.",
+    "action": "Assinar de novo"
+  },
+  "WO_WAITING_PARTS_HOLD": {
+    "title": "Peça indisponível",
+    "body": "A OS está salva. Coloque em espera por peças e anote o que falta.",
+    "action": "Escolher outro caminho"
+  }
+}

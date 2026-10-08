@@ -1,0 +1,28 @@
+{
+  "workOrder": {
+    "assigned": {
+      "title": "New job assigned",
+      "body": "{assetName} at {siteName}. Open the job to see the next step."
+    },
+    "reassigned": {
+      "title": "Job updated",
+      "body": "{assetName} was assigned to {assigneeName}. Your data was kept."
+    }
+  },
+  "sync": {
+    "attention": {
+      "title": "Sync needs attention",
+      "body": "{count, plural, one {# item needs action} other {# items need action}}. Open Sync Center."
+    },
+    "sent": {
+      "title": "Data sent",
+      "body": "{count, plural, one {# item was sent} other {# items were sent}} safely."
+    }
+  },
+  "rental": {
+    "returnDue": {
+      "title": "Return due today",
+      "body": "{customerName} returns {assetName} today. Open the rental to prepare the inspection."
+    }
+  }
+}

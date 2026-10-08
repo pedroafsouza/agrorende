@@ -1,0 +1,36 @@
+{
+  "assetCondition": {
+    "OPERATIONAL": "Operational",
+    "NEEDS_REPAIR": "Needs repair",
+    "IN_REPAIR": "In repair",
+    "OUT_OF_SERVICE": "Out of service",
+    "RETIRED": "Retired"
+  },
+  "workOrderStatus": {
+    "OPEN": "Open",
+    "ASSIGNED": "Assigned",
+    "ACCEPTED": "Accepted",
+    "EN_ROUTE": "En route",
+    "ON_SITE": "On site",
+    "IN_PROGRESS": "In progress",
+    "ON_HOLD": "On hold",
+    "COMPLETED": "Completed",
+    "VERIFIED": "Verified",
+    "CANCELLED": "Cancelled"
+  },
+  "rentalStatus": {
+    "DRAFT": "Draft",
+    "RESERVED": "Reserved",
+    "ACTIVE": "Active",
+    "RETURNED": "Returned",
+    "CLOSED": "Closed",
+    "CANCELLED": "Cancelled"
+  },
+  "syncState": {
+    "SYNCED": "Synced",
+    "PENDING": "Pending",
+    "IN_FLIGHT": "Sending",
+    "FAILED": "Failed",
+    "OFFLINE": "Offline"
+  }
+}

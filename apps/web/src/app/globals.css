@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mata-600: #2b8a3e;
+  --color-mata-700: #237032;
+  --color-mata-800: #1b5e2a;
+  --color-mata-400: #51cf66;
+  --color-terra-600: #e8590c;
+  --color-terra-700: #c2410c;
+  --color-graphite-950: #111315;
+  --color-graphite-900: #1c1f23;
+  --color-graphite-700: #3d434b;
+  --color-graphite-500: #6b7280;
+  --color-graphite-200: #e3e6ea;
+  --color-graphite-100: #f1f3f5;
+  --color-graphite-50: #f8f9fa;
+  --color-success: #237032;
+  --color-warning: #a15c07;
+  --color-warning-fill: #f2b705;
+  --color-danger: #b42318;
+  --color-info: #1d4ed8;
+  --color-neutral: #3d434b;
+  --radius-controls: 8px;
+  --radius-cards: 12px;
+  --radius-sheets: 16px;
+  --spacing-touch-target: 48px;
+  --spacing-primary-button-height: 56px;
+}
+
+:root {
+  color-scheme: light;
+  background: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: #f8f9fa;
+  color: #1c1f23;
+  font-family: var(--font-geist-sans, system-ui, sans-serif);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  min-height: var(--spacing-touch-target);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0ms !important;
+    transition-duration: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

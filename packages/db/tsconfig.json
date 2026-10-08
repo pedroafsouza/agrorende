@@ -1,0 +1,8 @@
+{
+  "extends": "@agrorende/config/tsconfig/node.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "noEmit": true
+  },
+  "include": ["src", "seed", "migrations", "scripts", "eslint.config.js", "vitest.config.ts"]
+}

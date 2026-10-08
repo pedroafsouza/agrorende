@@ -1,0 +1,66 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      next-react:
+        patterns:
+          - next
+          - react
+          - react-dom
+          - '@types/react'
+      mongodb:
+        patterns:
+          - mongodb
+          - bson
+      testing:
+        patterns:
+          - vitest
+          - '@playwright/*'
+          - playwright
+      lint-types:
+        patterns:
+          - eslint
+          - '@eslint/*'
+          - typescript-eslint
+          - eslint-plugin-*
+          - typescript
+          - '@types/*'
+          - prettier
+      auth-oidc:
+        patterns:
+          - arctic
+          - jose
+    ignore:
+      - dependency-name: expo
+      - dependency-name: expo*
+      - dependency-name: '@expo/*'
+      - dependency-name: react-native
+      - dependency-name: react-native-*
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: docker
+    directory: /apps/web
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /apps/realtime
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /apps/worker
+    schedule:
+      interval: monthly
+
+  - package-ecosystem: docker
+    directory: /infra
+    schedule:
+      interval: monthly

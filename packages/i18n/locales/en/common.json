@@ -1,0 +1,28 @@
+{
+  "actions": {
+    "retry": "Try again",
+    "save": "Save",
+    "cancel": "Cancel",
+    "learnMore": "Learn more",
+    "askOffice": "Ask the office",
+    "updateApp": "Update app"
+  },
+  "states": {
+    "loading": "Loading…",
+    "emptyTitle": "Nothing here yet",
+    "emptyBody": "Create the first item to get started.",
+    "offline": "No connection — data may be out of date",
+    "saved": "Saved"
+  },
+  "navigation": {
+    "home": "Home",
+    "jobs": "Jobs",
+    "rentals": "Rentals",
+    "assets": "Machines",
+    "settings": "Settings"
+  },
+  "format": {
+    "updatedAt": "Updated {time}",
+    "count": "{count, plural, one {# item} other {# items}}"
+  }
+}

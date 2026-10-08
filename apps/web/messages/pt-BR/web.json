@@ -1,0 +1,240 @@
+{
+  "meta": {
+    "title": "AgroRende admin",
+    "description": "AgroRende admin foundation shell"
+  },
+  "common": {
+    "loading": {
+      "title": "Loading state",
+      "body": "Skeleton layout reserved for data fetching."
+    },
+    "empty": {
+      "title": "Empty state",
+      "body": "Placeholder copy explains the next step."
+    },
+    "error": {
+      "title": "Error state",
+      "body": "Recovery action will retry the request."
+    },
+    "offline": {
+      "title": "Offline state",
+      "body": "Data may be out of date until the connection returns."
+    },
+    "retry": "Retry",
+    "status": "Status",
+    "foundationBadge": "Foundation placeholder",
+    "notImplemented": "Feature work lands in a later task.",
+    "route": "Route"
+  },
+  "shell": {
+    "org": "Organization",
+    "search": "Search placeholder",
+    "notifications": "Notifications",
+    "theme": "Theme",
+    "language": "Language",
+    "user": "User menu",
+    "realtime": "Realtime provider placeholder",
+    "toaster": "Toast provider placeholder"
+  },
+  "style": {
+    "title": "Campo claro style guide",
+    "description": "Design-token and component baseline for UI review.",
+    "tokens": "Tokens",
+    "states": "States",
+    "outdoor": "Outdoor contrast",
+    "touch": "48 dp touch targets",
+    "iconText": "Icon plus text",
+    "palette": "One palette",
+    "primaryAction": "Primary action",
+    "statusSuccess": "Operational",
+    "statusWarning": "Needs attention",
+    "statusDanger": "Stopped",
+    "statusInfo": "In progress"
+  },
+  "page": {
+    "home": {
+      "title": "Home redirect",
+      "description": "Redirects to operations center."
+    },
+    "login": {
+      "title": "Login",
+      "description": "Google, Apple, email password and language switch placeholder."
+    },
+    "changePassword": {
+      "title": "Change password",
+      "description": "Required password change placeholder."
+    },
+    "signup": {
+      "title": "Sign up",
+      "description": "Organization ticket flow placeholder."
+    },
+    "signupCompany": {
+      "title": "Company sign up",
+      "description": "Company form placeholder."
+    },
+    "invite": {
+      "title": "Invite",
+      "description": "Invite redemption placeholder."
+    },
+    "reset": {
+      "title": "Password reset",
+      "description": "Password reset placeholder."
+    },
+    "ops": {
+      "title": "Operations center",
+      "description": "Map, KPIs, alerts and activity placeholder."
+    },
+    "attention": {
+      "title": "Needs attention",
+      "description": "Rejected mutations, uploads, devices and diagnostics placeholder."
+    },
+    "reports": {
+      "title": "Reports",
+      "description": "Triage inbox placeholder."
+    },
+    "reportDetail": {
+      "title": "Report detail",
+      "description": "Report media, map, asset and actions placeholder."
+    },
+    "workOrders": {
+      "title": "Work orders",
+      "description": "Board and table placeholder."
+    },
+    "workOrderNew": {
+      "title": "New work order",
+      "description": "Manual work order form placeholder."
+    },
+    "workOrderDetail": {
+      "title": "Work order detail",
+      "description": "Timeline, evidence, checklist, costs and PDF placeholder."
+    },
+    "rentals": {
+      "title": "Rentals",
+      "description": "Rental list and tabs placeholder."
+    },
+    "rentalNew": {
+      "title": "New rental",
+      "description": "Rental creation and eligibility placeholder."
+    },
+    "rentalDetail": {
+      "title": "Rental detail",
+      "description": "Terms, inspections, damages, charges and PDFs placeholder."
+    },
+    "assets": {
+      "title": "Assets",
+      "description": "Asset table placeholder."
+    },
+    "assetNew": {
+      "title": "New asset",
+      "description": "Asset form placeholder."
+    },
+    "assetDetail": {
+      "title": "Asset detail",
+      "description": "Asset profile, history and QR placeholder."
+    },
+    "sites": {
+      "title": "Sites",
+      "description": "Sites and map picker placeholder."
+    },
+    "siteDetail": {
+      "title": "Site detail",
+      "description": "Plots, centroid, area and crop placeholder."
+    },
+    "customers": {
+      "title": "Customers",
+      "description": "Customers table placeholder."
+    },
+    "customerDetail": {
+      "title": "Customer detail",
+      "description": "Customer profile placeholder."
+    },
+    "team": {
+      "title": "Team",
+      "description": "Users, roles, skills and invites placeholder."
+    },
+    "teamDetail": {
+      "title": "Team member",
+      "description": "User profile and actions placeholder."
+    },
+    "teamDevices": {
+      "title": "Team devices",
+      "description": "Device sync health placeholder."
+    },
+    "templates": {
+      "title": "Checklist templates",
+      "description": "Template builder placeholder."
+    },
+    "templateDetail": {
+      "title": "Checklist template detail",
+      "description": "Template preview and publishing placeholder."
+    },
+    "seasons": {
+      "title": "Seasons",
+      "description": "Critical windows placeholder."
+    },
+    "costs": {
+      "title": "Costs",
+      "description": "Cost roll-up placeholder."
+    },
+    "imports": {
+      "title": "Imports",
+      "description": "Import wizard placeholder."
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "Organization settings placeholder."
+    },
+    "subscription": {
+      "title": "Subscription",
+      "description": "Plan, usage and terms placeholder."
+    },
+    "account": {
+      "title": "Account",
+      "description": "User account and sign-in methods placeholder."
+    },
+    "officeRoleRequired": {
+      "title": "Office role required",
+      "description": "Field web landing placeholder."
+    },
+    "notifications": {
+      "title": "Notifications",
+      "description": "Full notifications list placeholder."
+    },
+    "analytics": {
+      "title": "Analytics",
+      "description": "P1 analytics placeholder."
+    },
+    "parts": {
+      "title": "Parts",
+      "description": "P1 parts placeholder."
+    },
+    "stock": {
+      "title": "Stock",
+      "description": "P1 stock placeholder."
+    },
+    "maintenance": {
+      "title": "Maintenance",
+      "description": "P1 maintenance placeholder."
+    },
+    "fuel": {
+      "title": "Fuel",
+      "description": "P1 fuel placeholder."
+    },
+    "billing": {
+      "title": "Billing",
+      "description": "P1 billing placeholder."
+    },
+    "platformLogin": {
+      "title": "Platform login",
+      "description": "Staff Google sign-in placeholder."
+    },
+    "platformOrgs": {
+      "title": "Platform organizations",
+      "description": "Staff organization console placeholder."
+    },
+    "platformOrgDetail": {
+      "title": "Platform organization detail",
+      "description": "Status, plan, admins and audit placeholder."
+    }
+  }
+}

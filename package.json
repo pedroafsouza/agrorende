@@ -1,0 +1,40 @@
+{
+  "name": "agrorende",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.0.9",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "lint": "pnpm -r --parallel run lint",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "check": "pnpm lint && pnpm typecheck && pnpm test",
+    "check:only": "tsx scripts/check-only.ts",
+    "build": "pnpm -r run build",
+    "dev": "pnpm --parallel --filter web --filter realtime --filter worker run dev",
+    "dev:setup": "tsx scripts/dev-setup.ts",
+    "devloop": "tsx scripts/devloop.ts",
+    "dev:site": "pnpm --filter site dev",
+    "build:site": "pnpm --filter site build",
+    "dev:mobile": "pnpm --filter mobile start",
+    "db:migrate": "pnpm --filter @agrorende/db run migrate",
+    "db:seed": "pnpm --filter @agrorende/db run seed",
+    "db:reset": "pnpm --filter @agrorende/db run reset",
+    "db:shell": "docker compose exec mongo mongosh agrorende",
+    "storage:init": "pnpm --filter @agrorende/core run storage:init",
+    "storage:seed": "pnpm --filter @agrorende/core run storage:seed",
+    "i18n:check": "tsx scripts/i18n-check.ts",
+    "simulate": "pnpm --filter worker run simulate",
+    "smoke": "tsx scripts/smoke.ts"
+  },
+  "devDependencies": {
+    "@playwright/cli": "^0.1.22",
+    "@types/node": "catalog:",
+    "eslint": "catalog:",
+    "prettier": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
+  }
+}

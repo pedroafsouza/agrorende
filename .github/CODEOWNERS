@@ -1,0 +1,43 @@
+# AgroRende CODEOWNERS follows docs/DELIVERY-PLAN.md §3.
+# The current repository owner is the fallback reviewer for every path until task teams are created.
+* @pedroafsouza
+
+# T00, then T01 frozen agent toolkit.
+.mcp.json @pedroafsouza
+.github/skills/ @pedroafsouza
+.github/agents/ui-reviewer.agent.md @pedroafsouza
+.github/copilot-instructions.md @pedroafsouza
+scripts/vendor-skills.sh @pedroafsouza
+
+# T01 frozen foundations.
+.github/ @pedroafsouza
+package.json @pedroafsouza
+pnpm-workspace.yaml @pedroafsouza
+pnpm-lock.yaml @pedroafsouza
+.env.example @pedroafsouza
+.npmrc @pedroafsouza
+.node-version @pedroafsouza
+docker-compose.yml @pedroafsouza
+.dockerignore @pedroafsouza
+.gitignore @pedroafsouza
+patches/ @pedroafsouza
+scripts/devloop.ts @pedroafsouza
+scripts/devloop/ @pedroafsouza
+scripts/check-only.ts @pedroafsouza
+scripts/i18n-check.ts @pedroafsouza
+packages/config/ @pedroafsouza
+packages/contracts/ @pedroafsouza
+packages/db/ @pedroafsouza
+packages/design-tokens/ @pedroafsouza
+packages/i18n/ @pedroafsouza
+docs/reviews/ @pedroafsouza
+**/AGENTS.md @pedroafsouza
+
+# Later-task ownership from docs/DELIVERY-PLAN.md §3 is enforced by the delivery plan.
+packages/api-client/ @pedroafsouza
+packages/core/ @pedroafsouza
+apps/web/ @pedroafsouza
+apps/mobile/ @pedroafsouza
+apps/realtime/ @pedroafsouza
+apps/worker/ @pedroafsouza
+infra/ @pedroafsouza
