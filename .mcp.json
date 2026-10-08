@@ -1,0 +1,9 @@
+{
+  "servers": {
+    "expo": {
+      "type": "http",
+      "url": "https://mcp.expo.dev/mcp",
+      "tools": ["*"]
+    }
+  }
+}

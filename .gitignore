@@ -1,0 +1,5 @@
+# Generated agent and local artifacts: review reports, screenshots, local media, caches.
+.data/
+
+# OS noise
+.DS_Store
