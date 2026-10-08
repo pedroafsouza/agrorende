@@ -1,6 +1,8 @@
-import { PlaceholderScreen } from "../../src/components";
+import { SyncCenterScreen } from "../../src/features/sync";
 import { routeKeys } from "../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.syncCenter} />;
+  return <SyncCenterScreen />;
 }
+
+export const titleKey = routeKeys.syncCenter;

@@ -1,42 +1,119 @@
-import { integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
+import { index, integer, real, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
-const dirty = integer("_dirty").notNull().default(0);
-const id = text("id").primaryKey();
-const organizationId = text("organizationId").notNull();
-const syncVersion = integer("syncVersion").notNull().default(0);
-const createdAt = text("createdAt");
-const updatedAt = text("updatedAt");
-const json = (name: string) => text(name, { mode: "json" });
+export * from "./mirror.generated";
 
-export const organization = sqliteTable("organization", { id, name: text("name").notNull(), slug: text("slug"), status: text("status"), defaultLocale: text("defaultLocale"), settings: json("settings"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const users = sqliteTable("users", { id, organizationId, email: text("email"), name: text("name"), role: text("role"), skills: json("skills"), locale: text("locale"), avatarMediaId: text("avatarMediaId"), isActive: integer("isActive"), dutyStatus: text("dutyStatus"), homeSiteId: text("homeSiteId"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const sites = sqliteTable("sites", { id, organizationId, name: text("name"), address: json("address"), lat: real("lat"), lng: real("lng"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const plots = sqliteTable("plots", { id, organizationId, siteId: text("siteId"), name: text("name"), geometry: json("geometry"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const seasons = sqliteTable("seasons", { id, organizationId, name: text("name"), startsAt: text("startsAt"), endsAt: text("endsAt"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const customers = sqliteTable("customers", { id, organizationId, name: text("name"), document: text("document"), contacts: json("contacts"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const assets = sqliteTable("assets", { id, organizationId, code: text("code"), name: text("name"), type: text("type"), condition: text("condition"), siteId: text("siteId"), plotId: text("plotId"), hourMeter: integer("hourMeter"), odometerKm: integer("odometerKm"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const checklistTemplates = sqliteTable("checklist_templates", { id, organizationId, kind: text("kind"), version: integer("version"), title: json("title"), items: json("items"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const damages = sqliteTable("damages", { id, organizationId, assetId: text("assetId"), rentalId: text("rentalId"), inspectionId: text("inspectionId"), status: text("status"), description: text("description"), estimatedCostCents: integer("estimatedCostCents"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const fieldReports = sqliteTable("field_reports", { id, organizationId, number: text("number"), assetId: text("assetId"), siteId: text("siteId"), plotId: text("plotId"), status: text("status"), category: text("category"), priority: text("priority"), title: text("title"), description: text("description"), machineOperable: integer("machineOperable"), suggestedAction: text("suggestedAction"), rentalId: text("rentalId"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const workOrders = sqliteTable("work_orders", { id, organizationId, number: text("number"), assetId: text("assetId"), assigneeId: text("assigneeId"), status: text("status"), priority: text("priority"), title: text("title"), description: text("description"), dueAt: text("dueAt"), acceptedAt: text("acceptedAt"), startedAt: text("startedAt"), completedAt: text("completedAt"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const workOrderParts = sqliteTable("work_order_parts", { id, organizationId, workOrderId: text("workOrderId"), name: text("name"), partNumber: text("partNumber"), quantity: real("quantity"), unit: text("unit"), unitCostCents: integer("unitCostCents"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const rentals = sqliteTable("rentals", { id, organizationId, number: text("number"), assetId: text("assetId"), customerId: text("customerId"), status: text("status"), startsAt: text("startsAt"), endsAt: text("endsAt"), checkedOutAt: text("checkedOutAt"), checkedInAt: text("checkedInAt"), documentLocale: text("documentLocale"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const rentalCharges = sqliteTable("rental_charges", { id, organizationId, rentalId: text("rentalId"), kind: text("kind"), label: text("label"), amountCents: integer("amountCents"), isAuto: integer("isAuto"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const inspections = sqliteTable("inspections", { id, organizationId, rentalId: text("rentalId"), assetId: text("assetId"), kind: text("kind"), templateId: text("templateId"), templateVersion: integer("templateVersion"), responses: json("responses"), documentLocale: text("documentLocale"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const media = sqliteTable("media", { id, organizationId, parentType: text("parentType"), parentId: text("parentId"), kind: text("kind"), tag: text("tag"), mimeType: text("mimeType"), sizeBytes: integer("sizeBytes"), capturedAt: text("capturedAt"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const activityEvents = sqliteTable("activity_events", { id, organizationId, entityType: text("entityType"), entityId: text("entityId"), kind: text("kind"), payload: json("payload"), occurredAt: text("occurredAt"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const notifications = sqliteTable("notifications", { id, organizationId, userId: text("userId"), kind: text("kind"), titleKey: text("titleKey"), bodyKey: text("bodyKey"), readAt: text("readAt"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const comments = sqliteTable("comments", { id, organizationId, entityType: text("entityType"), entityId: text("entityId"), body: text("body"), authorId: text("authorId"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const parts = sqliteTable("parts", { id, organizationId, name: text("name"), partNumber: text("partNumber"), unit: text("unit"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const stockLocations = sqliteTable("stock_locations", { id, organizationId, name: text("name"), kind: text("kind"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const stockLevels = sqliteTable("stock_levels", { id, organizationId, partId: text("partId"), stockLocationId: text("stockLocationId"), quantity: real("quantity"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const maintenancePlans = sqliteTable("maintenance_plans", { id, organizationId, assetId: text("assetId"), title: text("title"), interval: json("interval"), syncVersion, createdAt, updatedAt, _dirty: dirty });
-export const fuelLogs = sqliteTable("fuel_logs", { id, organizationId, assetId: text("assetId"), liters: real("liters"), pricePerLiterCents: integer("pricePerLiterCents"), siteId: text("siteId"), plotId: text("plotId"), syncVersion, createdAt, updatedAt, _dirty: dirty });
+/**
+ * Local-only tables (ARCHITECTURE §7.1). They are never wiped by a scope reset.
+ * Mirror tables for every pulled entity live in `mirror.generated.ts`.
+ */
 
-export const outbox = sqliteTable("outbox", { seq: integer("seq").primaryKey({ autoIncrement: true }), id: text("id").notNull(), name: text("name").notNull(), entityType: text("entityType").notNull(), entityId: text("entityId").notNull(), payload: json("payload").notNull(), occurredAt: text("occurredAt").notNull(), lat: real("lat"), lng: real("lng"), status: text("status").notNull().default("PENDING"), attempts: integer("attempts").notNull().default(0), lastError: text("lastError"), nextAttemptAt: text("nextAttemptAt"), inFlightAt: text("inFlightAt"), pushAttemptId: text("pushAttemptId"), createdAt: text("createdAt").notNull() }, (table) => ({ idUnique: uniqueIndex("outbox_id_unique").on(table.id) }));
-export const mediaFiles = sqliteTable("media_files", { mediaId: text("mediaId").primaryKey(), localUri: text("localUri").notNull(), thumbUri: text("thumbUri"), mimeType: text("mimeType").notNull(), sizeBytes: integer("sizeBytes"), kind: text("kind").notNull(), priority: integer("priority").notNull().default(0), state: text("state").notNull(), uploadId: text("uploadId"), partSize: integer("partSize"), partsDone: json("partsDone"), bytesSent: integer("bytesSent").notNull().default(0), attempts: integer("attempts").notNull().default(0), nextAttemptAt: text("nextAttemptAt"), wifiOnly: integer("wifiOnly").notNull().default(0), doneAt: text("doneAt"), deleteAfter: text("deleteAfter") });
-export const locationBuffer = sqliteTable("location_buffer", { id: integer("id").primaryKey({ autoIncrement: true }), recordedAt: text("recordedAt").notNull(), lat: real("lat").notNull(), lng: real("lng").notNull(), accuracyM: real("accuracyM"), speedMps: real("speedMps"), heading: real("heading"), batteryLevel: real("batteryLevel"), workOrderId: text("workOrderId"), sentAt: text("sentAt") });
-export const drafts = sqliteTable("drafts", { id: text("id").primaryKey(), kind: text("kind").notNull(), refId: text("refId"), step: text("step").notNull(), payload: json("payload").notNull(), updatedAt: text("updatedAt").notNull() });
-export const conflicts = sqliteTable("conflicts", { id: text("id").primaryKey(), mutationId: text("mutationId").notNull(), name: text("name").notNull(), entityType: text("entityType").notNull(), entityId: text("entityId").notNull(), code: text("code").notNull(), payload: json("payload").notNull(), createdAt: text("createdAt").notNull(), acknowledgedAt: text("acknowledgedAt") });
-export const syncState = sqliteTable("sync_state", { key: text("key").primaryKey(), value: text("value").notNull() });
-export const diagnosticsQueue = sqliteTable("diagnostics_queue", { id: text("id").primaryKey(), createdAt: text("createdAt").notNull(), payload: json("payload").notNull(), attempts: integer("attempts").notNull().default(0), nextAttemptAt: text("nextAttemptAt") });
+export const OUTBOX_STATUSES = ["PENDING", "IN_FLIGHT", "REJECTED"] as const;
+export type OutboxStatus = (typeof OUTBOX_STATUSES)[number];
+
+export const MEDIA_FILE_STATES = ["WAITING_PARENT", "QUEUED", "UPLOADING", "UPLOADED", "DONE", "FAILED"] as const;
+export type MediaFileState = (typeof MEDIA_FILE_STATES)[number];
+
+export const DRAFT_KINDS = ["FIELD_REPORT", "CHECK_OUT", "CHECK_IN", "WO_COMPLETE"] as const;
+export type DraftKind = (typeof DRAFT_KINDS)[number];
+
+export const outbox = sqliteTable(
+  "outbox",
+  {
+    seq: integer("seq").primaryKey({ autoIncrement: true }),
+    id: text("id").notNull(),
+    name: text("name").notNull(),
+    entityType: text("entityType").notNull(),
+    entityId: text("entityId").notNull(),
+    payload: text("payload", { mode: "json" }).notNull(),
+    occurredAt: text("occurredAt").notNull(),
+    lat: real("lat"),
+    lng: real("lng"),
+    status: text("status").$type<OutboxStatus>().notNull().default("PENDING"),
+    attempts: integer("attempts").notNull().default(0),
+    lastError: text("lastError"),
+    nextAttemptAt: text("nextAttemptAt"),
+    inFlightAt: text("inFlightAt"),
+    pushAttemptId: text("pushAttemptId"),
+    createdAt: text("createdAt").notNull(),
+  },
+  (table) => [
+    uniqueIndex("outbox_id_unique").on(table.id),
+    index("outbox_status_seq_idx").on(table.status, table.seq),
+    index("outbox_entity_idx").on(table.entityType, table.entityId),
+  ],
+);
+
+export const mediaFiles = sqliteTable(
+  "media_files",
+  {
+  mediaId: text("mediaId").primaryKey(),
+  localUri: text("localUri").notNull(),
+  thumbUri: text("thumbUri"),
+  mimeType: text("mimeType").notNull(),
+  sizeBytes: integer("sizeBytes"),
+  kind: text("kind").notNull(),
+  priority: integer("priority").notNull().default(0),
+  state: text("state").$type<MediaFileState>().notNull(),
+  uploadId: text("uploadId"),
+  partSize: integer("partSize"),
+  partsDone: text("partsDone", { mode: "json" }),
+  bytesSent: integer("bytesSent").notNull().default(0),
+  attempts: integer("attempts").notNull().default(0),
+  nextAttemptAt: text("nextAttemptAt"),
+  wifiOnly: integer("wifiOnly").notNull().default(0),
+  doneAt: text("doneAt"),
+  deleteAfter: text("deleteAfter"),
+  },
+  (table) => [index("media_files_state_idx").on(table.state, table.priority)],
+);
+
+export const locationBuffer = sqliteTable(
+  "location_buffer",
+  {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  recordedAt: text("recordedAt").notNull(),
+  lat: real("lat").notNull(),
+  lng: real("lng").notNull(),
+  accuracyM: real("accuracyM"),
+  speedMps: real("speedMps"),
+  heading: real("heading"),
+  batteryLevel: real("batteryLevel"),
+  workOrderId: text("workOrderId"),
+  sentAt: text("sentAt"),
+  },
+  (table) => [index("location_buffer_recorded_idx").on(table.recordedAt)],
+);
+
+export const drafts = sqliteTable("drafts", {
+  id: text("id").primaryKey(),
+  kind: text("kind").$type<DraftKind>().notNull(),
+  refId: text("refId"),
+  step: text("step").notNull(),
+  payload: text("payload", { mode: "json" }).notNull(),
+  updatedAt: text("updatedAt").notNull(),
+});
+
+export const conflicts = sqliteTable("conflicts", {
+  id: text("id").primaryKey(),
+  mutationId: text("mutationId").notNull(),
+  name: text("name").notNull(),
+  entityType: text("entityType").notNull(),
+  entityId: text("entityId").notNull(),
+  code: text("code").notNull(),
+  payload: text("payload", { mode: "json" }).notNull(),
+  createdAt: text("createdAt").notNull(),
+  acknowledgedAt: text("acknowledgedAt"),
+});
+
+export const syncState = sqliteTable("sync_state", {
+  key: text("key").primaryKey(),
+  value: text("value").notNull(),
+});
+
+export const diagnosticsQueue = sqliteTable("diagnostics_queue", {
+  id: text("id").primaryKey(),
+  createdAt: text("createdAt").notNull(),
+  payload: text("payload", { mode: "json" }).notNull(),
+  attempts: integer("attempts").notNull().default(0),
+  nextAttemptAt: text("nextAttemptAt"),
+});

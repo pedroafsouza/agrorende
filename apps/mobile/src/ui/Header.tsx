@@ -1,5 +1,21 @@
-import { notImplemented } from "../lib/notImplemented";
+import type { ReactNode } from "react";
+import { StyleSheet, View } from "react-native";
 
-export function Header(): never {
-  return notImplemented("ui.Header");
+import type { MessageKey, MessageValues } from "../i18n/messages";
+import { Text } from "./Text";
+
+export type HeaderProps = { readonly titleKey: MessageKey; readonly titleValues?: MessageValues; readonly subtitleKey?: MessageKey; readonly subtitle?: string; readonly right?: ReactNode };
+
+export function Header({ titleKey, titleValues, subtitleKey, subtitle, right }: HeaderProps) {
+  return (
+    <View style={styles.row}>
+      <View style={styles.text}>
+        <Text i18nKey={titleKey} values={titleValues} variant="title" accessibilityRole="header" />
+        {subtitleKey !== undefined ? <Text i18nKey={subtitleKey} tone="secondary" /> : subtitle !== undefined ? <Text tone="secondary">{subtitle}</Text> : null}
+      </View>
+      {right}
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({ row: { alignItems: "center", flexDirection: "row", gap: 12 }, text: { flex: 1, gap: 4 } });

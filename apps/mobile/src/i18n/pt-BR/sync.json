@@ -1,0 +1,122 @@
+{
+  "action": {
+    "discard": "Descartar",
+    "syncNow": "Sincronizar agora",
+    "understood": "Entendi"
+  },
+  "badge": {
+    "failed": "Falha no envio",
+    "offline": "Sem conexão",
+    "pending": "Pendente",
+    "sending": "Enviando",
+    "synced": "Tudo enviado"
+  },
+  "center": {
+    "open": "Abrir sincronização"
+  },
+  "diagnostics": {
+    "body": "{count, plural, one {{count} registro de diagnóstico} other {{count} registros de diagnóstico}}",
+    "send": "Enviar diagnóstico",
+    "sent": "Diagnóstico enviado",
+    "title": "Diagnóstico"
+  },
+  "discard": {
+    "body": "Este item não será enviado e não pode ser recuperado.",
+    "title": "Descartar este item?"
+  },
+  "empty": {
+    "body": "Não há nada esperando envio.",
+    "title": "Tudo em dia"
+  },
+  "lastSync": {
+    "at": "Última sincronização: {when}",
+    "never": "Ainda não sincronizou"
+  },
+  "mutation": {
+    "asset": {
+      "updateReadings": "Leitura da máquina"
+    },
+    "comment": {
+      "create": "Comentário"
+    },
+    "fieldReport": {
+      "create": "Novo relato",
+      "update": "Relato editado",
+      "withdraw": "Relato retirado"
+    },
+    "fuelLog": {
+      "create": "Abastecimento"
+    },
+    "inspection": {
+      "submit": "Vistoria"
+    },
+    "media": {
+      "delete": "Mídia excluída",
+      "register": "Registro de mídia",
+      "update": "Mídia editada"
+    },
+    "notification": {
+      "markRead": "Notificação lida"
+    },
+    "rental": {
+      "checkin": "Devolução da locação",
+      "checkout": "Saída da locação"
+    },
+    "user": {
+      "setDuty": "Mudança de expediente"
+    },
+    "workOrder": {
+      "addPart": "Peça adicionada",
+      "complete": "Serviço concluído",
+      "removePart": "Peça removida",
+      "saveChecklist": "Checklist salvo",
+      "transition": "Mudança de status do serviço"
+    }
+  },
+  "offline": {
+    "body": "Seu trabalho fica salvo e é enviado quando a conexão voltar.",
+    "title": "Sem conexão"
+  },
+  "pending": {
+    "bytes": "{size} para enviar",
+    "summary": "{count, plural, one {{count} pendente} other {{count} pendentes}}"
+  },
+  "section": {
+    "conflicts": "Precisa de atenção",
+    "outbox": "{count, plural, one {Ações ({count})} other {Ações ({count})}}",
+    "uploads": "{count, plural, one {Envio de arquivo ({count})} other {Envios de arquivos ({count})}}"
+  },
+  "size": {
+    "kb": "{value} KB",
+    "mb": "{value} MB"
+  },
+  "status": {
+    "IN_FLIGHT": "Enviando",
+    "PENDING": "Na fila",
+    "REJECTED": "Recusado"
+  },
+  "time": {
+    "days": "{count, plural, one {há {count} dia} other {há {count} dias}}",
+    "hours": "{count, plural, one {há {count} hora} other {há {count} horas}}",
+    "minutes": "{count, plural, one {há {count} minuto} other {há {count} minutos}}",
+    "now": "agora"
+  },
+  "upload": {
+    "kind": {
+      "AUDIO": "Áudio",
+      "DOCUMENT": "Documento",
+      "PHOTO": "Foto",
+      "SIGNATURE": "Assinatura",
+      "VIDEO": "Vídeo"
+    },
+    "state": {
+      "DONE": "Enviado",
+      "FAILED": "Falhou",
+      "QUEUED": "Na fila",
+      "UPLOADED": "Processando",
+      "UPLOADING": "Enviando",
+      "WAITING_PARENT": "Aguardando registro"
+    },
+    "waitingWifi": "Aguardando Wi-Fi"
+  }
+}

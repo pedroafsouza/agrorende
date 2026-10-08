@@ -1,10 +1,19 @@
-import type { MutationPayload } from "@agrorende/contracts/mutations";
+import { patchMirrorRow } from "../../db/mirror";
+import { defineMutator } from "../mutator";
 
-import { notImplemented } from "../../lib/notImplemented";
+export type { LocalMutationResult } from "../mutator";
 
-export type LocalMutationResult = { readonly mutationId: string };
-
-export async function setDuty(_payload: MutationPayload<"user.setDuty">): Promise<LocalMutationResult> {
-  return notImplemented("sync.mutators.user.setDuty");
-}
-
+/** On/off duty (OPS). Going ON_DUTY needs `consent: true`; location tracking follows the local row. */
+export const setDuty = defineMutator({
+  name: "user.setDuty",
+  entityType: "USER",
+  entityId: (_payload, runtime) => runtime.userId,
+  apply: async (tx, payload, ctx) => {
+    await patchMirrorRow(tx, "users", ctx.runtime.userId, {
+      dutyStatus: payload.status,
+      dutyChangedAt: ctx.now,
+      ...(payload.consent === true ? { locationConsentAt: ctx.now } : {}),
+      updatedAt: ctx.now,
+    });
+  },
+});

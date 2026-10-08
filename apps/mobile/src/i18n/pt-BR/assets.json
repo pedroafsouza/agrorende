@@ -1,0 +1,70 @@
+{
+  "action": {
+    "checkout": "Fazer saída",
+    "newReport": "Relatar problema",
+    "scan": "Ler código"
+  },
+  "condition": {
+    "IN_REPAIR": "Em reparo",
+    "NEEDS_REPAIR": "Precisa de reparo",
+    "OPERATIONAL": "Operando",
+    "OUT_OF_SERVICE": "Parada",
+    "RETIRED": "Desativada"
+  },
+  "detail": {
+    "history": "Histórico",
+    "historyEmpty": "Sem histórico",
+    "historyEmptyBody": "Relatos, serviços e locações desta máquina aparecem aqui.",
+    "hourMeter": "Horímetro: {value} h"
+  },
+  "history": {
+    "job": "Serviço",
+    "rental": "Locação",
+    "report": "Relato"
+  },
+  "picker": {
+    "distance": "{code} · {km} km",
+    "near": "Perto",
+    "recent": "Recentes",
+    "recentEmpty": "Nenhuma máquina recente",
+    "recentEmptyBody": "Busque ou leia o código da máquina.",
+    "scan": "Ler código",
+    "search": "Buscar",
+    "searchLabel": "Nome, código ou placa",
+    "searchPlaceholder": "Ex.: trator 7230",
+    "selected": "Selecionada",
+    "unregistered": "Máquina sem cadastro",
+    "unregisteredHint": "Descreva a máquina; o escritório faz o cadastro depois.",
+    "unregisteredLabel": "Descrição da máquina"
+  },
+  "scan": {
+    "aim": "Aponte para o QR ou etiqueta",
+    "find": "Buscar",
+    "manualHint": "Está escrito na etiqueta da máquina",
+    "manualLabel": "Código da máquina",
+    "typeCode": "Digitar código",
+    "useCamera": "Usar câmera"
+  },
+  "status": {
+    "ACCEPTED": "Aceito",
+    "ACTIVE": "Ativa",
+    "ASSIGNED": "Atribuído",
+    "CANCELLED": "Cancelado",
+    "CLOSED": "Encerrada",
+    "COMPLETED": "Concluído",
+    "DISMISSED": "Arquivado",
+    "DRAFT": "Rascunho",
+    "EN_ROUTE": "A caminho",
+    "IN_PROGRESS": "Em andamento",
+    "IN_REVIEW": "Em análise",
+    "MARKED_FOR_REPAIR": "Para reparo",
+    "MONITORING": "Em observação",
+    "ON_HOLD": "Pausado",
+    "ON_SITE": "No local",
+    "OPEN": "Aberto",
+    "RESERVED": "Reservada",
+    "RETURNED": "Devolvida",
+    "SUBMITTED": "Enviado",
+    "VERIFIED": "Verificado"
+  }
+}

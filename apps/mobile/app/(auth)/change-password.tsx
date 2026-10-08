@@ -1,6 +1,8 @@
-import { PlaceholderScreen } from "../../src/components";
+import { ChangePasswordScreen } from "../../src/auth/ui";
 import { routeKeys } from "../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.changePassword} />;
+  return <ChangePasswordScreen />;
 }
+
+export const titleKey = routeKeys.changePassword;

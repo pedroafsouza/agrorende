@@ -1,18 +1,25 @@
-import { View, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import type { MessageKey } from "../i18n/messages";
+import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { minTouchTarget, statusTone } from "./theme";
+import { statusTone, useTheme, type StatusTone } from "./theme";
 
-type StatusPillProps = { readonly labelKey: MessageKey; readonly tone: "success" | "warning" | "danger" | "info" | "neutral" };
+export type StatusPillProps = { readonly labelKey: MessageKey; readonly tone: StatusTone; readonly testID?: string };
 
-export function StatusPill({ labelKey, tone }: StatusPillProps) {
-  const status = statusTone(tone);
+/** Status = colour + icon + word (§3.7). */
+export function StatusPill({ labelKey, tone, testID }: StatusPillProps) {
+  const theme = useTheme();
+  const style = statusTone(tone, theme);
   return (
-    <View style={[styles.base, { backgroundColor: status.backgroundColor, borderColor: status.color }]}>
-      <Text i18nKey={labelKey} />
+    <View testID={testID} style={[styles.base, { backgroundColor: style.backgroundColor, borderColor: style.color }]}>
+      <Icon icon={style.icon} size={18} color={style.onFill} />
+      <Text i18nKey={labelKey} variant="caption" color={style.onFill} style={styles.text} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({ base: { alignItems: "center", borderRadius: 999, borderWidth: 2, minHeight: minTouchTarget, paddingHorizontal: 16 } });
+const styles = StyleSheet.create({
+  base: { alignItems: "center", alignSelf: "flex-start", borderRadius: 999, borderWidth: 2, flexDirection: "row", gap: 6, minHeight: 32, paddingHorizontal: 12 },
+  text: { fontWeight: "600" },
+});

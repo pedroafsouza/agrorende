@@ -1,0 +1,122 @@
+{
+  "action": {
+    "discard": "Discard",
+    "syncNow": "Sync now",
+    "understood": "Got it"
+  },
+  "badge": {
+    "failed": "Send failed",
+    "offline": "Offline",
+    "pending": "Pending",
+    "sending": "Sending",
+    "synced": "All sent"
+  },
+  "center": {
+    "open": "Open sync"
+  },
+  "diagnostics": {
+    "body": "{count, plural, one {{count} diagnostics entry} other {{count} diagnostics entries}}",
+    "send": "Send diagnostics",
+    "sent": "Diagnostics sent",
+    "title": "Diagnostics"
+  },
+  "discard": {
+    "body": "This item will not be sent and cannot be recovered.",
+    "title": "Discard this item?"
+  },
+  "empty": {
+    "body": "Nothing is waiting to be sent.",
+    "title": "All caught up"
+  },
+  "lastSync": {
+    "at": "Last sync: {when}",
+    "never": "Not synced yet"
+  },
+  "mutation": {
+    "asset": {
+      "updateReadings": "Machine reading"
+    },
+    "comment": {
+      "create": "Comment"
+    },
+    "fieldReport": {
+      "create": "New report",
+      "update": "Report edit",
+      "withdraw": "Report withdrawn"
+    },
+    "fuelLog": {
+      "create": "Fuel log"
+    },
+    "inspection": {
+      "submit": "Inspection"
+    },
+    "media": {
+      "delete": "Media deleted",
+      "register": "Media record",
+      "update": "Media edit"
+    },
+    "notification": {
+      "markRead": "Notification read"
+    },
+    "rental": {
+      "checkin": "Rental return",
+      "checkout": "Rental checkout"
+    },
+    "user": {
+      "setDuty": "Duty change"
+    },
+    "workOrder": {
+      "addPart": "Part added",
+      "complete": "Job completed",
+      "removePart": "Part removed",
+      "saveChecklist": "Checklist saved",
+      "transition": "Job status change"
+    }
+  },
+  "offline": {
+    "body": "Your work is saved and sent when the connection returns.",
+    "title": "No connection"
+  },
+  "pending": {
+    "bytes": "{size} to send",
+    "summary": "{count, plural, one {{count} pending} other {{count} pending}}"
+  },
+  "section": {
+    "conflicts": "Needs attention",
+    "outbox": "{count, plural, one {Action ({count})} other {Actions ({count})}}",
+    "uploads": "{count, plural, one {Upload ({count})} other {Uploads ({count})}}"
+  },
+  "size": {
+    "kb": "{value} KB",
+    "mb": "{value} MB"
+  },
+  "status": {
+    "IN_FLIGHT": "Sending",
+    "PENDING": "Queued",
+    "REJECTED": "Rejected"
+  },
+  "time": {
+    "days": "{count, plural, one {{count} day ago} other {{count} days ago}}",
+    "hours": "{count, plural, one {{count} hour ago} other {{count} hours ago}}",
+    "minutes": "{count, plural, one {{count} minute ago} other {{count} minutes ago}}",
+    "now": "just now"
+  },
+  "upload": {
+    "kind": {
+      "AUDIO": "Audio",
+      "DOCUMENT": "Document",
+      "PHOTO": "Photo",
+      "SIGNATURE": "Signature",
+      "VIDEO": "Video"
+    },
+    "state": {
+      "DONE": "Sent",
+      "FAILED": "Failed",
+      "QUEUED": "Queued",
+      "UPLOADED": "Processing",
+      "UPLOADING": "Uploading",
+      "WAITING_PARENT": "Waiting for record"
+    },
+    "waitingWifi": "Waiting for Wi-Fi"
+  }
+}

@@ -1,1 +1,394 @@
-{}
+{
+  "env": {
+    "development": "Development environment",
+    "staging": "Staging environment"
+  },
+  "media": {
+    "capture": {
+      "count": "{count, plural, one {{count} photo} other {{count} photos}}",
+      "open": "Open camera",
+      "photo": "Photo",
+      "record": "Record",
+      "recording": "Recording",
+      "shoot": "Take photo",
+      "stop": "Stop",
+      "video": "Video"
+    },
+    "delete": "Delete media",
+    "register": "Register media",
+    "silhouette": {
+      "cab": "Cab",
+      "front": "Front",
+      "fuelGauge": "Fuel gauge",
+      "hourMeter": "Hour meter",
+      "left": "Left side",
+      "rear": "Rear",
+      "right": "Right side"
+    },
+    "tag": {
+      "AFTER": "After",
+      "BEFORE": "Before",
+      "CHECKLIST_ITEM": "Checklist item",
+      "DAMAGE": "Damage",
+      "FUEL_GAUGE": "Fuel gauge",
+      "FUEL_PUMP": "Fuel pump",
+      "GENERAL": "General",
+      "HOUR_METER": "Hour meter",
+      "PLATE": "Plate",
+      "SIGNATURE_AGENT": "Agent signature",
+      "SIGNATURE_CUSTOMER": "Customer signature",
+      "SIGNATURE_TECHNICIAN": "Technician signature",
+      "WALKAROUND_CAB": "Cab",
+      "WALKAROUND_FRONT": "Front",
+      "WALKAROUND_LEFT": "Left side",
+      "WALKAROUND_REAR": "Rear",
+      "WALKAROUND_RIGHT": "Right side"
+    },
+    "update": "Update media",
+    "voice": {
+      "record": "Record audio",
+      "stop": "Stop audio"
+    }
+  },
+  "permissions": {
+    "action": {
+      "askAgain": "Allow",
+      "checkAgain": "Check again",
+      "openSettings": "Open settings"
+    },
+    "camera": {
+      "alt": "Continue without photo",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed to photograph machines and problems.",
+        "title": "Access blocked: camera"
+      },
+      "denied": {
+        "body": "This access is needed to photograph machines and problems. You can allow it now.",
+        "title": "Access denied: camera"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: camera"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: camera"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the camera to photograph machines and problems.",
+        "title": "Allow camera?"
+      }
+    },
+    "locationBackground": {
+      "alt": "Use only while the app is open",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed so the office can see you while on duty.",
+        "title": "Access blocked: background location"
+      },
+      "denied": {
+        "body": "This access is needed so the office can see you while on duty. You can allow it now.",
+        "title": "Access denied: background location"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: background location"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: background location"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the background location so the office can see you while on duty.",
+        "title": "Allow background location?"
+      }
+    },
+    "locationForeground": {
+      "alt": "Pick on the map",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed to mark where the machine is.",
+        "title": "Access blocked: location"
+      },
+      "denied": {
+        "body": "This access is needed to mark where the machine is. You can allow it now.",
+        "title": "Access denied: location"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: location"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: location"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the location to mark where the machine is.",
+        "title": "Allow location?"
+      }
+    },
+    "microphone": {
+      "alt": "Type instead of recording",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed to record audio and video.",
+        "title": "Access blocked: microphone"
+      },
+      "denied": {
+        "body": "This access is needed to record audio and video. You can allow it now.",
+        "title": "Access denied: microphone"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: microphone"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: microphone"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the microphone to record audio and video.",
+        "title": "Allow microphone?"
+      }
+    },
+    "notifications": {
+      "alt": "Continue without notifications",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed to tell you about new jobs.",
+        "title": "Access blocked: notifications"
+      },
+      "denied": {
+        "body": "This access is needed to tell you about new jobs. You can allow it now.",
+        "title": "Access denied: notifications"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: notifications"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: notifications"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the notifications to tell you about new jobs.",
+        "title": "Allow notifications?"
+      }
+    },
+    "photos": {
+      "alt": "Use the camera",
+      "blocked": {
+        "body": "Turn it on in the device settings. It is needed to attach photos from the gallery.",
+        "title": "Access blocked: photos"
+      },
+      "denied": {
+        "body": "This access is needed to attach photos from the gallery. You can allow it now.",
+        "title": "Access denied: photos"
+      },
+      "granted": {
+        "body": "All set.",
+        "title": "Access allowed: photos"
+      },
+      "limited": {
+        "body": "Access is limited. Check again after allowing it in settings.",
+        "title": "Limited access: photos"
+      },
+      "undetermined": {
+        "body": "AgroRende uses the photos to attach photos from the gallery.",
+        "title": "Allow photos?"
+      }
+    }
+  },
+  "placeholder": {
+    "body": "This screen is coming soon.",
+    "cta": "Go back"
+  },
+  "routes": {
+    "app": {
+      "shell": "AgroRende"
+    },
+    "assets": {
+      "detail": "Machine",
+      "index": "Machines"
+    },
+    "auth": {
+      "changePassword": "Change password",
+      "login": "Sign in",
+      "onboarding": "Welcome"
+    },
+    "dev": {
+      "styleGuide": "Style guide"
+    },
+    "fuel": {
+      "new": "Fuel log"
+    },
+    "jobs": {
+      "checklist": "Checklist",
+      "complete": "Complete job",
+      "detail": "Job",
+      "parts": "Parts"
+    },
+    "notifications": "Notifications",
+    "rentals": {
+      "checkin": "Machine return",
+      "checkout": "Machine checkout",
+      "detail": "Rental",
+      "new": "New rental"
+    },
+    "reports": {
+      "detail": "Report",
+      "new": "New report"
+    },
+    "root": "AgroRende",
+    "scan": "Scan code",
+    "settings": "Settings",
+    "syncCenter": "Sync center",
+    "tabs": {
+      "jobs": "Jobs",
+      "more": "More",
+      "rentals": "Rentals",
+      "reports": "Reports",
+      "shell": "AgroRende",
+      "today": "Today"
+    }
+  },
+  "ui": {
+    "action": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "confirm": "Confirm",
+      "delete": "Delete",
+      "dismiss": "Dismiss",
+      "next": "Next",
+      "retry": "Try again",
+      "save": "Save",
+      "select": "Select",
+      "undo": "Undo"
+    },
+    "checklist": {
+      "addPhoto": "Photo ({count})",
+      "answered": "Answered",
+      "fail": "Fail",
+      "na": "N/A",
+      "pass": "Pass",
+      "photoRequired": "Photo required",
+      "previous": "Last time: {value}",
+      "progress": "{answered} of {total} answered",
+      "required": "Required",
+      "safetyCritical": "Safety item",
+      "stopWork": {
+        "back": "Back to checklist",
+        "body": "\"{item}\" failed. Stop work and tell the office before you continue.",
+        "confirm": "I stopped work",
+        "title": "Stop work"
+      },
+      "value": "Value"
+    },
+    "duty": {
+      "consentAccept": "I agree, go on duty",
+      "consentBody": "While you are on duty, the app shares your location with the office to plan jobs. Off duty, nothing is shared.",
+      "consentTitle": "Share location while on duty",
+      "goOff": "Go off duty",
+      "goOn": "Go on duty",
+      "notificationBody": "Your location is shared while you are on duty.",
+      "notificationTitle": "AgroRende on duty",
+      "off": "Off duty",
+      "offBody": "Your location is not shared.",
+      "on": "On duty",
+      "onBody": "The office can see where you are.",
+      "title": "Duty"
+    },
+    "empty": {
+      "body": "When there is something here, it shows up in this list.",
+      "title": "Nothing here"
+    },
+    "error": {
+      "body": "Your data is saved on this device. Try again.",
+      "title": "Something went wrong"
+    },
+    "home": {
+      "firstSyncBody": "Downloading machines, jobs and rentals. You can already create reports.",
+      "firstSyncTitle": "Setting up this device",
+      "greeting": "Hello, {name}",
+      "myReports": "My reports",
+      "myReportsBody": "Follow what you reported",
+      "nextJob": "Next job",
+      "nextJobBody": "See today's jobs",
+      "quickReport": "Report a problem",
+      "quickReportBody": "Photos, audio and location in a few taps",
+      "rentalsToday": "Today's rentals",
+      "rentalsTodayBody": "Checkouts and returns",
+      "signInAgain": "Sign in again"
+    },
+    "loading": "Loading",
+    "map": {
+      "navigate": "Navigate there"
+    },
+    "more": {
+      "assets": "Machines",
+      "assetsBody": "Search and see history",
+      "fuel": "Fuel log",
+      "fuelBody": "Record fuel",
+      "notifications": "Notifications",
+      "notificationsBody": "Messages from the office",
+      "scan": "Scan code",
+      "scanBody": "Machine QR or tag",
+      "settings": "Settings",
+      "settingsBody": "Language, theme and account",
+      "sync": "Sync",
+      "syncBody": "Pending items and uploads"
+    },
+    "number": {
+      "decrease": "Decrease",
+      "increase": "Increase"
+    },
+    "recovery": {
+      "alt": "Use another way",
+      "auto": "Try again",
+      "diag": "Send diagnostics",
+      "draft": "Save draft",
+      "fallback": "Continue without it",
+      "fix": "Fix it",
+      "handoff": "Hand off to the office",
+      "office": "Contact the office",
+      "officeMessage": "Hello, I need help in AgroRende: {title} (code {code}, reference {reference}).",
+      "reauth": "Sign in again",
+      "recentlyDeleted": "Recently deleted",
+      "recentlyDeletedEmpty": "Nothing deleted",
+      "recentlyDeletedHint": "Deleted items stay here for 30 days.",
+      "restore": "Restore",
+      "settings": "Open settings",
+      "update": "Update the app"
+    },
+    "signature": {
+      "absent": "Customer absent",
+      "absentReason": "Why is the customer absent?",
+      "clear": "Clear",
+      "confirmWithout": "Confirm without signature",
+      "document": "ID document",
+      "documentOptional": "ID document (optional)",
+      "name": "Signer name",
+      "refused": "Customer refused",
+      "refusedReason": "Reason for refusal",
+      "save": "Save signature",
+      "sign": "Sign here",
+      "signed": "Signed",
+      "statement": "I, {name}, confirm the information above.",
+      "title": "Signature"
+    },
+    "slider": {
+      "value": "{value} of {steps}"
+    },
+    "status": {
+      "failed": "Failed",
+      "pending": "Pending",
+      "synced": "Synced"
+    },
+    "toast": {
+      "saved": "Saved on this device"
+    },
+    "wizard": {
+      "back": "Back",
+      "incomplete": "Fill in the required fields",
+      "next": "Next",
+      "progress": "Step {current} of {total}",
+      "submit": "Submit"
+    }
+  }
+}

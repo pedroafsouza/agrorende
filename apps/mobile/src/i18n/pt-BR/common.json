@@ -1,1 +1,394 @@
-{}
+{
+  "env": {
+    "development": "Ambiente de desenvolvimento",
+    "staging": "Ambiente de testes"
+  },
+  "media": {
+    "capture": {
+      "count": "{count, plural, one {{count} foto} other {{count} fotos}}",
+      "open": "Abrir câmera",
+      "photo": "Foto",
+      "record": "Gravar",
+      "recording": "Gravando",
+      "shoot": "Fotografar",
+      "stop": "Parar",
+      "video": "Vídeo"
+    },
+    "delete": "Excluir mídia",
+    "register": "Registrar mídia",
+    "silhouette": {
+      "cab": "Cabine",
+      "front": "Frente",
+      "fuelGauge": "Marcador de combustível",
+      "hourMeter": "Horímetro",
+      "left": "Lado esquerdo",
+      "rear": "Traseira",
+      "right": "Lado direito"
+    },
+    "tag": {
+      "AFTER": "Depois",
+      "BEFORE": "Antes",
+      "CHECKLIST_ITEM": "Item do checklist",
+      "DAMAGE": "Avaria",
+      "FUEL_GAUGE": "Combustível",
+      "FUEL_PUMP": "Bomba de combustível",
+      "GENERAL": "Geral",
+      "HOUR_METER": "Horímetro",
+      "PLATE": "Placa",
+      "SIGNATURE_AGENT": "Assinatura do agente",
+      "SIGNATURE_CUSTOMER": "Assinatura do cliente",
+      "SIGNATURE_TECHNICIAN": "Assinatura do técnico",
+      "WALKAROUND_CAB": "Cabine",
+      "WALKAROUND_FRONT": "Frente",
+      "WALKAROUND_LEFT": "Lado esquerdo",
+      "WALKAROUND_REAR": "Traseira",
+      "WALKAROUND_RIGHT": "Lado direito"
+    },
+    "update": "Atualizar mídia",
+    "voice": {
+      "record": "Gravar áudio",
+      "stop": "Parar áudio"
+    }
+  },
+  "permissions": {
+    "action": {
+      "askAgain": "Permitir",
+      "checkAgain": "Verificar de novo",
+      "openSettings": "Abrir ajustes"
+    },
+    "camera": {
+      "alt": "Continuar sem foto",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para fotografar máquinas e problemas.",
+        "title": "Acesso bloqueado: câmera"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para fotografar máquinas e problemas. Você pode permitir agora.",
+        "title": "Acesso negado: câmera"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: câmera"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: câmera"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa a câmera para fotografar máquinas e problemas.",
+        "title": "Permitir câmera?"
+      }
+    },
+    "locationBackground": {
+      "alt": "Usar só com o app aberto",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para o escritório ver você enquanto está em serviço.",
+        "title": "Acesso bloqueado: localização em segundo plano"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para o escritório ver você enquanto está em serviço. Você pode permitir agora.",
+        "title": "Acesso negado: localização em segundo plano"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: localização em segundo plano"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: localização em segundo plano"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa a localização em segundo plano para o escritório ver você enquanto está em serviço.",
+        "title": "Permitir localização em segundo plano?"
+      }
+    },
+    "locationForeground": {
+      "alt": "Marcar no mapa",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para marcar onde está a máquina.",
+        "title": "Acesso bloqueado: localização"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para marcar onde está a máquina. Você pode permitir agora.",
+        "title": "Acesso negado: localização"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: localização"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: localização"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa a localização para marcar onde está a máquina.",
+        "title": "Permitir localização?"
+      }
+    },
+    "microphone": {
+      "alt": "Escrever em vez de gravar",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para gravar áudio e vídeo.",
+        "title": "Acesso bloqueado: microfone"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para gravar áudio e vídeo. Você pode permitir agora.",
+        "title": "Acesso negado: microfone"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: microfone"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: microfone"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa o microfone para gravar áudio e vídeo.",
+        "title": "Permitir microfone?"
+      }
+    },
+    "notifications": {
+      "alt": "Continuar sem avisos",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para avisar de serviços novos.",
+        "title": "Acesso bloqueado: notificações"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para avisar de serviços novos. Você pode permitir agora.",
+        "title": "Acesso negado: notificações"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: notificações"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: notificações"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa as notificações para avisar de serviços novos.",
+        "title": "Permitir notificações?"
+      }
+    },
+    "photos": {
+      "alt": "Usar a câmera",
+      "blocked": {
+        "body": "Libere nos ajustes do aparelho. Esse acesso serve para anexar fotos da galeria.",
+        "title": "Acesso bloqueado: fotos"
+      },
+      "denied": {
+        "body": "Sem esse acesso não dá para anexar fotos da galeria. Você pode permitir agora.",
+        "title": "Acesso negado: fotos"
+      },
+      "granted": {
+        "body": "Tudo certo.",
+        "title": "Acesso liberado: fotos"
+      },
+      "limited": {
+        "body": "O acesso está limitado. Verifique de novo depois de liberar nos ajustes.",
+        "title": "Acesso parcial: fotos"
+      },
+      "undetermined": {
+        "body": "O AgroRende usa as fotos para anexar fotos da galeria.",
+        "title": "Permitir fotos?"
+      }
+    }
+  },
+  "placeholder": {
+    "body": "Esta tela chega em breve.",
+    "cta": "Voltar"
+  },
+  "routes": {
+    "app": {
+      "shell": "AgroRende"
+    },
+    "assets": {
+      "detail": "Máquina",
+      "index": "Máquinas"
+    },
+    "auth": {
+      "changePassword": "Trocar senha",
+      "login": "Entrar",
+      "onboarding": "Boas-vindas"
+    },
+    "dev": {
+      "styleGuide": "Guia de estilo"
+    },
+    "fuel": {
+      "new": "Abastecimento"
+    },
+    "jobs": {
+      "checklist": "Checklist",
+      "complete": "Concluir serviço",
+      "detail": "Serviço",
+      "parts": "Peças"
+    },
+    "notifications": "Notificações",
+    "rentals": {
+      "checkin": "Devolução da máquina",
+      "checkout": "Saída da máquina",
+      "detail": "Locação",
+      "new": "Nova locação"
+    },
+    "reports": {
+      "detail": "Relato",
+      "new": "Novo relato"
+    },
+    "root": "AgroRende",
+    "scan": "Ler código",
+    "settings": "Configurações",
+    "syncCenter": "Central de sincronização",
+    "tabs": {
+      "jobs": "Serviços",
+      "more": "Mais",
+      "rentals": "Locações",
+      "reports": "Relatos",
+      "shell": "AgroRende",
+      "today": "Hoje"
+    }
+  },
+  "ui": {
+    "action": {
+      "cancel": "Cancelar",
+      "close": "Fechar",
+      "confirm": "Confirmar",
+      "delete": "Excluir",
+      "dismiss": "Dispensar",
+      "next": "Próximo",
+      "retry": "Tentar de novo",
+      "save": "Salvar",
+      "select": "Selecionar",
+      "undo": "Desfazer"
+    },
+    "checklist": {
+      "addPhoto": "Foto ({count})",
+      "answered": "Respondido",
+      "fail": "Não conforme",
+      "na": "Não se aplica",
+      "pass": "Conforme",
+      "photoRequired": "Foto obrigatória",
+      "previous": "Última vez: {value}",
+      "progress": "{answered} de {total} respondidos",
+      "required": "Obrigatório",
+      "safetyCritical": "Item de segurança",
+      "stopWork": {
+        "back": "Voltar ao checklist",
+        "body": "\"{item}\" falhou. Pare o trabalho e avise o escritório antes de continuar.",
+        "confirm": "Parei o trabalho",
+        "title": "Pare o trabalho"
+      },
+      "value": "Valor"
+    },
+    "duty": {
+      "consentAccept": "Concordo, entrar em serviço",
+      "consentBody": "Enquanto você estiver em serviço, o app envia sua localização ao escritório para organizar os atendimentos. Fora de serviço, nada é enviado.",
+      "consentTitle": "Compartilhar localização em serviço",
+      "goOff": "Sair de serviço",
+      "goOn": "Entrar em serviço",
+      "notificationBody": "Sua localização é compartilhada enquanto você está em serviço.",
+      "notificationTitle": "AgroRende em serviço",
+      "off": "Fora de serviço",
+      "offBody": "Sua localização não é compartilhada.",
+      "on": "Em serviço",
+      "onBody": "O escritório vê onde você está.",
+      "title": "Expediente"
+    },
+    "empty": {
+      "body": "Quando houver algo aqui, aparece nesta lista.",
+      "title": "Nada por aqui"
+    },
+    "error": {
+      "body": "Seus dados estão salvos no aparelho. Tente de novo.",
+      "title": "Algo deu errado"
+    },
+    "home": {
+      "firstSyncBody": "Baixando máquinas, serviços e locações. Você já pode criar relatos.",
+      "firstSyncTitle": "Preparando o aparelho",
+      "greeting": "Olá, {name}",
+      "myReports": "Meus relatos",
+      "myReportsBody": "Acompanhe o que você relatou",
+      "nextJob": "Próximo serviço",
+      "nextJobBody": "Veja seus serviços de hoje",
+      "quickReport": "Relatar problema",
+      "quickReportBody": "Fotos, áudio e local em poucos toques",
+      "rentalsToday": "Locações de hoje",
+      "rentalsTodayBody": "Saídas e devoluções",
+      "signInAgain": "Entrar de novo"
+    },
+    "loading": "Carregando",
+    "map": {
+      "navigate": "Navegar até lá"
+    },
+    "more": {
+      "assets": "Máquinas",
+      "assetsBody": "Buscar e ver histórico",
+      "fuel": "Abastecimento",
+      "fuelBody": "Registrar combustível",
+      "notifications": "Notificações",
+      "notificationsBody": "Avisos do escritório",
+      "scan": "Ler código",
+      "scanBody": "QR ou etiqueta da máquina",
+      "settings": "Configurações",
+      "settingsBody": "Idioma, tema e conta",
+      "sync": "Sincronização",
+      "syncBody": "Pendências e envios"
+    },
+    "number": {
+      "decrease": "Diminuir",
+      "increase": "Aumentar"
+    },
+    "recovery": {
+      "alt": "Usar outra forma",
+      "auto": "Tentar de novo",
+      "diag": "Enviar diagnóstico",
+      "draft": "Salvar rascunho",
+      "fallback": "Continuar sem isso",
+      "fix": "Corrigir",
+      "handoff": "Passar para o escritório",
+      "office": "Falar com o escritório",
+      "officeMessage": "Olá, preciso de ajuda no AgroRende: {title} (código {code}, referência {reference}).",
+      "reauth": "Entrar de novo",
+      "recentlyDeleted": "Excluídos recentemente",
+      "recentlyDeletedEmpty": "Nada excluído",
+      "recentlyDeletedHint": "Itens excluídos ficam aqui por 30 dias.",
+      "restore": "Restaurar",
+      "settings": "Abrir ajustes",
+      "update": "Atualizar o app"
+    },
+    "signature": {
+      "absent": "Cliente ausente",
+      "absentReason": "Por que o cliente não está?",
+      "clear": "Limpar",
+      "confirmWithout": "Confirmar sem assinatura",
+      "document": "Documento",
+      "documentOptional": "Documento (opcional)",
+      "name": "Nome de quem assina",
+      "refused": "Cliente recusou",
+      "refusedReason": "Motivo da recusa",
+      "save": "Salvar assinatura",
+      "sign": "Assine aqui",
+      "signed": "Assinado",
+      "statement": "Eu, {name}, confirmo as informações acima.",
+      "title": "Assinatura"
+    },
+    "slider": {
+      "value": "{value} de {steps}"
+    },
+    "status": {
+      "failed": "Falhou",
+      "pending": "Pendente",
+      "synced": "Enviado"
+    },
+    "toast": {
+      "saved": "Salvo no aparelho"
+    },
+    "wizard": {
+      "back": "Voltar",
+      "incomplete": "Preencha os campos obrigatórios",
+      "next": "Próximo",
+      "progress": "Passo {current} de {total}",
+      "submit": "Enviar"
+    }
+  }
+}

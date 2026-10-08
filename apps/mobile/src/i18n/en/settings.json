@@ -1,0 +1,46 @@
+{
+  "account": {
+    "delete": "Delete my account",
+    "deleteBody": "Your account and personal data will be removed. Work records stay with the company.",
+    "deleteConfirm": "Delete account",
+    "deletePhrase": "DELETE",
+    "deleteTitle": "Delete account?",
+    "deleteTypeHint": "Type the word above to confirm",
+    "deleteTypeLabel": "Confirmation",
+    "logout": "Sign out on this device",
+    "logoutAnyway": "Sign out anyway",
+    "sending": "Sending…",
+    "title": "Account"
+  },
+  "help": {
+    "body": "Diagnostics, app version and contact",
+    "syncCenter": "Sync center",
+    "syncCenterBody": "See what still needs sending",
+    "title": "Help"
+  },
+  "language": {
+    "body": "Changes right away on this device",
+    "en": "English",
+    "pt-BR": "Português",
+    "title": "Language"
+  },
+  "nav": {
+    "apple": "Apple Maps",
+    "body": "App used to navigate to the machine",
+    "google": "Google Maps",
+    "system": "System maps",
+    "title": "Navigation app",
+    "waze": "Waze"
+  },
+  "theme": {
+    "dark": "Dark",
+    "light": "Light",
+    "outdoor": "Bright sun",
+    "system": "System",
+    "title": "Theme"
+  },
+  "wifiVideo": {
+    "body": "Videos wait for Wi-Fi to save mobile data",
+    "title": "Video on Wi-Fi only"
+  }
+}

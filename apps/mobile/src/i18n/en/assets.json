@@ -1,0 +1,70 @@
+{
+  "action": {
+    "checkout": "Check out",
+    "newReport": "Report a problem",
+    "scan": "Scan code"
+  },
+  "condition": {
+    "IN_REPAIR": "In repair",
+    "NEEDS_REPAIR": "Needs repair",
+    "OPERATIONAL": "Operational",
+    "OUT_OF_SERVICE": "Out of service",
+    "RETIRED": "Retired"
+  },
+  "detail": {
+    "history": "History",
+    "historyEmpty": "No history",
+    "historyEmptyBody": "Reports, jobs and rentals for this machine show up here.",
+    "hourMeter": "Hour meter: {value} h"
+  },
+  "history": {
+    "job": "Job",
+    "rental": "Rental",
+    "report": "Report"
+  },
+  "picker": {
+    "distance": "{code} · {km} km",
+    "near": "Nearby",
+    "recent": "Recent",
+    "recentEmpty": "No recent machines",
+    "recentEmptyBody": "Search or scan the machine code.",
+    "scan": "Scan code",
+    "search": "Search",
+    "searchLabel": "Name, code or plate",
+    "searchPlaceholder": "E.g. tractor 7230",
+    "selected": "Selected",
+    "unregistered": "Unregistered machine",
+    "unregisteredHint": "Describe the machine; the office registers it later.",
+    "unregisteredLabel": "Machine description"
+  },
+  "scan": {
+    "aim": "Point at the QR code or tag",
+    "find": "Find",
+    "manualHint": "It is printed on the machine tag",
+    "manualLabel": "Machine code",
+    "typeCode": "Type the code",
+    "useCamera": "Use camera"
+  },
+  "status": {
+    "ACCEPTED": "Accepted",
+    "ACTIVE": "Active",
+    "ASSIGNED": "Assigned",
+    "CANCELLED": "Cancelled",
+    "CLOSED": "Closed",
+    "COMPLETED": "Completed",
+    "DISMISSED": "Dismissed",
+    "DRAFT": "Draft",
+    "EN_ROUTE": "En route",
+    "IN_PROGRESS": "In progress",
+    "IN_REVIEW": "In review",
+    "MARKED_FOR_REPAIR": "Marked for repair",
+    "MONITORING": "Monitoring",
+    "ON_HOLD": "On hold",
+    "ON_SITE": "On site",
+    "OPEN": "Open",
+    "RESERVED": "Reserved",
+    "RETURNED": "Returned",
+    "SUBMITTED": "Submitted",
+    "VERIFIED": "Verified"
+  }
+}

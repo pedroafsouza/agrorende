@@ -1,6 +1,8 @@
-import { PlaceholderScreen } from "../../../src/components";
+import { TodayScreen } from "../../../src/features/home";
 import { routeKeys } from "../../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.today} />;
+  return <TodayScreen />;
 }
+
+export const titleKey = routeKeys.today;

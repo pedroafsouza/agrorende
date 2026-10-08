@@ -1,0 +1,46 @@
+{
+  "account": {
+    "delete": "Excluir minha conta",
+    "deleteBody": "Sua conta e seus dados pessoais serão removidos. Os registros de trabalho continuam com a empresa.",
+    "deleteConfirm": "Excluir conta",
+    "deletePhrase": "EXCLUIR",
+    "deleteTitle": "Excluir conta?",
+    "deleteTypeHint": "Digite a palavra acima para confirmar",
+    "deleteTypeLabel": "Confirmação",
+    "logout": "Sair deste aparelho",
+    "logoutAnyway": "Sair mesmo assim",
+    "sending": "Enviando…",
+    "title": "Conta"
+  },
+  "help": {
+    "body": "Diagnóstico, versão do app e contato",
+    "syncCenter": "Central de sincronização",
+    "syncCenterBody": "Veja o que falta enviar",
+    "title": "Ajuda"
+  },
+  "language": {
+    "body": "Muda na hora neste aparelho",
+    "en": "English",
+    "pt-BR": "Português",
+    "title": "Idioma"
+  },
+  "nav": {
+    "apple": "Mapas da Apple",
+    "body": "App usado para navegar até a máquina",
+    "google": "Google Maps",
+    "system": "Mapa do sistema",
+    "title": "App de navegação",
+    "waze": "Waze"
+  },
+  "theme": {
+    "dark": "Escuro",
+    "light": "Claro",
+    "outdoor": "Sol forte",
+    "system": "Sistema",
+    "title": "Tema"
+  },
+  "wifiVideo": {
+    "body": "Vídeos esperam o Wi-Fi para economizar dados",
+    "title": "Vídeo só no Wi-Fi"
+  }
+}

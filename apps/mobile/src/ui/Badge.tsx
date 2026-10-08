@@ -1,5 +1,19 @@
-import { notImplemented } from "../lib/notImplemented";
+import { StyleSheet, View } from "react-native";
 
-export function Badge(): never {
-  return notImplemented("ui.Badge");
+import type { MessageKey, MessageValues } from "../i18n/messages";
+import { Text } from "./Text";
+import { statusTone, useTheme, type StatusTone } from "./theme";
+
+export type BadgeProps = { readonly labelKey: MessageKey; readonly values?: MessageValues; readonly tone?: StatusTone };
+
+export function Badge({ labelKey, values, tone = "neutral" }: BadgeProps) {
+  const theme = useTheme();
+  const style = statusTone(tone, theme);
+  return (
+    <View style={[styles.base, { backgroundColor: style.backgroundColor, borderColor: style.color }]}>
+      <Text i18nKey={labelKey} values={values} variant="caption" color={style.onFill} style={styles.text} />
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({ base: { alignSelf: "flex-start", borderRadius: 6, borderWidth: 1, paddingHorizontal: 8, paddingVertical: 2 }, text: { fontWeight: "600" } });

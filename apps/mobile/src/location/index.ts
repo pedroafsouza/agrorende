@@ -1,5 +1,2 @@
-import { notImplemented } from "../lib/notImplemented";
-
-export function createLocationService(): never {
-  return notImplemented("location.createService");
-}
+export * from "./buffer";
+export * from "./consent";

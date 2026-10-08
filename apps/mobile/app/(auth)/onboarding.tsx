@@ -1,6 +1,8 @@
-import { PlaceholderScreen } from "../../src/components";
+import { OnboardingScreen } from "../../src/auth/ui";
 import { routeKeys } from "../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.onboarding} />;
+  return <OnboardingScreen />;
 }
+
+export const titleKey = routeKeys.onboarding;
