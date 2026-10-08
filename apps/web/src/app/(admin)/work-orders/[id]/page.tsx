@@ -1,5 +1,11 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { WorkOrderDetailPage } from "@/features/work-orders/WorkOrderDetailPage";
+import { WorkOrdersIntl } from "@/features/work-orders/WorkOrdersIntl";
 
-export default function AdminworkOrdersidpage() {
-  return <PlaceholderPage descriptionKey="page.workOrderDetail.description" route="/work-orders/[id]" titleKey="page.workOrderDetail.title" />;
+export default async function WorkOrderPage({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return (
+    <WorkOrdersIntl>
+      <WorkOrderDetailPage id={id} />
+    </WorkOrdersIntl>
+  );
 }

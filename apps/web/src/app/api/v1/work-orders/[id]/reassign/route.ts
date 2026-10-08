@@ -1,3 +1,7 @@
-import { notImplemented } from "@/server/withApi";
+import { workOrdersCore } from "@/features/work-orders/server";
+import { OFFICE, param, readJson, route, write } from "@/lib/core.server";
 
-export const POST = notImplemented("POST", "/api/v1/work-orders/:id/reassign");
+export const POST = route(OFFICE, async (request, ctx, params) => {
+  const body = await readJson(request);
+  return write(ctx, (tx) => workOrdersCore.reassign(tx, ctx, param(params, "id"), body));
+});

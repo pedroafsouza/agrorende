@@ -1,0 +1,156 @@
+{
+  "list": {
+    "today": "Today",
+    "upcoming": "Upcoming",
+    "done": "Done",
+    "overdue": "Overdue",
+    "pending": "Waiting to send",
+    "empty": {
+      "today": {
+        "title": "Nothing for today",
+        "body": "When the office assigns you a job, it shows up here."
+      },
+      "upcoming": {
+        "title": "No jobs scheduled",
+        "body": "Jobs for the coming days show up here."
+      },
+      "done": {
+        "title": "No finished jobs",
+        "body": "Jobs finished in the last 7 days show up here."
+      }
+    }
+  },
+  "actions": {
+    "assign": "Assign",
+    "reassign": "Reassign",
+    "accept": "Accept job",
+    "decline": "Decline",
+    "startRoute": "On my way",
+    "arrive": "I've arrived",
+    "abortRoute": "Stop travel",
+    "startWork": "Start work",
+    "hold": "Pause",
+    "resume": "Resume",
+    "complete": "Finish job",
+    "verify": "Verify",
+    "reopen": "Reopen",
+    "cancel": "Cancel",
+    "navigate": "Navigate",
+    "checklist": "Checklist",
+    "parts": "Parts used"
+  },
+  "status": {
+    "OPEN": "Open",
+    "ASSIGNED": "Assigned",
+    "ACCEPTED": "Accepted",
+    "EN_ROUTE": "On the way",
+    "ON_SITE": "On site",
+    "IN_PROGRESS": "In progress",
+    "ON_HOLD": "Paused",
+    "COMPLETED": "Finished",
+    "VERIFIED": "Verified",
+    "CANCELLED": "Cancelled"
+  },
+  "priority": {
+    "LOW": "Low",
+    "MEDIUM": "Medium",
+    "HIGH": "High",
+    "CRITICAL": "Critical"
+  },
+  "holdReason": {
+    "WAITING_PARTS": "Waiting for parts",
+    "WAITING_CUSTOMER": "Waiting for customer",
+    "WEATHER": "Bad weather",
+    "NEEDS_SPECIALIST": "Needs a specialist",
+    "SAFETY": "Safety stop",
+    "OTHER": "Other reason"
+  },
+  "detail": {
+    "notFoundTitle": "Job not found",
+    "notFoundBody": "It may have been removed or not reached this phone yet. Pull to refresh.",
+    "backToJobs": "Back to jobs",
+    "backToJob": "Back to job",
+    "checklistProgress": "{done} of {total} items answered",
+    "noChecklist": "This job has no checklist",
+    "partsCount": "{count, plural, =0 {No parts} one {# part} other {# parts}}",
+    "evidence": "Photos and evidence",
+    "completeHint": "Resolution, after photo and signature"
+  },
+  "decline": {
+    "title": "Decline job",
+    "reason": "Why can't you take it?",
+    "reasonRequired": "Write the reason for the office."
+  },
+  "hold": {
+    "title": "Pause job",
+    "note": "Note (optional)",
+    "reasonRequired": "Choose why you are pausing."
+  },
+  "checklist": {
+    "progress": "{done} of {total} answered",
+    "done": "Done",
+    "emptyTitle": "No checklist",
+    "emptyBody": "This job has no items to check.",
+    "photoTitle": "Item photo",
+    "safetyStopBody": "The job is paused and the office has been told. Do not continue until they release it.",
+    "safetyStopConfirm": "Understood"
+  },
+  "parts": {
+    "add": "Add part",
+    "added": "Part added",
+    "remove": "Remove part",
+    "save": "Save part",
+    "emptyTitle": "No parts used",
+    "emptyBody": "Write down here the parts you used on this job.",
+    "name": "Part",
+    "nameRequired": "Write the part name.",
+    "quantity": "Quantity",
+    "quantityInvalid": "Quantity must be more than zero.",
+    "unit": "Unit",
+    "unitRequired": "Write the unit (pc, L, m).",
+    "unitCost": "Unit cost (optional)",
+    "unitCostHint": "In reais, for example 12.50",
+    "unitCostInvalid": "Invalid amount. Use for example 12.50.",
+    "total": "Parts total: {total}"
+  },
+  "complete": {
+    "resolution": "What was done",
+    "resolutionHint": "Describe the fix in a few words.",
+    "rootCause": "Cause (optional)",
+    "photos": "Photos",
+    "photosHint": "Take at least one after photo.",
+    "hourMeter": "Hour meter",
+    "hoursUnit": "h",
+    "lastReading": "Last reading: {hours} h",
+    "meterReplaced": "Hour meter was replaced",
+    "confirmJump": "I confirm the reading",
+    "signatureRequired": "Customer signature",
+    "signatureOptional": "Customer signature (optional)",
+    "signAgain": "Redo",
+    "signatureStatus": {
+      "SIGNED": "Signed",
+      "ABSENT": "Customer absent",
+      "REFUSED": "Customer refused"
+    },
+    "alreadyTitle": "Job already finished",
+    "alreadyBody": "This job has already been finished.",
+    "notReadyTitle": "Not ready to finish",
+    "notReadyBody": "Start the work before finishing."
+  },
+  "toast": {
+    "accept": "Job accepted",
+    "decline": "Job declined",
+    "startRoute": "Safe travels",
+    "arrive": "Arrival recorded",
+    "abortRoute": "Travel stopped",
+    "startWork": "Work started",
+    "hold": "Job paused",
+    "resume": "Job resumed",
+    "complete": "Job finished"
+  },
+  "widget": {
+    "title": "Next job",
+    "empty": "No jobs assigned",
+    "error": "Could not read your jobs. Tap to try again."
+  }
+}

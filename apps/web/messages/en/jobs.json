@@ -1,1 +1,334 @@
-{}
+{
+  "noAsset": "No machine",
+  "unassigned": "Unassigned",
+  "dueOn": "Due {when}",
+  "duration": "{hours} h {minutes} min",
+  "fields": {
+    "number": "Number",
+    "title": "Title",
+    "priority": "Priority",
+    "status": "Status",
+    "assignee": "Assignee",
+    "site": "Site",
+    "dueAt": "Due",
+    "asset": "Machine",
+    "type": "Type",
+    "customer": "Customer",
+    "scheduledFor": "Scheduled for",
+    "description": "Description",
+    "createdAt": "Created",
+    "createdBy": "Created by",
+    "source": "Source",
+    "previousAssignees": "Previous assignees",
+    "resolution": "Work done",
+    "rootCause": "Root cause",
+    "travelTime": "Travel time",
+    "workTime": "Work time",
+    "startedAt": "Work started",
+    "completedAt": "Completed",
+    "verifiedAt": "Verified",
+    "hourMeter": "Hour meter",
+    "laborCost": "Labour",
+    "partsCost": "Parts",
+    "externalCost": "External cost",
+    "totalCost": "Total",
+    "partName": "Part",
+    "quantity": "Quantity",
+    "unitCost": "Unit cost",
+    "signatureStatus": "Signature",
+    "signer": "Signed by",
+    "witness": "Witness",
+    "signatureReason": "Reason for no signature"
+  },
+  "list": {
+    "title": "Work orders",
+    "emptyTitle": "No open work orders",
+    "emptyBody": "Create a manual work order or send a field report to repair.",
+    "searchPlaceholder": "Search by number or title",
+    "activeStatuses": "Open",
+    "allStatuses": "All statuses",
+    "allPriorities": "All priorities",
+    "allAssignees": "All assignees",
+    "anyDue": "Any due date",
+    "view": "View",
+    "board": "Board",
+    "table": "Table"
+  },
+  "due": {
+    "overdue": "Overdue",
+    "atRisk": "Due date at risk",
+    "today": "Due within 24 h",
+    "week": "Due within 7 days"
+  },
+  "board": {
+    "unassigned": "Unassigned",
+    "assigned": "Assigned",
+    "inField": "In the field",
+    "onHold": "On hold",
+    "toVerify": "To verify",
+    "empty": "Nothing here.",
+    "closedHidden": "{count, plural, one {# closed job is not on the board} other {# closed jobs are not on the board}}. Use the table to see them."
+  },
+  "actions": {
+    "new": "New work order",
+    "create": "Create work order",
+    "assign": "Assign",
+    "reassign": "Reassign",
+    "releaseHold": "Release after safety review",
+    "verify": "Verify",
+    "reopen": "Reopen",
+    "cancel": "Cancel job",
+    "externalCost": "External cost",
+    "pdf": "PDF report"
+  },
+  "sla": {
+    "OK": "On time",
+    "AT_RISK": "Due date at risk",
+    "BREACHED": "Overdue"
+  },
+  "flags": {
+    "lateEvidence": "Late evidence"
+  },
+  "new": {
+    "title": "New work order",
+    "assigneeHint": "Optional. Without an assignee the job waits on the board.",
+    "dueHint": "Leave empty to use the priority's SLA."
+  },
+  "offDuty": {
+    "title": "This person is off duty",
+    "body": "They may not see the job until their next shift. Confirm to assign anyway.",
+    "confirm": "Assign anyway",
+    "leaveUnassigned": "Leave unassigned"
+  },
+  "dialogs": {
+    "suggested": "Suggestions",
+    "loadingSuggestions": "Working out suggestions…",
+    "noSuggestions": "No suggestions right now. Pick someone from the team below.",
+    "anyone": "Or pick anyone on the team",
+    "missingAssignee": "Pick who will do the job and fill in the reason if asked.",
+    "assign": {
+      "title": "Assign {number}"
+    },
+    "reassign": {
+      "title": "Reassign {number}",
+      "reason": "Reason for the change"
+    },
+    "verify": {
+      "title": "Verify job",
+      "body": "Confirm the work was checked. The job closes and counts towards costs."
+    },
+    "releaseHold": {
+      "title": "Release job held for safety",
+      "body": "Confirm the safety issue was reviewed. The technician is notified and can carry on.",
+      "note": "What was reviewed"
+    },
+    "reopen": {
+      "title": "Reopen job",
+      "body": "The job goes back to the technician as in progress. Everything recorded stays in the history.",
+      "reason": "Reason"
+    },
+    "cancel": {
+      "title": "Cancel job",
+      "body": "The job leaves the technician's queue. This cannot be undone.",
+      "reason": "Reason"
+    },
+    "externalCost": {
+      "title": "External cost",
+      "note": "Description (supplier, invoice)"
+    }
+  },
+  "suggestion": {
+    "online": "Online",
+    "offline": "Offline",
+    "open": "{count, plural, =0 {no open jobs} one {# open job} other {# open jobs}}",
+    "distance": "{km} km",
+    "reason": {
+      "onDuty": "On duty",
+      "offDuty": "Off duty",
+      "skillMatch": "Has the skill",
+      "nearby": "Nearby",
+      "lightLoad": "Light load",
+      "noLocation": "No location"
+    }
+  },
+  "detail": {
+    "cancelReason": "Cancellation reason",
+    "summary": "Summary",
+    "noDescription": "No description.",
+    "timeline": "History",
+    "timesAndCosts": "Times and costs",
+    "laborHidden": "Hidden by settings",
+    "checklist": "Checklist",
+    "safetyCritical": "Safety item",
+    "required": "Required",
+    "notAnswered": "No answer",
+    "parts": "Parts used",
+    "noParts": "No parts recorded.",
+    "evidence": "Evidence",
+    "lateEvidence": "{count, plural, one {# piece of evidence arrived after completion} other {# pieces of evidence arrived after completion}}.",
+    "noEvidence": "No photos yet.",
+    "signature": "Customer signature",
+    "evidenceGroup": {
+      "BEFORE": "Before",
+      "AFTER": "After",
+      "OTHER": "Other"
+    }
+  },
+  "source": {
+    "fieldReport": "Field report",
+    "rental": "Rental damage",
+    "maintenance": "Preventive maintenance",
+    "manual": "Manual"
+  },
+  "hold": {
+    "title": "On hold: {reason}",
+    "safetyBody": "A safety item failed. Review the evidence and release the job when it is safe to continue.",
+    "body": "The technician paused the work."
+  },
+  "toast": {
+    "assign": "Job assigned",
+    "reassign": "Job reassigned",
+    "verify": "Job verified",
+    "releaseHold": "Job released",
+    "reopen": "Job reopened",
+    "cancel": "Job cancelled",
+    "externalCost": "External cost saved"
+  },
+  "enums": {
+    "workOrderType": {
+      "CORRECTIVE": "Corrective",
+      "PREVENTIVE": "Preventive",
+      "INSPECTION": "Inspection"
+    },
+    "holdReason": {
+      "WAITING_PARTS": "waiting for parts",
+      "WAITING_CUSTOMER": "waiting for the customer",
+      "WEATHER": "weather",
+      "SAFETY": "safety",
+      "NEEDS_SPECIALIST": "needs a specialist",
+      "OTHER": "other reason"
+    },
+    "checklistValue": {
+      "PASS": "Pass",
+      "FAIL": "Fail",
+      "NA": "Not applicable"
+    },
+    "signatureStatus": {
+      "SIGNED": "Signed",
+      "REFUSED": "Customer refused",
+      "ABSENT": "Customer absent"
+    },
+    "mediaTag": {
+      "GENERAL": "General",
+      "BEFORE": "Before",
+      "AFTER": "After",
+      "WALKAROUND_FRONT": "Front",
+      "WALKAROUND_REAR": "Rear",
+      "WALKAROUND_LEFT": "Left side",
+      "WALKAROUND_RIGHT": "Right side",
+      "WALKAROUND_CAB": "Cab",
+      "HOUR_METER": "Hour meter",
+      "FUEL_GAUGE": "Fuel gauge",
+      "DAMAGE": "Damage",
+      "PLATE": "Plate",
+      "CHECKLIST_ITEM": "Checklist item",
+      "SIGNATURE_CUSTOMER": "Customer signature",
+      "SIGNATURE_AGENT": "Agent signature",
+      "SIGNATURE_TECHNICIAN": "Technician signature",
+      "FUEL_PUMP": "Fuel pump"
+    },
+    "workOrderStatus": {
+      "OPEN": "Open",
+      "ASSIGNED": "Assigned",
+      "ACCEPTED": "Accepted",
+      "EN_ROUTE": "En route",
+      "ON_SITE": "On site",
+      "IN_PROGRESS": "In progress",
+      "ON_HOLD": "On hold",
+      "COMPLETED": "Completed",
+      "VERIFIED": "Verified",
+      "CANCELLED": "Cancelled"
+    },
+    "priority": {
+      "CRITICAL": "Critical",
+      "HIGH": "High",
+      "MEDIUM": "Medium",
+      "LOW": "Low"
+    }
+  },
+  "report": {
+    "title": "Service report",
+    "number": "Job",
+    "generatedAt": "Generated",
+    "asset": "Machine",
+    "customer": "Customer",
+    "site": "Site",
+    "assignee": "Technician",
+    "type": "Type",
+    "priority": "Priority",
+    "status": "Status",
+    "createdAt": "Opened",
+    "startedAt": "Started",
+    "completedAt": "Completed",
+    "verifiedAt": "Verified",
+    "verifiedBy": "Verified by",
+    "travelTime": "Travel",
+    "workTime": "Work",
+    "minutesSuffix": "min",
+    "hourMeter": "Hour meter",
+    "description": "Reported problem",
+    "resolution": "Work done",
+    "rootCause": "Root cause",
+    "checklist": "Checklist",
+    "safetyCritical": "safety",
+    "parts": "Parts",
+    "partName": "Part",
+    "quantity": "Qty",
+    "unitCost": "Unit",
+    "costs": "Costs",
+    "labor": "Labour",
+    "partsCost": "Parts",
+    "external": "External",
+    "total": "Total",
+    "photos": "Photos",
+    "morePhotos": "+{count} more photos in the system",
+    "signature": "Signature",
+    "signer": "Signed by",
+    "witness": "Witness",
+    "signatureReason": "Reason",
+    "timeline": "History",
+    "none": "—"
+  },
+  "activity": {
+    "workOrder": {
+      "create": "Job created",
+      "update": "Job edited",
+      "assign": "Assigned",
+      "assigned": "Assigned",
+      "reassign": "Reassigned",
+      "reassignReason": "Reason for change recorded",
+      "reassignedAway": "Taken from the technician",
+      "accept": "Accepted by the technician",
+      "decline": "Declined by the technician",
+      "startRoute": "Technician on the way",
+      "arrive": "Technician arrived",
+      "abortRoute": "Trip stopped",
+      "startWork": "Work started",
+      "hold": "Put on hold",
+      "resume": "Work resumed",
+      "saveChecklist": "Checklist updated",
+      "addPart": "Part added",
+      "removePart": "Part removed",
+      "complete": "Completed",
+      "lateEvidence": "Late evidence received",
+      "readingIgnored": "Hour meter reading ignored",
+      "externalCost": "External cost recorded",
+      "verify": "Verified",
+      "reopen": "Reopened",
+      "reopened": "Reopened",
+      "cancel": "Cancelled",
+      "cancelled": "Cancelled",
+      "resumed": "Released by the office"
+    }
+  }
+}

@@ -1,6 +1,8 @@
-import { PlaceholderScreen } from "../../../src/components";
+import { JobsScreen } from "../../../src/features/jobs";
 import { routeKeys } from "../../../src/i18n";
 
 export default function Route() {
-  return <PlaceholderScreen titleKey={routeKeys.jobs} />;
+  return <JobsScreen />;
 }
+
+export const titleKey = routeKeys.jobs;

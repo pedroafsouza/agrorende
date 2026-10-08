@@ -1,0 +1,156 @@
+{
+  "list": {
+    "today": "Hoje",
+    "upcoming": "Próximos",
+    "done": "Feitos",
+    "overdue": "Atrasado",
+    "pending": "Aguardando envio",
+    "empty": {
+      "today": {
+        "title": "Nada para hoje",
+        "body": "Quando o escritório atribuir um serviço para você, ele aparece aqui."
+      },
+      "upcoming": {
+        "title": "Nenhum serviço agendado",
+        "body": "Serviços dos próximos dias aparecem aqui."
+      },
+      "done": {
+        "title": "Nenhum serviço concluído",
+        "body": "Serviços concluídos nos últimos 7 dias aparecem aqui."
+      }
+    }
+  },
+  "actions": {
+    "assign": "Atribuir",
+    "reassign": "Reatribuir",
+    "accept": "Aceitar serviço",
+    "decline": "Recusar",
+    "startRoute": "Saí para o local",
+    "arrive": "Cheguei",
+    "abortRoute": "Cancelar deslocamento",
+    "startWork": "Começar o serviço",
+    "hold": "Pausar",
+    "resume": "Retomar",
+    "complete": "Concluir serviço",
+    "verify": "Verificar",
+    "reopen": "Reabrir",
+    "cancel": "Cancelar",
+    "navigate": "Ir até lá",
+    "checklist": "Checklist",
+    "parts": "Peças usadas"
+  },
+  "status": {
+    "OPEN": "Aberto",
+    "ASSIGNED": "Atribuído",
+    "ACCEPTED": "Aceito",
+    "EN_ROUTE": "A caminho",
+    "ON_SITE": "No local",
+    "IN_PROGRESS": "Em andamento",
+    "ON_HOLD": "Pausado",
+    "COMPLETED": "Concluído",
+    "VERIFIED": "Verificado",
+    "CANCELLED": "Cancelado"
+  },
+  "priority": {
+    "LOW": "Baixa",
+    "MEDIUM": "Média",
+    "HIGH": "Alta",
+    "CRITICAL": "Crítica"
+  },
+  "holdReason": {
+    "WAITING_PARTS": "Aguardando peças",
+    "WAITING_CUSTOMER": "Aguardando cliente",
+    "WEATHER": "Tempo ruim",
+    "NEEDS_SPECIALIST": "Precisa de especialista",
+    "SAFETY": "Parada de segurança",
+    "OTHER": "Outro motivo"
+  },
+  "detail": {
+    "notFoundTitle": "Serviço não encontrado",
+    "notFoundBody": "Ele pode ter sido removido ou ainda não chegou neste aparelho. Puxe para atualizar.",
+    "backToJobs": "Voltar aos serviços",
+    "backToJob": "Voltar ao serviço",
+    "checklistProgress": "{done} de {total} itens respondidos",
+    "noChecklist": "Este serviço não tem checklist",
+    "partsCount": "{count, plural, =0 {Nenhuma peça} one {# peça} other {# peças}}",
+    "evidence": "Fotos e evidências",
+    "completeHint": "Solução, foto do depois e assinatura"
+  },
+  "decline": {
+    "title": "Recusar serviço",
+    "reason": "Por que você não pode fazer?",
+    "reasonRequired": "Escreva o motivo para o escritório."
+  },
+  "hold": {
+    "title": "Pausar serviço",
+    "note": "Observação (opcional)",
+    "reasonRequired": "Escolha o motivo da pausa."
+  },
+  "checklist": {
+    "progress": "{done} de {total} respondidos",
+    "done": "Pronto",
+    "emptyTitle": "Sem checklist",
+    "emptyBody": "Este serviço não tem itens para conferir.",
+    "photoTitle": "Foto do item",
+    "safetyStopBody": "O serviço foi pausado e o escritório foi avisado. Não continue até liberarem.",
+    "safetyStopConfirm": "Entendi"
+  },
+  "parts": {
+    "add": "Adicionar peça",
+    "added": "Peça adicionada",
+    "remove": "Remover peça",
+    "save": "Salvar peça",
+    "emptyTitle": "Nenhuma peça usada",
+    "emptyBody": "Anote aqui as peças que você usou neste serviço.",
+    "name": "Peça",
+    "nameRequired": "Escreva o nome da peça.",
+    "quantity": "Quantidade",
+    "quantityInvalid": "A quantidade precisa ser maior que zero.",
+    "unit": "Unidade",
+    "unitRequired": "Escreva a unidade (un, L, m).",
+    "unitCost": "Custo unitário (opcional)",
+    "unitCostHint": "Em reais, por exemplo 12,50",
+    "unitCostInvalid": "Valor inválido. Use por exemplo 12,50.",
+    "total": "Total em peças: {total}"
+  },
+  "complete": {
+    "resolution": "O que foi feito",
+    "resolutionHint": "Descreva a solução em poucas palavras.",
+    "rootCause": "Causa (opcional)",
+    "photos": "Fotos",
+    "photosHint": "Tire pelo menos uma foto do depois.",
+    "hourMeter": "Horímetro",
+    "hoursUnit": "h",
+    "lastReading": "Última leitura: {hours} h",
+    "meterReplaced": "Horímetro foi trocado",
+    "confirmJump": "Confirmo a leitura",
+    "signatureRequired": "Assinatura do cliente",
+    "signatureOptional": "Assinatura do cliente (opcional)",
+    "signAgain": "Refazer",
+    "signatureStatus": {
+      "SIGNED": "Assinado",
+      "ABSENT": "Cliente ausente",
+      "REFUSED": "Cliente recusou"
+    },
+    "alreadyTitle": "Serviço já concluído",
+    "alreadyBody": "Este serviço já foi concluído.",
+    "notReadyTitle": "Ainda não dá para concluir",
+    "notReadyBody": "Comece o serviço antes de concluir."
+  },
+  "toast": {
+    "accept": "Serviço aceito",
+    "decline": "Serviço recusado",
+    "startRoute": "Bom caminho",
+    "arrive": "Chegada registrada",
+    "abortRoute": "Deslocamento cancelado",
+    "startWork": "Serviço iniciado",
+    "hold": "Serviço pausado",
+    "resume": "Serviço retomado",
+    "complete": "Serviço concluído"
+  },
+  "widget": {
+    "title": "Próximo serviço",
+    "empty": "Nenhum serviço atribuído",
+    "error": "Não foi possível ler os serviços. Toque para tentar de novo."
+  }
+}

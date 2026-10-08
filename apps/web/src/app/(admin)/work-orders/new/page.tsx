@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { NewWorkOrderPage } from "@/features/work-orders/NewWorkOrderPage";
+import { WorkOrdersIntl } from "@/features/work-orders/WorkOrdersIntl";
 
-export default function AdminworkOrdersnewpage() {
-  return <PlaceholderPage descriptionKey="page.workOrderNew.description" route="/work-orders/new" titleKey="page.workOrderNew.title" />;
+export default function NewWorkOrderRoute() {
+  return (
+    <WorkOrdersIntl>
+      <NewWorkOrderPage />
+    </WorkOrdersIntl>
+  );
 }

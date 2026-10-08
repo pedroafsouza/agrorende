@@ -1,1 +1,334 @@
-{}
+{
+  "noAsset": "Sem máquina",
+  "unassigned": "Sem responsável",
+  "dueOn": "Prazo: {when}",
+  "duration": "{hours} h {minutes} min",
+  "fields": {
+    "number": "Número",
+    "title": "Título",
+    "priority": "Prioridade",
+    "status": "Situação",
+    "assignee": "Responsável",
+    "site": "Local",
+    "dueAt": "Prazo",
+    "asset": "Máquina",
+    "type": "Tipo",
+    "customer": "Cliente",
+    "scheduledFor": "Agendada para",
+    "description": "Descrição",
+    "createdAt": "Criada em",
+    "createdBy": "Criada por",
+    "source": "Origem",
+    "previousAssignees": "Responsáveis anteriores",
+    "resolution": "O que foi feito",
+    "rootCause": "Causa",
+    "travelTime": "Tempo de deslocamento",
+    "workTime": "Tempo de trabalho",
+    "startedAt": "Início do trabalho",
+    "completedAt": "Concluída em",
+    "verifiedAt": "Verificada em",
+    "hourMeter": "Horímetro",
+    "laborCost": "Mão de obra",
+    "partsCost": "Peças",
+    "externalCost": "Custo externo",
+    "totalCost": "Total",
+    "partName": "Peça",
+    "quantity": "Quantidade",
+    "unitCost": "Custo unitário",
+    "signatureStatus": "Assinatura",
+    "signer": "Quem assinou",
+    "witness": "Testemunha",
+    "signatureReason": "Motivo sem assinatura"
+  },
+  "list": {
+    "title": "Ordens de serviço",
+    "emptyTitle": "Nenhuma OS aberta",
+    "emptyBody": "Crie uma OS manual ou encaminhe um relato de campo para reparo.",
+    "searchPlaceholder": "Buscar por número ou título",
+    "activeStatuses": "Em aberto",
+    "allStatuses": "Todas as situações",
+    "allPriorities": "Todas as prioridades",
+    "allAssignees": "Todos os responsáveis",
+    "anyDue": "Qualquer prazo",
+    "view": "Visualização",
+    "board": "Quadro",
+    "table": "Tabela"
+  },
+  "due": {
+    "overdue": "Atrasadas",
+    "atRisk": "Prazo em risco",
+    "today": "Vencem em 24 h",
+    "week": "Vencem em 7 dias"
+  },
+  "board": {
+    "unassigned": "Sem responsável",
+    "assigned": "Atribuídas",
+    "inField": "Em campo",
+    "onHold": "Em espera",
+    "toVerify": "Para verificar",
+    "empty": "Nada aqui.",
+    "closedHidden": "{count, plural, one {# OS encerrada não aparece no quadro} other {# OS encerradas não aparecem no quadro}}. Use a tabela para vê-las."
+  },
+  "actions": {
+    "new": "Nova OS",
+    "create": "Criar OS",
+    "assign": "Atribuir",
+    "reassign": "Reatribuir",
+    "releaseHold": "Liberar após segurança",
+    "verify": "Verificar",
+    "reopen": "Reabrir",
+    "cancel": "Cancelar OS",
+    "externalCost": "Custo externo",
+    "pdf": "Relatório PDF"
+  },
+  "sla": {
+    "OK": "No prazo",
+    "AT_RISK": "Prazo em risco",
+    "BREACHED": "Prazo estourado"
+  },
+  "flags": {
+    "lateEvidence": "Evidência tardia"
+  },
+  "new": {
+    "title": "Nova ordem de serviço",
+    "assigneeHint": "Opcional. Sem responsável, a OS fica no quadro para atribuir depois.",
+    "dueHint": "Se vazio, o prazo vem do SLA da prioridade."
+  },
+  "offDuty": {
+    "title": "Essa pessoa está fora de serviço",
+    "body": "Ela pode não ver a OS até voltar ao turno. Confirme para atribuir mesmo assim.",
+    "confirm": "Atribuir mesmo assim",
+    "leaveUnassigned": "Deixar sem responsável"
+  },
+  "dialogs": {
+    "suggested": "Sugestões",
+    "loadingSuggestions": "Calculando sugestões…",
+    "noSuggestions": "Sem sugestões agora. Escolha alguém da equipe abaixo.",
+    "anyone": "Ou escolha alguém da equipe",
+    "missingAssignee": "Escolha quem vai atender e preencha o motivo, se pedido.",
+    "assign": {
+      "title": "Atribuir {number}"
+    },
+    "reassign": {
+      "title": "Reatribuir {number}",
+      "reason": "Motivo da troca"
+    },
+    "verify": {
+      "title": "Verificar OS",
+      "body": "Confirma que o serviço foi conferido. A OS fica encerrada e entra nos custos."
+    },
+    "releaseHold": {
+      "title": "Liberar OS parada por segurança",
+      "body": "Confirme que o problema de segurança foi revisto. O técnico é avisado e pode continuar.",
+      "note": "O que foi revisto"
+    },
+    "reopen": {
+      "title": "Reabrir OS",
+      "body": "A OS volta para o técnico em andamento. Tudo o que já foi registrado continua no histórico.",
+      "reason": "Motivo"
+    },
+    "cancel": {
+      "title": "Cancelar OS",
+      "body": "A OS sai da fila do técnico. Esta ação não pode ser desfeita.",
+      "reason": "Motivo"
+    },
+    "externalCost": {
+      "title": "Custo externo",
+      "note": "Descrição (fornecedor, nota fiscal)"
+    }
+  },
+  "suggestion": {
+    "online": "Online",
+    "offline": "Offline",
+    "open": "{count, plural, =0 {sem OS abertas} one {# OS aberta} other {# OS abertas}}",
+    "distance": "{km} km",
+    "reason": {
+      "onDuty": "Em serviço",
+      "offDuty": "Fora de serviço",
+      "skillMatch": "Tem a especialidade",
+      "nearby": "Perto",
+      "lightLoad": "Pouca carga",
+      "noLocation": "Sem localização"
+    }
+  },
+  "detail": {
+    "cancelReason": "Motivo do cancelamento",
+    "summary": "Resumo",
+    "noDescription": "Sem descrição.",
+    "timeline": "Histórico",
+    "timesAndCosts": "Tempos e custos",
+    "laborHidden": "Oculto pela configuração",
+    "checklist": "Checklist",
+    "safetyCritical": "Item de segurança",
+    "required": "Obrigatório",
+    "notAnswered": "Sem resposta",
+    "parts": "Peças usadas",
+    "noParts": "Nenhuma peça registrada.",
+    "evidence": "Evidências",
+    "lateEvidence": "{count, plural, one {# evidência chegou depois da conclusão} other {# evidências chegaram depois da conclusão}}.",
+    "noEvidence": "Nenhuma foto ainda.",
+    "signature": "Assinatura do cliente",
+    "evidenceGroup": {
+      "BEFORE": "Antes",
+      "AFTER": "Depois",
+      "OTHER": "Outras"
+    }
+  },
+  "source": {
+    "fieldReport": "Relato de campo",
+    "rental": "Avaria de locação",
+    "maintenance": "Manutenção preventiva",
+    "manual": "Manual"
+  },
+  "hold": {
+    "title": "Em espera: {reason}",
+    "safetyBody": "Um item de segurança falhou. Revise a evidência e libere a OS quando for seguro continuar.",
+    "body": "O técnico pausou o serviço."
+  },
+  "toast": {
+    "assign": "OS atribuída",
+    "reassign": "OS reatribuída",
+    "verify": "OS verificada",
+    "releaseHold": "OS liberada",
+    "reopen": "OS reaberta",
+    "cancel": "OS cancelada",
+    "externalCost": "Custo externo salvo"
+  },
+  "enums": {
+    "workOrderType": {
+      "CORRECTIVE": "Corretiva",
+      "PREVENTIVE": "Preventiva",
+      "INSPECTION": "Inspeção"
+    },
+    "holdReason": {
+      "WAITING_PARTS": "aguardando peças",
+      "WAITING_CUSTOMER": "aguardando cliente",
+      "WEATHER": "clima",
+      "SAFETY": "segurança",
+      "NEEDS_SPECIALIST": "precisa de especialista",
+      "OTHER": "outro motivo"
+    },
+    "checklistValue": {
+      "PASS": "OK",
+      "FAIL": "Falhou",
+      "NA": "Não se aplica"
+    },
+    "signatureStatus": {
+      "SIGNED": "Assinada",
+      "REFUSED": "Cliente recusou",
+      "ABSENT": "Cliente ausente"
+    },
+    "mediaTag": {
+      "GENERAL": "Geral",
+      "BEFORE": "Antes",
+      "AFTER": "Depois",
+      "WALKAROUND_FRONT": "Frente",
+      "WALKAROUND_REAR": "Traseira",
+      "WALKAROUND_LEFT": "Lado esquerdo",
+      "WALKAROUND_RIGHT": "Lado direito",
+      "WALKAROUND_CAB": "Cabine",
+      "HOUR_METER": "Horímetro",
+      "FUEL_GAUGE": "Marcador de combustível",
+      "DAMAGE": "Avaria",
+      "PLATE": "Placa",
+      "CHECKLIST_ITEM": "Item do checklist",
+      "SIGNATURE_CUSTOMER": "Assinatura do cliente",
+      "SIGNATURE_AGENT": "Assinatura do agente",
+      "SIGNATURE_TECHNICIAN": "Assinatura do técnico",
+      "FUEL_PUMP": "Bomba de combustível"
+    },
+    "workOrderStatus": {
+      "OPEN": "Aberta",
+      "ASSIGNED": "Atribuída",
+      "ACCEPTED": "Aceita",
+      "EN_ROUTE": "A caminho",
+      "ON_SITE": "No local",
+      "IN_PROGRESS": "Em andamento",
+      "ON_HOLD": "Em espera",
+      "COMPLETED": "Concluída",
+      "VERIFIED": "Verificada",
+      "CANCELLED": "Cancelada"
+    },
+    "priority": {
+      "CRITICAL": "Crítica",
+      "HIGH": "Alta",
+      "MEDIUM": "Média",
+      "LOW": "Baixa"
+    }
+  },
+  "report": {
+    "title": "Relatório de serviço",
+    "number": "OS",
+    "generatedAt": "Gerado em",
+    "asset": "Máquina",
+    "customer": "Cliente",
+    "site": "Local",
+    "assignee": "Técnico",
+    "type": "Tipo",
+    "priority": "Prioridade",
+    "status": "Situação",
+    "createdAt": "Aberta em",
+    "startedAt": "Início",
+    "completedAt": "Conclusão",
+    "verifiedAt": "Verificada em",
+    "verifiedBy": "Verificada por",
+    "travelTime": "Deslocamento",
+    "workTime": "Trabalho",
+    "minutesSuffix": "min",
+    "hourMeter": "Horímetro",
+    "description": "Problema relatado",
+    "resolution": "Serviço executado",
+    "rootCause": "Causa",
+    "checklist": "Checklist",
+    "safetyCritical": "segurança",
+    "parts": "Peças",
+    "partName": "Peça",
+    "quantity": "Qtd.",
+    "unitCost": "Unitário",
+    "costs": "Custos",
+    "labor": "Mão de obra",
+    "partsCost": "Peças",
+    "external": "Externo",
+    "total": "Total",
+    "photos": "Fotos",
+    "morePhotos": "+{count} fotos no sistema",
+    "signature": "Assinatura",
+    "signer": "Assinado por",
+    "witness": "Testemunha",
+    "signatureReason": "Motivo",
+    "timeline": "Histórico",
+    "none": "—"
+  },
+  "activity": {
+    "workOrder": {
+      "create": "OS criada",
+      "update": "OS editada",
+      "assign": "Atribuída",
+      "assigned": "Atribuída",
+      "reassign": "Reatribuída",
+      "reassignReason": "Motivo da troca registrado",
+      "reassignedAway": "Retirada do técnico",
+      "accept": "Aceita pelo técnico",
+      "decline": "Recusada pelo técnico",
+      "startRoute": "Técnico a caminho",
+      "arrive": "Técnico chegou",
+      "abortRoute": "Deslocamento interrompido",
+      "startWork": "Trabalho iniciado",
+      "hold": "Colocada em espera",
+      "resume": "Trabalho retomado",
+      "saveChecklist": "Checklist atualizado",
+      "addPart": "Peça adicionada",
+      "removePart": "Peça removida",
+      "complete": "Concluída",
+      "lateEvidence": "Evidência tardia recebida",
+      "readingIgnored": "Leitura do horímetro ignorada",
+      "externalCost": "Custo externo registrado",
+      "verify": "Verificada",
+      "reopen": "Reaberta",
+      "reopened": "Reaberta",
+      "cancel": "Cancelada",
+      "cancelled": "Cancelada",
+      "resumed": "Liberada pela central"
+    }
+  }
+}
