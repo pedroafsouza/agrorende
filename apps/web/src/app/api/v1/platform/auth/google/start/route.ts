@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { tenancyRoute } from "@/features/tenancy/server";
 
-export const GET = notImplemented("GET", "/api/v1/platform/auth/google/start");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const GET = tenancyRoute("GET /platform/auth/google/start");

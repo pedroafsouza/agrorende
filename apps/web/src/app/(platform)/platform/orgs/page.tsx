@@ -1,5 +1,11 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { Suspense } from "react";
 
-export default function Platformplatformorgspage() {
-  return <PlaceholderPage descriptionKey="page.platformOrgs.description" route="/platform/orgs" titleKey="page.platformOrgs.title" />;
+import { PlatformOrgsPage } from "@/features/platform/PlatformOrgsPage";
+
+export default function PlatformOrgsRoute() {
+  return (
+    <Suspense>
+      <PlatformOrgsPage />
+    </Suspense>
+  );
 }

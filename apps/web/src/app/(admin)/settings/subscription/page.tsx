@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { SubscriptionIntl } from "@/features/subscription/SubscriptionIntl";
+import { SubscriptionPage } from "@/features/subscription/SubscriptionPage";
 
-export default function Adminsettingssubscriptionpage() {
-  return <PlaceholderPage descriptionKey="page.subscription.description" route="/settings/subscription" titleKey="page.subscription.title" />;
+export default function SettingsSubscriptionRoute() {
+  return (
+    <SubscriptionIntl>
+      <SubscriptionPage />
+    </SubscriptionIntl>
+  );
 }

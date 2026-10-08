@@ -1,3 +1,6 @@
-import { notImplemented } from "@/server/withApi";
+import { tenancyRoute } from "@/features/tenancy/server";
 
-export const POST = notImplemented("POST", "/api/v1/org/cancel");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const POST = tenancyRoute("POST /org/cancel");

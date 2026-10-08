@@ -1,1 +1,48 @@
-{}
+{
+  "status": {
+    "TRIAL": "Trial",
+    "ACTIVE": "Active",
+    "PAST_DUE": "Payment due",
+    "SUSPENDED": "Paused",
+    "CANCELLED": "Cancelled"
+  },
+  "banner": {
+    "trial": {
+      "title": "{days, plural, =0 {Your trial ends today} one {# trial day left} other {# trial days left}}",
+      "body": "The free trial runs until {date}. Talk to AgroRende to keep going without interruption."
+    },
+    "pastDue": {
+      "admin": {
+        "title": "Payment due",
+        "body": "{days, plural, =0 {Access may be paused today} one {Access will be paused in # day} other {Access will be paused in # days}} ({date}). Settle it to keep using everything."
+      },
+      "manager": {
+        "title": "Payment due",
+        "body": "The company account has a payment due. Ask your administrator to settle it by {date}."
+      }
+    },
+    "suspended": {
+      "title": "Access paused: read-only",
+      "body": "You can still view and export data. Talk to AgroRende to reactivate."
+    },
+    "cancelled": {
+      "title": "Account cancelled: read-only",
+      "body": "Export what you need by {date}. After that, the company's data will be deleted."
+    },
+    "action": {
+      "subscription": "View subscription",
+      "whatsapp": "Chat on WhatsApp"
+    }
+  },
+  "gettingStarted": {
+    "title": "Getting started",
+    "progress": "{done} of {total} done",
+    "completed": "All set! Your team can start working.",
+    "steps": {
+      "assets": "Add your machines",
+      "team": "Invite your team",
+      "qr": "Print the QR labels",
+      "app": "Install the app on your team's phones"
+    }
+  }
+}

@@ -1,1 +1,48 @@
-{}
+{
+  "status": {
+    "TRIAL": "Em teste",
+    "ACTIVE": "Ativa",
+    "PAST_DUE": "Pagamento pendente",
+    "SUSPENDED": "Pausada",
+    "CANCELLED": "Cancelada"
+  },
+  "banner": {
+    "trial": {
+      "title": "{days, plural, =0 {Seu teste termina hoje} one {Falta # dia de teste} other {Faltam # dias de teste}}",
+      "body": "O teste gratuito vai até {date}. Fale com a AgroRende para continuar sem interrupção."
+    },
+    "pastDue": {
+      "admin": {
+        "title": "Pagamento pendente",
+        "body": "{days, plural, =0 {O acesso pode ser pausado hoje} one {O acesso será pausado em # dia} other {O acesso será pausado em # dias}} ({date}). Regularize para continuar usando tudo."
+      },
+      "manager": {
+        "title": "Pagamento pendente",
+        "body": "A conta da empresa tem um pagamento pendente. Peça ao administrador para regularizar até {date}."
+      }
+    },
+    "suspended": {
+      "title": "Acesso pausado: só leitura",
+      "body": "Você ainda pode ver e exportar os dados. Fale com a AgroRende para reativar."
+    },
+    "cancelled": {
+      "title": "Conta cancelada: só leitura",
+      "body": "Exporte o que precisar até {date}. Depois disso, os dados da empresa serão apagados."
+    },
+    "action": {
+      "subscription": "Ver assinatura",
+      "whatsapp": "Falar no WhatsApp"
+    }
+  },
+  "gettingStarted": {
+    "title": "Primeiros passos",
+    "progress": "{done} de {total} concluídos",
+    "completed": "Tudo pronto! Sua equipe já pode trabalhar.",
+    "steps": {
+      "assets": "Cadastre suas máquinas",
+      "team": "Convide sua equipe",
+      "qr": "Imprima as etiquetas QR",
+      "app": "Instale o app no celular da equipe"
+    }
+  }
+}

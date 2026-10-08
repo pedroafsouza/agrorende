@@ -1,0 +1,83 @@
+{
+  "start": {
+    "title": "Crie a conta da sua empresa",
+    "subtitle": "Comece em poucos minutos, sem cartão de crédito.",
+    "steps": {
+      "company": "Entre com sua conta Google ou Apple e informe os dados da empresa.",
+      "team": "Cadastre as máquinas e convide sua equipe.",
+      "app": "A equipe instala o app e começa a registrar no campo."
+    },
+    "google": "Continuar com Google",
+    "apple": "Continuar com Apple",
+    "trial": "30 dias grátis, com todos os recursos.",
+    "haveAccount": "Já tem uma conta?",
+    "login": "Entrar"
+  },
+  "company": {
+    "title": "Dados da empresa",
+    "subtitle": "Usamos estes dados para configurar sua conta. Você pode mudá-los depois.",
+    "noTicket": "O link de cadastro expirou ou está incompleto. Comece de novo para continuar.",
+    "restart": "Começar de novo",
+    "none": "Não informar",
+    "submit": "Criar conta e começar o teste",
+    "trialNote": "O teste gratuito dura 30 dias. Não cobramos nada sem você concordar.",
+    "acceptTerms": "Li e aceito os Termos de Uso, a Política de Privacidade e o Acordo de Tratamento de Dados.",
+    "terms": "Termos de Uso",
+    "privacy": "Política de Privacidade",
+    "dpa": "Acordo de Tratamento de Dados",
+    "fields": {
+      "name": "Nome da empresa",
+      "officePhone": "Telefone do escritório",
+      "taxId": "CNPJ (opcional)",
+      "city": "Cidade",
+      "state": "Estado",
+      "timezone": "Fuso horário",
+      "locale": "Idioma",
+      "expectedFieldUsers": "Quantas pessoas vão usar o app no campo?"
+    },
+    "hints": {
+      "officePhone": "Com DDD, por exemplo (34) 3333-4444.",
+      "taxId": "Apenas números ou no formato 00.000.000/0000-00."
+    }
+  },
+  "timezones": {
+    "Sao_Paulo": "Brasília (São Paulo, Minas, Goiás, Sul)",
+    "Bahia": "Bahia",
+    "Fortaleza": "Fortaleza (Ceará, Piauí, Maranhão, Rio Grande do Norte, Paraíba)",
+    "Recife": "Recife (Pernambuco)",
+    "Belem": "Belém (Pará leste, Amapá)",
+    "Araguaina": "Araguaína (Tocantins)",
+    "Maceio": "Maceió (Alagoas, Sergipe)",
+    "Santarem": "Santarém (Pará oeste)",
+    "Cuiaba": "Cuiabá (Mato Grosso)",
+    "Campo_Grande": "Campo Grande (Mato Grosso do Sul)",
+    "Manaus": "Manaus (Amazonas)",
+    "Porto_Velho": "Porto Velho (Rondônia)",
+    "Boa_Vista": "Boa Vista (Roraima)",
+    "Rio_Branco": "Rio Branco (Acre)",
+    "Noronha": "Fernando de Noronha"
+  },
+  "locales": {
+    "pt-BR": "Português (Brasil)",
+    "en": "English"
+  },
+  "expectedFieldUsers": {
+    "1-5": "De 1 a 5 pessoas",
+    "6-20": "De 6 a 20 pessoas",
+    "21-50+": "21 pessoas ou mais"
+  },
+  "fieldErrors": {
+    "cnpj_invalid": "CNPJ inválido. Confira os números.",
+    "timezone_invalid": "Escolha um fuso horário da lista.",
+    "too_small": "Preencha este campo.",
+    "too_big": "Texto muito longo.",
+    "invalid_type": "Preencha este campo.",
+    "invalid_string": "Valor inválido.",
+    "invalid_format": "Formato inválido.",
+    "invalid_literal": "Valor inválido.",
+    "invalid_value": "Escolha uma opção da lista.",
+    "invalid": "Confira este campo.",
+    "terms_required": "Para continuar, aceite os termos.",
+    "phone_invalid": "Telefone inválido. Inclua o DDD."
+  }
+}

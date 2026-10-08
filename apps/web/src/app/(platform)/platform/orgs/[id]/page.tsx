@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { PlatformOrgDetailPage } from "@/features/platform/PlatformOrgDetailPage";
 
-export default function Platformplatformorgsidpage() {
-  return <PlaceholderPage descriptionKey="page.platformOrgDetail.description" route="/platform/orgs/[id]" titleKey="page.platformOrgDetail.title" />;
+export default async function PlatformOrgDetailRoute({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <PlatformOrgDetailPage id={id} />;
 }

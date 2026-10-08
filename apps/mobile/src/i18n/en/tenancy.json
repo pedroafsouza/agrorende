@@ -1,1 +1,6 @@
-{}
+{
+  "orgStatusBanner": {
+    "title": "Company access paused",
+    "body": "Keep recording: everything stays saved and will send when the company is back."
+  }
+}

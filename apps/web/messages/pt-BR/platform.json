@@ -1,0 +1,100 @@
+{
+  "brand": "AgroRende Console",
+  "staffOnly": "Somente equipe AgroRende",
+  "logout": "Sair",
+  "login": {
+    "title": "Console da plataforma",
+    "subtitle": "Acesso restrito à equipe da AgroRende.",
+    "google": "Entrar com Google",
+    "allowList": "Só e-mails autorizados da equipe conseguem entrar.",
+    "devHint": "Apenas no ambiente local: simula o login com este e-mail.",
+    "devLabel": "E-mail da equipe (local)",
+    "devSubmit": "Entrar no modo local"
+  },
+  "orgs": {
+    "title": "Empresas",
+    "subtitle": "Todas as empresas clientes, com situação e uso.",
+    "columns": {
+      "name": "Empresa",
+      "status": "Situação",
+      "plan": "Plano",
+      "keyDate": "Data importante",
+      "fieldUsers": "Pessoas no campo",
+      "assets": "Máquinas",
+      "createdAt": "Criada em"
+    },
+    "trialEnds": "Teste até {date}",
+    "purgeAfter": "Apagar após {date}",
+    "pastDueSince": "Pendente desde {date}",
+    "suspendedSince": "Pausada desde {date}",
+    "empty": "Nenhuma empresa encontrada",
+    "emptyBody": "Mude a busca ou o filtro de situação.",
+    "search": "Buscar por nome",
+    "statusFilter": "Situação",
+    "allStatuses": "Todas"
+  },
+  "detail": {
+    "back": "Empresas",
+    "facts": {
+      "plan": "Plano",
+      "createdAt": "Criada em",
+      "trialEndsAt": "Fim do teste",
+      "purgeAfter": "Apagar após",
+      "timezone": "Fuso horário",
+      "locale": "Idioma",
+      "officePhone": "Telefone do escritório",
+      "expectedFieldUsers": "Pessoas no campo (estimativa)",
+      "signupSource": "Origem do cadastro",
+      "terms": "Termos aceitos"
+    },
+    "edit": {
+      "title": "Alterar conta",
+      "status": "Situação",
+      "plan": "Plano",
+      "trialEndsAt": "Fim do teste",
+      "trialHint": "Use para estender o teste.",
+      "reason": "Motivo",
+      "reasonHint": "Obrigatório. Fica registrado no histórico.",
+      "reasonRequired": "Informe o motivo com pelo menos 3 caracteres.",
+      "submit": "Salvar alterações",
+      "saved": "Alterações salvas."
+    },
+    "usage": {
+      "title": "Uso por mês",
+      "empty": "Ainda não há uso registrado.",
+      "month": "Mês",
+      "activeFieldUsers": "Pessoas ativas no campo",
+      "officeUsers": "Pessoas no escritório",
+      "assetCount": "Máquinas",
+      "storage": "Armazenamento"
+    },
+    "admins": {
+      "title": "Administradores",
+      "noEmail": "Sem e-mail",
+      "inactive": "Inativo",
+      "resetLink": "Gerar link de acesso"
+    },
+    "reset": {
+      "title": "Link de acesso para o administrador",
+      "description": "Gera um link de uso único para {name} entrar de novo.",
+      "reasonHint": "Obrigatório. Por exemplo: perdeu o acesso ao e-mail.",
+      "create": "Gerar link",
+      "ready": "Link pronto. Ele vale até {date} e só pode ser usado uma vez.",
+      "copy": "Copiar link",
+      "copied": "Link copiado."
+    },
+    "audit": {
+      "title": "Histórico",
+      "empty": "Nenhuma alteração registrada.",
+      "actions": {
+        "org": {
+          "status": { "change": "Situação alterada" },
+          "plan": { "change": "Plano alterado" },
+          "trial": { "extend": "Teste estendido" },
+          "adminResetLink": "Link de acesso gerado",
+          "purge": "Dados apagados"
+        }
+      }
+    }
+  }
+}

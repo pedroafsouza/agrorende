@@ -1,5 +1,14 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { Suspense } from "react";
 
-export default function Authsignuppage() {
-  return <PlaceholderPage descriptionKey="page.signup.description" route="/signup" titleKey="page.signup.title" />;
+import { SignupIntl } from "@/features/signup/SignupIntl";
+import { SignupStartPage } from "@/features/signup/SignupStartPage";
+
+export default function SignupRoute() {
+  return (
+    <SignupIntl>
+      <Suspense>
+        <SignupStartPage />
+      </Suspense>
+    </SignupIntl>
+  );
 }

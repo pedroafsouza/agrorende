@@ -1,4 +1,7 @@
-import { notImplemented } from "@/server/withApi";
+import { tenancyRoute } from "@/features/tenancy/server";
 
-export const GET = notImplemented("GET", "/api/v1/platform/orgs/:id");
-export const PATCH = notImplemented("PATCH", "/api/v1/platform/orgs/:id");
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+
+export const GET = tenancyRoute("GET /platform/orgs/:id");
+export const PATCH = tenancyRoute("PATCH /platform/orgs/:id");

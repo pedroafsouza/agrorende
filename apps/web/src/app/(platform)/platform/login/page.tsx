@@ -1,5 +1,14 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { Suspense } from "react";
 
-export default function Platformplatformloginpage() {
-  return <PlaceholderPage descriptionKey="page.platformLogin.description" route="/platform/login" titleKey="page.platformLogin.title" />;
+import { PlatformLoginPage } from "@/features/platform/PlatformLoginPage";
+import { serverConfig } from "@/server/config";
+
+export default function PlatformLoginRoute() {
+  return (
+    <div className="flex flex-1 items-start justify-center sm:items-center">
+      <Suspense>
+        <PlatformLoginPage showDevLogin={serverConfig.appEnv === "local"} />
+      </Suspense>
+    </div>
+  );
 }

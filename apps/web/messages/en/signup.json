@@ -1,0 +1,83 @@
+{
+  "start": {
+    "title": "Create your company account",
+    "subtitle": "Get started in a few minutes, no credit card needed.",
+    "steps": {
+      "company": "Sign in with your Google or Apple account and enter your company details.",
+      "team": "Add your machines and invite your team.",
+      "app": "Your team installs the app and starts recording in the field."
+    },
+    "google": "Continue with Google",
+    "apple": "Continue with Apple",
+    "trial": "30 days free, with every feature.",
+    "haveAccount": "Already have an account?",
+    "login": "Sign in"
+  },
+  "company": {
+    "title": "Company details",
+    "subtitle": "We use these details to set up your account. You can change them later.",
+    "noTicket": "The sign-up link has expired or is incomplete. Start again to continue.",
+    "restart": "Start again",
+    "none": "Prefer not to say",
+    "submit": "Create account and start the trial",
+    "trialNote": "The free trial lasts 30 days. We never charge without your agreement.",
+    "acceptTerms": "I have read and accept the Terms of Use, the Privacy Policy and the Data Processing Agreement.",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "dpa": "Data Processing Agreement",
+    "fields": {
+      "name": "Company name",
+      "officePhone": "Office phone",
+      "taxId": "CNPJ (optional)",
+      "city": "City",
+      "state": "State",
+      "timezone": "Time zone",
+      "locale": "Language",
+      "expectedFieldUsers": "How many people will use the app in the field?"
+    },
+    "hints": {
+      "officePhone": "Include the area code, for example (34) 3333-4444.",
+      "taxId": "Digits only or in the 00.000.000/0000-00 format."
+    }
+  },
+  "timezones": {
+    "Sao_Paulo": "Brasília (São Paulo, Minas Gerais, Goiás, South)",
+    "Bahia": "Bahia",
+    "Fortaleza": "Fortaleza (Ceará, Piauí, Maranhão, Rio Grande do Norte, Paraíba)",
+    "Recife": "Recife (Pernambuco)",
+    "Belem": "Belém (eastern Pará, Amapá)",
+    "Araguaina": "Araguaína (Tocantins)",
+    "Maceio": "Maceió (Alagoas, Sergipe)",
+    "Santarem": "Santarém (western Pará)",
+    "Cuiaba": "Cuiabá (Mato Grosso)",
+    "Campo_Grande": "Campo Grande (Mato Grosso do Sul)",
+    "Manaus": "Manaus (Amazonas)",
+    "Porto_Velho": "Porto Velho (Rondônia)",
+    "Boa_Vista": "Boa Vista (Roraima)",
+    "Rio_Branco": "Rio Branco (Acre)",
+    "Noronha": "Fernando de Noronha"
+  },
+  "locales": {
+    "pt-BR": "Português (Brasil)",
+    "en": "English"
+  },
+  "expectedFieldUsers": {
+    "1-5": "1 to 5 people",
+    "6-20": "6 to 20 people",
+    "21-50+": "21 people or more"
+  },
+  "fieldErrors": {
+    "cnpj_invalid": "Invalid CNPJ. Check the digits.",
+    "timezone_invalid": "Choose a time zone from the list.",
+    "too_small": "Fill in this field.",
+    "too_big": "This text is too long.",
+    "invalid_type": "Fill in this field.",
+    "invalid_string": "Invalid value.",
+    "invalid_format": "Invalid format.",
+    "invalid_literal": "Invalid value.",
+    "invalid_value": "Choose an option from the list.",
+    "invalid": "Check this field.",
+    "terms_required": "To continue, accept the terms.",
+    "phone_invalid": "Invalid phone number. Include the area code."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "title": "Subscription",
+  "status": {
+    "title": "Account status",
+    "readOnly": "The account is read-only: you can view and export, but not create or edit.",
+    "explain": {
+      "TRIAL": "You are on the free trial, with every feature unlocked.",
+      "ACTIVE": "Your subscription is active. Everything is working normally.",
+      "PAST_DUE": "A payment is due. Settle it before the deadline to avoid paused access.",
+      "SUSPENDED": "Access is paused. Your data is still stored and can be exported.",
+      "CANCELLED": "The account was cancelled. Export your data before the final deadline."
+    }
+  },
+  "plan": {
+    "label": "Plan",
+    "names": {
+      "trial": "Free trial"
+    }
+  },
+  "support": "Talk to AgroRende on WhatsApp",
+  "countdown": {
+    "trial": {
+      "unit": "{days, plural, one {trial day left} other {trial days left}}",
+      "label": "The trial ends on {date}"
+    },
+    "grace": {
+      "unit": "{days, plural, one {day to settle} other {days to settle}}",
+      "label": "Access will be paused on {date}"
+    },
+    "export": {
+      "unit": "{days, plural, one {day to export} other {days to export}}",
+      "label": "Data will be deleted on {date}"
+    }
+  },
+  "export": {
+    "title": "Export your data",
+    "body": "Download the company's reports and spreadsheets at any time.",
+    "bodyDeadline": "Download the company's reports and spreadsheets by {date}. After that, the data will be deleted.",
+    "action": "Go to reports"
+  },
+  "usage": {
+    "title": "Monthly usage",
+    "empty": "No usage recorded yet.",
+    "month": "Month",
+    "activeFieldUsers": "Active field users",
+    "officeUsers": "Office users",
+    "assetCount": "Machines",
+    "storage": "Storage",
+    "note": "Updated once a day."
+  },
+  "terms": {
+    "title": "Terms of use",
+    "needsAcceptance": "The terms were updated to version {version}. Read and accept them to continue.",
+    "accept": "Accept the terms",
+    "accepted": "Terms accepted.",
+    "current": "Version {version} accepted on {date}."
+  },
+  "cancel": {
+    "sectionTitle": "Cancel the account",
+    "sectionBody": "If you cancel, the account becomes read-only and you get a deadline to export your data.",
+    "open": "Cancel the account",
+    "title": "Cancel the company account?",
+    "description": "You cannot undo this yourself. Here is what happens:",
+    "keep": "Keep the account",
+    "confirm": "Cancel the account",
+    "done": "Account cancelled.",
+    "mismatch": "The name does not match. Type it exactly as shown above.",
+    "hint": "To confirm, type the company name: {name}",
+    "nameLabel": "Company name",
+    "consequences": {
+      "readOnly": "No one will be able to create or edit records.",
+      "export": "You can still view and export the data for 90 days.",
+      "purge": "After the deadline, all of the company's data and photos will be deleted."
+    }
+  }
+}

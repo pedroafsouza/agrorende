@@ -1,0 +1,100 @@
+{
+  "brand": "AgroRende Console",
+  "staffOnly": "AgroRende staff only",
+  "logout": "Sign out",
+  "login": {
+    "title": "Platform console",
+    "subtitle": "Restricted to AgroRende staff.",
+    "google": "Sign in with Google",
+    "allowList": "Only authorised staff e-mail addresses can sign in.",
+    "devHint": "Local environment only: simulates sign-in with this e-mail.",
+    "devLabel": "Staff e-mail (local)",
+    "devSubmit": "Sign in locally"
+  },
+  "orgs": {
+    "title": "Companies",
+    "subtitle": "Every customer company, with status and usage.",
+    "columns": {
+      "name": "Company",
+      "status": "Status",
+      "plan": "Plan",
+      "keyDate": "Key date",
+      "fieldUsers": "Field users",
+      "assets": "Machines",
+      "createdAt": "Created"
+    },
+    "trialEnds": "Trial until {date}",
+    "purgeAfter": "Delete after {date}",
+    "pastDueSince": "Payment due since {date}",
+    "suspendedSince": "Paused since {date}",
+    "empty": "No companies found",
+    "emptyBody": "Change the search or the status filter.",
+    "search": "Search by name",
+    "statusFilter": "Status",
+    "allStatuses": "All"
+  },
+  "detail": {
+    "back": "Companies",
+    "facts": {
+      "plan": "Plan",
+      "createdAt": "Created",
+      "trialEndsAt": "Trial ends",
+      "purgeAfter": "Delete after",
+      "timezone": "Time zone",
+      "locale": "Language",
+      "officePhone": "Office phone",
+      "expectedFieldUsers": "Field users (estimate)",
+      "signupSource": "Sign-up source",
+      "terms": "Accepted terms"
+    },
+    "edit": {
+      "title": "Change account",
+      "status": "Status",
+      "plan": "Plan",
+      "trialEndsAt": "Trial ends",
+      "trialHint": "Use this to extend the trial.",
+      "reason": "Reason",
+      "reasonHint": "Required. It is kept in the history.",
+      "reasonRequired": "Enter a reason of at least 3 characters.",
+      "submit": "Save changes",
+      "saved": "Changes saved."
+    },
+    "usage": {
+      "title": "Monthly usage",
+      "empty": "No usage recorded yet.",
+      "month": "Month",
+      "activeFieldUsers": "Active field users",
+      "officeUsers": "Office users",
+      "assetCount": "Machines",
+      "storage": "Storage"
+    },
+    "admins": {
+      "title": "Administrators",
+      "noEmail": "No e-mail",
+      "inactive": "Inactive",
+      "resetLink": "Create sign-in link"
+    },
+    "reset": {
+      "title": "Sign-in link for the administrator",
+      "description": "Creates a single-use link so {name} can sign in again.",
+      "reasonHint": "Required. For example: lost access to their e-mail.",
+      "create": "Create link",
+      "ready": "The link is ready. It is valid until {date} and works only once.",
+      "copy": "Copy link",
+      "copied": "Link copied."
+    },
+    "audit": {
+      "title": "History",
+      "empty": "No changes recorded.",
+      "actions": {
+        "org": {
+          "status": { "change": "Status changed" },
+          "plan": { "change": "Plan changed" },
+          "trial": { "extend": "Trial extended" },
+          "adminResetLink": "Sign-in link created",
+          "purge": "Data deleted"
+        }
+      }
+    }
+  }
+}

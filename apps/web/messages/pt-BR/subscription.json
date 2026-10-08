@@ -1,0 +1,76 @@
+{
+  "title": "Assinatura",
+  "status": {
+    "title": "Situação da conta",
+    "readOnly": "A conta está em modo só leitura: dá para ver e exportar, mas não criar nem editar.",
+    "explain": {
+      "TRIAL": "Você está no teste gratuito, com todos os recursos liberados.",
+      "ACTIVE": "Sua assinatura está ativa. Tudo funcionando normalmente.",
+      "PAST_DUE": "Há um pagamento pendente. Regularize antes do fim do prazo para evitar a pausa do acesso.",
+      "SUSPENDED": "O acesso está pausado. Os dados continuam guardados e podem ser exportados.",
+      "CANCELLED": "A conta foi cancelada. Exporte os dados antes do prazo final."
+    }
+  },
+  "plan": {
+    "label": "Plano",
+    "names": {
+      "trial": "Teste gratuito"
+    }
+  },
+  "support": "Falar com a AgroRende no WhatsApp",
+  "countdown": {
+    "trial": {
+      "unit": "{days, plural, one {dia de teste restante} other {dias de teste restantes}}",
+      "label": "O teste termina em {date}"
+    },
+    "grace": {
+      "unit": "{days, plural, one {dia para regularizar} other {dias para regularizar}}",
+      "label": "O acesso será pausado em {date}"
+    },
+    "export": {
+      "unit": "{days, plural, one {dia para exportar} other {dias para exportar}}",
+      "label": "Os dados serão apagados em {date}"
+    }
+  },
+  "export": {
+    "title": "Exportar os dados",
+    "body": "Baixe os relatórios e planilhas da empresa a qualquer momento.",
+    "bodyDeadline": "Baixe os relatórios e planilhas da empresa até {date}. Depois disso, os dados serão apagados.",
+    "action": "Ir para relatórios"
+  },
+  "usage": {
+    "title": "Uso por mês",
+    "empty": "Ainda não há uso registrado.",
+    "month": "Mês",
+    "activeFieldUsers": "Pessoas ativas no campo",
+    "officeUsers": "Pessoas no escritório",
+    "assetCount": "Máquinas",
+    "storage": "Armazenamento",
+    "note": "Atualizado uma vez por dia."
+  },
+  "terms": {
+    "title": "Termos de uso",
+    "needsAcceptance": "Os termos foram atualizados para a versão {version}. Leia e aceite para continuar.",
+    "accept": "Aceitar os termos",
+    "accepted": "Termos aceitos.",
+    "current": "Versão {version} aceita em {date}."
+  },
+  "cancel": {
+    "sectionTitle": "Cancelar a conta",
+    "sectionBody": "Se cancelar, a conta fica só leitura e você terá um prazo para exportar os dados.",
+    "open": "Cancelar a conta",
+    "title": "Cancelar a conta da empresa?",
+    "description": "Esta ação não pode ser desfeita por você. Veja o que acontece:",
+    "keep": "Manter a conta",
+    "confirm": "Cancelar a conta",
+    "done": "Conta cancelada.",
+    "mismatch": "O nome não confere. Digite exatamente como aparece acima.",
+    "hint": "Para confirmar, digite o nome da empresa: {name}",
+    "nameLabel": "Nome da empresa",
+    "consequences": {
+      "readOnly": "Ninguém poderá criar nem editar registros.",
+      "export": "Você ainda poderá ver e exportar os dados por 90 dias.",
+      "purge": "Depois do prazo, todos os dados e fotos da empresa serão apagados."
+    }
+  }
+}
