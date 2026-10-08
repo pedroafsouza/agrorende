@@ -1,26 +1,35 @@
 import { jwtVerify } from "jose";
-import { z } from "zod";
-
+import { RoleEnum, type Role } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 
-const SocketAuthPayloadSchema = z.object({
-  userId: z.string().uuid(),
-  orgId: z.string().uuid(),
-  role: z.string().min(1),
-});
+export const REALTIME_AUDIENCE = "realtime";
 
-export type SocketAuthPayload = z.infer<typeof SocketAuthPayloadSchema>;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+function uuidClaim(value: unknown): string | undefined {
+  return typeof value === "string" && UUID.test(value) ? value : undefined;
+}
+
+export interface SocketAuthPayload {
+  readonly userId: string;
+  readonly orgId: string;
+  readonly role: Role;
+  readonly deviceId: string | null;
+}
+
+/** Verifies a `POST /auth/socket-token` JWT (`aud: "realtime"`, same `JWT_SECRET`). */
 export async function verifySocketToken(token: string, jwtSecret: string): Promise<SocketAuthPayload> {
   try {
-    const secret = new TextEncoder().encode(jwtSecret);
-    const result = await jwtVerify(token, secret, { audience: "realtime" });
-    return SocketAuthPayloadSchema.parse(result.payload);
-  } catch (error) {
-    throw new AppError("UNAUTHENTICATED", {
-      message: "Invalid realtime socket token",
-      details: error instanceof Error ? { cause: error.message } : undefined,
-    });
+    const result = await jwtVerify(token, new TextEncoder().encode(jwtSecret), { audience: REALTIME_AUDIENCE, algorithms: ["HS256"] });
+    const claims = result.payload;
+    const userId = uuidClaim(claims.userId) ?? uuidClaim(claims.sub);
+    const orgId = uuidClaim(claims.orgId);
+    const role = RoleEnum.safeParse(claims.role);
+    if (userId === undefined || orgId === undefined || !role.success) throw new Error("invalid claims");
+    const deviceId = typeof claims.deviceId === "string" && claims.deviceId.length > 0 && claims.deviceId.length <= 200 ? claims.deviceId : null;
+    return { userId, orgId, role: role.data, deviceId };
+  } catch {
+    throw new AppError("UNAUTHENTICATED", { message: "Invalid realtime socket token" });
   }
 }
 

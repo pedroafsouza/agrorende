@@ -1,3 +1,3 @@
-import { notImplemented } from "@/server/withApi";
+import { postExport } from "@/features/exports/server";
 
-export const POST = notImplemented("POST", "/api/v1/exports");
+export const POST = postExport;

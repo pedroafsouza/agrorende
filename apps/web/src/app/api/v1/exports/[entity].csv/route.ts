@@ -1,3 +1,3 @@
-import { notImplemented } from "@/server/withApi";
+import { getExportCsv } from "@/features/exports/server";
 
-export const GET = notImplemented("GET", "/api/v1/exports/:entity.csv");
+export const GET = getExportCsv;

@@ -1,46 +1,65 @@
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import { createServer, type Server, type ServerResponse } from "node:http";
+import { join } from "node:path";
 
-import Redis from "ioredis";
+import type { Redis } from "ioredis";
 
 export interface WorkerHealthServer {
+  readonly port: () => number;
   readonly start: () => Promise<void>;
   readonly stop: () => Promise<void>;
 }
 
-function writeJson(response: ServerResponse, status: number, body: Readonly<Record<string, unknown>>): void {
-  response.writeHead(status, { "content-type": "application/json; charset=utf-8" });
+export interface WorkerHealthStatus {
+  readonly ok: boolean;
+  readonly app: "agrorende";
+  readonly service: "worker";
+  readonly redis: "ok" | "error";
+  readonly media: "ok" | "error";
+}
+
+/** Pings the shared Redis client and proves `MEDIA_ROOT` is writable (ARCHITECTURE §17). */
+export async function checkWorkerHealth(redis: Pick<Redis, "ping">, mediaRoot: string): Promise<WorkerHealthStatus> {
+  const [redisOk, mediaOk] = await Promise.all([
+    redis.ping().then(
+      (reply) => reply === "PONG",
+      () => false,
+    ),
+    (async () => {
+      const dir = join(mediaRoot, ".tmp");
+      const probe = join(dir, `health-${process.pid}-${Date.now()}.tmp`);
+      await mkdir(dir, { recursive: true });
+      await writeFile(probe, "ok");
+      await rm(probe, { force: true });
+      return true;
+    })().catch(() => false),
+  ]);
+  return { ok: redisOk && mediaOk, app: "agrorende", service: "worker", redis: redisOk ? "ok" : "error", media: mediaOk ? "ok" : "error" };
+}
+
+function writeJson(response: ServerResponse, status: number, body: object): void {
+  response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
   response.end(JSON.stringify(body));
 }
 
-export function createWorkerHealthServer(port: number, redisUrl: string): WorkerHealthServer {
+export function createWorkerHealthServer(port: number, redis: Pick<Redis, "ping">, mediaRoot: string): WorkerHealthServer {
   let server: Server | undefined;
 
   return {
+    port() {
+      const address = server?.address();
+      return typeof address === "object" && address !== null ? address.port : port;
+    },
     async start() {
       server = createServer((request, response) => {
-        if (request.method !== "GET" || (request.url !== "/health" && request.url !== "/api/v1/health")) {
+        const path = (request.url ?? "").split("?")[0];
+        if (request.method !== "GET" || (path !== "/health" && path !== "/api/v1/health")) {
           writeJson(response, 404, { ok: false, app: "agrorende" });
           return;
         }
-        const redis = new Redis(redisUrl, { lazyConnect: true, maxRetriesPerRequest: null });
-        void redis
-          .connect()
-          .then(() => redis.ping())
-          .then(() => {
-            writeJson(response, 200, { ok: true, app: "agrorende", service: "worker", redis: "ok" });
-          })
-          .catch((error: unknown) => {
-            writeJson(response, 503, {
-              ok: false,
-              app: "agrorende",
-              service: "worker",
-              redis: "error",
-              message: error instanceof Error ? error.message : "Redis health check failed",
-            });
-          })
-          .finally(() => {
-            void redis.quit();
-          });
+        void checkWorkerHealth(redis, mediaRoot).then((status) => {
+          writeJson(response, status.ok ? 200 : 503, status);
+        });
       });
       await new Promise<void>((resolve) => {
         server?.listen(port, resolve);
@@ -50,8 +69,10 @@ export function createWorkerHealthServer(port: number, redisUrl: string): Worker
       if (server === undefined) {
         return;
       }
+      const current = server;
+      server = undefined;
       await new Promise<void>((resolve, reject) => {
-        server?.close((error) => {
+        current.close((error) => {
           if (error !== undefined) {
             reject(error);
             return;

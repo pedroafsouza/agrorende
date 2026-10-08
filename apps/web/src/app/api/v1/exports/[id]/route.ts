@@ -1,3 +1,3 @@
-import { notImplemented } from "@/server/withApi";
+import { getExport } from "@/features/exports/server";
 
-export const GET = notImplemented("GET", "/api/v1/exports/:id");
+export const GET = getExport;

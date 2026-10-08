@@ -1,3 +1,3 @@
-import { notImplemented } from "@/server/withApi";
+import { postLocationBatch } from "@/features/exports/server";
 
-export const POST = notImplemented("POST", "/api/v1/locations/batch");
+export const POST = postLocationBatch;
