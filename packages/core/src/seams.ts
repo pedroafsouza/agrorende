@@ -26,43 +26,49 @@ import type { ChecklistSnapshot, CreateWorkOrderInput, EntityRef, WorkOrderBilli
 import type { Ctx } from "@agrorende/contracts/seams";
 
 import { notImplemented } from "./errors.js";
+import * as assetsService from "./modules/assets/service.js";
+import * as checklistsService from "./modules/checklists/service.js";
+import * as customersService from "./modules/customers/service.js";
+import { locationSeamsImpl } from "./modules/locations/service.js";
 import * as mediaService from "./modules/media/service.js";
+import * as seasonsService from "./modules/seasons/service.js";
+import * as sitesService from "./modules/sites/service.js";
 import * as usersService from "./modules/users/service.js";
 import * as notify from "./notify/index.js";
 import { touchDependents } from "./sync/touch.js";
 import type { SyncTx } from "./sync/types.js";
 
-export async function getAssetSummary(_tx: Tx, _assetId: string): Promise<AssetSummary> {
-  return notImplemented("seams.assets.getSummary");
+export async function getAssetSummary(tx: Tx, assetId: string): Promise<AssetSummary> {
+  return assetsService.getSummary(tx, assetId);
 }
 
 export async function listAssetSummaries(
-  _tx: Tx,
-  _orgId: string,
-  _filter: { ids?: string[]; category?: AssetCategory; includeRetired?: boolean },
+  tx: Tx,
+  orgId: string,
+  filter: { ids?: string[]; category?: AssetCategory; includeRetired?: boolean },
 ): Promise<AssetSummary[]> {
-  return notImplemented("seams.assets.listSummaries");
+  return assetsService.listSummaries(tx, orgId, filter);
 }
 
-export async function recomputeAssetCondition(_tx: Tx, _assetId: string): Promise<AssetCondition> {
-  return notImplemented("seams.assets.recomputeCondition");
+export async function recomputeAssetCondition(tx: Tx, assetId: string): Promise<AssetCondition> {
+  return assetsService.recomputeCondition(tx, assetId);
 }
 
 export async function applyAssetReadings(
-  _tx: Tx,
-  _ctx: Ctx,
-  _assetId: string,
-  _readings: { hourMeter?: number; odometerKm?: number; source: EntityRef },
+  tx: Tx,
+  ctx: Ctx,
+  assetId: string,
+  readings: { hourMeter?: number; odometerKm?: number; source: EntityRef },
 ): Promise<{ ignored: ("hourMeter" | "odometerKm")[] }> {
-  return notImplemented("seams.assets.applyReadings");
+  return assetsService.applyReadings(tx, ctx, assetId, readings);
 }
 
 export async function setAssetCustody(
-  _tx: Tx,
-  _assetId: string,
-  _custody: { currentRentalId: string | null; currentSiteId?: string },
+  tx: Tx,
+  assetId: string,
+  custody: { currentRentalId: string | null; currentSiteId?: string },
 ): Promise<void> {
-  return notImplemented("seams.assets.setCustody");
+  return assetsService.setCustody(tx, assetId, custody);
 }
 
 export const assetSeams = {
@@ -73,27 +79,22 @@ export const assetSeams = {
   setCustody: setAssetCustody,
 } satisfies AssetSeams;
 
-export async function currentSeasonId(_tx: Tx, _orgId: string): Promise<string | null> {
-  return notImplemented("seams.seasons.currentSeasonId");
+export async function currentSeasonId(tx: Tx, orgId: string): Promise<string | null> {
+  return seasonsService.currentSeasonId(tx, orgId);
 }
 
-export async function criticalWindowFor(_tx: Tx, _orgId: string, _category: AssetCategory, _at: Date): Promise<CriticalWindow | null> {
-  return notImplemented("seams.seasons.criticalWindowFor");
+export async function criticalWindowFor(tx: Tx, orgId: string, category: AssetCategory, at: Date): Promise<CriticalWindow | null> {
+  return seasonsService.criticalWindowFor(tx, orgId, category, at);
 }
 
 export const seasonSeams = { currentSeasonId, criticalWindowFor } satisfies SeasonSeams;
 
-export async function snapshotPublishedChecklist(_tx: Tx, _templateId: string): Promise<ChecklistSnapshot> {
-  return notImplemented("seams.checklists.snapshotPublished");
+export async function snapshotPublishedChecklist(tx: Tx, templateId: string): Promise<ChecklistSnapshot> {
+  return checklistsService.snapshotPublished(tx, templateId);
 }
 
-export async function defaultChecklistTemplateId(
-  _tx: Tx,
-  _orgId: string,
-  _kind: ChecklistKind,
-  _category: AssetCategory,
-): Promise<string | null> {
-  return notImplemented("seams.checklists.defaultTemplateId");
+export async function defaultChecklistTemplateId(tx: Tx, orgId: string, kind: ChecklistKind, category: AssetCategory): Promise<string | null> {
+  return checklistsService.defaultTemplateId(tx, orgId, kind, category);
 }
 
 export const checklistSeams = {
@@ -101,14 +102,14 @@ export const checklistSeams = {
   defaultTemplateId: defaultChecklistTemplateId,
 } satisfies ChecklistSeams;
 
-export async function getSiteSummary(_tx: Tx, _siteId: string): Promise<SiteSummary> {
-  return notImplemented("seams.sites.getSummary");
+export async function getSiteSummary(tx: Tx, siteId: string): Promise<SiteSummary> {
+  return sitesService.getSummary(tx, siteId);
 }
 
 export const siteSeams = { getSummary: getSiteSummary } satisfies SiteSeams;
 
-export async function getCustomerForEligibility(_tx: Tx, _customerId: string): Promise<{ id: string; hasDocument: boolean; hasPhone: boolean }> {
-  return notImplemented("seams.customers.getForEligibility");
+export async function getCustomerForEligibility(tx: Tx, customerId: string): Promise<{ id: string; hasDocument: boolean; hasPhone: boolean }> {
+  return customersService.getForEligibility(tx, customerId);
 }
 
 export const customerSeams = { getForEligibility: getCustomerForEligibility } satisfies CustomerSeams;
@@ -151,12 +152,12 @@ export async function touchSyncDependents(tx: Tx, entity: EntityRef): Promise<vo
 
 export const syncSeams = { touchDependents: touchSyncDependents } satisfies SyncSeams;
 
-export async function lastLocationFixes(_orgId: string, _userIds: string[]): Promise<Map<string, LiveFix>> {
-  return notImplemented("seams.locations.lastFixes");
+export async function lastLocationFixes(orgId: string, userIds: string[]): Promise<Map<string, LiveFix>> {
+  return locationSeamsImpl.lastFixes(orgId, userIds);
 }
 
-export async function liveLocationSnapshot(_orgId: string): Promise<LiveOperator[]> {
-  return notImplemented("seams.locations.liveSnapshot");
+export async function liveLocationSnapshot(orgId: string): Promise<LiveOperator[]> {
+  return locationSeamsImpl.liveSnapshot(orgId);
 }
 
 export const locationSeams = { lastFixes: lastLocationFixes, liveSnapshot: liveLocationSnapshot } satisfies LocationSeams;

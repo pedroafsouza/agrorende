@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button, buttonVariants } from "@/components/ui/Button";
+import { QrSvg } from "@/components/ui/QrSvg";
 import { formatDateTime } from "@/lib/format";
 
 import type { InviteLink } from "./types";
@@ -43,6 +44,7 @@ export function SharePanel({ link, kind, name, phone }: { readonly link: InviteL
         </Button>
       </div>
       <div className="flex flex-col items-center gap-1 rounded-cards border border-dashed border-[var(--ar-border)] p-4">
+        <QrSvg label={t("share.qr")} value={link.url} />
         <span className="text-sm text-[var(--ar-text-muted)]">{t("share.code")}</span>
         <span className="font-mono text-3xl font-bold tracking-widest">{link.code}</span>
       </div>

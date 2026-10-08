@@ -1,7 +1,7 @@
 import { mkdir, readdir, rm, utimes, writeFile } from "node:fs/promises";
 import { createServer } from "node:net";
 import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 
 import { Redis } from "ioredis";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
@@ -168,7 +168,7 @@ afterAll(async () => {
   await handle.drop();
   await platform.close();
   redis.disconnect();
-  const dbModule = (await import(pathToFileURL(path.join(REPO_ROOT, "packages/db/src/index.ts")).href)) as { closeClient(): Promise<void> };
+  const dbModule = await import("@agrorende/db");
   await dbModule.closeClient();
 });
 
@@ -356,7 +356,7 @@ describe("exports.build", () => {
   it("builds a queued export once and notifies once", async () => {
     const now = new Date();
     await seedOrg(now);
-    const exportsModule = (await import(pathToFileURL(path.join(REPO_ROOT, "packages/core/src/modules/exports/index.ts")).href)) as {
+    const exportsModule = (await import("@agrorende/core/modules/exports")) as unknown as {
       createExportJob(ctx: Doc, input: Doc, deps: Doc): Promise<{ job: { id: string } }>;
     };
     const { job } = await exportsModule.createExportJob({ orgId: ORG, userId: ADMIN, role: "ADMIN", locale: "pt-BR" }, { entity: "assets" }, { db: handle.db, now });

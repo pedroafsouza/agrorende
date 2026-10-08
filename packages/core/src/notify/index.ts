@@ -4,6 +4,7 @@ import type { NotificationType, Role } from "@agrorende/contracts/enums";
 import type { EntityRef } from "@agrorende/contracts/dto";
 import { RealtimeServerEvents, userRoom } from "@agrorende/contracts/realtime";
 
+import { emit } from "../events/index.js";
 import { toWire } from "../sync/pull.js";
 import { txDb } from "../sync/touch.js";
 import type { SyncTx } from "../sync/types.js";
@@ -29,19 +30,15 @@ export interface OutboxPayload {
   readonly pushNotificationIds?: readonly string[];
 }
 
-/** Inserts an `event_outbox` row inside the caller's transaction and returns its id. */
+/** Inserts an `event_outbox` row inside the caller's transaction (through `events.emit`) and returns its id. */
 export async function writeOutbox(tx: SyncTx, type: string, payload: OutboxPayload, now: Date = new Date()): Promise<string> {
-  const id = randomUUID();
-  await txDb(tx).event_outbox.insertOne({
-    _id: id,
-    organizationId: tx.orgId,
+  return emit(tx, {
     type,
-    payload: { ...payload },
-    createdAt: now,
-    dispatchedAt: null,
-    attempts: 0,
+    rooms: payload.rooms,
+    data: payload.data,
+    ...(payload.pushNotificationIds === undefined ? {} : { pushNotificationIds: payload.pushNotificationIds }),
+    occurredAt: now,
   });
-  return id;
 }
 
 /** Writes notification rows (rendered in each recipient's locale) and their outbox events in the caller's transaction. */

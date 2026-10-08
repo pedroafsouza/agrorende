@@ -10,8 +10,7 @@ export const ACTIVE_WORK_ORDER_STATUSES = ["EN_ROUTE", "ON_SITE", "IN_PROGRESS",
  * Operator state for the map (ARCHITECTURE §6.4).
  *
  * `socketOnline` is true when the operator's last presence ping is within the offline
- * window. `OperatorStateEnum` in contracts has no `ON_HOLD` yet (change request T05-003),
- * so a held work order maps to `IDLE` until the contract adds it.
+ * window. A held work order maps to `ON_HOLD` (change request T05-003).
  */
 export function deriveOperatorState(
   lastFixAt: Date | null,
@@ -30,6 +29,8 @@ export function deriveOperatorState(
       return "ON_SITE";
     case "IN_PROGRESS":
       return "WORKING";
+    case "ON_HOLD":
+      return "ON_HOLD";
     default:
       return "IDLE";
   }

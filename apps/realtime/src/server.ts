@@ -10,9 +10,11 @@ import {
   RedisRealtimeMessageSchema,
   ServerPayloadSchemas,
   opsRoom,
+  orgRoom,
   realtimeRedisChannel,
   userRoom,
   type LocationBatchAck,
+  type LocationBatchNack,
   type RedisRealtimeMessage,
 } from "@agrorende/contracts/realtime";
 import { AppError, type ErrorCode } from "@agrorende/contracts/errors";
@@ -22,12 +24,6 @@ import { isOfficeRole, verifySocketToken, type SocketAuthPayload } from "./auth.
 import type { RealtimeConfig } from "./config.js";
 import { EventIdCache } from "./dedupe.js";
 import { createLocationHandlers, type RealtimeHandlers } from "./handlers.js";
-
-/** Negative ack for `location:batch`; the client keeps the fixes and retries over REST. */
-export interface LocationBatchNack {
-  readonly ok: false;
-  readonly code: ErrorCode;
-}
 
 type AckFn = (response: LocationBatchAck | LocationBatchNack) => void;
 
@@ -45,11 +41,7 @@ interface SocketData {
 type RealtimeIo = Server<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>;
 type RealtimeSocket = Socket<ClientToServerEvents, ServerToClientEvents, Record<string, never>, SocketData>;
 
-/** Every socket joins its tenant room so `org:status` reaches all devices of the organisation. */
-export function orgRoom(orgId: string): `org:${string}` {
-  return `org:${orgId}`;
-}
-
+export type { LocationBatchNack };
 function writeJson(response: ServerResponse, status: number, body: Readonly<Record<string, unknown>>): void {
   response.writeHead(status, { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" });
   response.end(JSON.stringify(body));

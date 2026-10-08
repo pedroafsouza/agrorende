@@ -1,3 +1,5 @@
+import { Expo } from "expo-server-sdk";
+
 import { readString, readStringArray, type Doc, type JobContext, type JobHandler } from "./index.js";
 
 /**
@@ -29,25 +31,30 @@ export interface ExpoPushClient {
   getReceipts(ticketIds: readonly string[]): Promise<Record<string, ExpoReceipt>>;
 }
 
-const EXPO_SEND_URL = "https://exp.host/--/api/v2/push/send";
-const EXPO_RECEIPTS_URL = "https://exp.host/--/api/v2/push/getReceipts";
-
-/** Minimal Expo Push client over `fetch` (`expo-server-sdk` is not a dependency, change request T05-004). */
-export function createExpoFetchClient(accessToken = process.env.EXPO_ACCESS_TOKEN, fetchImpl: typeof fetch = fetch): ExpoPushClient {
-  const headers: Record<string, string> = { accept: "application/json", "content-type": "application/json" };
-  if (accessToken !== undefined && accessToken !== "") {
-    headers.authorization = `Bearer ${accessToken}`;
-  }
-  async function post<T>(url: string, body: unknown): Promise<T> {
-    const response = await fetchImpl(url, { method: "POST", headers, body: JSON.stringify(body) });
-    if (!response.ok) {
-      throw new Error(`Expo push API responded ${response.status}`);
-    }
-    return ((await response.json()) as { data: T }).data;
-  }
+/** Expo Push client over `expo-server-sdk` (change request T05-004); the SDK chunks and retries. */
+export function createExpoPushClient(accessToken = process.env.EXPO_ACCESS_TOKEN, expo?: Expo): ExpoPushClient {
+  const client = expo ?? new Expo(accessToken !== undefined && accessToken !== "" ? { accessToken } : {});
   return {
-    send: (messages) => post<ExpoTicket[]>(EXPO_SEND_URL, messages),
-    getReceipts: (ids) => post<Record<string, ExpoReceipt>>(EXPO_RECEIPTS_URL, { ids }),
+    async send(messages) {
+      const tickets: ExpoTicket[] = [];
+      for (const chunk of client.chunkPushNotifications(messages.map((message) => ({ ...message })))) {
+        const sent = await client.sendPushNotificationsAsync(chunk);
+        for (const ticket of sent) {
+          tickets.push(ticket.status === "ok" ? { status: "ok", id: ticket.id } : { status: "error", message: ticket.message, details: { ...(ticket.details?.error === undefined ? {} : { error: ticket.details.error }) } });
+        }
+      }
+      return tickets;
+    },
+    async getReceipts(ticketIds) {
+      const receipts: Record<string, ExpoReceipt> = {};
+      for (const chunk of client.chunkPushNotificationReceiptIds([...ticketIds])) {
+        const result = await client.getPushNotificationReceiptsAsync(chunk);
+        for (const [id, receipt] of Object.entries(result)) {
+          receipts[id] = receipt.status === "ok" ? { status: "ok" } : { status: "error", message: receipt.message, details: { ...(receipt.details?.error === undefined ? {} : { error: receipt.details.error }) } };
+        }
+      }
+      return receipts;
+    },
   };
 }
 

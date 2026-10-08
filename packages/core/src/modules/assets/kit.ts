@@ -5,8 +5,10 @@ import type { EntityType } from "@agrorende/contracts/enums";
 import type { z } from "zod";
 import { AppError } from "@agrorende/contracts/errors";
 
+import { recordActivity } from "../../activity/index.js";
 import type { Ctx } from "../../context.js";
 import { reject } from "../../errors.js";
+import type { SyncTx } from "../../sync/types.js";
 
 /**
  * Shared helpers for the master-data modules owned by T04 (assets, sites, seasons,
@@ -106,28 +108,17 @@ export interface ActivityRow {
   readonly occurredAt?: Date;
 }
 
-/**
- * Writes an ActivityEvent row directly. `recordActivity` in `core/src/activity` is a frozen
- * notImplemented stub (see docs/change-requests/T04-002.md); this keeps the timeline correct
- * until the shared helper lands.
- */
+/** Writes an ActivityEvent row through the shared `recordActivity` helper (PLT-13). */
 export async function writeActivity(tx: DbSyncTx, row: ActivityRow): Promise<void> {
-  const now = new Date();
-  await tx.db.activity_events.insertOne({
-    _id: newId(),
-    organizationId: tx.orgId,
-    syncVersion: tx.syncVersion,
-    createdAt: now,
-    updatedAt: now,
-    actorId: row.actorId ?? null,
+  await recordActivity(tx as unknown as SyncTx, {
     entityType: row.entityType,
     entityId: row.entityId,
     action: row.action,
+    actorId: row.actorId ?? null,
     fromStatus: row.fromStatus ?? null,
     toStatus: row.toStatus ?? null,
     meta: row.meta ?? {},
-    occurredAt: row.occurredAt ?? now,
-    receivedAt: now,
+    ...(row.occurredAt === undefined ? {} : { occurredAt: row.occurredAt }),
   });
 }
 

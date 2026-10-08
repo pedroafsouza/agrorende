@@ -1,21 +1,17 @@
 import "server-only";
 
-/*
- * Thin adapter from Next.js route files to the framework-free T02 handlers in
- * `packages/core/src/auth/api`. `@agrorende/core` does not export that folder yet
- * (change request T02-002), so it is reached through a relative path in this one file.
- */
-import { platformApi, type PlatformRouteKey } from "../../../../../../../packages/core/src/auth/api/index";
+/* Thin adapter from Next.js route files to the framework-free T02 handlers exported as `@agrorende/core/auth/api`. */
+import { platformApi, type PlatformRouteKey } from "@agrorende/core/auth/api";
 
-export interface PlatformRouteContext {
-  readonly params?: Promise<Readonly<Record<string, string | string[]>>>;
-}
+import { routeContextOf } from "@/server/withApi";
 
-export type PlatformRoute = (request: Request, context: PlatformRouteContext) => Promise<Response>;
+/** The second argument is `unknown` so the route type check accepts every segment's params (see `routeContextOf`). */
+export type PlatformRoute = (request: Request, context: unknown) => Promise<Response>;
 
 export function platformRoute(key: PlatformRouteKey): PlatformRoute {
   return async (request, context) => {
-    const raw = context.params === undefined ? {} : await context.params;
+    const routeContext = routeContextOf(context);
+    const raw = routeContext.params === undefined ? {} : await routeContext.params;
     const params: Record<string, string> = {};
     for (const [name, value] of Object.entries(raw)) params[name] = Array.isArray(value) ? value.join("/") : value;
     return platformApi[key](request, params);

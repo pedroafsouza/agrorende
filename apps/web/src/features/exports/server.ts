@@ -6,14 +6,13 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { OFFICE, readJson, route, type AuthedCtx } from "@/lib/core.server";
 
-import * as exportsCore from "../../../../../packages/core/src/modules/exports/service";
-import { REST_BATCH_MAX } from "../../../../../packages/core/src/modules/locations/dto";
-import * as locationsCore from "../../../../../packages/core/src/modules/locations/service";
+import { enqueueJob } from "@agrorende/core/jobs";
+import * as exportsCore from "@agrorende/core/modules/exports";
+import * as locationsCore from "@agrorende/core/modules/locations";
 
 /*
- * Route handlers for the T05 endpoints (`/locations/batch` and `/exports/**`). `@agrorende/core`
- * does not export `modules/**` yet (change request T05-001), so the services are reached through
- * a relative path in this one file; the route files stay one-line re-exports.
+ * Route handlers for the T05 endpoints (`/locations/batch` and `/exports/**`). The route files stay
+ * one-line re-exports of these handlers.
  */
 
 const FIELD_ROLES: readonly Role[] = ["ADMIN", "MANAGER", "FIELD"];
@@ -21,6 +20,11 @@ const FIELD_ROLES: readonly Role[] = ["ADMIN", "MANAGER", "FIELD"];
 function exportCtx(request: NextRequest, ctx: AuthedCtx) {
   const candidates = [request.nextUrl.searchParams.get("locale") ?? "", ...(request.headers.get("accept-language") ?? "").split(",")];
   return { orgId: ctx.orgId, userId: ctx.userId, role: ctx.role, locale: resolveLocale(candidates.filter((value) => value.trim() !== "")) };
+}
+
+async function exportDepsWithQueue(): Promise<exportsCore.ExportDeps> {
+  const deps = await exportsCore.resolveExportDeps();
+  return { ...deps, enqueue: async (jobId: string) => { await enqueueJob("exports.build", { jobId }, { jobId }); } };
 }
 
 function filtersFrom(request: NextRequest): Record<string, string> {
@@ -61,7 +65,7 @@ function jobStarted(job: exportsCore.ExportRequestResult & { kind: "job" }, requ
 }
 
 export async function exportCsv(request: NextRequest, ctx: AuthedCtx, entity: string): Promise<NextResponse> {
-  const result = await exportsCore.requestExport(exportCtx(request, ctx), entity, filtersFrom(request), await exportsCore.resolveExportDeps());
+  const result = await exportsCore.requestExport(exportCtx(request, ctx), entity, filtersFrom(request), await exportDepsWithQueue());
   if (result.kind === "job") return jobStarted(result, ctx.requestId);
   return new NextResponse(streamOf(result.chunks), {
     status: 200,
@@ -81,7 +85,7 @@ export const getExportCsv = route(OFFICE, async (request, ctx, params) => {
 });
 
 export const postExport = route(OFFICE, async (request, ctx) => {
-  const { job, created } = await exportsCore.createExportJob(exportCtx(request, ctx), await readJson(request), await exportsCore.resolveExportDeps());
+  const { job, created } = await exportsCore.createExportJob(exportCtx(request, ctx), await readJson(request), await exportDepsWithQueue());
   return NextResponse.json({ job, created }, { status: created ? 202 : 200, headers: { location: `/api/v1/exports/${job.id}` } });
 });
 
@@ -102,5 +106,5 @@ export const getExport = route(OFFICE, async (request, ctx, params) => {
 
 /** REST fallback for location batches (ARCHITECTURE §7.8): up to 500 fixes, duplicates ignored. */
 export const postLocationBatch = route(FIELD_ROLES, async (request, ctx) => {
-  return locationsCore.ingest({ orgId: ctx.orgId, userId: ctx.userId, deviceId: ctx.deviceId }, await readJson(request), { maxFixes: REST_BATCH_MAX });
+  return locationsCore.ingest({ orgId: ctx.orgId, userId: ctx.userId, deviceId: ctx.deviceId }, await readJson(request), { maxFixes: locationsCore.REST_BATCH_MAX });
 });

@@ -1,7 +1,7 @@
 import { AppError, ERROR_META, getErrorHttpStatus, type AppErrorEnvelope, type ErrorCode } from "@agrorende/contracts/errors";
 import type { HealthResponse } from "@agrorende/contracts/sync";
 import type { MutationPayload } from "@agrorende/contracts/mutations";
-import type { Ctx, DomainError } from "@agrorende/core";
+import { verifyAccessToken, type Ctx, type DomainError } from "@agrorende/core";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
@@ -11,12 +11,29 @@ export type ApiRole = "public" | "any" | "ADMIN" | "MANAGER" | "FIELD" | "ar_pla
 export interface ApiSession {
   readonly authenticated: boolean;
   readonly role?: Exclude<ApiRole, "public" | "any">;
+  /** Set when an access token was presented but did not verify. */
+  readonly invalidToken?: boolean;
 }
 
 export interface ApiContext {
   readonly requestId: string;
   readonly session: ApiSession;
   readonly core?: Ctx;
+}
+
+/**
+ * The second argument Next.js passes to a route handler. Its `params` type is specific to each
+ * route segment, so shared wrappers accept `unknown` (which the generated route type checks
+ * accept for every segment) and narrow it with `routeContextOf`.
+ */
+export function routeContextOf(nextContext: unknown): ApiRouteContext {
+  if (typeof nextContext === "object" && nextContext !== null && "params" in nextContext) {
+    const params: unknown = nextContext.params;
+    if (params instanceof Promise) {
+      return { params: params as Promise<Readonly<Record<string, string | string[]>>> };
+    }
+  }
+  return {};
 }
 
 export interface ApiRouteContext {
@@ -55,16 +72,47 @@ function requestRef(request: NextRequest): string {
   return crypto.randomUUID().replaceAll("-", "").slice(0, 8).toUpperCase();
 }
 
-function readSession(request: NextRequest): ApiSession {
+function accessToken(request: NextRequest): string | undefined {
+  const cookie = request.cookies.get("ar_access")?.value;
+  if (cookie !== undefined && cookie.length > 0) {
+    return cookie;
+  }
+
+  const header = request.headers.get("authorization");
+  return header?.startsWith("Bearer ") === true && header.length > 7 ? header.slice(7) : undefined;
+}
+
+/**
+ * Verifies the `ar_access` cookie or the bearer token and builds the core ctx from its claims
+ * (change request T04-004). The platform console keeps its own `ar_platform` session, which its
+ * routes verify themselves.
+ */
+async function readSession(request: NextRequest, requestId: string): Promise<{ session: ApiSession; core?: Ctx }> {
+  const token = accessToken(request);
+  if (token !== undefined) {
+    try {
+      const claims = await verifyAccessToken(token, { secret: process.env.JWT_SECRET ?? "" });
+      const core: Ctx = {
+        organizationId: claims.orgId,
+        orgId: claims.orgId,
+        userId: claims.sub,
+        role: claims.role,
+        deviceId: claims.deviceId ?? null,
+        requestId,
+      };
+      return { session: { authenticated: true, role: claims.role }, core };
+    } catch {
+      if (!request.cookies.has("ar_platform")) {
+        return { session: { authenticated: false, invalidToken: true } };
+      }
+    }
+  }
+
   if (request.cookies.has("ar_platform")) {
-    return { authenticated: true, role: "ar_platform" };
+    return { session: { authenticated: true, role: "ar_platform" } };
   }
 
-  if (request.cookies.has("ar_access")) {
-    return { authenticated: true };
-  }
-
-  return { authenticated: false };
+  return { session: { authenticated: false } };
 }
 
 function isPublic(roles: readonly ApiRole[]): boolean {
@@ -81,7 +129,7 @@ function assertSession(session: ApiSession, roles: readonly ApiRole[], ref: stri
   }
 
   if (!session.authenticated) {
-    throw apiError("UNAUTHENTICATED", ref);
+    throw apiError(session.invalidToken === true ? "TOKEN_EXPIRED" : "UNAUTHENTICATED", ref);
   }
 
   if (roles.includes("any")) {
@@ -92,7 +140,8 @@ function assertSession(session: ApiSession, roles: readonly ApiRole[], ref: stri
     return;
   }
 
-  throw apiError("FORBIDDEN", ref);
+  const officeOnly = roles.every((role) => role === "ADMIN" || role === "MANAGER");
+  throw apiError(session.role === "FIELD" && officeOnly ? "OFFICE_ROLE_REQUIRED" : "FORBIDDEN", ref);
 }
 
 function errorWithRef(error: AppError, ref: string): AppError {
@@ -114,12 +163,14 @@ function toErrorResponse(error: unknown, ref: string): NextResponse<AppErrorEnve
 }
 
 export function withApi(handler: ApiHandler, options: WithApiOptions = {}) {
-  return async function routeHandler(request: NextRequest, routeContext: ApiRouteContext = {}): Promise<NextResponse> {
+  return async function routeHandler(request: NextRequest, nextContext: unknown): Promise<NextResponse> {
+    const routeContext = routeContextOf(nextContext);
     const ref = requestRef(request);
     try {
-      const session = readSession(request);
-      assertSession(session, options.roles ?? ["any"], ref);
-      const result = await handler(request, { requestId: ref, session }, routeContext);
+      const roles = options.roles ?? ["any"];
+      const { session, core } = isPublic(roles) ? { session: { authenticated: false }, core: undefined } : await readSession(request, ref);
+      assertSession(session, roles, ref);
+      const result = await handler(request, { requestId: ref, session, ...(core === undefined ? {} : { core }) }, routeContext);
       if (result instanceof NextResponse) {
         return result;
       }

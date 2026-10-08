@@ -3,6 +3,7 @@ import { DutyStatusEnum, OrgStatusEnum } from "./enums.js";
 import { ActivityEventDTOSchema } from "./dto/activityEvents.js";
 import { NotificationDTOSchema } from "./dto/notifications.js";
 import { EntityTypeEnum } from "./enums.js";
+import { ERROR_CODES } from "./errors.js";
 
 export const RealtimeClientEvents = {
   locationBatch: "location:batch",
@@ -21,7 +22,7 @@ export const RealtimeServerEvents = {
 } as const;
 export type RealtimeServerEvent = (typeof RealtimeServerEvents)[keyof typeof RealtimeServerEvents];
 
-export const OperatorStateEnum = z.enum(["OFFLINE", "IDLE", "EN_ROUTE", "ON_SITE", "WORKING"]);
+export const OperatorStateEnum = z.enum(["OFFLINE", "IDLE", "EN_ROUTE", "ON_SITE", "WORKING", "ON_HOLD"]);
 export type OperatorState = z.infer<typeof OperatorStateEnum>;
 
 export const LocationFixSchema = z.object({
@@ -46,6 +47,13 @@ export const LocationBatchAckSchema = z.object({
   accepted: z.number().int().nonnegative(),
 });
 export type LocationBatchAck = z.infer<typeof LocationBatchAckSchema>;
+
+/** Negative ack for `location:batch`; the device keeps the fixes and retries over REST. */
+export const LocationBatchNackSchema = z.object({
+  ok: z.literal(false),
+  code: z.enum(ERROR_CODES),
+});
+export type LocationBatchNack = z.infer<typeof LocationBatchNackSchema>;
 
 export const PresencePingPayloadSchema = z.object({});
 export type PresencePingPayload = z.infer<typeof PresencePingPayloadSchema>;
@@ -120,6 +128,11 @@ export const ServerPayloadSchemas = {
 
 export function userRoom(userId: string): `user:${string}` {
   return `user:${userId}`;
+}
+
+/** Tenant room every socket of the organisation joins; `org:status` is sent here. */
+export function orgRoom(orgId: string): `org:${string}` {
+  return `org:${orgId}`;
 }
 
 export function opsRoom(orgId: string): `org:${string}:ops` {

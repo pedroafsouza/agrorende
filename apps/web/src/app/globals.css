@@ -28,8 +28,7 @@
 }
 
 :root {
-  color-scheme: light;
-  background: #ffffff;
+  background: var(--ar-bg, #f8f9fa);
 }
 
 * {
@@ -39,8 +38,9 @@
 body {
   min-height: 100vh;
   margin: 0;
-  background: #f8f9fa;
-  color: #1c1f23;
+  /* Theme variables come from components/shell/theme.css, which also sets color-scheme per theme. */
+  background: var(--ar-bg, #f8f9fa);
+  color: var(--ar-text, #1c1f23);
   font-family: var(--font-geist-sans, system-ui, sans-serif);
 }
 
@@ -49,11 +49,15 @@ a {
   text-decoration: none;
 }
 
+/* 48 px touch targets on controls only (ARCHITECTURE §3.7); inline links and checkboxes keep their size. */
 button,
-a,
-input,
 select,
-textarea {
+textarea,
+input:not([type="checkbox"], [type="radio"], [type="hidden"]) {
+  min-height: var(--spacing-touch-target);
+}
+
+@utility min-h-touch {
   min-height: var(--spacing-touch-target);
 }
 

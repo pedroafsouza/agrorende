@@ -9,7 +9,15 @@
     ".": "./src/index.ts",
     "./context": "./src/context.ts",
     "./sync": "./src/sync/index.ts",
-    "./seams": "./src/seams.ts"
+    "./seams": "./src/seams.ts",
+    "./activity": "./src/activity/index.ts",
+    "./events": "./src/events/index.ts",
+    "./jobs": "./src/jobs/index.ts",
+    "./notify": "./src/notify/index.ts",
+    "./auth/api": "./src/auth/api/index.ts",
+    "./modules/locations": "./src/modules/locations/index.ts",
+    "./modules/exports": "./src/modules/exports/index.ts",
+    "./modules/*": "./src/modules/*.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",
@@ -21,7 +29,9 @@
   "dependencies": {
     "@agrorende/contracts": "workspace:*",
     "@agrorende/db": "workspace:*",
+    "@node-rs/argon2": "^2.2.2",
     "@react-pdf/renderer": "^4.3.1",
+    "arctic": "^3.7.0",
     "bullmq": "^6.3.11",
     "csv-stringify": "^6.6.0",
     "ioredis": "catalog:",

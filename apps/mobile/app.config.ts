@@ -61,7 +61,6 @@ export default ({ config }: ConfigContext): ExpoConfig => {
       "expo-secure-store",
       "expo-web-browser",
       "expo-apple-authentication",
-      "expo-crypto",
       "expo-build-properties",
       "@sentry/react-native/expo",
       "./plugins/withNavigationQueries.js",

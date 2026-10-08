@@ -196,7 +196,7 @@ describe("deriveOperatorState", () => {
     expect(deriveOperatorState(null, true, "IN_PROGRESS", NOW)).toBe("WORKING");
     expect(deriveOperatorState(fresh, false, "ON_SITE", NOW)).toBe("ON_SITE");
     expect(deriveOperatorState(fresh, false, "EN_ROUTE", NOW)).toBe("EN_ROUTE");
-    expect(deriveOperatorState(fresh, false, "ON_HOLD", NOW)).toBe("IDLE");
+    expect(deriveOperatorState(fresh, false, "ON_HOLD", NOW)).toBe("ON_HOLD");
     expect(deriveOperatorState(fresh, false, null, NOW)).toBe("IDLE");
   });
 });

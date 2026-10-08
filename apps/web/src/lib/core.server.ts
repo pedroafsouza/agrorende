@@ -8,21 +8,17 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { withApi, type ApiRouteContext } from "@/server/withApi";
 
-/*
- * Typed adapter to the T04 core modules. `@agrorende/core` does not export `modules/**` yet
- * (change request T04-001), so the services are reached through a relative path in this one
- * file. When the `./modules` export lands, only these lines change.
- */
-export * as assetsCore from "../../../../packages/core/src/modules/assets/service";
-export * as assetsQueries from "../../../../packages/core/src/modules/assets/queries";
-export * as sitesCore from "../../../../packages/core/src/modules/sites/service";
-export * as sitesQueries from "../../../../packages/core/src/modules/sites/queries";
-export * as seasonsCore from "../../../../packages/core/src/modules/seasons/service";
-export * as seasonsQueries from "../../../../packages/core/src/modules/seasons/queries";
-export * as customersCore from "../../../../packages/core/src/modules/customers/service";
-export * as customersQueries from "../../../../packages/core/src/modules/customers/queries";
-export * as checklistsCore from "../../../../packages/core/src/modules/checklists/service";
-export * as checklistsQueries from "../../../../packages/core/src/modules/checklists/queries";
+/* Typed adapter to the T04 core modules, reached through the `@agrorende/core/modules/*` export (T04-001). */
+export * as assetsCore from "@agrorende/core/modules/assets/service";
+export * as assetsQueries from "@agrorende/core/modules/assets/queries";
+export * as sitesCore from "@agrorende/core/modules/sites/service";
+export * as sitesQueries from "@agrorende/core/modules/sites/queries";
+export * as seasonsCore from "@agrorende/core/modules/seasons/service";
+export * as seasonsQueries from "@agrorende/core/modules/seasons/queries";
+export * as customersCore from "@agrorende/core/modules/customers/service";
+export * as customersQueries from "@agrorende/core/modules/customers/queries";
+export * as checklistsCore from "@agrorende/core/modules/checklists/service";
+export * as checklistsQueries from "@agrorende/core/modules/checklists/queries";
 
 export const OFFICE: readonly Role[] = ["ADMIN", "MANAGER"];
 export const ADMIN_ONLY: readonly Role[] = ["ADMIN"];
@@ -52,11 +48,11 @@ export async function authenticate(request: NextRequest, roles: readonly Role[],
 type Params = Readonly<Record<string, string>>;
 type Handler = (request: NextRequest, ctx: AuthedCtx, params: Params) => Promise<unknown>;
 
-/** Thin route wrapper: auth + role check, then the handler's DTO as JSON. */
+/** Thin route wrapper: `withApi` verifies the token and enforces the roles, then the handler's DTO as JSON. */
 export function route(roles: readonly Role[], handler: Handler) {
   return withApi(
     async (request, api, routeContext: ApiRouteContext) => {
-      const ctx = await authenticate(request, roles, api.requestId);
+      const ctx: AuthedCtx = api.core === undefined ? await authenticate(request, roles, api.requestId) : { ...api.core, requestId: api.requestId };
       const raw = (await routeContext.params) ?? {};
       const params: Record<string, string> = {};
       for (const [key, value] of Object.entries(raw)) params[key] = Array.isArray(value) ? value.join("/") : String(value);
@@ -65,7 +61,7 @@ export function route(roles: readonly Role[], handler: Handler) {
       if (result === undefined) return new NextResponse(null, { status: 204 });
       return NextResponse.json(result);
     },
-    { roles: ["any"] },
+    { roles },
   );
 }
 

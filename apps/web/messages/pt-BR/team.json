@@ -106,6 +106,7 @@
     "expires": "Válido até {at}",
     "inviteBody": "Envie o link para {name}. Ele vale uma vez.",
     "inviteMessage": "Olá, {name}! Você foi convidado para o AgroRende. Entre por este link: {url}",
+    "qr": "QR code do link",
     "resetBody": "Envie o link para {name}. Ele vale uma vez.",
     "resetMessage": "Olá, {name}! Use este link para criar uma nova senha no AgroRende: {url}",
     "resetTitle": "Link para nova senha",

@@ -1,7 +1,4 @@
-/**
- * Bridge to the core locations module. `@agrorende/core` does not export `modules/*` yet
- * (change request T05-001), so the gateway imports the module source directly.
- */
+/** Bridge to the core locations module, imported through the `@agrorende/core/modules/locations` export. */
 export {
   closeLocationsDb,
   createPingWriter,
@@ -10,4 +7,4 @@ export {
   recordPresence,
   SOCKET_BATCH_MAX,
   type PingWriter,
-} from "../../../packages/core/src/modules/locations/index.js";
+} from "@agrorende/core/modules/locations";

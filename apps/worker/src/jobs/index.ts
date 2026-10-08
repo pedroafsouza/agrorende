@@ -240,11 +240,12 @@ export const EXTRA_SCHEDULES = [
   { schedulerId: "notifications.push.receipts", name: "notifications.push", every: 15 * 60_000, data: { receiptsOnly: true } },
 ] as const satisfies readonly { schedulerId: string; name: JobName; every: number; data: Doc }[];
 
-// ───────── Runtime bridge to packages/db and packages/core ─────────
+// ───────── Bridge to packages/db and packages/core ─────────
 //
-// The worker tsconfig is frozen with `rootDir: "."`, and `@agrorende/core` does not export its
-// modules yet, so the bridge loads source files by URL and types them with the local interfaces
-// above (change request T05-001).
+// The modules are imported by package name (`@agrorende/db`, `@agrorende/core/seams`,
+// `@agrorende/core/modules/*`, change request T05-001). They are loaded lazily so that importing
+// the job registry does not open a database client, and they are typed with the local structural
+// interfaces below so that job code stays independent of the driver types.
 
 interface DbModule {
   documentSchemas: Record<string, { shape?: Record<string, unknown> }>;
@@ -281,19 +282,32 @@ interface AppleModule {
   revokeAppleRefreshToken?: (input: AppleRevokeInput) => Promise<void>;
 }
 
-async function importRepo<T>(relative: string): Promise<T> {
-  return (await importModule(path.join(REPO_ROOT, relative))) as T;
-}
-
+/*
+ * The local interfaces use `unknown` for the database handle and the transaction, while the
+ * package signatures use the concrete driver types. The casts below are the single place where
+ * the two views meet.
+ */
 export async function loadDbModule(): Promise<DbModule> {
-  return importRepo<DbModule>("packages/db/src/index.ts");
+  return (await import("@agrorende/db")) as unknown as DbModule;
 }
 
-/** Test helper: `@agrorende/db/testing` through the same bridge. */
+/** Test helper: `@agrorende/db/testing`. */
 export async function loadDbTesting(): Promise<{
   setupTestDb(name: string): Promise<{ db: { databaseName: string }; drop(): Promise<void>; truncate(): Promise<void> }>;
 }> {
-  return importRepo("packages/db/src/testing/setupTestDb.ts");
+  return import("@agrorende/db/testing");
+}
+
+async function loadSeams(): Promise<SeamsModule> {
+  return (await import("@agrorende/core/seams")) as unknown as SeamsModule;
+}
+
+async function loadLocations(): Promise<LocationsModule> {
+  return (await import("@agrorende/core/modules/locations")) as unknown as LocationsModule;
+}
+
+async function loadExports(): Promise<ExportsModule> {
+  return (await import("@agrorende/core/modules/exports")) as unknown as ExportsModule;
 }
 
 /** The T02 handler is expected at `packages/core/src/auth/apple.ts` (change request T05-005). */
@@ -325,9 +339,9 @@ export interface PlatformOptions {
 export async function loadWorkerPlatform(options: PlatformOptions): Promise<WorkerPlatform> {
   const [dbModule, seams, locations, exportsModule] = await Promise.all([
     loadDbModule(),
-    importRepo<SeamsModule>("packages/core/src/seams.ts"),
-    importRepo<LocationsModule>("packages/core/src/modules/locations/index.ts"),
-    importRepo<ExportsModule>("packages/core/src/modules/exports/index.ts"),
+    loadSeams(),
+    loadLocations(),
+    loadExports(),
   ]);
   const db = options.db ?? (await dbModule.getDb());
   const store = options.store ?? exportsModule.defaultExportStore();

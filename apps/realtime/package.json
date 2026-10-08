@@ -15,6 +15,7 @@
   "dependencies": {
     "@agrorende/contracts": "workspace:*",
     "@agrorende/core": "workspace:*",
+    "@agrorende/db": "workspace:*",
     "@socket.io/redis-adapter": "^8.3.0",
     "ioredis": "catalog:",
     "jose": "catalog:",

@@ -1,16 +1,19 @@
 import { createHash, randomBytes, scrypt, timingSafeEqual } from "node:crypto";
 
 import { AppError } from "@agrorende/contracts/errors";
+import { hash as argon2Hash, verify as argon2Verify, type Algorithm } from "@node-rs/argon2";
 
 /*
- * ARCHITECTURE §11 asks for Argon2id, which is not a workspace dependency (R4 freezes
- * dependencies). Passwords use scrypt from `node:crypto` until change request T02-001 lands.
- * The seed's `sha256:<hex>` hashes are verified and upgraded to scrypt on the next login.
+ * Passwords are hashed with Argon2id (ARCHITECTURE §11, change request T02-001). Hashes written
+ * before the switch — `scrypt$…` from the interim implementation and the seed's `sha256:<hex>` —
+ * are still verified and are upgraded to Argon2id on the next successful login (`needsRehash`).
  */
 
-const SCRYPT_N = 16_384;
-const SCRYPT_R = 8;
-const SCRYPT_P = 1;
+/** `Algorithm.Argon2id`; the package exports an ambient const enum, which `verbatimModuleSyntax` cannot read. */
+const ARGON2ID = 2 as Algorithm;
+const ARGON2_OPTIONS = { algorithm: ARGON2ID, memoryCost: 19_456, timeCost: 2, parallelism: 1 } as const;
+const ARGON2_PREFIX = `$argon2id$v=19$m=${ARGON2_OPTIONS.memoryCost},t=${ARGON2_OPTIONS.timeCost},p=${ARGON2_OPTIONS.parallelism}$`;
+
 const KEY_LENGTH = 64;
 export const PASSWORD_MIN_LENGTH = 8;
 
@@ -43,9 +46,7 @@ function derive(password: string, salt: Buffer, n: number, r: number, p: number)
 }
 
 export async function hashPassword(password: string): Promise<string> {
-  const salt = randomBytes(16);
-  const key = await derive(password, salt, SCRYPT_N, SCRYPT_R, SCRYPT_P);
-  return `scrypt$${SCRYPT_N}$${SCRYPT_R}$${SCRYPT_P}$${salt.toString("base64url")}$${key.toString("base64url")}`;
+  return argon2Hash(password, ARGON2_OPTIONS);
 }
 
 function safeEqual(a: Buffer, b: Buffer): boolean {
@@ -54,6 +55,13 @@ function safeEqual(a: Buffer, b: Buffer): boolean {
 
 export async function verifyPassword(password: string, stored: string | null | undefined): Promise<boolean> {
   if (stored === null || stored === undefined || stored.length === 0) return false;
+  if (stored.startsWith("$argon2")) {
+    try {
+      return await argon2Verify(stored, password);
+    } catch {
+      return false;
+    }
+  }
   if (stored.startsWith("sha256:")) {
     const expected = Buffer.from(stored.slice(7), "hex");
     return safeEqual(createHash("sha256").update(password).digest(), expected);
@@ -67,7 +75,7 @@ export async function verifyPassword(password: string, stored: string | null | u
 }
 
 export function needsRehash(stored: string | null | undefined): boolean {
-  return stored !== null && stored !== undefined && !stored.startsWith(`scrypt$${SCRYPT_N}$${SCRYPT_R}$${SCRYPT_P}$`);
+  return stored !== null && stored !== undefined && !stored.startsWith(ARGON2_PREFIX);
 }
 
 /** Throws `VALIDATION_FAILED` with a field error when the password is too short or too common. */

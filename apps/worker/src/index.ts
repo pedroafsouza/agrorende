@@ -4,7 +4,7 @@ import { pino } from "pino";
 import { readWorkerConfig } from "./config.js";
 import { createWorkerHealthServer } from "./health.js";
 import { createJobRuntime, createWorkerLogger, loadJobHandlers, loadWorkerPlatform } from "./jobs/index.js";
-import { createExpoFetchClient } from "./jobs/notifications.push.js";
+import { createExpoPushClient } from "./jobs/notifications.push.js";
 
 /**
  * Worker entry (ARCHITECTURE §10, T05): one BullMQ worker per queue, repeatable jobs registered
@@ -35,7 +35,7 @@ const platform = await loadWorkerPlatform({
   dbName,
   mediaRoot,
   redis: connection,
-  expo: createExpoFetchClient(process.env.EXPO_ACCESS_TOKEN),
+  expo: createExpoPushClient(process.env.EXPO_ACCESS_TOKEN),
   logger,
 });
 const runtime = createJobRuntime({ connection, dbName, handlers: await loadJobHandlers(), platform, logger });

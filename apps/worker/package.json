@@ -16,7 +16,9 @@
   "dependencies": {
     "@agrorende/contracts": "workspace:*",
     "@agrorende/core": "workspace:*",
+    "@agrorende/db": "workspace:*",
     "bullmq": "^6.3.11",
+    "expo-server-sdk": "^7.2.0",
     "ioredis": "catalog:",
     "pino": "catalog:"
   },

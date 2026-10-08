@@ -5,14 +5,14 @@ import { SignJWT } from "jose";
 import { io as connect, type Socket as ClientSocket } from "socket.io-client";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { opsRoom, realtimeRedisChannel, userRoom } from "@agrorende/contracts/realtime";
+import { opsRoom, orgRoom, realtimeRedisChannel, userRoom } from "@agrorende/contracts/realtime";
 
-import { closeClient, collections } from "../../../packages/db/src/index.js";
-import { setupTestDb, type TestDbHandle } from "../../../packages/db/src/testing/setupTestDb.js";
-import { liveKey, liveSnapshot, presenceKey } from "../../../packages/core/src/modules/locations/index.js";
+import { closeClient, collections } from "@agrorende/db";
+import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
+import { liveKey, liveSnapshot, presenceKey } from "@agrorende/core/modules/locations";
 import { EventIdCache } from "./dedupe.js";
 import { createJsonLogger } from "./logger.js";
-import { createRealtimeServer, orgRoom, type RealtimeServerRuntime } from "./server.js";
+import { createRealtimeServer, type RealtimeServerRuntime } from "./server.js";
 
 const SECRET = "t05-realtime-test-secret-with-enough-length";
 const REDIS_URL = process.env.REDIS_URL ?? "redis://localhost:6379";
