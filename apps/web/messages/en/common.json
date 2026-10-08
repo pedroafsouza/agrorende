@@ -1,1 +1,225 @@
-{}
+{
+  "actions": {
+    "archive": "Archive",
+    "cancel": "Cancel",
+    "close": "Close",
+    "delete": "Delete",
+    "done": "Done",
+    "edit": "Edit",
+    "retry": "Try again",
+    "save": "Save",
+    "unarchive": "Unarchive"
+  },
+  "activity": {
+    "asset": {
+      "conditionChanged": "Condition changed",
+      "created": "Asset created",
+      "meterReplaced": "Meter replaced",
+      "retired": "Asset retired",
+      "updated": "Asset updated"
+    },
+    "customer": {
+      "created": "Customer created",
+      "deleted": "Customer deleted"
+    },
+    "plot": {
+      "created": "Plot created"
+    },
+    "season": {
+      "closed": "Season closed",
+      "created": "Season created",
+      "updated": "Season updated"
+    },
+    "site": {
+      "created": "Site created",
+      "deleted": "Site deleted"
+    },
+    "template": {
+      "deleted": "Checklist deleted",
+      "published": "Checklist published"
+    }
+  },
+  "bulk": {
+    "ok": "OK",
+    "retryFailed": "Retry the failed ones",
+    "summary": "{ok, plural, one {# done} other {# done}} · {failed, plural, =0 {no failures} one {# failed} other {# failed}}",
+    "title": "Bulk action result"
+  },
+  "category": {
+    "EXCAVATOR": "Excavator",
+    "GENERATOR": "Generator",
+    "HARVESTER": "Harvester",
+    "IMPLEMENT": "Implement",
+    "IRRIGATION": "Irrigation",
+    "LOADER": "Loader",
+    "OTHER": "Other",
+    "PICKUP": "Pickup",
+    "PLANTER": "Planter",
+    "SPRAYER": "Sprayer",
+    "TRACTOR": "Tractor",
+    "TRUCK": "Truck"
+  },
+  "condition": {
+    "IN_REPAIR": "In repair",
+    "NEEDS_REPAIR": "Needs repair",
+    "OPERATIONAL": "Operational",
+    "OUT_OF_SERVICE": "Out of service",
+    "RETIRED": "Retired"
+  },
+  "conflict": {
+    "body": "Someone else saved this record while you were editing. Compare and choose what to keep.",
+    "field": "Field",
+    "keepMine": "Keep mine",
+    "mine": "My version",
+    "noDiff": "No difference in the fields you edited.",
+    "theirs": "Saved version",
+    "title": "This record changed",
+    "useTheirs": "Use the saved version"
+  },
+  "errors": {
+    "copyReference": "Copy reference",
+    "reference": "Error reference: {ref}"
+  },
+  "filters": {
+    "includeArchived": "Show archived",
+    "search": "Search"
+  },
+  "form": {
+    "summaryTitle": "{count, plural, one {Fix # field} other {Fix # fields}}"
+  },
+  "import": {
+    "download": "Download error file",
+    "errorsTitle": "{count, plural, one {# row with errors} other {# rows with errors}}",
+    "rowError": "Row {row} · {field}: {message}"
+  },
+  "map": {
+    "label": "Map"
+  },
+  "media": {
+    "empty": "No media yet",
+    "failed": "Upload failed",
+    "kind": {
+      "AUDIO": "Audio",
+      "DOCUMENT": "Document",
+      "PHOTO": "Photo",
+      "SIGNATURE": "Signature",
+      "VIDEO": "Video"
+    },
+    "pending": "Uploading…",
+    "photo": "Photo"
+  },
+  "no": "No",
+  "notFound": {
+    "back": "Back to start",
+    "body": "The address may be wrong or the record was removed.",
+    "title": "Page not found"
+  },
+  "offline": {
+    "body": "No internet connection. Try again once you are back online.",
+    "title": "You are offline"
+  },
+  "picker": {
+    "none": "None",
+    "search": "Search…"
+  },
+  "priority": {
+    "CRITICAL": "Critical",
+    "HIGH": "High",
+    "LOW": "Low",
+    "MEDIUM": "Medium"
+  },
+  "rateUnit": {
+    "DAY": "Day",
+    "HOUR": "Hour",
+    "MONTH": "Month",
+    "WEEK": "Week"
+  },
+  "realtime": {
+    "connected": "Live",
+    "connecting": "Connecting…",
+    "offline": "Live updates off",
+    "reconnecting": "Reconnecting…"
+  },
+  "reauth": {
+    "body": "Your session expired. Sign in again to continue without losing what you typed.",
+    "email": "Email",
+    "password": "Password",
+    "signOut": "Sign out",
+    "submit": "Sign in",
+    "title": "Sign in again"
+  },
+  "states": {
+    "active": "Active",
+    "archived": "Archived",
+    "inactive": "Inactive",
+    "loading": "Loading…",
+    "noMatches": "Nothing found",
+    "noMatchesBody": "Adjust the search or the filters."
+  },
+  "status": {
+    "rental": {
+      "ACTIVE": "Active",
+      "CANCELLED": "Cancelled",
+      "CLOSED": "Closed",
+      "DRAFT": "Draft",
+      "RESERVED": "Reserved",
+      "RETURNED": "Returned"
+    },
+    "report": {
+      "DISMISSED": "Dismissed",
+      "IN_REVIEW": "In review",
+      "MARKED_FOR_REPAIR": "Marked for repair",
+      "MONITORING": "Monitoring",
+      "SUBMITTED": "Submitted"
+    },
+    "workOrder": {
+      "ACCEPTED": "Accepted",
+      "ASSIGNED": "Assigned",
+      "CANCELLED": "Cancelled",
+      "COMPLETED": "Completed",
+      "EN_ROUTE": "En route",
+      "IN_PROGRESS": "In progress",
+      "ON_HOLD": "On hold",
+      "ON_SITE": "On site",
+      "OPEN": "Open",
+      "VERIFIED": "Verified"
+    }
+  },
+  "syncHealth": {
+    "NEVER": "Never synced",
+    "OK": "In sync",
+    "STALE": "Not synced for over 24 h",
+    "STUCK": "Sync stuck"
+  },
+  "table": {
+    "first": "First page",
+    "next": "Next page",
+    "open": "Open",
+    "pagination": "Pagination"
+  },
+  "timeline": {
+    "empty": "No activity recorded"
+  },
+  "toast": {
+    "deleted": "Deleted",
+    "saved": "Saved"
+  },
+  "validation": {
+    "duplicateKey": "A record with this value already exists",
+    "email": "Invalid email",
+    "invalid": "Invalid value",
+    "invalid_enum_value": "Choose one of the options",
+    "invalid_format": "Invalid format",
+    "invalid_string": "Invalid format",
+    "invalid_type": "Invalid value type",
+    "invalid_value": "Invalid value",
+    "number": "Enter a number",
+    "phone": "Invalid phone. Use +55 and the area code.",
+    "range": "Out of the allowed range",
+    "required": "Required field",
+    "taxId": "Invalid CPF or CNPJ",
+    "too_big": "Value is too long or too large",
+    "too_small": "Value is too short or too small"
+  },
+  "yes": "Yes"
+}

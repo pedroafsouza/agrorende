@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { CustomersListPage } from "@/features/customers/CustomersListPage";
 
-export default function Admincustomerspage() {
-  return <PlaceholderPage descriptionKey="page.customers.description" route="/customers" titleKey="page.customers.title" />;
+export default function CustomersPage() {
+  return <CustomersListPage />;
 }

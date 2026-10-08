@@ -1,5 +1,13 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { PublicFrame } from "@/features/shell/auth/PublicFrame";
+import { ResetPage } from "@/features/shell/auth/ResetPage";
 
-export default function Rcodepage() {
-  return <PlaceholderPage descriptionKey="page.reset.description" route="/r/[code]" titleKey="page.reset.title" />;
+export const dynamic = "force-dynamic";
+
+export default async function ResetRoute({ params }: { readonly params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  return (
+    <PublicFrame>
+      <ResetPage code={code} />
+    </PublicFrame>
+  );
 }

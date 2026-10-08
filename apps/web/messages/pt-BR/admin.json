@@ -1,1 +1,128 @@
-{}
+{
+  "nav": {
+    "account": "Minha conta",
+    "analytics": "Indicadores",
+    "assets": "Máquinas",
+    "attention": "Precisa de atenção",
+    "billing": "Faturamento",
+    "costs": "Custos",
+    "customers": "Clientes",
+    "devices": "Aparelhos",
+    "fuel": "Combustível",
+    "imports": "Importar",
+    "maintenance": "Manutenção preventiva",
+    "notifications": "Notificações",
+    "ops": "Operação",
+    "parts": "Peças",
+    "rentals": "Locações",
+    "reports": "Relatos",
+    "seasons": "Safras",
+    "settings": "Configurações",
+    "sites": "Locais",
+    "stock": "Estoque",
+    "subscription": "Assinatura",
+    "team": "Equipe",
+    "templates": "Checklists",
+    "workOrders": "Ordens de serviço"
+  },
+  "notifications": {
+    "emptyBody": "Avisos sobre ordens de serviço, locações e relatos aparecem aqui.",
+    "emptyTitle": "Nenhuma notificação",
+    "markAllRead": "Marcar todas como lidas",
+    "markRead": "Marcar como lida",
+    "more": "Carregar mais",
+    "title": "Notificações",
+    "unread": "Não lida:",
+    "unreadOnly": "Somente não lidas"
+  },
+  "officeRole": {
+    "appStore": "Baixar na App Store",
+    "body": "O painel web é para o escritório. Sua conta é da equipe de campo: instale o aplicativo no celular e entre com o mesmo e-mail.",
+    "playStore": "Baixar no Google Play",
+    "signOut": "Sair",
+    "title": "Use o aplicativo AgroRende"
+  },
+  "orgStatus": {
+    "CANCELLED": {
+      "body": "A assinatura foi cancelada. Exporte seus dados antes da exclusão.",
+      "title": "Assinatura cancelada"
+    },
+    "PAST_DUE": {
+      "body": "Há um pagamento pendente. Regularize para evitar a suspensão.",
+      "title": "Pagamento pendente"
+    },
+    "SUSPENDED": {
+      "body": "A organização está suspensa e só pode consultar dados. Fale com o administrador.",
+      "title": "Conta suspensa"
+    },
+    "TRIAL": {
+      "body": "Sua organização está no período de teste. Escolha um plano para continuar depois do fim do teste.",
+      "title": "Período de teste"
+    }
+  },
+  "roles": {
+    "ADMIN": "Administrador",
+    "FIELD": "Equipe de campo",
+    "MANAGER": "Gestor"
+  },
+  "shell": {
+    "attentionCount": "{count, plural, =0 {Nada precisa de atenção} one {# item precisa de atenção} other {# itens precisam de atenção}}",
+    "brand": "AgroRende",
+    "closeMenu": "Fechar menu",
+    "env": {
+      "ci": "Ambiente de testes (CI)",
+      "local": "Ambiente local",
+      "production": "Produção",
+      "staging": "Homologação — dados de teste"
+    },
+    "language": "Idioma",
+    "mainNav": "Navegação principal",
+    "more": "Mais",
+    "notificationsLabel": "{count, plural, =0 {Notificações} one {Notificações, # não lida} other {Notificações, # não lidas}}",
+    "openMenu": "Abrir menu",
+    "search": "Buscar",
+    "searchSoon": "A busca global chega em breve",
+    "sidebar": "Menu lateral",
+    "signOut": "Sair",
+    "skipToContent": "Pular para o conteúdo",
+    "theme": {
+      "dark": "Escuro",
+      "light": "Claro",
+      "outdoor": "Sol forte",
+      "system": "Automático"
+    },
+    "themeLabel": "Tema: {theme}"
+  },
+  "styleGuide": {
+    "badges": "Selos de status",
+    "busy": "Salvando",
+    "buttons": "Botões",
+    "checkbox": "Caixa de seleção",
+    "components": "Componentes",
+    "danger": "Perigo",
+    "disabled": "Desativada",
+    "empty": "Vazio",
+    "emptyBody": "Cadastre a primeira máquina para começar.",
+    "emptyTitle": "Nenhuma máquina ainda",
+    "error": "Erro",
+    "errorText": "Campo obrigatório",
+    "forms": "Formulários",
+    "ghost": "Discreta",
+    "hint": "Dica abaixo do campo",
+    "invalid": "Campo com erro",
+    "loading": "Carregando",
+    "money": "Valor",
+    "offline": "Sem conexão",
+    "palette": "Paleta Campo claro",
+    "primary": "Ação principal",
+    "sample": "Trator 01",
+    "secondary": "Secundária",
+    "select": "Seleção",
+    "states": "Estados",
+    "subtitle": "Somente em desenvolvimento. Alvos de toque de 48 dp, ícone com texto e contraste para uso ao ar livre.",
+    "text": "Texto",
+    "themeVars": "Variáveis do tema atual",
+    "title": "Guia visual — Campo claro",
+    "tokens": "Tokens"
+  }
+}

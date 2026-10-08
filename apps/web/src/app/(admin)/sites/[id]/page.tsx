@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { SiteDetailPage } from "@/features/sites/SiteDetailPage";
 
-export default function Adminsitesidpage() {
-  return <PlaceholderPage descriptionKey="page.siteDetail.description" route="/sites/[id]" titleKey="page.siteDetail.title" />;
+export default async function SitePage({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <SiteDetailPage id={id} />;
 }

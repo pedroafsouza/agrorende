@@ -1,5 +1,11 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { Suspense } from "react";
 
-export default function Authloginpage() {
-  return <PlaceholderPage descriptionKey="page.login.description" route="/login" titleKey="page.login.title" />;
+import { LoginPage } from "@/features/shell/auth/LoginPage";
+
+export default function LoginRoute() {
+  return (
+    <Suspense>
+      <LoginPage />
+    </Suspense>
+  );
 }

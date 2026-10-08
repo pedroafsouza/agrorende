@@ -1,1 +1,72 @@
-{}
+{
+  "org": {
+    "atRisk": "Alerta de risco",
+    "atRiskHint": "Fração do prazo restante que dispara o alerta (0,25 = 25%).",
+    "audioMaxSeconds": "Duração máxima do áudio (s)",
+    "defaultSiteRadiusM": "Raio padrão do local (m)",
+    "field": "Campo e sincronização",
+    "locationDistanceM": "Distância mínima de localização (m)",
+    "locationIntervalSec": "Intervalo de localização (s)",
+    "maxVideosPerReport": "Vídeos por relato",
+    "media": "Fotos, vídeos e áudios",
+    "office": "Contato do escritório",
+    "officeMissing": "Cadastre o telefone do escritório. Sem ele, o botão \"Falar com o escritório\" do aplicativo não funciona.",
+    "officePhone": "Telefone do escritório",
+    "officeWhatsApp": "WhatsApp do escritório",
+    "phoneHint": "Formato internacional: +55, DDD e número.",
+    "phonePlaceholder": "+5534999990000",
+    "photoMaxPx": "Tamanho máximo da foto (px)",
+    "photoQuality": "Qualidade da foto (0–1)",
+    "rentalDueSoonHours": "Aviso de devolução próxima (h)",
+    "rentalGraceHours": "Tolerância de atraso (h)",
+    "rentals": "Locação",
+    "requireWoSignature": "Exigir assinatura ao concluir ordem de serviço",
+    "showLaborCostToManager": "Mostrar custo de mão de obra para gestores",
+    "sla": "Prazos de atendimento (SLA)",
+    "slaHint": "Horas para concluir uma ordem de serviço, por prioridade.",
+    "slaHours": "{priority} (h)",
+    "staleSyncAlertHours": "Alerta de aparelho sem sincronizar (h)",
+    "staleSyncHint": "Aparelhos sem sincronizar por mais tempo aparecem em Precisa de atenção.",
+    "subscription": "Assinatura",
+    "subtitle": "Prazos, contato do escritório, locação e mídia. Vale para todos os aparelhos na próxima sincronização.",
+    "termsIn": "Termos de locação ({locale})",
+    "termsVersion": "Versão dos termos",
+    "termsVersionHint": "Aumente ao mudar o texto. Novas locações exigem aceite da nova versão.",
+    "title": "Configurações da organização",
+    "videoMaxSeconds": "Duração máxima do vídeo (s)"
+  },
+  "seasons": {
+    "actions": {
+      "close": "Encerrar safra",
+      "makeCurrent": "Tornar atual",
+      "new": "Nova safra"
+    },
+    "closed": "Encerrada",
+    "current": "Atual",
+    "edit": "Editar safra",
+    "emptyBody": "Crie a safra atual para separar custos e indicadores por período.",
+    "emptyTitle": "Nenhuma safra cadastrada",
+    "fields": {
+      "crop": "Cultura",
+      "endsOn": "Fim",
+      "isCurrent": "Safra atual",
+      "name": "Nome",
+      "startsOn": "Início"
+    },
+    "openWork": {
+      "body": "{workOrders, plural, =0 {Nenhuma ordem de serviço aberta} one {# ordem de serviço aberta} other {# ordens de serviço abertas}} e {rentals, plural, =0 {nenhuma locação ativa} one {# locação ativa} other {# locações ativas}}. Elas continuam ligadas a esta safra. Encerrar mesmo assim?",
+      "confirm": "Encerrar mesmo assim",
+      "title": "Há trabalho em aberto"
+    },
+    "subtitle": "A safra atual organiza custos, ordens de serviço e locações. Janelas críticas destacam máquinas no período de maior uso.",
+    "title": "Safras",
+    "windows": {
+      "add": "Adicionar janela",
+      "categories": "Categorias afetadas",
+      "hint": "Períodos como plantio ou colheita em que a parada de certas máquinas custa mais.",
+      "name": "Nome da janela",
+      "remove": "Remover janela",
+      "title": "Janelas críticas"
+    }
+  }
+}

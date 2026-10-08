@@ -1,5 +1,13 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { PublicFrame } from "@/features/shell/auth/PublicFrame";
+import { InvitePage } from "@/features/shell/auth/InvitePage";
 
-export default function Icodepage() {
-  return <PlaceholderPage descriptionKey="page.invite.description" route="/i/[code]" titleKey="page.invite.title" />;
+export const dynamic = "force-dynamic";
+
+export default async function InviteRoute({ params }: { readonly params: Promise<{ code: string }> }) {
+  const { code } = await params;
+  return (
+    <PublicFrame>
+      <InvitePage code={code} />
+    </PublicFrame>
+  );
 }

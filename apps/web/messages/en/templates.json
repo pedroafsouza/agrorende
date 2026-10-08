@@ -1,1 +1,90 @@
-{}
+{
+  "actions": {
+    "create": "Create checklist",
+    "new": "New checklist",
+    "publish": "Publish new version",
+    "saveDetails": "Save details"
+  },
+  "delete": {
+    "archiveInstead": "Archive instead",
+    "body": "Only never-used checklists can be deleted. Checklists in use can be archived.",
+    "title": "Delete {name}?"
+  },
+  "editor": {
+    "accessories": "Accessories",
+    "accessoriesHint": "Items handed over with the asset and checked on return.",
+    "addAccessory": "Add accessory",
+    "addItem": "Add item",
+    "addOption": "Add option",
+    "defaultQty": "Quantity",
+    "details": "Checklist details",
+    "itemNumber": "Item {n}",
+    "items": "Items",
+    "key": "Key",
+    "keyHint": "Stable identifier, like front_tyres.",
+    "labelIn": "Label ({locale})",
+    "max": "Maximum",
+    "min": "Minimum",
+    "moveDown": "Move down",
+    "moveUp": "Move up",
+    "optionValue": "Option",
+    "options": "Options",
+    "photo": "Photo",
+    "publishHint": "Items and accessories change only when you publish. Past inspections keep the old version.",
+    "removeAccessory": "Remove accessory",
+    "removeItem": "Remove item",
+    "removeOption": "Remove option",
+    "replacementCost": "Replacement cost",
+    "required": "Required",
+    "safetyCritical": "Safety-critical",
+    "section": "Section",
+    "type": "Answer type",
+    "unit": "Unit"
+  },
+  "fields": {
+    "appliesTo": "Used for",
+    "assetCategories": "Asset categories",
+    "isActive": "Active",
+    "items": "Items",
+    "name": "Name",
+    "status": "Status",
+    "version": "Version"
+  },
+  "hints": {
+    "assetCategories": "Leave empty to apply to every category."
+  },
+  "inUse": "{count, plural, =0 {Not in use} one {Used by # record} other {Used by # records}}",
+  "inUseDialog": {
+    "body": "Past inspections and rentals keep the current version; only new records use the published version.",
+    "confirm": "Publish new version",
+    "title": "This checklist is in use"
+  },
+  "itemType": {
+    "NUMBER": "Number",
+    "PASS_FAIL_NA": "Pass / Fail / N/A",
+    "PHOTO": "Photo",
+    "SELECT": "Option list",
+    "TEXT": "Text"
+  },
+  "kind": {
+    "RENTAL": "Rental",
+    "WORK_ORDER": "Work order"
+  },
+  "list": {
+    "allKinds": "All uses",
+    "emptyBody": "Create a checklist to standardise hand-overs, returns and work orders.",
+    "emptyTitle": "No checklists yet",
+    "subtitle": "Templates used for asset hand-over, return and inspection.",
+    "title": "Checklists"
+  },
+  "new": {
+    "title": "New checklist"
+  },
+  "photoRule": {
+    "ALWAYS": "Always",
+    "NEVER": "No photo",
+    "ON_FAIL": "On failure"
+  },
+  "published": "Version {n} published",
+  "version": "Version {n}"
+}

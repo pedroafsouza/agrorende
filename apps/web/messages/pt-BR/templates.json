@@ -1,1 +1,90 @@
-{}
+{
+  "actions": {
+    "create": "Criar checklist",
+    "new": "Novo checklist",
+    "publish": "Publicar nova versão",
+    "saveDetails": "Salvar dados"
+  },
+  "delete": {
+    "archiveInstead": "Arquivar em vez disso",
+    "body": "Só é possível excluir checklists nunca usados. Checklists em uso podem ser arquivados.",
+    "title": "Excluir {name}?"
+  },
+  "editor": {
+    "accessories": "Acessórios",
+    "accessoriesHint": "Itens entregues junto com a máquina e conferidos na devolução.",
+    "addAccessory": "Adicionar acessório",
+    "addItem": "Adicionar item",
+    "addOption": "Adicionar opção",
+    "defaultQty": "Quantidade",
+    "details": "Dados do checklist",
+    "itemNumber": "Item {n}",
+    "items": "Itens",
+    "key": "Chave",
+    "keyHint": "Identificador estável, como pneus_dianteiros.",
+    "labelIn": "Texto ({locale})",
+    "max": "Máximo",
+    "min": "Mínimo",
+    "moveDown": "Mover para baixo",
+    "moveUp": "Mover para cima",
+    "optionValue": "Opção",
+    "options": "Opções",
+    "photo": "Foto",
+    "publishHint": "Itens e acessórios mudam só ao publicar. Inspeções já feitas mantêm a versão antiga.",
+    "removeAccessory": "Remover acessório",
+    "removeItem": "Remover item",
+    "removeOption": "Remover opção",
+    "replacementCost": "Custo de reposição",
+    "required": "Obrigatório",
+    "safetyCritical": "Crítico para segurança",
+    "section": "Seção",
+    "type": "Tipo de resposta",
+    "unit": "Unidade"
+  },
+  "fields": {
+    "appliesTo": "Usado em",
+    "assetCategories": "Categorias de máquina",
+    "isActive": "Ativo",
+    "items": "Itens",
+    "name": "Nome",
+    "status": "Situação",
+    "version": "Versão"
+  },
+  "hints": {
+    "assetCategories": "Deixe vazio para valer para todas as categorias."
+  },
+  "inUse": "{count, plural, =0 {Sem uso} one {Usado em # registro} other {Usado em # registros}}",
+  "inUseDialog": {
+    "body": "Inspeções e locações já feitas continuam com a versão atual; só os novos registros usam a versão publicada.",
+    "confirm": "Publicar nova versão",
+    "title": "Este checklist está em uso"
+  },
+  "itemType": {
+    "NUMBER": "Número",
+    "PASS_FAIL_NA": "OK / Falha / N.A.",
+    "PHOTO": "Foto",
+    "SELECT": "Lista de opções",
+    "TEXT": "Texto"
+  },
+  "kind": {
+    "RENTAL": "Locação",
+    "WORK_ORDER": "Ordem de serviço"
+  },
+  "list": {
+    "allKinds": "Todos os usos",
+    "emptyBody": "Crie um checklist para padronizar entregas, devoluções e ordens de serviço.",
+    "emptyTitle": "Nenhum checklist ainda",
+    "subtitle": "Modelos usados na entrega, devolução e inspeção de máquinas.",
+    "title": "Checklists"
+  },
+  "new": {
+    "title": "Novo checklist"
+  },
+  "photoRule": {
+    "ALWAYS": "Sempre",
+    "NEVER": "Sem foto",
+    "ON_FAIL": "Quando falhar"
+  },
+  "published": "Versão {n} publicada",
+  "version": "Versão {n}"
+}

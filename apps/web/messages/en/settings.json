@@ -1,1 +1,72 @@
-{}
+{
+  "org": {
+    "atRisk": "At-risk alert",
+    "atRiskHint": "Remaining share of the deadline that triggers the alert (0.25 = 25%).",
+    "audioMaxSeconds": "Maximum audio length (s)",
+    "defaultSiteRadiusM": "Default site radius (m)",
+    "field": "Field and sync",
+    "locationDistanceM": "Location minimum distance (m)",
+    "locationIntervalSec": "Location interval (s)",
+    "maxVideosPerReport": "Videos per report",
+    "media": "Photos, videos and audio",
+    "office": "Office contact",
+    "officeMissing": "Add the office phone. Without it, the app's \"Ask the office\" button does not work.",
+    "officePhone": "Office phone",
+    "officeWhatsApp": "Office WhatsApp",
+    "phoneHint": "International format: +55, area code and number.",
+    "phonePlaceholder": "+5534999990000",
+    "photoMaxPx": "Maximum photo size (px)",
+    "photoQuality": "Photo quality (0–1)",
+    "rentalDueSoonHours": "Due-soon warning (h)",
+    "rentalGraceHours": "Late grace period (h)",
+    "rentals": "Rentals",
+    "requireWoSignature": "Require a signature to complete a work order",
+    "showLaborCostToManager": "Show labour cost to managers",
+    "sla": "Service deadlines (SLA)",
+    "slaHint": "Hours to finish a work order, by priority.",
+    "slaHours": "{priority} (h)",
+    "staleSyncAlertHours": "Unsynced device alert (h)",
+    "staleSyncHint": "Devices unsynced for longer show up in Needs attention.",
+    "subscription": "Subscription",
+    "subtitle": "Deadlines, office contact, rentals and media. Applies to every device on its next sync.",
+    "termsIn": "Rental terms ({locale})",
+    "termsVersion": "Terms version",
+    "termsVersionHint": "Increase it when the text changes. New rentals require accepting the new version.",
+    "title": "Organisation settings",
+    "videoMaxSeconds": "Maximum video length (s)"
+  },
+  "seasons": {
+    "actions": {
+      "close": "Close season",
+      "makeCurrent": "Make current",
+      "new": "New season"
+    },
+    "closed": "Closed",
+    "current": "Current",
+    "edit": "Edit season",
+    "emptyBody": "Create the current season to split costs and indicators by period.",
+    "emptyTitle": "No seasons yet",
+    "fields": {
+      "crop": "Crop",
+      "endsOn": "Ends on",
+      "isCurrent": "Current season",
+      "name": "Name",
+      "startsOn": "Starts on"
+    },
+    "openWork": {
+      "body": "{workOrders, plural, =0 {No open work orders} one {# open work order} other {# open work orders}} and {rentals, plural, =0 {no active rentals} one {# active rental} other {# active rentals}}. They stay linked to this season. Close anyway?",
+      "confirm": "Close anyway",
+      "title": "There is open work"
+    },
+    "subtitle": "The current season groups costs, work orders and rentals. Critical windows highlight assets during peak use.",
+    "title": "Seasons",
+    "windows": {
+      "add": "Add window",
+      "categories": "Affected categories",
+      "hint": "Periods such as planting or harvest when downtime of some assets costs more.",
+      "name": "Window name",
+      "remove": "Remove window",
+      "title": "Critical windows"
+    }
+  }
+}

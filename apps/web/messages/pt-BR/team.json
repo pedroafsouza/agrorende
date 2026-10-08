@@ -1,1 +1,143 @@
-{}
+{
+  "actions": {
+    "changeRole": "Mudar função",
+    "deactivate": "Desativar",
+    "invite": "Convidar pessoa",
+    "reactivate": "Reativar",
+    "resendInvite": "Reenviar convite",
+    "resetLink": "Gerar link de senha",
+    "temporaryPassword": "Definir senha temporária"
+  },
+  "deactivate": {
+    "body": "A pessoa sai de todos os aparelhos e não recebe novas tarefas. O histórico é mantido e você pode reativar depois.",
+    "title": "Desativar {name}?"
+  },
+  "detail": {
+    "devices": "Aparelhos",
+    "info": "Dados da pessoa"
+  },
+  "devices": {
+    "appVersion": "Versão do app",
+    "battery": "Bateria",
+    "device": "Aparelho",
+    "diagnostics": {
+      "emptyBody": "Peça para a pessoa tocar em \"Enviar diagnóstico\" no aplicativo.",
+      "emptyTitle": "Nenhum diagnóstico enviado",
+      "title": "{count, plural, =0 {Diagnóstico} one {Diagnóstico (# envio)} other {Diagnóstico (# envios)}}"
+    },
+    "emptyBody": "Os aparelhos aparecem aqui quando a equipe entra no aplicativo.",
+    "emptyTitle": "Nenhum aparelho conectado",
+    "lastSync": "Última sincronização",
+    "noneForUser": "Esta pessoa ainda não entrou no aplicativo.",
+    "pending": "Pendências",
+    "pendingValue": "{mutations, plural, one {# alteração} other {# alterações}} · {uploads, plural, one {# envio} other {# envios}}",
+    "platform": {
+      "ANDROID": "Android",
+      "IOS": "iPhone",
+      "WEB": "Navegador"
+    },
+    "subtitle": "Sincronização, bateria e notificações de cada celular.",
+    "sync": "Sincronização",
+    "title": "Aparelhos da equipe",
+    "user": "Pessoa",
+    "warning": {
+      "battery": "Economia de bateria pode atrasar a sincronização",
+      "clock": "Relógio do aparelho errado",
+      "pending": "Alterações presas no aparelho",
+      "push": "Notificações desligadas"
+    },
+    "warnings": "Alertas"
+  },
+  "duty": {
+    "OFF_DUTY": "Fora do expediente",
+    "ON_DUTY": "Em expediente"
+  },
+  "edit": {
+    "title": "Editar dados"
+  },
+  "fields": {
+    "contact": "Contato",
+    "duty": "Expediente",
+    "email": "E-mail",
+    "hourlyCost": "Custo por hora",
+    "joinedAt": "Entrou em",
+    "lastSeenAt": "Visto por último",
+    "name": "Nome",
+    "phone": "Telefone",
+    "role": "Função",
+    "skills": "Especialidades",
+    "state": "Situação"
+  },
+  "hints": {
+    "hourlyCost": "Usado para calcular o custo de mão de obra das ordens de serviço."
+  },
+  "invite": {
+    "emailHint": "Opcional. Quem não tem e-mail entra pelo link do convite.",
+    "phoneHint": "Para enviar o convite por WhatsApp.",
+    "sentTitle": "Convite criado",
+    "submit": "Criar convite",
+    "title": "Convidar pessoa"
+  },
+  "list": {
+    "allRoles": "Todas as funções",
+    "emptyBody": "Convide gestores e a equipe de campo para dividir o trabalho.",
+    "emptyTitle": "Só você por aqui",
+    "includeInactive": "Mostrar desativados",
+    "searchPlaceholder": "Nome, e-mail ou telefone",
+    "subtitle": "Quem usa o escritório e o aplicativo de campo.",
+    "title": "Equipe"
+  },
+  "otherEmail": {
+    "body": "Convidado como {invited}, mas entrou com {joined}."
+  },
+  "role": {
+    "body": "A nova função vale no próximo acesso da pessoa.",
+    "title": "Mudar função de {name}"
+  },
+  "roleHint": {
+    "ADMIN": "Tudo, inclusive assinatura e equipe.",
+    "FIELD": "Aplicativo de campo: relatos, checklists e ordens atribuídas.",
+    "MANAGER": "Escritório: ordens, locações, cadastros e relatórios."
+  },
+  "share": {
+    "code": "Código",
+    "copied": "Link copiado",
+    "copy": "Copiar link",
+    "expires": "Válido até {at}",
+    "inviteBody": "Envie o link para {name}. Ele vale uma vez.",
+    "inviteMessage": "Olá, {name}! Você foi convidado para o AgroRende. Entre por este link: {url}",
+    "resetBody": "Envie o link para {name}. Ele vale uma vez.",
+    "resetMessage": "Olá, {name}! Use este link para criar uma nova senha no AgroRende: {url}",
+    "resetTitle": "Link para nova senha",
+    "whatsapp": "Enviar por WhatsApp"
+  },
+  "skill": {
+    "BRAKES": "Freios",
+    "CAB": "Cabine",
+    "ELECTRICAL": "Elétrica",
+    "ENGINE": "Motor",
+    "HYDRAULIC": "Hidráulica",
+    "IMPLEMENT": "Implemento",
+    "LEAK": "Vazamento",
+    "OTHER": "Outro",
+    "SAFETY": "Segurança",
+    "STRUCTURE": "Estrutura",
+    "TIRES_TRACKS": "Pneus e esteiras",
+    "TRANSMISSION": "Transmissão"
+  },
+  "state": {
+    "ACTIVE": "Ativo",
+    "DISABLED": "Desativado",
+    "INVITED": "Convidado",
+    "MUST_CHANGE_PASSWORD": "Precisa trocar senha",
+    "otherEmail": "Outro e-mail"
+  },
+  "temporary": {
+    "body": "A pessoa entra com esta senha e precisa trocá-la no primeiro acesso.",
+    "done": "Senha temporária definida",
+    "password": "Senha temporária",
+    "submit": "Definir senha",
+    "title": "Senha temporária para {name}",
+    "tooShort": "A senha precisa ter pelo menos {min} caracteres."
+  }
+}

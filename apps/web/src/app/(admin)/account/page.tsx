@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { AccountPage } from "@/features/shell/AccountPage";
 
-export default function Adminaccountpage() {
-  return <PlaceholderPage descriptionKey="page.account.description" route="/account" titleKey="page.account.title" />;
+export default function AccountRoute() {
+  return <AccountPage />;
 }

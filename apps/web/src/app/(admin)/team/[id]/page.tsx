@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { UserDetailPage } from "@/features/team/UserDetailPage";
 
-export default function Adminteamidpage() {
-  return <PlaceholderPage descriptionKey="page.teamDetail.description" route="/team/[id]" titleKey="page.teamDetail.title" />;
+export default async function TeamUserPage({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <UserDetailPage id={id} />;
 }

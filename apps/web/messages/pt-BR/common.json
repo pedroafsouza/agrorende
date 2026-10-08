@@ -1,1 +1,225 @@
-{}
+{
+  "actions": {
+    "archive": "Arquivar",
+    "cancel": "Cancelar",
+    "close": "Fechar",
+    "delete": "Excluir",
+    "done": "Concluir",
+    "edit": "Editar",
+    "retry": "Tentar de novo",
+    "save": "Salvar",
+    "unarchive": "Desarquivar"
+  },
+  "activity": {
+    "asset": {
+      "conditionChanged": "Condição alterada",
+      "created": "Máquina cadastrada",
+      "meterReplaced": "Horímetro substituído",
+      "retired": "Máquina baixada",
+      "updated": "Máquina atualizada"
+    },
+    "customer": {
+      "created": "Cliente cadastrado",
+      "deleted": "Cliente excluído"
+    },
+    "plot": {
+      "created": "Talhão cadastrado"
+    },
+    "season": {
+      "closed": "Safra encerrada",
+      "created": "Safra criada",
+      "updated": "Safra atualizada"
+    },
+    "site": {
+      "created": "Local cadastrado",
+      "deleted": "Local excluído"
+    },
+    "template": {
+      "deleted": "Checklist excluído",
+      "published": "Checklist publicado"
+    }
+  },
+  "bulk": {
+    "ok": "Ok",
+    "retryFailed": "Tentar de novo as que falharam",
+    "summary": "{ok, plural, one {# concluído} other {# concluídos}} · {failed, plural, =0 {nenhuma falha} one {# falhou} other {# falharam}}",
+    "title": "Resultado da ação em lote"
+  },
+  "category": {
+    "EXCAVATOR": "Escavadeira",
+    "GENERATOR": "Gerador",
+    "HARVESTER": "Colheitadeira",
+    "IMPLEMENT": "Implemento",
+    "IRRIGATION": "Irrigação",
+    "LOADER": "Carregadeira",
+    "OTHER": "Outro",
+    "PICKUP": "Caminhonete",
+    "PLANTER": "Plantadeira",
+    "SPRAYER": "Pulverizador",
+    "TRACTOR": "Trator",
+    "TRUCK": "Caminhão"
+  },
+  "condition": {
+    "IN_REPAIR": "Em reparo",
+    "NEEDS_REPAIR": "Precisa de reparo",
+    "OPERATIONAL": "Operando",
+    "OUT_OF_SERVICE": "Fora de serviço",
+    "RETIRED": "Baixado"
+  },
+  "conflict": {
+    "body": "Outra pessoa salvou este registro enquanto você editava. Compare e escolha o que manter.",
+    "field": "Campo",
+    "keepMine": "Manter o meu",
+    "mine": "Minha versão",
+    "noDiff": "Nenhuma diferença nos campos que você editou.",
+    "theirs": "Versão salva",
+    "title": "Este registro mudou",
+    "useTheirs": "Usar a versão salva"
+  },
+  "errors": {
+    "copyReference": "Copiar código",
+    "reference": "Código do erro: {ref}"
+  },
+  "filters": {
+    "includeArchived": "Mostrar arquivados",
+    "search": "Buscar"
+  },
+  "form": {
+    "summaryTitle": "{count, plural, one {Corrija # campo} other {Corrija # campos}}"
+  },
+  "import": {
+    "download": "Baixar planilha de erros",
+    "errorsTitle": "{count, plural, one {# linha com erro} other {# linhas com erro}}",
+    "rowError": "Linha {row} · {field}: {message}"
+  },
+  "map": {
+    "label": "Mapa"
+  },
+  "media": {
+    "empty": "Nenhuma mídia ainda",
+    "failed": "Falha no envio",
+    "kind": {
+      "AUDIO": "Áudio",
+      "DOCUMENT": "Documento",
+      "PHOTO": "Foto",
+      "SIGNATURE": "Assinatura",
+      "VIDEO": "Vídeo"
+    },
+    "pending": "Enviando…",
+    "photo": "Foto"
+  },
+  "no": "Não",
+  "notFound": {
+    "back": "Voltar ao início",
+    "body": "O endereço pode estar errado ou o registro foi removido.",
+    "title": "Página não encontrada"
+  },
+  "offline": {
+    "body": "Sem conexão com a internet. Assim que voltar, tente de novo.",
+    "title": "Você está sem conexão"
+  },
+  "picker": {
+    "none": "Nenhum",
+    "search": "Buscar…"
+  },
+  "priority": {
+    "CRITICAL": "Crítica",
+    "HIGH": "Alta",
+    "LOW": "Baixa",
+    "MEDIUM": "Média"
+  },
+  "rateUnit": {
+    "DAY": "Dia",
+    "HOUR": "Hora",
+    "MONTH": "Mês",
+    "WEEK": "Semana"
+  },
+  "realtime": {
+    "connected": "Ao vivo",
+    "connecting": "Conectando…",
+    "offline": "Sem atualização ao vivo",
+    "reconnecting": "Reconectando…"
+  },
+  "reauth": {
+    "body": "Sua sessão expirou. Entre de novo para continuar sem perder o que digitou.",
+    "email": "E-mail",
+    "password": "Senha",
+    "signOut": "Sair",
+    "submit": "Entrar",
+    "title": "Entre de novo"
+  },
+  "states": {
+    "active": "Ativo",
+    "archived": "Arquivado",
+    "inactive": "Inativo",
+    "loading": "Carregando…",
+    "noMatches": "Nada encontrado",
+    "noMatchesBody": "Ajuste a busca ou os filtros."
+  },
+  "status": {
+    "rental": {
+      "ACTIVE": "Em andamento",
+      "CANCELLED": "Cancelada",
+      "CLOSED": "Encerrada",
+      "DRAFT": "Rascunho",
+      "RESERVED": "Reservada",
+      "RETURNED": "Devolvida"
+    },
+    "report": {
+      "DISMISSED": "Dispensado",
+      "IN_REVIEW": "Em análise",
+      "MARKED_FOR_REPAIR": "Encaminhado para reparo",
+      "MONITORING": "Em observação",
+      "SUBMITTED": "Enviado"
+    },
+    "workOrder": {
+      "ACCEPTED": "Aceita",
+      "ASSIGNED": "Atribuída",
+      "CANCELLED": "Cancelada",
+      "COMPLETED": "Concluída",
+      "EN_ROUTE": "A caminho",
+      "IN_PROGRESS": "Em andamento",
+      "ON_HOLD": "Pausada",
+      "ON_SITE": "No local",
+      "OPEN": "Aberta",
+      "VERIFIED": "Verificada"
+    }
+  },
+  "syncHealth": {
+    "NEVER": "Nunca sincronizou",
+    "OK": "Sincronizado",
+    "STALE": "Sem sincronizar há mais de 24 h",
+    "STUCK": "Sincronização travada"
+  },
+  "table": {
+    "first": "Primeira página",
+    "next": "Próxima página",
+    "open": "Abrir",
+    "pagination": "Paginação"
+  },
+  "timeline": {
+    "empty": "Nenhuma atividade registrada"
+  },
+  "toast": {
+    "deleted": "Excluído",
+    "saved": "Salvo"
+  },
+  "validation": {
+    "duplicateKey": "Já existe um registro com este valor",
+    "email": "E-mail inválido",
+    "invalid": "Valor inválido",
+    "invalid_enum_value": "Escolha uma das opções",
+    "invalid_format": "Formato inválido",
+    "invalid_string": "Formato inválido",
+    "invalid_type": "Tipo de valor inválido",
+    "invalid_value": "Valor inválido",
+    "number": "Digite um número",
+    "phone": "Telefone inválido. Use +55 e o DDD.",
+    "range": "Fora do intervalo permitido",
+    "required": "Campo obrigatório",
+    "taxId": "CPF ou CNPJ inválido",
+    "too_big": "Valor muito longo ou grande",
+    "too_small": "Valor muito curto ou pequeno"
+  },
+  "yes": "Sim"
+}

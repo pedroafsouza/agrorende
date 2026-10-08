@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { NewAssetPage } from "@/features/assets/NewAssetPage";
 
-export default function Adminassetsnewpage() {
-  return <PlaceholderPage descriptionKey="page.assetNew.description" route="/assets/new" titleKey="page.assetNew.title" />;
+export default function AssetsNewPage() {
+  return <NewAssetPage />;
 }

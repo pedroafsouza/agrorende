@@ -1,1 +1,182 @@
-{}
+{
+  "actions": {
+    "backInService": "Voltar a operar",
+    "create": "Cadastrar máquina",
+    "downloadQr": "Baixar etiqueta QR",
+    "new": "Nova máquina",
+    "outOfService": "Tirar de serviço",
+    "retire": "Dar baixa"
+  },
+  "customers": {
+    "actions": {
+      "create": "Cadastrar cliente",
+      "new": "Novo cliente"
+    },
+    "complete": "Completo",
+    "delete": {
+      "body": "Só é possível excluir clientes sem histórico. Clientes em uso podem ser arquivados.",
+      "title": "Excluir {name}?"
+    },
+    "detail": {
+      "noSites": "Nenhum local vinculado",
+      "sites": "Locais do cliente"
+    },
+    "edit": {
+      "title": "Editar cliente"
+    },
+    "fields": {
+      "address": "Endereço",
+      "city": "Cidade",
+      "email": "E-mail",
+      "isSupplier": "Também é fornecedor",
+      "name": "Nome ou razão social",
+      "notes": "Observações",
+      "phone": "Telefone",
+      "state": "UF",
+      "status": "Cadastro",
+      "taxId": "CPF ou CNPJ",
+      "tradeName": "Nome fantasia",
+      "whatsapp": "WhatsApp"
+    },
+    "hints": {
+      "taxId": "Necessário para locação. Mostramos só parte do número depois de salvo."
+    },
+    "incomplete": "Incompleto",
+    "list": {
+      "emptyBody": "Cadastre quem aluga suas máquinas e quem fornece peças.",
+      "emptyTitle": "Nenhum cliente cadastrado",
+      "incompleteOnly": "Somente incompletos",
+      "searchPlaceholder": "Nome, CPF/CNPJ ou cidade",
+      "suppliersOnly": "Somente fornecedores",
+      "title": "Clientes"
+    },
+    "new": {
+      "title": "Novo cliente"
+    },
+    "supplier": "Fornecedor"
+  },
+  "detail": {
+    "history": "Histórico",
+    "info": "Dados da máquina",
+    "noLocation": "Sem localização registrada",
+    "qr": "Etiqueta QR",
+    "qrBody": "Cole a etiqueta na máquina. A equipe de campo escaneia para abrir relatos e checklists."
+  },
+  "edit": {
+    "title": "Editar máquina"
+  },
+  "fields": {
+    "category": "Categoria",
+    "code": "Código",
+    "condition": "Condição",
+    "defaultRate": "Preço padrão",
+    "defaultRateUnit": "Cobrança por",
+    "homeSite": "Local base",
+    "hourMeter": "Horímetro (h)",
+    "isRentable": "Disponível para locação",
+    "lastLocated": "Última localização",
+    "make": "Marca",
+    "model": "Modelo",
+    "name": "Nome",
+    "notes": "Observações",
+    "odometerKm": "Hodômetro (km)",
+    "ownerCustomer": "Cliente proprietário",
+    "ownerType": "Proprietário",
+    "plate": "Placa",
+    "serialNumber": "Número de série",
+    "tankCapacityL": "Capacidade do tanque (L)",
+    "year": "Ano"
+  },
+  "hints": {
+    "code": "Curto e único, como TR-01. Vai na etiqueta QR.",
+    "meters": "Leitura inicial. Depois, os valores só aumentam pelas leituras do campo."
+  },
+  "list": {
+    "allCategories": "Todas as categorias",
+    "allConditions": "Todas as condições",
+    "emptyBody": "Cadastre tratores, colheitadeiras e implementos para acompanhar condição, locações e custos.",
+    "emptyTitle": "Nenhuma máquina cadastrada",
+    "includeRetired": "Mostrar baixadas",
+    "searchPlaceholder": "Código, nome ou placa",
+    "title": "Máquinas"
+  },
+  "new": {
+    "title": "Nova máquina"
+  },
+  "ownerType": {
+    "CUSTOMER": "Cliente",
+    "ORGANIZATION": "Própria",
+    "PARTNER": "Parceiro"
+  },
+  "plots": {
+    "actions": {
+      "new": "Novo talhão"
+    },
+    "edit": "Editar talhão",
+    "empty": "Nenhum talhão neste local",
+    "fields": {
+      "areaHa": "Área (ha)",
+      "centroidLat": "Latitude do centro",
+      "centroidLng": "Longitude do centro",
+      "code": "Código",
+      "crop": "Cultura",
+      "name": "Nome"
+    },
+    "title": "Talhões"
+  },
+  "retire": {
+    "body": "A máquina sai das listas e não pode receber novas ordens nem locações. O histórico é mantido.",
+    "done": "Máquina baixada",
+    "reason": "Motivo da baixa",
+    "title": "Dar baixa em {name}?"
+  },
+  "sites": {
+    "actions": {
+      "create": "Cadastrar local",
+      "new": "Novo local"
+    },
+    "delete": {
+      "archiveInstead": "Arquivar em vez disso",
+      "body": "Só é possível excluir locais sem histórico. Locais em uso podem ser arquivados.",
+      "title": "Excluir {name}?"
+    },
+    "detail": {
+      "map": "Mapa do local"
+    },
+    "edit": {
+      "title": "Editar local"
+    },
+    "fields": {
+      "address": "Endereço",
+      "city": "Cidade",
+      "coordinates": "Coordenadas",
+      "customer": "Cliente",
+      "lat": "Latitude",
+      "lng": "Longitude",
+      "name": "Nome",
+      "notes": "Observações",
+      "radiusM": "Raio (m)",
+      "state": "UF",
+      "status": "Situação",
+      "type": "Tipo"
+    },
+    "list": {
+      "allTypes": "Todos os tipos",
+      "emptyBody": "Cadastre fazendas, pátios e oficinas para saber onde cada máquina está.",
+      "emptyTitle": "Nenhum local cadastrado",
+      "searchPlaceholder": "Nome ou cidade",
+      "title": "Locais"
+    },
+    "new": {
+      "title": "Novo local"
+    },
+    "type": {
+      "CONSTRUCTION": "Obra",
+      "DEALER": "Concessionária",
+      "FARM": "Fazenda",
+      "OTHER": "Outro",
+      "WORKSHOP": "Oficina",
+      "YARD": "Pátio"
+    }
+  }
+}

@@ -1,1 +1,128 @@
-{}
+{
+  "nav": {
+    "account": "My account",
+    "analytics": "Analytics",
+    "assets": "Assets",
+    "attention": "Needs attention",
+    "billing": "Billing",
+    "costs": "Costs",
+    "customers": "Customers",
+    "devices": "Devices",
+    "fuel": "Fuel",
+    "imports": "Imports",
+    "maintenance": "Preventive maintenance",
+    "notifications": "Notifications",
+    "ops": "Operations",
+    "parts": "Parts",
+    "rentals": "Rentals",
+    "reports": "Reports",
+    "seasons": "Seasons",
+    "settings": "Settings",
+    "sites": "Sites",
+    "stock": "Stock",
+    "subscription": "Subscription",
+    "team": "Team",
+    "templates": "Checklists",
+    "workOrders": "Work orders"
+  },
+  "notifications": {
+    "emptyBody": "Updates about work orders, rentals and reports appear here.",
+    "emptyTitle": "No notifications",
+    "markAllRead": "Mark all as read",
+    "markRead": "Mark as read",
+    "more": "Load more",
+    "title": "Notifications",
+    "unread": "Unread:",
+    "unreadOnly": "Unread only"
+  },
+  "officeRole": {
+    "appStore": "Get it on the App Store",
+    "body": "The web dashboard is for the office. Your account is a field account: install the app on your phone and sign in with the same email.",
+    "playStore": "Get it on Google Play",
+    "signOut": "Sign out",
+    "title": "Use the AgroRende app"
+  },
+  "orgStatus": {
+    "CANCELLED": {
+      "body": "The subscription was cancelled. Export your data before it is deleted.",
+      "title": "Subscription cancelled"
+    },
+    "PAST_DUE": {
+      "body": "A payment is overdue. Settle it to avoid suspension.",
+      "title": "Payment overdue"
+    },
+    "SUSPENDED": {
+      "body": "The organisation is suspended and is read-only. Talk to your administrator.",
+      "title": "Account suspended"
+    },
+    "TRIAL": {
+      "body": "Your organisation is on a trial. Choose a plan to keep going after the trial ends.",
+      "title": "Trial period"
+    }
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "FIELD": "Field team",
+    "MANAGER": "Manager"
+  },
+  "shell": {
+    "attentionCount": "{count, plural, =0 {Nothing needs attention} one {# item needs attention} other {# items need attention}}",
+    "brand": "AgroRende",
+    "closeMenu": "Close menu",
+    "env": {
+      "ci": "Test environment (CI)",
+      "local": "Local environment",
+      "production": "Production",
+      "staging": "Staging — test data"
+    },
+    "language": "Language",
+    "mainNav": "Main navigation",
+    "more": "More",
+    "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
+    "openMenu": "Open menu",
+    "search": "Search",
+    "searchSoon": "Global search is coming soon",
+    "sidebar": "Sidebar",
+    "signOut": "Sign out",
+    "skipToContent": "Skip to content",
+    "theme": {
+      "dark": "Dark",
+      "light": "Light",
+      "outdoor": "Bright sun",
+      "system": "Automatic"
+    },
+    "themeLabel": "Theme: {theme}"
+  },
+  "styleGuide": {
+    "badges": "Status badges",
+    "busy": "Saving",
+    "buttons": "Buttons",
+    "checkbox": "Checkbox",
+    "components": "Components",
+    "danger": "Danger",
+    "disabled": "Disabled",
+    "empty": "Empty",
+    "emptyBody": "Add the first asset to get started.",
+    "emptyTitle": "No assets yet",
+    "error": "Error",
+    "errorText": "Required field",
+    "forms": "Forms",
+    "ghost": "Ghost",
+    "hint": "Hint below the field",
+    "invalid": "Field with an error",
+    "loading": "Loading",
+    "money": "Amount",
+    "offline": "Offline",
+    "palette": "Campo claro palette",
+    "primary": "Primary action",
+    "sample": "Tractor 01",
+    "secondary": "Secondary",
+    "select": "Select",
+    "states": "States",
+    "subtitle": "Development only. 48 dp touch targets, icon with text and outdoor contrast.",
+    "text": "Text",
+    "themeVars": "Current theme variables",
+    "title": "Style guide — Campo claro",
+    "tokens": "Tokens"
+  }
+}

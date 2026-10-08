@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { SettingsPage } from "@/features/settings/SettingsPage";
 
-export default function Adminsettingspage() {
-  return <PlaceholderPage descriptionKey="page.settings.description" route="/settings" titleKey="page.settings.title" />;
+export default function OrgSettingsPage() {
+  return <SettingsPage />;
 }

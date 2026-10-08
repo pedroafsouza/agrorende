@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { TeamDevicesPage } from "@/features/team/TeamDevicesPage";
 
-export default function Adminteamdevicespage() {
-  return <PlaceholderPage descriptionKey="page.teamDevices.description" route="/team/devices" titleKey="page.teamDevices.title" />;
+export default function DevicesPage() {
+  return <TeamDevicesPage />;
 }

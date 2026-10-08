@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { SeasonsPage } from "@/features/seasons/SeasonsPage";
 
-export default function Adminseasonspage() {
-  return <PlaceholderPage descriptionKey="page.seasons.description" route="/seasons" titleKey="page.seasons.title" />;
+export default function SeasonsRoute() {
+  return <SeasonsPage />;
 }

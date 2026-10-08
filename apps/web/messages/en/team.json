@@ -1,1 +1,143 @@
-{}
+{
+  "actions": {
+    "changeRole": "Change role",
+    "deactivate": "Deactivate",
+    "invite": "Invite person",
+    "reactivate": "Reactivate",
+    "resendInvite": "Resend invitation",
+    "resetLink": "Create password link",
+    "temporaryPassword": "Set temporary password"
+  },
+  "deactivate": {
+    "body": "The person is signed out of every device and gets no new tasks. History is kept and you can reactivate later.",
+    "title": "Deactivate {name}?"
+  },
+  "detail": {
+    "devices": "Devices",
+    "info": "Person details"
+  },
+  "devices": {
+    "appVersion": "App version",
+    "battery": "Battery",
+    "device": "Device",
+    "diagnostics": {
+      "emptyBody": "Ask the person to tap \"Send diagnostics\" in the app.",
+      "emptyTitle": "No diagnostics sent",
+      "title": "{count, plural, =0 {Diagnostics} one {Diagnostics (# report)} other {Diagnostics (# reports)}}"
+    },
+    "emptyBody": "Devices appear here when the team signs in to the app.",
+    "emptyTitle": "No devices connected",
+    "lastSync": "Last sync",
+    "noneForUser": "This person has not signed in to the app yet.",
+    "pending": "Pending",
+    "pendingValue": "{mutations, plural, one {# change} other {# changes}} · {uploads, plural, one {# upload} other {# uploads}}",
+    "platform": {
+      "ANDROID": "Android",
+      "IOS": "iPhone",
+      "WEB": "Browser"
+    },
+    "subtitle": "Sync, battery and notifications for each phone.",
+    "sync": "Sync",
+    "title": "Team devices",
+    "user": "Person",
+    "warning": {
+      "battery": "Battery saver may delay sync",
+      "clock": "Device clock is wrong",
+      "pending": "Changes stuck on the device",
+      "push": "Notifications off"
+    },
+    "warnings": "Warnings"
+  },
+  "duty": {
+    "OFF_DUTY": "Off duty",
+    "ON_DUTY": "On duty"
+  },
+  "edit": {
+    "title": "Edit details"
+  },
+  "fields": {
+    "contact": "Contact",
+    "duty": "Duty",
+    "email": "Email",
+    "hourlyCost": "Hourly cost",
+    "joinedAt": "Joined",
+    "lastSeenAt": "Last seen",
+    "name": "Name",
+    "phone": "Phone",
+    "role": "Role",
+    "skills": "Skills",
+    "state": "Status"
+  },
+  "hints": {
+    "hourlyCost": "Used to compute the labour cost of work orders."
+  },
+  "invite": {
+    "emailHint": "Optional. People without email join through the invitation link.",
+    "phoneHint": "To send the invitation over WhatsApp.",
+    "sentTitle": "Invitation created",
+    "submit": "Create invitation",
+    "title": "Invite person"
+  },
+  "list": {
+    "allRoles": "All roles",
+    "emptyBody": "Invite managers and field staff to share the work.",
+    "emptyTitle": "Just you here",
+    "includeInactive": "Show deactivated",
+    "searchPlaceholder": "Name, email or phone",
+    "subtitle": "Who uses the office and the field app.",
+    "title": "Team"
+  },
+  "otherEmail": {
+    "body": "Invited as {invited}, but joined with {joined}."
+  },
+  "role": {
+    "body": "The new role applies on the person's next sign-in.",
+    "title": "Change role for {name}"
+  },
+  "roleHint": {
+    "ADMIN": "Everything, including subscription and team.",
+    "FIELD": "Field app: reports, checklists and assigned work orders.",
+    "MANAGER": "Office: work orders, rentals, records and reports."
+  },
+  "share": {
+    "code": "Code",
+    "copied": "Link copied",
+    "copy": "Copy link",
+    "expires": "Valid until {at}",
+    "inviteBody": "Send the link to {name}. It works once.",
+    "inviteMessage": "Hello, {name}! You have been invited to AgroRende. Join with this link: {url}",
+    "resetBody": "Send the link to {name}. It works once.",
+    "resetMessage": "Hello, {name}! Use this link to create a new AgroRende password: {url}",
+    "resetTitle": "New password link",
+    "whatsapp": "Send via WhatsApp"
+  },
+  "skill": {
+    "BRAKES": "Brakes",
+    "CAB": "Cab",
+    "ELECTRICAL": "Electrical",
+    "ENGINE": "Engine",
+    "HYDRAULIC": "Hydraulics",
+    "IMPLEMENT": "Implement",
+    "LEAK": "Leak",
+    "OTHER": "Other",
+    "SAFETY": "Safety",
+    "STRUCTURE": "Structure",
+    "TIRES_TRACKS": "Tyres and tracks",
+    "TRANSMISSION": "Transmission"
+  },
+  "state": {
+    "ACTIVE": "Active",
+    "DISABLED": "Deactivated",
+    "INVITED": "Invited",
+    "MUST_CHANGE_PASSWORD": "Must change password",
+    "otherEmail": "Different email"
+  },
+  "temporary": {
+    "body": "The person signs in with this password and must change it on first sign-in.",
+    "done": "Temporary password set",
+    "password": "Temporary password",
+    "submit": "Set password",
+    "title": "Temporary password for {name}",
+    "tooShort": "The password needs at least {min} characters."
+  }
+}

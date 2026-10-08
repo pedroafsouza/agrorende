@@ -1,7 +1,31 @@
 import type { ReactNode } from "react";
 
-import { AdminShell } from "@/components/foundation/AdminShell";
+import "@/components/shell/theme.css";
 
-export default function AdminLayout({ children }: { readonly children: ReactNode }) {
-  return <AdminShell>{children}</AdminShell>;
+import { Providers } from "@/components/shell/Providers";
+import { ShellIntlProvider } from "@/components/shell/IntlProvider";
+import { AdminShell } from "@/features/shell/AdminShell";
+import { EnvRibbon } from "@/features/shell/EnvRibbon";
+import { OfficeRoleRequired } from "@/features/shell/OfficeRoleRequired";
+import { OrgBanner } from "@/features/shell/OrgBanner";
+import { readSession } from "@/lib/session.server";
+import { serverConfig } from "@/server/config";
+
+export const dynamic = "force-dynamic";
+
+export default async function AdminLayout({ children }: { readonly children: ReactNode }) {
+  const session = await readSession();
+  return (
+    <ShellIntlProvider>
+      <Providers>
+        {session?.role === "FIELD" ? (
+          <OfficeRoleRequired />
+        ) : (
+          <AdminShell banner={<OrgBanner />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
+            {children}
+          </AdminShell>
+        )}
+      </Providers>
+    </ShellIntlProvider>
+  );
 }

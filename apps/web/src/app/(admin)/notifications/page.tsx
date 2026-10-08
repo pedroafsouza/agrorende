@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { NotificationsPage } from "@/features/notifications/NotificationsPage";
 
-export default function Adminnotificationspage() {
-  return <PlaceholderPage descriptionKey="page.notifications.description" route="/notifications" titleKey="page.notifications.title" />;
+export default function NotificationsRoute() {
+  return <NotificationsPage />;
 }

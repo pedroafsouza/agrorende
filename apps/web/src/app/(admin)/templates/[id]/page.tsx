@@ -1,5 +1,6 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { TemplateEditorPage } from "@/features/templates/TemplateEditorPage";
 
-export default function Admintemplatesidpage() {
-  return <PlaceholderPage descriptionKey="page.templateDetail.description" route="/templates/[id]" titleKey="page.templateDetail.title" />;
+export default async function TemplatePage({ params }: { readonly params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  return <TemplateEditorPage id={id} />;
 }

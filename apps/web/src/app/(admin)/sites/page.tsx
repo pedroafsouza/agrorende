@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { SitesListPage } from "@/features/sites/SitesListPage";
 
-export default function Adminsitespage() {
-  return <PlaceholderPage descriptionKey="page.sites.description" route="/sites" titleKey="page.sites.title" />;
+export default function SitesPage() {
+  return <SitesListPage />;
 }

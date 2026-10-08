@@ -1,1 +1,182 @@
-{}
+{
+  "actions": {
+    "backInService": "Back in service",
+    "create": "Create asset",
+    "downloadQr": "Download QR label",
+    "new": "New asset",
+    "outOfService": "Take out of service",
+    "retire": "Retire"
+  },
+  "customers": {
+    "actions": {
+      "create": "Create customer",
+      "new": "New customer"
+    },
+    "complete": "Complete",
+    "delete": {
+      "body": "Only customers without history can be deleted. Customers in use can be archived.",
+      "title": "Delete {name}?"
+    },
+    "detail": {
+      "noSites": "No linked sites",
+      "sites": "Customer sites"
+    },
+    "edit": {
+      "title": "Edit customer"
+    },
+    "fields": {
+      "address": "Address",
+      "city": "City",
+      "email": "Email",
+      "isSupplier": "Also a supplier",
+      "name": "Name or legal name",
+      "notes": "Notes",
+      "phone": "Phone",
+      "state": "State",
+      "status": "Record",
+      "taxId": "CPF or CNPJ",
+      "tradeName": "Trade name",
+      "whatsapp": "WhatsApp"
+    },
+    "hints": {
+      "taxId": "Required for rentals. Only part of the number is shown after saving."
+    },
+    "incomplete": "Incomplete",
+    "list": {
+      "emptyBody": "Add who rents your assets and who supplies parts.",
+      "emptyTitle": "No customers yet",
+      "incompleteOnly": "Incomplete only",
+      "searchPlaceholder": "Name, CPF/CNPJ or city",
+      "suppliersOnly": "Suppliers only",
+      "title": "Customers"
+    },
+    "new": {
+      "title": "New customer"
+    },
+    "supplier": "Supplier"
+  },
+  "detail": {
+    "history": "History",
+    "info": "Asset details",
+    "noLocation": "No location recorded",
+    "qr": "QR label",
+    "qrBody": "Stick the label on the machine. The field team scans it to open reports and checklists."
+  },
+  "edit": {
+    "title": "Edit asset"
+  },
+  "fields": {
+    "category": "Category",
+    "code": "Code",
+    "condition": "Condition",
+    "defaultRate": "Default rate",
+    "defaultRateUnit": "Charged per",
+    "homeSite": "Home site",
+    "hourMeter": "Hour meter (h)",
+    "isRentable": "Available for rent",
+    "lastLocated": "Last location",
+    "make": "Make",
+    "model": "Model",
+    "name": "Name",
+    "notes": "Notes",
+    "odometerKm": "Odometer (km)",
+    "ownerCustomer": "Owner customer",
+    "ownerType": "Owner",
+    "plate": "Plate",
+    "serialNumber": "Serial number",
+    "tankCapacityL": "Tank capacity (L)",
+    "year": "Year"
+  },
+  "hints": {
+    "code": "Short and unique, like TR-01. It goes on the QR label.",
+    "meters": "Starting reading. Afterwards values only increase through field readings."
+  },
+  "list": {
+    "allCategories": "All categories",
+    "allConditions": "All conditions",
+    "emptyBody": "Add tractors, harvesters and implements to track condition, rentals and costs.",
+    "emptyTitle": "No assets yet",
+    "includeRetired": "Show retired",
+    "searchPlaceholder": "Code, name or plate",
+    "title": "Assets"
+  },
+  "new": {
+    "title": "New asset"
+  },
+  "ownerType": {
+    "CUSTOMER": "Customer",
+    "ORGANIZATION": "Own fleet",
+    "PARTNER": "Partner"
+  },
+  "plots": {
+    "actions": {
+      "new": "New plot"
+    },
+    "edit": "Edit plot",
+    "empty": "No plots on this site",
+    "fields": {
+      "areaHa": "Area (ha)",
+      "centroidLat": "Centre latitude",
+      "centroidLng": "Centre longitude",
+      "code": "Code",
+      "crop": "Crop",
+      "name": "Name"
+    },
+    "title": "Plots"
+  },
+  "retire": {
+    "body": "The asset leaves the lists and cannot get new work orders or rentals. History is kept.",
+    "done": "Asset retired",
+    "reason": "Reason for retiring",
+    "title": "Retire {name}?"
+  },
+  "sites": {
+    "actions": {
+      "create": "Create site",
+      "new": "New site"
+    },
+    "delete": {
+      "archiveInstead": "Archive instead",
+      "body": "Only sites without history can be deleted. Sites in use can be archived.",
+      "title": "Delete {name}?"
+    },
+    "detail": {
+      "map": "Site map"
+    },
+    "edit": {
+      "title": "Edit site"
+    },
+    "fields": {
+      "address": "Address",
+      "city": "City",
+      "coordinates": "Coordinates",
+      "customer": "Customer",
+      "lat": "Latitude",
+      "lng": "Longitude",
+      "name": "Name",
+      "notes": "Notes",
+      "radiusM": "Radius (m)",
+      "state": "State",
+      "status": "Status",
+      "type": "Type"
+    },
+    "list": {
+      "allTypes": "All types",
+      "emptyBody": "Add farms, yards and workshops to know where each asset is.",
+      "emptyTitle": "No sites yet",
+      "searchPlaceholder": "Name or city",
+      "title": "Sites"
+    },
+    "new": {
+      "title": "New site"
+    },
+    "type": {
+      "CONSTRUCTION": "Construction site",
+      "DEALER": "Dealer",
+      "FARM": "Farm",
+      "OTHER": "Other",
+      "WORKSHOP": "Workshop",
+      "YARD": "Yard"
+    }
+  }
+}

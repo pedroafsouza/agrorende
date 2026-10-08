@@ -1,5 +1,5 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { StyleGuideStates } from "@/features/shell/styleguide/StyleGuide";
 
-export default function Styleguidestatespage() {
-  return <PlaceholderPage descriptionKey="style.description" route="/style-guide/states" titleKey="style.states" />;
+export default function StyleGuideStatesPage() {
+  return <StyleGuideStates />;
 }

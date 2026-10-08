@@ -1,5 +1,11 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { Suspense } from "react";
 
-export default function AuthchangePasswordpage() {
-  return <PlaceholderPage descriptionKey="page.changePassword.description" route="/change-password" titleKey="page.changePassword.title" />;
+import { ChangePasswordPage } from "@/features/shell/auth/ChangePasswordPage";
+
+export default function ChangePasswordRoute() {
+  return (
+    <Suspense>
+      <ChangePasswordPage />
+    </Suspense>
+  );
 }
