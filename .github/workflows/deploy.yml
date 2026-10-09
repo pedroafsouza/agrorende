@@ -210,11 +210,6 @@ jobs:
       - name: Validate the environment file
         run: bash infra/scripts/validate-env.sh "$TARGET" "$ENV_FILE"
 
-      - name: Check for the site package
-        id: site
-        run: |
-          if [[ -f apps/site/package.json ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
-
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -229,8 +224,19 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # The site is built per environment so canonical, hreflang and sitemap URLs use its host.
       - name: Build the static site
-        if: ${{ steps.site.outputs.present == 'true' }}
+        env:
+          SITE_URL: https://${{ vars.SITE_HOST }}
+          APP_URL: https://${{ vars.APP_HOST }}
+          PLATFORM_SUPPORT_WHATSAPP: ${{ vars.PLATFORM_SUPPORT_WHATSAPP }}
+          TERMS_VERSION: ${{ vars.TERMS_VERSION }}
+          SITE_SHOW_PRICES: ${{ vars.SITE_SHOW_PRICES }}
+          SITE_WHATSAPP: ${{ vars.SITE_WHATSAPP }}
+          SITE_CONTACT_EMAIL: ${{ vars.SITE_CONTACT_EMAIL }}
+          SITE_PRIVACY_EMAIL: ${{ vars.SITE_PRIVACY_EMAIL }}
+          SITE_APP_STORE_URL: ${{ vars.SITE_APP_STORE_URL }}
+          SITE_PLAY_STORE_URL: ${{ vars.SITE_PLAY_STORE_URL }}
         run: pnpm --filter site build
 
       - name: Set up SSH
@@ -261,9 +267,7 @@ jobs:
           ssh agrorende-vm 'install -d -m 755 /srv/agrorende/site /srv/agrorende/restore'
           scp infra/compose/app.yml infra/compose/vm.yml infra/caddy/Caddyfile agrorende-vm:/srv/agrorende/
           ssh agrorende-vm 'umask 077 && cat > /srv/agrorende/.env.next && mv /srv/agrorende/.env.next /srv/agrorende/.env && chmod 600 /srv/agrorende/.env' < "$ENV_FILE"
-          if [[ -d apps/site/out ]]; then
-            rsync -a --delete apps/site/out/ agrorende-vm:/srv/agrorende/site/
-          fi
+          rsync -a --delete apps/site/out/ agrorende-vm:/srv/agrorende/site/
 
       - name: Pull images
         env:

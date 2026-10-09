@@ -1,0 +1,274 @@
+@import "tailwindcss";
+
+/*
+ * Campo claro palette (ARCHITECTURE §3.7). The hex values mirror `campoClaroPalette` from
+ * `@agrorende/design-tokens`; `src/lib/tokens.test.ts` fails when the two drift apart.
+ */
+:root {
+  --mata-400: #51cf66;
+  --mata-600: #2b8a3e;
+  --mata-700: #237032;
+  --mata-800: #1b5e2a;
+  --terra-600: #e8590c;
+  --terra-700: #c2410c;
+  --graphite-950: #111315;
+  --graphite-900: #1c1f23;
+  --graphite-700: #3d434b;
+  --graphite-500: #6b7280;
+  --graphite-200: #e3e6ea;
+  --graphite-100: #f1f3f5;
+  --graphite-50: #f8f9fa;
+  --warning-text: #a15c07;
+  --warning-fill: #f2b705;
+  --danger-light: #b42318;
+  --danger-dark: #f97066;
+  --info-light: #1d4ed8;
+  --info-dark: #60a5fa;
+
+  --bg: #ffffff;
+  --surface: var(--graphite-50);
+  --surface-strong: var(--graphite-100);
+  --fg: var(--graphite-900);
+  --fg-muted: var(--graphite-700);
+  --border: var(--graphite-200);
+  --action: var(--mata-700);
+  --action-hover: var(--mata-800);
+  --action-fg: #ffffff;
+  --link: var(--mata-700);
+  --brand: var(--mata-600);
+  --accent: var(--terra-600);
+  --accent-text: var(--terra-700);
+  --success: var(--mata-700);
+  --warning: var(--warning-text);
+  --danger: var(--danger-light);
+  --info: var(--info-light);
+  --focus: var(--mata-800);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: var(--graphite-950);
+    --surface: var(--graphite-900);
+    --surface-strong: var(--graphite-900);
+    --fg: var(--graphite-50);
+    --fg-muted: var(--graphite-200);
+    --border: var(--graphite-700);
+    --action: var(--mata-400);
+    --action-hover: var(--mata-400);
+    --action-fg: var(--graphite-950);
+    --link: var(--mata-400);
+    --brand: var(--mata-400);
+    --accent-text: var(--terra-600);
+    --success: var(--mata-400);
+    --warning: var(--warning-fill);
+    --danger: var(--danger-dark);
+    --info: var(--info-dark);
+    --focus: var(--mata-400);
+  }
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-action-fg: var(--action-fg);
+  --color-link: var(--link);
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+  --color-accent-text: var(--accent-text);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-warning-fill: var(--warning-fill);
+  --color-danger: var(--danger);
+  --color-info: var(--info);
+  --color-graphite-900: var(--graphite-900);
+  --color-graphite-950: var(--graphite-950);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-sheet: 16px;
+}
+
+/* Base and component rules live in layers so Tailwind utilities can override them. */
+@layer base {
+  html {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    font-size: 1.0625rem;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  a {
+    color: inherit;
+  }
+}
+
+@layer components {
+  .prose-link {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .prose-link:hover {
+    text-decoration-thickness: 2px;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The headline marker: a short Terra stroke used only as a brand accent, never as a status. */
+  .accent-rule::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 4px;
+    margin-bottom: 1.25rem;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  details.menu > summary {
+    list-style: none;
+  }
+
+  details.menu > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details.faq > summary {
+    list-style: none;
+  }
+
+  details.faq > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /*
+   * The error-code index on the help page lists every code. Plain selectors keep its 188 rows
+   * small in the HTML instead of repeating the same utility classes and an SVG on each row.
+   */
+  .code-list {
+    display: grid;
+    column-gap: 1.5rem;
+  }
+
+  @media (min-width: 40rem) {
+    .code-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  .code-list > li {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .code-list a {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 3rem;
+    padding: 0.5rem 2rem 0.5rem 0;
+    color: var(--fg);
+    text-decoration: none;
+  }
+
+  .code-list a:hover b {
+    text-decoration: underline;
+  }
+
+  .code-list a::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0.5rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-top: 2px solid var(--fg-muted);
+    border-right: 2px solid var(--fg-muted);
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .code-list b,
+  .code-list code {
+    display: block;
+  }
+
+  .code-list b {
+    font-weight: 600;
+  }
+
+  /* System monospace here, so the help page does not fetch Geist Mono for below-the-fold labels. */
+  .code-list code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 0.875rem;
+    color: var(--fg-muted);
+  }
+
+  details.faq[open] .faq-chevron {
+    transform: rotate(180deg);
+  }
+}
+
+/*
+ * Lite mode (EC-SITE-06). The inline head script sets `data-lite` on <html> when the browser
+ * reports Save-Data or a 2G connection. Decorative images stay hidden until the reader asks.
+ */
+.lite-notice {
+  display: none;
+}
+
+html[data-lite="on"] .lite-notice {
+  display: block;
+}
+
+html[data-lite="on"] [data-decorative="true"] {
+  display: none;
+}
+
+/* Broken or blocked images fall back to the surface colour instead of a broken icon. */
+img[data-failed="true"] {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .motion-safe-transition {
+    transition:
+      background-color 150ms ease,
+      color 150ms ease,
+      border-color 150ms ease,
+      transform 150ms ease;
+  }
+}
+
+@media print {
+  header,
+  footer,
+  .no-print {
+    display: none !important;
+  }
+}

@@ -1,0 +1,297 @@
+{
+  "meta": {
+    "siteName": "AgroRende",
+    "tagline": "O ERP de campo do agro. Cada hora rende mais.",
+    "home": {
+      "title": "AgroRende · O ERP de campo do agro",
+      "description": "Vistoria, reparo, locação e custos da frota agrícola em um só fluxo. Funciona sem sinal no campo e ao vivo no escritório. Teste grátis por 30 dias."
+    },
+    "features": {
+      "title": "Recursos · AgroRende",
+      "description": "Vistoria e relato, reparo, locação, central de operações e a base do ERP agro: o que cada módulo do AgroRende faz no campo e no escritório."
+    },
+    "pricing": {
+      "title": "Planos · AgroRende",
+      "description": "Como funcionam os planos do AgroRende: cobrança por usuário de campo, usuários de escritório sem custo e 30 dias grátis para testar."
+    },
+    "help": {
+      "title": "Ajuda · AgroRende",
+      "description": "Perguntas frequentes e uma página de ajuda para cada código de erro do AgroRende, com o que aconteceu e como seguir o trabalho."
+    },
+    "helpUnknown": {
+      "title": "Código de ajuda não encontrado · AgroRende",
+      "description": "Procure o código novamente ou fale com a AgroRende."
+    },
+    "helpError": {
+      "title": "{code}: {title} · Ajuda AgroRende",
+      "description": "{body}"
+    },
+    "privacy": {
+      "title": "Política de privacidade · AgroRende",
+      "description": "Quais dados o AgroRende trata, por quê, por quanto tempo e como exercer seus direitos pela LGPD."
+    },
+    "terms": {
+      "title": "Termos de uso · AgroRende",
+      "description": "As regras de uso do AgroRende para empresas e para as pessoas convidadas por elas."
+    },
+    "dpa": {
+      "title": "Acordo de tratamento de dados (DPA) · AgroRende",
+      "description": "Como o AgroRende trata dados pessoais como operador em nome da empresa cliente, conforme a LGPD."
+    },
+    "deleteAccount": {
+      "title": "Excluir conta · AgroRende",
+      "description": "Como excluir sua conta do AgroRende no app ou na web, o que fica guardado para a empresa e como falar com a gente."
+    },
+    "notFound": {
+      "title": "Página não encontrada · AgroRende",
+      "description": "Nada foi perdido. Use a busca de ajuda ou volte para a página inicial."
+    }
+  },
+  "nav": {
+    "label": "Navegação principal",
+    "home": "Início",
+    "features": "Recursos",
+    "pricing": "Planos",
+    "help": "Ajuda",
+    "signIn": "Entrar",
+    "menu": "Menu",
+    "skipToContent": "Pular para o conteúdo",
+    "homeLink": "AgroRende, página inicial",
+    "language": "Idioma",
+    "switchTo": "English",
+    "switchToLabel": "Read this page in English"
+  },
+  "cta": {
+    "primary": "Comece grátis — 30 dias",
+    "primaryNote": "Sem cartão de crédito. Entre com Google ou Apple.",
+    "whatsapp": "Falar no WhatsApp",
+    "email": "Enviar e-mail",
+    "signIn": "Entrar no AgroRende",
+    "talkToUs": "Fale com a gente",
+    "whatsappText": "Olá! Vim pelo site do AgroRende e quero saber mais.",
+    "emailSubject": "Quero conhecer o AgroRende",
+    "emailBody": "Olá! Vim pelo site do AgroRende e quero saber mais.",
+    "storesTitle": "Baixe o app de campo",
+    "appStore": "Baixar na App Store",
+    "playStore": "Disponível no Google Play"
+  },
+  "contact": {
+    "phoneLabel": "Telefone e WhatsApp",
+    "emailLabel": "E-mail",
+    "subjectLabel": "Assunto sugerido",
+    "messageLabel": "Mensagem sugerida",
+    "copy": "Copiar",
+    "copied": "Copiado",
+    "copyFailed": "Selecione o texto e copie manualmente.",
+    "close": "Fechar",
+    "openAgain": "Tentar abrir de novo",
+    "privacyNote": "O site não guarda nem envia nada do que você escrever."
+  },
+  "home": {
+    "heroTitle": "O ERP de campo do agro.",
+    "heroSubtitle": "Cada hora rende mais.",
+    "heroLead": "Vistoria, reparo, locação e custo de cada máquina em um só fluxo. No celular de quem está no campo, mesmo sem sinal. Na tela de quem está no escritório, ao vivo.",
+    "heroImageAlt": "Linhas de plantio em um talhão ao fim da tarde, com a luz baixa sobre a terra",
+    "problemTitle": "Hoje a frota roda no improviso",
+    "problemLead": "Na maioria das operações, a informação da máquina vive espalhada em grupos, papel e planilhas.",
+    "problem1": "O defeito chega por áudio no grupo, sem foto da peça certa e sem localização.",
+    "problem2": "O mecânico perde horas procurando a máquina dentro da fazenda.",
+    "problem3": "A locação começa e termina sem prova do estado da máquina.",
+    "problem4": "Ninguém sabe quanto cada máquina custa de verdade na safra.",
+    "stepsTitle": "Como funciona, em quatro passos",
+    "step1Title": "Vistoria",
+    "step1Body": "Quem está no campo relata o problema com fotos, vídeo, áudio e GPS em menos de 2 minutos.",
+    "step2Title": "Reparo",
+    "step2Body": "O escritório gera a ordem de serviço. O mecânico navega até a máquina, registra peças, fotos de antes e depois e a assinatura do cliente.",
+    "step3Title": "Locação",
+    "step3Body": "Entrega e devolução guiadas, com checklist e fotos. Dano novo na devolução vira relato e cobrança.",
+    "step4Title": "Central",
+    "step4Body": "O escritório vê ao vivo quem está onde, o que está parado, o que está locado e o que está atrasado.",
+    "offlineTitle": "Funciona sem sinal",
+    "offlineBody": "Relatos, fotos, checklists e assinaturas ficam salvos no aparelho e sobem sozinhos quando o sinal volta. Nada se perde no caminho até o escritório.",
+    "offlineSaved": "Salvo no aparelho",
+    "offlineSending": "Enviando",
+    "offlineSynced": "Enviado ao escritório",
+    "audienceTitle": "Para quem trabalha com máquina",
+    "audience1Title": "Concessionárias e oficinas volantes",
+    "audience1Body": "Equipes de serviço que atendem clientes no campo e precisam de ordem de serviço, peças e assinatura no mesmo lugar.",
+    "audience2Title": "Locadoras de máquinas",
+    "audience2Body": "Entrega e devolução com evidência, cobranças de hora extra, combustível e danos sem discussão.",
+    "audience3Title": "Fazendas, usinas e cooperativas com frota própria",
+    "audience3Body": "Custo real por máquina, talhão e safra, com manutenção preventiva pelo horímetro.",
+    "modulesTitle": "Módulos",
+    "modulesLead": "Comece pelo que dói mais hoje. Os módulos usam os mesmos cadastros de máquinas, clientes, fazendas e safras.",
+    "modulesLink": "Ver todos os recursos",
+    "pilotTitle": "Piloto em uma safra",
+    "pilotBody": "Estamos abrindo pilotos acompanhados durante uma janela de colheita. Os resultados serão publicados aqui com autorização dos participantes.",
+    "pilotPlaceholder": "Conteúdo provisório: aguarda dados reais do piloto aprovados pelo responsável do produto.",
+    "faqTitle": "Perguntas frequentes",
+    "finalTitle": "Teste com a sua equipe nesta safra",
+    "finalBody": "Cadastre a empresa em minutos, convide a equipe pelo WhatsApp e use todos os módulos por 30 dias."
+  },
+  "faq": {
+    "q1": "Funciona mesmo sem internet?",
+    "a1": "Sim. O app de campo salva relatos, fotos, vídeos, áudios, checklists e assinaturas no aparelho e envia tudo quando o sinal volta. Você vê o que ainda está pendente.",
+    "q2": "Preciso instalar algo no computador?",
+    "a2": "Não. O escritório usa o AgroRende pelo navegador. A equipe de campo usa o app no celular Android ou iPhone.",
+    "q3": "Como a equipe entra?",
+    "a3": "A empresa convida cada pessoa por WhatsApp ou e-mail. Dá para entrar com Google, Apple ou e-mail e senha.",
+    "q4": "Funciona com máquinas de qualquer marca?",
+    "a4": "Sim. O AgroRende não depende de telemetria do fabricante. Você cadastra a frota, inclusive implementos, e identifica cada máquina com QR code.",
+    "q5": "O que acontece com meus dados se eu cancelar?",
+    "a5": "Os dados ficam disponíveis para exportação por 90 dias após o cancelamento. Depois disso, são apagados."
+  },
+  "modules": {
+    "f1Title": "Vistoria e relato",
+    "f1Body": "Relato em 4 passos com fotos, vídeo, áudio, GPS e QR code da máquina.",
+    "f2Title": "Reparo",
+    "f2Body": "Ordens de serviço com navegação, checklist, peças, fotos e assinatura.",
+    "f3Title": "Locação",
+    "f3Body": "Reserva, entrega e devolução guiadas, com cobranças calculadas.",
+    "f4Title": "Central de operações",
+    "f4Body": "Mapa ao vivo, indicadores do dia e fila do que precisa de atenção.",
+    "f5Title": "Base do ERP agro",
+    "f5Body": "Fazendas, talhões, safras, centros de custo, peças, preventivas e combustível."
+  },
+  "features": {
+    "title": "Recursos",
+    "lead": "Um fluxo do primeiro relato no campo até o último custo no escritório. Cada módulo funciona sozinho e fica melhor junto com os outros.",
+    "screenshotPending": "Imagem provisória. A captura de tela real desta tela entra antes do lançamento.",
+    "f1Points": "Relato em até 2 toques a partir da tela inicial|QR code, busca, máquinas próximas ou máquina sem cadastro|Fotos, vídeos de até 60 s e áudios de até 2 min com hora e GPS|Gravidade e categoria em ícones grandes, fáceis de tocar com luva",
+    "f2Points": "Serviços de hoje ordenados por prioridade, prazo e distância|Navegação pelo Google Maps ou Waze até a máquina|Peças, horas, fotos de antes e depois e assinatura do cliente|Tudo funciona sem sinal e sincroniza depois",
+    "f3Points": "Locação para clientes, com diária, semanal, mensal ou por hora|Checklist de entrega e devolução com fotos lado a lado|Hora extra, combustível, atraso e danos calculados na devolução|Dano novo vira relato de campo automaticamente",
+    "f4Points": "Mapa ao vivo com operadores, relatos, ordens de serviço e máquinas|Indicadores do dia: relatos abertos, serviços em andamento, locações atrasadas|Triagem de relatos e despacho de serviços com poucos cliques|Linha do tempo de cada máquina com tudo o que aconteceu",
+    "f5Points": "Empresa, fazendas, pátios, oficinas e talhões|Safras com custos e receitas apurados automaticamente|Peças e estoque por local, incluindo a van do mecânico|Preventivas por horímetro ou calendário e registro de abastecimento",
+    "imageAlt": {
+      "f1": "Tela do app de campo com o assistente de novo relato",
+      "f2": "Tela do app de campo com a lista de serviços do dia",
+      "f3": "Tela de entrega de máquina locada com checklist e fotos",
+      "f4": "Central de operações na web com mapa e indicadores",
+      "f5": "Tela de custos por máquina e safra na web"
+    }
+  },
+  "pricing": {
+    "title": "Planos",
+    "lead": "Você paga pelas pessoas que trabalham no campo. O escritório usa sem custo.",
+    "trialTitle": "30 dias grátis",
+    "trialBody": "Todos os módulos liberados durante o teste. Sem cartão de crédito e sem taxa de implantação.",
+    "fieldTitle": "Usuário de campo",
+    "fieldBody": "Vistoriador, mecânico ou agente de locação que usa o app no celular.",
+    "fieldPrice": "{price} por usuário de campo/mês",
+    "officeTitle": "Usuário de escritório",
+    "officeBody": "Administração, gestão e despacho usam a web sem custo adicional.",
+    "officePrice": "Incluído",
+    "rentalTitle": "Módulo de locação",
+    "rentalBody": "Para quem aluga máquinas para clientes. Preço do módulo a combinar.",
+    "priceOnRequest": "Fale com a gente",
+    "priceOnRequestBody": "Os valores ainda estão sendo definidos com os primeiros clientes. Conte o tamanho da sua equipe e da sua frota que respondemos com uma proposta.",
+    "includedTitle": "Em todos os planos",
+    "included": "App de campo para Android e iPhone que funciona sem sinal|Web para o escritório, sem instalar nada|Exportação dos seus dados em CSV a qualquer momento|Suporte por WhatsApp e e-mail em português",
+    "pricesHypothesis": "Valores de referência sujeitos a aprovação comercial."
+  },
+  "help": {
+    "title": "Ajuda",
+    "lead": "Respostas rápidas e uma página para cada código que aparece no app ou na web. Os códigos ficam no canto da mensagem de erro.",
+    "faqTitle": "Perguntas frequentes",
+    "codesTitle": "Códigos de erro",
+    "codesLead": "Digite o código ou parte da mensagem para encontrar a página certa.",
+    "searchLabel": "Buscar código ou mensagem",
+    "searchPlaceholder": "Ex.: SYNC ou sinal",
+    "searchEmpty": "Nenhum código encontrado para essa busca. Confira o código na mensagem ou fale com a gente.",
+    "searchCount": "{count, plural, one {# código} other {# códigos}}",
+    "groups": {
+      "PLT": "Conta, acesso e aparelho",
+      "SYN": "Sincronização e mídia",
+      "FR": "Relatos de campo",
+      "WO": "Reparos e ordens de serviço",
+      "RN": "Locação",
+      "OPS": "Escritório na web",
+      "ERP": "Cadastros e safras",
+      "SITE": "Este site"
+    },
+    "contactTitle": "Ainda com dúvida?",
+    "contactBody": "Fale com a equipe da AgroRende. Respondemos em português, em horário comercial."
+  },
+  "helpError": {
+    "breadcrumb": "Ajuda",
+    "codesLink": "Todos os códigos",
+    "codeLabel": "Código",
+    "whatHappened": "O que aconteceu",
+    "whatToDo": "O que fazer",
+    "moreHelp": "Mais detalhes",
+    "options": "Outros caminhos",
+    "retryable": "Pode tentar de novo com segurança.",
+    "notRetryable": "Tentar de novo sem mudar nada não resolve; use um dos caminhos abaixo.",
+    "kindServer": "Mensagem enviada pelo servidor do AgroRende.",
+    "kindClient": "Mensagem mostrada pelo próprio app ou site.",
+    "placeholders": {
+      "email": "o e-mail que você usou",
+      "emailHint": "o e-mail indicado no convite",
+      "role": "papel"
+    },
+    "reference": "Referência para o suporte"
+  },
+  "recovery": {
+    "AUTO": "O app tenta de novo sozinho e mostra o andamento.",
+    "RETRY": "Toque em Tentar de novo. É seguro repetir.",
+    "FIX": "Corrija o campo destacado; o que você já digitou continua lá.",
+    "ALT": "Use outro caminho para terminar a mesma tarefa.",
+    "DRAFT": "Salve como rascunho e continue depois do mesmo ponto.",
+    "UNDO": "Desfaça em até 10 segundos.",
+    "RESTORE": "O escritório pode restaurar o registro arquivado.",
+    "SETTINGS": "Abra os ajustes do aparelho ou do navegador e volte para conferir.",
+    "REAUTH": "Entre de novo sem sair da tela; nada do que você fez se perde.",
+    "UPDATE": "Atualize o app; seus dados locais são mantidos.",
+    "OFFICE": "Fale com o escritório da sua empresa pelo app.",
+    "DIAG": "Envie o diagnóstico pelo app para o escritório entender o problema.",
+    "HANDOFF": "O escritório recebe o aviso e resolve; você pode continuar trabalhando.",
+    "FALLBACK": "O app mostra a última informação disponível e avisa quando volta ao normal."
+  },
+  "legal": {
+    "pendingReview": "Revisão jurídica pendente",
+    "pendingReviewBody": "Este documento é um modelo e ainda não foi aprovado por um advogado. O texto pode mudar antes do lançamento.",
+    "version": "Versão {version}",
+    "contents": "Nesta página",
+    "otherDocuments": "Outros documentos"
+  },
+  "deleteAccount": {
+    "title": "Excluir sua conta",
+    "lead": "Você pode excluir a sua conta pessoal do AgroRende a qualquer momento, pelo app ou pela web.",
+    "appTitle": "No app de campo",
+    "appSteps": "Abra Ajustes e toque em Conta|Toque em Excluir conta|Se houver itens esperando envio, toque em Enviar agora ou Salvar cópia; o app não exclui a conta enquanto houver trabalho pendente no aparelho|Confirme a exclusão",
+    "webTitle": "Na web",
+    "webSteps": "Entre no AgroRende pelo navegador|Abra o menu do seu nome e escolha Conta|Clique em Excluir conta e confirme",
+    "keptTitle": "O que acontece com os dados",
+    "keptBody": "Seu nome, e-mail, telefone e foto são anonimizados e o acesso por Google ou Apple é revogado. Os registros que a empresa precisa guardar por lei ou contrato, como ordens de serviço, locações, assinaturas e custos, continuam com a empresa, sem os seus dados pessoais.",
+    "companyTitle": "Excluir a empresa inteira",
+    "companyBody": "Quem administra a empresa cancela a assinatura em Ajustes → Assinatura. Os dados ficam disponíveis para exportação por 90 dias e depois são apagados.",
+    "noAccessTitle": "Sem acesso ao app?",
+    "noAccessBody": "Escreva para {email} a partir do e-mail cadastrado na conta. Confirmamos a sua identidade e fazemos a exclusão."
+  },
+  "notFound": {
+    "home": "Voltar para o início",
+    "help": "Buscar na ajuda",
+    "contact": "Falar com a AgroRende"
+  },
+  "helpUnknown": {
+    "search": "Procurar o código na ajuda",
+    "hint": "Os códigos usam letras maiúsculas e sublinhado, como FIRST_SYNC_LARGE. Confira se não faltou nenhuma parte."
+  },
+  "notices": {
+    "liteLoadImages": "Carregar imagens",
+    "dismiss": "Fechar aviso"
+  },
+  "footer": {
+    "label": "Rodapé",
+    "product": "Produto",
+    "legal": "Legal",
+    "contact": "Contato",
+    "privacy": "Política de privacidade",
+    "terms": "Termos de uso",
+    "dpa": "Acordo de tratamento de dados (DPA)",
+    "deleteAccount": "Excluir conta",
+    "dpo": "Encarregado de dados (LGPD)",
+    "noCookies": "Este site não usa cookies nem scripts de terceiros.",
+    "copyright": "© {year} AgroRende"
+  }
+}

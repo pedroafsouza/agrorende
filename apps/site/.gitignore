@@ -1,0 +1,2 @@
+# Lighthouse CI keeps its raw runs here; the summary goes to .data/lhci-site.
+.lighthouseci/

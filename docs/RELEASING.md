@@ -144,8 +144,9 @@ These come from ARCHITECTURE §18.4 and are done once by a person:
 
 ### 4.1 Pull requests
 
-`release.yml` builds all five images and the site artifact with no registry login and no push, so a
-broken Dockerfile fails the pull request. `ci.yml` runs the checks.
+`release.yml` builds all five images and the site artifact (`site.tar.gz`, an archive of
+`apps/site/out`) with no registry login and no push, so a broken Dockerfile fails the pull request.
+`ci.yml` runs the checks, including the site's Playwright checks and Lighthouse budgets.
 
 ### 4.2 Merge to `main` → staging
 
@@ -186,8 +187,11 @@ environment:
 3. **Render** the `.env` from the environment's secrets and variables with
    `infra/scripts/render-env.py` and **validate** it with `infra/scripts/validate-env.sh`.
 4. **Copy** `app.yml`, `vm.yml` and the `Caddyfile` to `/srv/agrorende`, the `.env` (mode 600)
-   through SSH standard input, and the static site (when `apps/site` exists) to
-   `/srv/agrorende/site`.
+   through SSH standard input, and the static site (`apps/site/out/`, with `rsync --delete`) to
+   `/srv/agrorende/site`. The site is built on the runner for the target environment, so
+   canonical, hreflang and sitemap URLs use that environment's `SITE_HOST`. The optional
+   variables `SITE_SHOW_PRICES`, `SITE_WHATSAPP`, `SITE_CONTACT_EMAIL`, `SITE_PRIVACY_EMAIL`,
+   `SITE_APP_STORE_URL` and `SITE_PLAY_STORE_URL` tune the build; see `docs/SITE.md`.
 5. **Pull:** `docker login ghcr.io` with `GHCR_READ_TOKEN` (read-only), then
    `docker compose -f app.yml -f vm.yml --profile migrate pull`.
 6. **Migrate:** start Redis (and MongoDB on staging), then

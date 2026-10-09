@@ -136,37 +136,43 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # The public site (apps/site, T19) is optional until it lands; the job is a no-op without it.
-      - name: Check for the site package
-        id: site
-        run: |
-          if [[ -f apps/site/package.json ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
-
       - name: Set up pnpm
-        if: ${{ steps.site.outputs.present == 'true' }}
         uses: pnpm/action-setup@v4
         with:
           version: 11.0.9
 
       - name: Set up Node.js
-        if: ${{ steps.site.outputs.present == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: 24
           cache: pnpm
 
+      # The artifact is the production build of apps/site (T19). deploy.yml rebuilds the site with
+      # the target environment's SITE_URL, so staging canonical URLs never point at production.
       - name: Build the static site
-        if: ${{ steps.site.outputs.present == 'true' }}
+        env:
+          SITE_URL: https://${{ vars.SITE_HOST || 'agrorende.com.br' }}
+          APP_URL: https://${{ vars.APP_HOST || 'app.agrorende.com.br' }}
+          PLATFORM_SUPPORT_WHATSAPP: ${{ vars.PLATFORM_SUPPORT_WHATSAPP }}
+          TERMS_VERSION: ${{ vars.TERMS_VERSION }}
+          SITE_SHOW_PRICES: ${{ vars.SITE_SHOW_PRICES }}
+          SITE_WHATSAPP: ${{ vars.SITE_WHATSAPP }}
+          SITE_CONTACT_EMAIL: ${{ vars.SITE_CONTACT_EMAIL }}
+          SITE_PRIVACY_EMAIL: ${{ vars.SITE_PRIVACY_EMAIL }}
+          SITE_APP_STORE_URL: ${{ vars.SITE_APP_STORE_URL }}
+          SITE_PLAY_STORE_URL: ${{ vars.SITE_PLAY_STORE_URL }}
         run: |
           pnpm install --frozen-lockfile --filter "site..."
           pnpm --filter site build
 
+      - name: Package the site
+        run: tar -czf site.tar.gz -C apps/site/out .
+
       - name: Upload the site artifact
-        if: ${{ steps.site.outputs.present == 'true' }}
         uses: actions/upload-artifact@v4
         with:
           name: site
-          path: apps/site/out
+          path: site.tar.gz
           if-no-files-found: error
           retention-days: 30
 

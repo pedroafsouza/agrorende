@@ -1,0 +1,48 @@
+{
+  "name": "site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --webpack --port 3300",
+    "build": "next build --webpack && tsx scripts/postbuild.ts",
+    "images": "tsx scripts/images.ts",
+    "screenshots": "tsx scripts/screenshots.ts",
+    "serve": "tsx scripts/serve.ts",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "e2e": "playwright test",
+    "lhci": "tsx scripts/lhci.ts"
+  },
+  "dependencies": {
+    "@agrorende/contracts": "workspace:*",
+    "@agrorende/design-tokens": "workspace:*",
+    "@agrorende/i18n": "workspace:*",
+    "lucide-react": "^0.561.0",
+    "next": "16.3.8",
+    "next-intl": "^4.6.0",
+    "react": "catalog:",
+    "react-dom": "catalog:"
+  },
+  "devDependencies": {
+    "@agrorende/config": "workspace:*",
+    "@axe-core/playwright": "^4.13.0",
+    "@lhci/cli": "^0.15.1",
+    "@playwright/test": "^1.64.0",
+    "@tailwindcss/postcss": "^4.1.18",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.0",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "catalog:",
+    "jsdom": "^27.0.0",
+    "sharp": "^0.35.5",
+    "tailwindcss": "^4.1.18",
+    "tsx": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}

@@ -37,23 +37,81 @@ www.{$SITE_HOST:agrorende.com.br} {
 	redir https://{$SITE_HOST:agrorende.com.br}{uri} permanent
 }
 
+# Public site (T19, ARCHITECTURE §22). Static export of apps/site, copied by deploy.yml to
+# /srv/agrorende/site and mounted read-only at /srv/site. apps/site/scripts/serve.ts mirrors
+# this block for local tests, so keep the two in step.
 {$SITE_HOST:agrorende.com.br} {
 	import security_headers
 	import access_log
 	encode zstd gzip
 	root * /srv/site
 
-	@assets path /_next/static/* /_astro/* /assets/* *.css *.js *.woff2 *.png *.jpg *.jpeg *.webp *.avif *.svg *.ico
-	header @assets Cache-Control "public, max-age=31536000, immutable"
+	header {
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+	}
 
-	@html not path /_next/static/* /_astro/* /assets/* *.css *.js *.woff2 *.png *.jpg *.jpeg *.webp *.avif *.svg *.ico
+	# Hashed build output never changes; images and fonts keep stable names, so they get a week;
+	# HTML is always revalidated so a deploy is visible at once.
+	@immutable path /_next/static/*
+	header @immutable Cache-Control "public, max-age=31536000, immutable"
+
+	@media {
+		not path /_next/static/*
+		path *.png *.ico *.svg *.avif *.webp *.woff2
+	}
+	header @media Cache-Control "public, max-age=604800"
+
+	@html {
+		not path /_next/static/*
+		not path *.png *.ico *.svg *.avif *.webp *.woff2
+	}
 	header @html Cache-Control "no-cache"
 
-	try_files {path} {path}/index.html {path}.html
-	file_server
-	handle_errors 404 {
-		rewrite * /404.html
+	# "/" picks the language from Accept-Language: en* goes to /en/, everything else to /pt-br/.
+	# out/index.html keeps a meta-refresh to /pt-br/ for any host that serves the files without this rule.
+	@root_en {
+		path /
+		header_regexp Accept-Language (?i)^\s*en
+	}
+	handle @root_en {
+		header Vary Accept-Language
+		redir * /en/{?query} 302
+	}
+	@root path /
+	handle @root {
+		header Vary Accept-Language
+		redir * /pt-br/{?query} 302
+	}
+
+	handle {
+		try_files {path} {path}/index.html {path}.html
 		file_server
+	}
+
+	# Unknown error codes land on the "unknown code" help page (EC-SITE-07); other misses get the
+	# 404 page in the language of the path.
+	handle_errors 404 {
+		header Cache-Control "no-cache"
+		@unknown_pt path /pt-br/ajuda/erros/*
+		@unknown_en path /en/help/errors/*
+		@missing_en path /en /en/*
+		handle @unknown_pt {
+			rewrite * /pt-br/ajuda/erros/codigo-desconhecido/index.html
+			file_server
+		}
+		handle @unknown_en {
+			rewrite * /en/help/errors/unknown-code/index.html
+			file_server
+		}
+		handle @missing_en {
+			rewrite * /en/404/index.html
+			file_server
+		}
+		handle {
+			rewrite * /404.html
+			file_server
+		}
 	}
 }
 

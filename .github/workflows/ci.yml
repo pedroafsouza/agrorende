@@ -148,8 +148,34 @@ jobs:
       - name: Build web app
         run: pnpm --filter web build
 
+      # The canonical and hreflang URLs are baked in at build time, so the CI build points them
+      # at the local server the site checks below use (port 3191, see apps/site/playwright.config.ts).
       - name: Build public site
+        env:
+          SITE_URL: http://localhost:3191
         run: pnpm --filter site build
+
+      - name: Install Chromium for the site checks
+        run: pnpm --filter site exec playwright install --with-deps chromium
+
+      # Smoke on every page in both locales, axe, link checker, same-origin and no-cookie checks.
+      - name: Public site end-to-end checks
+        run: pnpm --filter site e2e
+
+      - name: Public site Lighthouse budgets
+        run: pnpm --filter site lhci
+
+      - name: Upload public site check results
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-checks
+          path: |
+            .data/e2e-results-site
+            .data/lhci-site
+            .data/junit-e2e-site.xml
+          if-no-files-found: ignore
+          retention-days: 7
 
       - name: Export mobile Android bundle
         run: pnpm --filter mobile exec expo export --platform android
