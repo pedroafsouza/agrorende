@@ -58,6 +58,7 @@ export async function openUserDatabase(input: OpenUserDatabaseInput): Promise<Op
   }
   const healthy = await quickCheck(db).catch(() => false);
   if (!healthy) {
+    await db.close().catch(() => undefined);
     throw new LocalError("LOCAL_DB_REPAIR_REQUIRED");
   }
 
@@ -77,6 +78,7 @@ export async function openUserDatabase(input: OpenUserDatabaseInput): Promise<Op
       await input.host.removeFile(backupPath);
       await db.run("VACUUM INTO ?", [backupPath]);
     } catch (cause) {
+      await db.close().catch(() => undefined);
       throw new LocalError("LOCAL_MIGRATION_FAILED", { cause });
     }
   }
@@ -84,6 +86,7 @@ export async function openUserDatabase(input: OpenUserDatabaseInput): Promise<Op
     const applied = await runMigrations(db, bundle);
     return { db, fileName, appliedMigrations: applied, backupPath, deferredMigrations: 0 };
   } catch (cause) {
+    await db.close().catch(() => undefined);
     throw new LocalError("LOCAL_MIGRATION_FAILED", { cause });
   }
 }

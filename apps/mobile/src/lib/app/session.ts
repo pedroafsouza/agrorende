@@ -1,4 +1,5 @@
 import { AgrorendeApiClient } from "@agrorende/api-client";
+import { SLOW_LINK_BYTES_PER_SECOND } from "@agrorende/contracts/sync";
 import NetInfo from "@react-native-community/netinfo";
 import * as Application from "expo-application";
 import { Platform } from "react-native";
@@ -10,10 +11,10 @@ import { openUserDatabase } from "../../db/client";
 import { expoDatabaseHost } from "../../db/expoDriver";
 import type { SqlDb } from "../../db/sql";
 import { initI18n, type AppLocale } from "../../i18n/runtime";
-import { flushViaRest, flushViaSocket } from "../../location/buffer";
+import { flushViaRest, flushViaSocket, maintainLocationBuffer } from "../../location/buffer";
 import { setLocationBufferDb } from "../../location/tracker";
 import { expoFileStore } from "../../media/expoFiles";
-import { drainMediaQueue } from "../../media/queue";
+import { drainMediaQueue, pruneMediaFiles } from "../../media/queue";
 import { createRealtimeClient, type RealtimeClient } from "../../realtime/client";
 import { socketIoFactory } from "../../realtime/socketIo";
 import { registerBackgroundSync, setBackgroundSyncEngine } from "../../sync/backgroundTask";
@@ -104,10 +105,23 @@ async function openSession(userId: string): Promise<UserSession> {
   });
   const created = createSyncEngine(runtime, {
     media: async () => {
-      await drainMediaQueue({ db, api: transport, files: expoFileStore, now: Date.now, isWifi });
+      await drainMediaQueue({
+        db,
+        api: transport,
+        files: expoFileStore,
+        now: Date.now,
+        isWifi,
+        slowLink: () => syncStore.getState().slowLink,
+        onThroughput: (bytesPerSecond) => syncStore.setState({ slowLink: bytesPerSecond < SLOW_LINK_BYTES_PER_SECOND }),
+      });
+      // §7.7 step 8: DONE originals are kept 7 days, or removed at once when free space is low.
+      await pruneMediaFiles(db, expoFileStore, Date.now(), await expoFileStore.freeBytes()).catch(() => 0);
     },
     location: async () => {
       const now = new Date().toISOString();
+      // G1.10: cap and thin the buffer before sending; the trim is surfaced as EC-SYN-28.
+      const trimmed = await maintainLocationBuffer(db, Date.now()).catch(() => 0);
+      if (trimmed > 0) syncStore.setState({ locationTrimmed: trimmed });
       if (realtime.isConnected()) await flushViaSocket(db, realtime.emitLocationBatch, now);
       await flushViaRest(db, transport, deviceId, now);
       await uploadDiagnostics(runtime).catch(() => undefined);

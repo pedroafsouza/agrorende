@@ -138,7 +138,7 @@ describe("media pipeline", () => {
     const { runtime } = await createTestRuntime();
     const files = new FakeFiles();
     files.free = 100 * 1024 ** 2;
-    await expect(persistCapture(runtime.db, files, { meta: meta("PHOTO"), sourceUri: files.add("file:///tmp/x", 1) })).rejects.toMatchObject({ code: "STORAGE_FULL" });
+    await expect(persistCapture(runtime.db, files, { meta: meta("PHOTO"), sourceUri: files.add("file:///tmp/x", 1) })).rejects.toMatchObject({ code: "MEDIA_DEVICE_STORAGE_LOW" });
     files.free = 10 * 1024 ** 3;
     files.files.clear();
 

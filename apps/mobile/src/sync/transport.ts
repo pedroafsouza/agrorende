@@ -166,7 +166,9 @@ export function createHttpTransport(options: TransportOptions): SyncApi {
       return (await call("POST", `/media/${seg(mediaId)}/upload-url`, body)) as UploadUrlResponse;
     },
     async multipartParts(mediaId, body) {
-      return (await call("POST", `/media/${seg(mediaId)}/multipart/parts`, body)) as { parts: { n: number; url: string }[] };
+      // The server answers `{ urls, expiresAt }` (§7.7); `parts` is accepted for older fakes.
+      const result = (await call("POST", `/media/${seg(mediaId)}/multipart/parts`, body)) as { urls?: { n: number; url: string }[]; parts?: { n: number; url: string }[] };
+      return { parts: result.urls ?? result.parts ?? [] };
     },
     completeUpload: (mediaId, body) => call("POST", `/media/${seg(mediaId)}/complete`, body),
     postLocations: (body) => call("POST", "/locations/batch", body),

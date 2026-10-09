@@ -45,7 +45,7 @@ export function CameraSheet({ visible, tag, allowVideo, silhouette, onCaptured, 
     if (permissionStateOf(micPermission) !== "granted") await requestMic();
     setRecording(true);
     const started = Date.now();
-    const video = await view.recordAsync({ maxDuration: 120 });
+    const video = await view.recordAsync({ maxDuration: 60 });
     setRecording(false);
     if (video !== undefined) onCaptured({ kind: "VIDEO", tag, mimeType: "video/mp4", sourceUri: video.uri, durationMs: Date.now() - started });
   };

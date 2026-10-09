@@ -11,7 +11,7 @@ export const MEDIA_PRUNE_FREE_BYTES = 1024 * 1024 * 1024;
 /** Codes that mark the row FAILED (§7.7 step 7); every other failure retries forever. */
 const TERMINAL_CODES = new Set(["MEDIA_LOCKED", "NOT_FOUND", "MEDIA_TOO_LARGE"]);
 /** The file is kept but the user is asked to retake or choose again. */
-const USER_ACTION_CODES = new Set(["MEDIA_TYPE_MISMATCH"]);
+const USER_ACTION_CODES = new Set(["MEDIA_TYPE_MISMATCH", "LOCAL_MEDIA_MISSING", "LOCAL_MEDIA_CORRUPT"]);
 
 export interface MediaProgress {
   thumb?: boolean;
@@ -45,6 +45,10 @@ export interface MediaQueueDeps {
   readonly random?: () => number;
   readonly isWifi: () => Promise<boolean>;
   readonly onChange?: () => void;
+  /** EC-SYN-06: when true only signatures and thumbnails are sent; originals wait for a better link. */
+  readonly slowLink?: () => boolean;
+  /** Measured original-upload throughput, so the caller can update `slowLink` (§7.10). */
+  readonly onThroughput?: (bytesPerSecond: number) => void;
 }
 
 export function mediaBackoffMs(attempts: number, random: () => number = Math.random): number {
@@ -103,13 +107,38 @@ function codeFromBody(body: string): string | undefined {
   }
 }
 
+/** EC-SYN-20: an S3 presigned URL past its expiry answers `403 Request has expired`. */
+function expiredPresign(response: UploadResponse): boolean {
+  return response.status === 403 && typeof response.body === "string" && /request has expired|AccessDenied.*expired/i.test(response.body);
+}
+
 function uploadError(response: UploadResponse): TransportError {
   const fallback: Record<number, string> = { 409: "MEDIA_PART_MISSING", 410: "UPLOAD_URL_EXPIRED", 413: "MEDIA_TOO_LARGE", 507: "STORAGE_FULL" };
-  const code = codeFromBody(response.body) ?? fallback[response.status];
+  const code = expiredPresign(response) ? "UPLOAD_URL_EXPIRED" : (codeFromBody(response.body) ?? fallback[response.status]);
   return new TransportError("http", { status: response.status, ...(code === undefined ? {} : { code }) });
 }
 
-export type MediaUploadOutcome = "done" | "retry" | "failed" | "needsUser";
+const STORED = Symbol("stored");
+
+/**
+ * `MEDIA_LOCKED` from upload-url, the blob PUT or complete means this variant is already
+ * stored on the server: an earlier attempt succeeded but its answer was lost (A7 for media).
+ * The queue treats it as success instead of failing a file the office already has.
+ */
+async function alreadyStored<T>(call: Promise<T>): Promise<T | typeof STORED> {
+  try {
+    return await call;
+  } catch (error) {
+    if (error instanceof TransportError && error.code === "MEDIA_LOCKED") return STORED;
+    throw error;
+  }
+}
+
+function lockedResponse(response: UploadResponse): boolean {
+  return response.status === 409 && codeFromBody(response.body) === "MEDIA_LOCKED";
+}
+
+export type MediaUploadOutcome = "done" | "retry" | "failed" | "needsUser" | "deferred";
 
 /** Uploads one row: thumbnail first, then the original (single or multipart), then complete. */
 export async function uploadOne(deps: MediaQueueDeps, row: MediaFileRow): Promise<MediaUploadOutcome> {
@@ -119,33 +148,50 @@ export async function uploadOne(deps: MediaQueueDeps, row: MediaFileRow): Promis
     await db.run(`UPDATE media_files SET ${patch} WHERE mediaId = ?`, [...params, row.mediaId]);
   };
   try {
-    if (!(await files.exists(row.localUri))) throw new TransportError("http", { status: 404, code: "NOT_FOUND", message: "local file missing" });
+    // EC-SYN-17 / EC-SYN-18: never upload a missing, empty or changed original.
+    if (!(await files.exists(row.localUri))) throw new TransportError("http", { status: 404, code: "LOCAL_MEDIA_MISSING", message: "local file missing" });
+    const actualSize = await files.size(row.localUri);
+    if (actualSize === 0 || (row.sizeBytes !== null && row.sizeBytes > 0 && actualSize !== row.sizeBytes)) {
+      throw new TransportError("http", { status: 422, code: "LOCAL_MEDIA_CORRUPT", message: "local file changed" });
+    }
     await save("state = 'UPLOADING'", []);
     deps.onChange?.();
     if (row.thumbUri !== null && progress.thumb !== true && (await files.exists(row.thumbUri))) {
       const variant: MediaVariant = row.kind === "VIDEO" ? "poster" : "thumb";
       const size = await files.size(row.thumbUri);
-      const target = await api.uploadUrl(row.mediaId, { sizeBytes: size, mimeType: "image/jpeg", variant });
-      if (target.mode === "single") {
+      const target = await alreadyStored(api.uploadUrl(row.mediaId, { sizeBytes: size, mimeType: "image/jpeg", variant }));
+      if (target !== STORED && target.mode === "single") {
         const response = await files.upload(target.url, row.thumbUri, { mimeType: "image/jpeg", ...(target.headers === undefined ? {} : { headers: target.headers }) });
-        if (response.status >= 300) throw uploadError(response);
-        await api.completeUpload(row.mediaId, { variant });
+        if (response.status >= 300 && !lockedResponse(response)) throw uploadError(response);
+        if (!lockedResponse(response)) await alreadyStored(api.completeUpload(row.mediaId, { variant }));
       }
       progress.thumb = true;
       await save("partsDone = ?", [JSON.stringify(progress)]);
     }
 
+    // EC-SYN-06: on a very slow link the preview goes first and the video original waits.
+    if (deps.slowLink?.() === true && row.kind === "VIDEO") {
+      await save("state = 'QUEUED'", []);
+      deps.onChange?.();
+      return "deferred";
+    }
+
     const sizeBytes = row.sizeBytes ?? (await files.size(row.localUri));
+    const startedAt = deps.now();
     let uploadId = row.uploadId;
     let partSize = row.partSize;
     let parts: readonly { n: number; url: string }[] = [];
     if (uploadId === null) {
-      const target = await api.uploadUrl(row.mediaId, { sizeBytes, mimeType: row.mimeType, variant: "original" });
+      const target = await alreadyStored(api.uploadUrl(row.mediaId, { sizeBytes, mimeType: row.mimeType, variant: "original" }));
+      // The original landed on an earlier attempt whose answer was lost.
+      if (target === STORED) return await markDone(deps, row.mediaId);
       if (target.mode === "single") {
         const response = await files.upload(target.url, row.localUri, { mimeType: row.mimeType, ...(target.headers === undefined ? {} : { headers: target.headers }) });
+        if (lockedResponse(response)) return await markDone(deps, row.mediaId);
         if (response.status >= 300) throw uploadError(response);
+        reportThroughput(deps, sizeBytes, startedAt);
         await save("bytesSent = ?, state = 'UPLOADED'", [sizeBytes]);
-        await api.completeUpload(row.mediaId, { variant: "original" });
+        await alreadyStored(api.completeUpload(row.mediaId, { variant: "original" }));
         return await markDone(deps, row.mediaId);
       }
       uploadId = target.uploadId;
@@ -177,8 +223,9 @@ export async function uploadOne(deps: MediaQueueDeps, row: MediaFileRow): Promis
       await save("partsDone = ?, bytesSent = ?", [JSON.stringify(progress), Math.min(sizeBytes, done.size * size)]);
       deps.onChange?.();
     }
+    reportThroughput(deps, missing.length * size, startedAt);
     try {
-      await api.completeUpload(row.mediaId, { variant: "original", uploadId, parts: progress.parts ?? [] });
+      await alreadyStored(api.completeUpload(row.mediaId, { variant: "original", uploadId, parts: progress.parts ?? [] }));
     } catch (error) {
       if (error instanceof TransportError && error.code === "MEDIA_PART_MISSING") {
         const missingParts = (error.body as { error?: { details?: { missing?: number[] } } } | undefined)?.error?.details?.missing;
@@ -192,6 +239,12 @@ export async function uploadOne(deps: MediaQueueDeps, row: MediaFileRow): Promis
   } catch (error) {
     return failUpload(deps, row, progress, error);
   }
+}
+
+function reportThroughput(deps: MediaQueueDeps, bytes: number, startedAt: number): void {
+  const elapsedMs = deps.now() - startedAt;
+  if (deps.onThroughput === undefined || elapsedMs <= 0 || bytes <= 0) return;
+  deps.onThroughput((bytes * 1000) / elapsedMs);
 }
 
 async function markDone(deps: MediaQueueDeps, mediaId: string): Promise<MediaUploadOutcome> {
@@ -244,7 +297,7 @@ export async function drainMediaQueue(deps: MediaQueueDeps, maxRounds = 50): Pro
     for (const outcome of outcomes) {
       if (outcome === "done") done += 1;
       else if (outcome === "retry") retried += 1;
-      else failed += 1;
+      else if (outcome !== "deferred") failed += 1;
     }
   }
   return { done, retried, failed };
@@ -268,6 +321,11 @@ export async function pruneMediaFiles(db: SqlDb, files: FileStore, nowMs: number
 /** Sync Center: retry a FAILED row now, or discard it (the server row stays). */
 export async function retryMediaFile(db: SqlDb, mediaId: string): Promise<void> {
   await db.run("UPDATE media_files SET state = 'QUEUED', attempts = 0, nextAttemptAt = NULL WHERE mediaId = ? AND state IN ('FAILED', 'QUEUED')", [mediaId]);
+}
+
+/** EC-SYN-25: one-time "Use mobile data for this video" override; the setting itself is unchanged. */
+export async function allowMobileDataOnce(db: SqlDb, mediaId: string): Promise<void> {
+  await db.run("UPDATE media_files SET wifiOnly = 0, nextAttemptAt = NULL WHERE mediaId = ? AND wifiOnly = 1", [mediaId]);
 }
 
 export async function discardMediaFile(db: SqlDb, files: FileStore, mediaId: string): Promise<void> {

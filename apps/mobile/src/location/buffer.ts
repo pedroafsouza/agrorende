@@ -81,10 +81,11 @@ export async function flushViaRest(db: SqlDb, api: Pick<SyncApi, "postLocations"
 }
 
 /** Deletes sent rows after 24 h and keeps the buffer under the 50 000-point cap (§7.8). */
-export async function maintainLocationBuffer(db: SqlDb, nowMs: number, cap = LOCATION_BUFFER_CAP): Promise<void> {
+/** Returns how many unsent points were thinned away, so the duty banner can show EC-SYN-28. */
+export async function maintainLocationBuffer(db: SqlDb, nowMs: number, cap = LOCATION_BUFFER_CAP): Promise<number> {
   await db.run("DELETE FROM location_buffer WHERE sentAt IS NOT NULL AND sentAt < ?", [new Date(nowMs - LOCATION_SENT_KEEP_MS).toISOString()]);
   const total = Number((await db.get<{ total: number }>("SELECT COUNT(*) AS total FROM location_buffer"))?.total ?? 0);
-  if (total <= cap) return;
+  if (total <= cap) return 0;
   const cutoff = new Date(nowMs - LOCATION_RECENT_KEEP_MS).toISOString();
   const old = await db.all<{ id: number; recordedAt: string }>("SELECT id, recordedAt FROM location_buffer WHERE recordedAt < ? ORDER BY recordedAt ASC", [cutoff]);
   const keep = new Set<number>();
@@ -101,4 +102,5 @@ export async function maintainLocationBuffer(db: SqlDb, nowMs: number, cap = LOC
     const chunk = drop.slice(i, i + 500);
     await db.run(`DELETE FROM location_buffer WHERE id IN (${chunk.map(() => "?").join(", ")})`, chunk);
   }
+  return drop.length;
 }

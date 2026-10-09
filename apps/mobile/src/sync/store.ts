@@ -22,6 +22,8 @@ export interface SyncSnapshot {
   readonly firstSyncDone: boolean;
   readonly unauthorized: boolean;
   readonly scopeEpoch: number;
+  /** Fixes dropped by the last location-buffer maintenance run (EC-SYN-28). */
+  readonly locationTrimmed: number;
 }
 
 export const initialSyncSnapshot: SyncSnapshot = {
@@ -41,6 +43,7 @@ export const initialSyncSnapshot: SyncSnapshot = {
   firstSyncDone: false,
   unauthorized: false,
   scopeEpoch: 0,
+  locationTrimmed: 0,
 };
 
 export type SyncStore = ReturnType<typeof createSyncStore>;

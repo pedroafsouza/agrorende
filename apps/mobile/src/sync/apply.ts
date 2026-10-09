@@ -27,10 +27,13 @@ async function releaseMediaFor(tx: SqlDb, row: OutboxRow): Promise<void> {
 }
 
 async function failMediaFor(tx: SqlDb, row: OutboxRow): Promise<void> {
-  // Files are kept on disk so the user can copy or retake them (§7.4).
+  // Files are kept on disk so the user can copy or retake them (§7.4). Media that still has its own
+  // queued command (e.g. `media.register` on a work order) is evidence that is never rejected for
+  // the parent's state (BR-F2-4), so a rejected sibling command must not fail it.
   await tx.run(
-    `UPDATE media_files SET state = 'FAILED' WHERE state = 'WAITING_PARENT' AND (mediaId = ? OR mediaId IN (${MEDIA_FOR_ENTITY}))`,
-    [row.entityId, row.entityId],
+    `UPDATE media_files SET state = 'FAILED' WHERE state = 'WAITING_PARENT' AND (mediaId = ? OR mediaId IN (${MEDIA_FOR_ENTITY}))
+       AND mediaId NOT IN (SELECT entityId FROM outbox WHERE status IN ('PENDING', 'IN_FLIGHT') AND id <> ?)`,
+    [row.entityId, row.entityId, row.id],
   );
 }
 

@@ -9,6 +9,9 @@ import { canCapture } from "./storage";
 /** SIGNATURE > PHOTO > AUDIO > VIDEO (§7.7 step 4). */
 export const MEDIA_PRIORITY: Readonly<Record<string, number>> = { SIGNATURE: 4, PHOTO: 3, DOCUMENT: 2, AUDIO: 1, VIDEO: 0 };
 
+/** §7.7 step 2: videos are recorded at 720p for at most 60 s, the limit the camera sheet shows to the operator. */
+export const VIDEO_MAX_MS = 60_000;
+
 export interface CaptureInput {
   readonly meta: MediaMeta;
   readonly sourceUri: string;
@@ -29,8 +32,12 @@ export interface CapturedMedia {
  * that registers the metadata is APPLIED.
  */
 export async function persistCapture(db: SqlDb, files: FileStore, input: CaptureInput): Promise<CapturedMedia> {
+  // EC-SYN-16: the oversized video is never enqueued; the form stays as it is.
+  if (input.meta.kind === "VIDEO" && (input.meta.durationMs ?? 0) > VIDEO_MAX_MS) throw new LocalError("VIDEO_TOO_LONG", { details: { durationMs: input.meta.durationMs } });
+  // EC-SYN-14: the camera returned a URI that holds no file; no orphan row is written.
+  if (!(await files.exists(input.sourceUri)) || (await files.size(input.sourceUri)) === 0) throw new LocalError("MEDIA_CAPTURE_FAILED");
   const free = await files.freeBytes();
-  if (!canCapture(input.meta.kind as MediaKind, free)) throw new LocalError("STORAGE_FULL", { details: { freeBytes: free } });
+  if (!canCapture(input.meta.kind as MediaKind, free)) throw new LocalError("MEDIA_DEVICE_STORAGE_LOW", { details: { freeBytes: free } });
   const localUri = await files.persist(input.sourceUri, `${input.meta.id}.${extensionFor(input.meta.mimeType)}`);
   const thumbUri = input.thumbSourceUri === undefined ? undefined : await files.persist(input.thumbSourceUri, `${input.meta.id}_thumb.jpg`);
   const sizeBytes = input.meta.sizeBytes ?? (await files.size(localUri));
