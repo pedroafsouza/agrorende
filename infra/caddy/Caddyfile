@@ -1,0 +1,84 @@
+# AgroRende edge (T18, ARCHITECTURE §18.3). Caddy 2 with automatic HTTPS.
+#
+# Hosts come from the environment written by deploy.yml (/srv/agrorende/.env):
+#   SITE_HOST  public site, static files from /srv/site (the site artifact)
+#   APP_HOST   admin web and API, proxied to web:3000
+#   WS_HOST    realtime gateway (Socket.IO over WebSocket), proxied to realtime:4001
+# Staging uses staging.<domain>, app.staging.<domain> and ws.staging.<domain>.
+#
+# Validate locally:
+#   docker run --rm -v "$PWD/infra/caddy:/etc/caddy:ro" --entrypoint caddy caddy:2 \
+#     validate --config /etc/caddy/Caddyfile --adapter caddyfile
+{
+	email {$ACME_EMAIL:ops@agrorende.com.br}
+	servers {
+		# Only Caddy is published on the VM, so client addresses are taken from the TCP connection.
+		trusted_proxies static private_ranges
+	}
+}
+
+(security_headers) {
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		-Server
+	}
+}
+
+(access_log) {
+	log {
+		output stdout
+		format json
+	}
+}
+
+www.{$SITE_HOST:agrorende.com.br} {
+	redir https://{$SITE_HOST:agrorende.com.br}{uri} permanent
+}
+
+{$SITE_HOST:agrorende.com.br} {
+	import security_headers
+	import access_log
+	encode zstd gzip
+	root * /srv/site
+
+	@assets path /_next/static/* /_astro/* /assets/* *.css *.js *.woff2 *.png *.jpg *.jpeg *.webp *.avif *.svg *.ico
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+
+	@html not path /_next/static/* /_astro/* /assets/* *.css *.js *.woff2 *.png *.jpg *.jpeg *.webp *.avif *.svg *.ico
+	header @html Cache-Control "no-cache"
+
+	try_files {path} {path}/index.html {path}.html
+	file_server
+	handle_errors 404 {
+		rewrite * /404.html
+		file_server
+	}
+}
+
+{$APP_HOST:app.agrorende.com.br} {
+	import security_headers
+	import access_log
+	encode zstd gzip
+	# Media uploads go through the API: single PUTs up to 15 MB, larger files as 8 MiB parts
+	# (ARCHITECTURE §7.7), so 32 MB leaves headroom without accepting unbounded bodies.
+	request_body {
+		max_size 32MB
+	}
+	reverse_proxy web:3000 {
+		health_uri /api/v1/health
+		health_interval 15s
+	}
+}
+
+{$WS_HOST:ws.agrorende.com.br} {
+	import security_headers
+	import access_log
+	reverse_proxy realtime:4001 {
+		health_uri /health
+		health_interval 15s
+		# Keep WebSocket connections open across Caddy config reloads.
+		stream_close_delay 5m
+	}
+}

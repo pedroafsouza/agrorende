@@ -1,0 +1,268 @@
+# Release pipeline (T18, ARCHITECTURE §18.2 and §18.4, docs/RELEASING.md).
+#
+# - Pull requests: build every image (no login, no push) and the static site artifact.
+# - Push to main: build and push `sha-<12>` images with provenance to GHCR, then deploy staging.
+# - Tag vX.Y.Z: no rebuild. Check that the tagged commit is on main and was deployed to staging,
+#   re-tag the exact `sha-<12>` digests as `vX.Y.Z` with `docker buildx imagetools create`, and
+#   create the GitHub Release. Production is deployed by a human with deploy.yml.
+name: release
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  meta:
+    name: meta
+    runs-on: ubuntu-latest
+    outputs:
+      registry: ${{ steps.meta.outputs.registry }}
+      sha_tag: ${{ steps.meta.outputs.sha_tag }}
+      push: ${{ steps.meta.outputs.push }}
+    steps:
+      - name: Compute image names and tags
+        id: meta
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          sha="${PR_HEAD_SHA:-$GITHUB_SHA}"
+          echo "registry=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+          echo "sha_tag=sha-${sha:0:12}" >> "$GITHUB_OUTPUT"
+          # Images are pushed only from main. Pull requests and tags never push a build.
+          if [[ "$EVENT_NAME" == "push" && "$REF" == "refs/heads/main" ]]; then
+            echo "push=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "push=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  images:
+    name: image ${{ matrix.image }}
+    needs: meta
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: web
+            dockerfile: apps/web/Dockerfile
+            target: runner
+          - image: migrate
+            dockerfile: apps/web/Dockerfile
+            target: migrate
+          - image: realtime
+            dockerfile: apps/realtime/Dockerfile
+            target: ""
+          - image: worker
+            dockerfile: apps/worker/Dockerfile
+            target: ""
+          - image: backup
+            dockerfile: infra/backup/Dockerfile
+            target: ""
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: ${{ needs.meta.outputs.push == 'true' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build${{ needs.meta.outputs.push == 'true' && ' and push' || '' }}
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.image == 'backup' && 'infra/backup' || '.' }}
+          file: ${{ matrix.dockerfile }}
+          target: ${{ matrix.target }}
+          push: ${{ needs.meta.outputs.push == 'true' }}
+          provenance: ${{ needs.meta.outputs.push == 'true' && 'mode=max' || 'false' }}
+          sbom: ${{ needs.meta.outputs.push == 'true' }}
+          tags: ${{ needs.meta.outputs.registry }}/agrorende-${{ matrix.image }}:${{ needs.meta.outputs.sha_tag }}
+          labels: |
+            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+          build-args: |
+            APP_VERSION=${{ needs.meta.outputs.sha_tag }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+      - name: Attest build provenance
+        if: ${{ needs.meta.outputs.push == 'true' }}
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: ${{ needs.meta.outputs.registry }}/agrorende-${{ matrix.image }}
+          subject-digest: ${{ steps.build.outputs.digest }}
+          push-to-registry: true
+
+      - name: Record digest
+        if: ${{ needs.meta.outputs.push == 'true' }}
+        env:
+          IMAGE: ${{ needs.meta.outputs.registry }}/agrorende-${{ matrix.image }}:${{ needs.meta.outputs.sha_tag }}
+          DIGEST: ${{ steps.build.outputs.digest }}
+        run: echo "- \`$IMAGE\` → \`$DIGEST\`" >> "$GITHUB_STEP_SUMMARY"
+
+  site:
+    name: site
+    if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The public site (apps/site, T19) is optional until it lands; the job is a no-op without it.
+      - name: Check for the site package
+        id: site
+        run: |
+          if [[ -f apps/site/package.json ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Set up pnpm
+        if: ${{ steps.site.outputs.present == 'true' }}
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        if: ${{ steps.site.outputs.present == 'true' }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Build the static site
+        if: ${{ steps.site.outputs.present == 'true' }}
+        run: |
+          pnpm install --frozen-lockfile --filter "site..."
+          pnpm --filter site build
+
+      - name: Upload the site artifact
+        if: ${{ steps.site.outputs.present == 'true' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: apps/site/out
+          if-no-files-found: error
+          retention-days: 30
+
+  staging:
+    name: deploy staging
+    needs: [meta, images, site]
+    if: ${{ needs.meta.outputs.push == 'true' }}
+    permissions:
+      contents: read
+      deployments: read
+      packages: read
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: staging
+      image_tag: ${{ needs.meta.outputs.sha_tag }}
+    secrets: inherit
+
+  promote:
+    name: promote ${{ github.ref_name }}
+    needs: meta
+    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      packages: write
+      deployments: read
+    env:
+      REGISTRY: ${{ needs.meta.outputs.registry }}
+      SHA_TAG: ${{ needs.meta.outputs.sha_tag }}
+      VERSION: ${{ github.ref_name }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check the version tag
+        run: |
+          if [[ ! "$VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Release tags must look like vX.Y.Z (got $VERSION)."
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/main; then
+            echo "::error::$VERSION points at $GITHUB_SHA, which is not on main."
+            exit 1
+          fi
+
+      - name: Check that staging ran this commit
+        run: |
+          deployment_id="$(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=staging&sha=$GITHUB_SHA&per_page=20" --jq '.[].id' | head -n 20)"
+          for id in $deployment_id; do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses?per_page=1" --jq '.[0].state // ""')"
+            if [[ "$state" == "success" ]]; then
+              echo "Staging deployment $id of $GITHUB_SHA succeeded."
+              exit 0
+            fi
+          done
+          echo "::error::No successful staging deployment of $GITHUB_SHA. Wait for the main build to deploy staging, then push the tag again."
+          exit 1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Re-tag the staged digests
+        run: |
+          {
+            echo "## $VERSION"
+            echo
+            echo "Promoted from \`$SHA_TAG\` without rebuilding:"
+            echo
+          } > release-notes.md
+          for image in web migrate realtime worker backup; do
+            repo="$REGISTRY/agrorende-$image"
+            digest="$(docker buildx imagetools inspect "$repo:$SHA_TAG" --format '{{json .Manifest}}' | jq -r '.digest')"
+            if [[ -z "$digest" || "$digest" == "null" ]]; then
+              echo "::error::$repo:$SHA_TAG does not exist."
+              exit 1
+            fi
+            docker buildx imagetools create --tag "$repo:$VERSION" "$repo@$digest"
+            promoted="$(docker buildx imagetools inspect "$repo:$VERSION" --format '{{json .Manifest}}' | jq -r '.digest')"
+            if [[ "$promoted" != "$digest" ]]; then
+              echo "::error::$repo:$VERSION has digest $promoted, expected $digest."
+              exit 1
+            fi
+            echo "- \`$repo:$VERSION\` = \`$repo@$digest\`" | tee -a release-notes.md >> "$GITHUB_STEP_SUMMARY"
+          done
+
+      - name: Create the GitHub Release
+        run: |
+          gh release create "$VERSION" --verify-tag --title "$VERSION" --generate-notes --notes-file release-notes.md

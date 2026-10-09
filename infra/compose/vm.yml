@@ -1,0 +1,144 @@
+# AgroRende Phase 1 VM services (T18, ARCHITECTURE §18.3). Used together with app.yml:
+#
+#   cd /srv/agrorende
+#   docker compose -f app.yml -f vm.yml up -d                      # production (Atlas)
+#   COMPOSE_PROFILES=staging docker compose -f app.yml -f vm.yml up -d   # staging (VM MongoDB)
+#
+# deploy.yml copies app.yml, vm.yml and the Caddyfile to /srv/agrorende and writes
+# /srv/agrorende/.env (mode 600) from the GitHub Environment secrets. Host folders:
+#   /srv/agrorende/media   media files (mounted at /data/media in web, worker and backup)
+#   /srv/agrorende/caddy   certificates and Caddy state
+#   /srv/agrorende/redis   Redis append-only file
+#   /srv/agrorende/mongo   staging MongoDB data (profile `staging` only)
+#   /srv/agrorende/site    public site build
+# Only Caddy publishes ports (80 and 443). The OIDC mock of the root compose file is never part of
+# this deployment: staging and production use the real Google and Apple issuers.
+
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+x-vm-app: &vm-app
+  restart: unless-stopped
+  logging: *logging
+  ports: !reset []
+  depends_on:
+    redis:
+      condition: service_healthy
+    mongo:
+      condition: service_healthy
+      required: false
+
+x-vm-env: &vm-env
+  APP_ENV: ${APP_ENV:-production}
+  MONGODB_URI: ${MONGODB_URI:-mongodb://mongo:27017/?directConnection=true}
+  REDIS_URL: redis://redis:6379
+  APP_URL: https://${APP_HOST:-app.agrorende.com.br}
+  REALTIME_CORS_ORIGINS: https://${APP_HOST:-app.agrorende.com.br}
+
+services:
+  web:
+    <<: *vm-app
+    environment:
+      <<: *vm-env
+      NEXT_PUBLIC_REALTIME_URL: https://${WS_HOST:-ws.agrorende.com.br}
+    volumes: !override
+      - /srv/agrorende/media:/data/media
+
+  realtime:
+    <<: *vm-app
+    environment:
+      <<: *vm-env
+
+  worker:
+    <<: *vm-app
+    environment:
+      <<: *vm-env
+    volumes: !override
+      - /srv/agrorende/media:/data/media
+
+  migrate:
+    logging: *logging
+    depends_on:
+      mongo:
+        condition: service_healthy
+        required: false
+    environment:
+      <<: *vm-env
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    logging: *logging
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      ACME_EMAIL: ${ACME_EMAIL:-ops@agrorende.com.br}
+      SITE_HOST: ${SITE_HOST:-agrorende.com.br}
+      APP_HOST: ${APP_HOST:-app.agrorende.com.br}
+      WS_HOST: ${WS_HOST:-ws.agrorende.com.br}
+    volumes:
+      - /srv/agrorende/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /srv/agrorende/site:/srv/site:ro
+      - /srv/agrorende/caddy/data:/data
+      - /srv/agrorende/caddy/config:/config
+    depends_on:
+      web:
+        condition: service_healthy
+      realtime:
+        condition: service_healthy
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    logging: *logging
+    command: ["redis-server", "--appendonly", "yes", "--appendfsync", "everysec", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - /srv/agrorende/redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Staging only. Production uses MongoDB Atlas (MONGODB_URI in .env).
+  mongo:
+    image: mongo:8
+    profiles: ["staging"]
+    restart: unless-stopped
+    logging: *logging
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - /srv/agrorende/mongo:/data/db
+    ulimits:
+      nofile: { soft: 65536, hard: 65536 }
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'mongo:27017' }] }).ok }"]
+      interval: 5s
+      timeout: 10s
+      retries: 30
+      start_period: 10s
+
+  # Nightly restic snapshot of the media folder (and of the staging database when
+  # BACKUP_MONGO_URI is set) to the off-site repository in RESTIC_REPOSITORY.
+  backup:
+    image: ${IMAGE_REGISTRY:-ghcr.io/agrorende}/agrorende-backup:${IMAGE_TAG:-local}
+    restart: unless-stopped
+    logging: *logging
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      MONGODB_DB: ${MONGODB_DB:-agrorende}
+      RESTIC_REPOSITORY: ${RESTIC_REPOSITORY:-}
+      RESTIC_PASSWORD: ${RESTIC_PASSWORD:-}
+      AWS_ACCESS_KEY_ID: ${RESTIC_AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${RESTIC_AWS_SECRET_ACCESS_KEY:-}
+      AWS_DEFAULT_REGION: ${RESTIC_AWS_DEFAULT_REGION:-sa-east-1}
+      BACKUP_MONGO_URI: ${BACKUP_MONGO_URI:-}
+      BACKUP_HOUR: ${BACKUP_HOUR:-3}
+    volumes:
+      - /srv/agrorende/media:/data/media:ro
+      - /srv/agrorende/restore:/restore

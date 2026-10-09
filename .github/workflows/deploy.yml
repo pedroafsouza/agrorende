@@ -1,0 +1,348 @@
+# Phase 1 SSH deploy (T18, ARCHITECTURE §18.2–§18.4, docs/RELEASING.md).
+#
+# Called by release.yml for staging after every main build, and dispatched by a human for
+# production (and for rollbacks). Every connection goes to the VM of the selected GitHub
+# Environment; nothing here runs on a developer machine.
+#
+# Rules enforced by the `guard` job:
+#   - staging accepts `sha-<12>` tags of commits on main and `vX.Y.Z` tags (rollback);
+#   - production accepts only `vX.Y.Z` tags that release.yml promoted from a commit that staging
+#     already ran: the tag's image digests must equal the `sha-<12>` digests, and a successful
+#     staging deployment of that commit must exist.
+# The production GitHub Environment must have required reviewers and allow only `v*` tags and main.
+name: deploy
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: staging or production
+        type: string
+        required: true
+      image_tag:
+        description: Image tag to deploy (sha-<12> or vX.Y.Z)
+        type: string
+        required: true
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target environment
+        type: choice
+        options:
+          - staging
+          - production
+        required: true
+      image_tag:
+        description: Image tag to deploy (sha-<12> for staging, vX.Y.Z for production or rollback)
+        type: string
+        required: true
+
+permissions:
+  contents: read
+  deployments: read
+  packages: read
+
+concurrency:
+  group: deploy-${{ inputs.environment }}
+  cancel-in-progress: false
+
+jobs:
+  guard:
+    name: guard ${{ inputs.environment }} ${{ inputs.image_tag }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      commit: ${{ steps.resolve.outputs.commit }}
+      registry: ${{ steps.resolve.outputs.registry }}
+    env:
+      TARGET: ${{ inputs.environment }}
+      IMAGE_TAG: ${{ inputs.image_tag }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve the image tag to a commit
+        id: resolve
+        run: |
+          case "$TARGET" in
+            staging) pattern='^(sha-[0-9a-f]{12}|v[0-9]+\.[0-9]+\.[0-9]+)$' ;;
+            production) pattern='^v[0-9]+\.[0-9]+\.[0-9]+$' ;;
+            *) echo "::error::Unknown environment $TARGET."; exit 1 ;;
+          esac
+          if [[ ! "$IMAGE_TAG" =~ $pattern ]]; then
+            echo "::error::$TARGET does not accept the image tag '$IMAGE_TAG'."
+            exit 1
+          fi
+          if [[ "$IMAGE_TAG" == sha-* ]]; then
+            commit="$(git rev-parse --verify --quiet "${IMAGE_TAG#sha-}^{commit}" || true)"
+          else
+            commit="$(git rev-parse --verify --quiet "refs/tags/$IMAGE_TAG^{commit}" || true)"
+          fi
+          if [[ -z "$commit" ]]; then
+            echo "::error::No commit matches $IMAGE_TAG."
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$commit" origin/main; then
+            echo "::error::$commit is not on main."
+            exit 1
+          fi
+          echo "commit=$commit" >> "$GITHUB_OUTPUT"
+          echo "registry=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_OUTPUT"
+
+      - name: Check that production gets a tag staging already ran
+        if: ${{ inputs.environment == 'production' }}
+        env:
+          COMMIT: ${{ steps.resolve.outputs.commit }}
+        run: |
+          ok=false
+          for id in $(gh api "repos/$GITHUB_REPOSITORY/deployments?environment=staging&sha=$COMMIT&per_page=20" --jq '.[].id'); do
+            state="$(gh api "repos/$GITHUB_REPOSITORY/deployments/$id/statuses?per_page=1" --jq '.[0].state // ""')"
+            if [[ "$state" == "success" ]]; then ok=true; break; fi
+          done
+          if [[ "$ok" != "true" ]]; then
+            echo "::error::$IMAGE_TAG ($COMMIT) has no successful staging deployment."
+            exit 1
+          fi
+
+      - name: Log in to GHCR
+        if: ${{ inputs.environment == 'production' }}
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check that the release images are the staged digests
+        if: ${{ inputs.environment == 'production' }}
+        env:
+          COMMIT: ${{ steps.resolve.outputs.commit }}
+          REGISTRY: ${{ steps.resolve.outputs.registry }}
+        run: |
+          sha_tag="sha-${COMMIT:0:12}"
+          for image in web migrate realtime worker backup; do
+            repo="$REGISTRY/agrorende-$image"
+            staged="$(docker buildx imagetools inspect "$repo:$sha_tag" --format '{{json .Manifest}}' | jq -r '.digest')"
+            release="$(docker buildx imagetools inspect "$repo:$IMAGE_TAG" --format '{{json .Manifest}}' | jq -r '.digest')"
+            if [[ -z "$staged" || "$staged" == "null" || "$staged" != "$release" ]]; then
+              echo "::error::$repo:$IMAGE_TAG ($release) is not the staged $sha_tag ($staged). Promote it with release.yml."
+              exit 1
+            fi
+            echo "$repo:$IMAGE_TAG = $staged"
+          done
+
+  deploy:
+    name: deploy ${{ inputs.environment }} ${{ inputs.image_tag }}
+    needs: guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    environment:
+      name: ${{ inputs.environment }}
+      url: https://${{ vars.APP_HOST }}
+    env:
+      TARGET: ${{ inputs.environment }}
+      DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+      DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+      ENV_FILE: ${{ github.workspace }}/../agrorende.env
+    steps:
+      # Compose and Caddy files come from the commit of the image, so a rollback also rolls them back.
+      - name: Checkout the deployed commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.guard.outputs.commit }}
+
+      - name: Render the environment file
+        env:
+          APP_ENV: ${{ inputs.environment }}
+          IMAGE_REGISTRY: ${{ needs.guard.outputs.registry }}
+          IMAGE_TAG: ${{ inputs.image_tag }}
+          COMPOSE_PROFILES: ${{ inputs.environment == 'staging' && 'staging' || '' }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB: ${{ vars.MONGODB_DB || 'agrorende' }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          AUTH_ENCRYPTION_KEY: ${{ secrets.AUTH_ENCRYPTION_KEY }}
+          MEDIA_URL_SECRET: ${{ secrets.MEDIA_URL_SECRET }}
+          MEDIA_DRIVER: local
+          GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_OIDC_ISSUER: ${{ vars.GOOGLE_OIDC_ISSUER || 'https://accounts.google.com' }}
+          APPLE_SERVICES_ID: ${{ vars.APPLE_SERVICES_ID }}
+          APPLE_BUNDLE_IDS: ${{ vars.APPLE_BUNDLE_IDS }}
+          APPLE_CLIENT_ID: ${{ vars.APPLE_CLIENT_ID }}
+          APPLE_TEAM_ID: ${{ vars.APPLE_TEAM_ID }}
+          APPLE_KEY_ID: ${{ secrets.APPLE_KEY_ID }}
+          APPLE_PRIVATE_KEY: ${{ secrets.APPLE_PRIVATE_KEY }}
+          APPLE_OIDC_ISSUER: ${{ vars.APPLE_OIDC_ISSUER || 'https://appleid.apple.com' }}
+          OAUTH_MOBILE_SCHEMES: ${{ vars.OAUTH_MOBILE_SCHEMES }}
+          PLATFORM_ADMIN_EMAILS: ${{ vars.PLATFORM_ADMIN_EMAILS }}
+          PLATFORM_SUPPORT_WHATSAPP: ${{ vars.PLATFORM_SUPPORT_WHATSAPP }}
+          TRIAL_DAYS: ${{ vars.TRIAL_DAYS }}
+          TERMS_VERSION: ${{ vars.TERMS_VERSION }}
+          SITE_HOST: ${{ vars.SITE_HOST }}
+          APP_HOST: ${{ vars.APP_HOST }}
+          WS_HOST: ${{ vars.WS_HOST }}
+          APP_URL: https://${{ vars.APP_HOST }}
+          SITE_URL: https://${{ vars.SITE_HOST }}
+          ACME_EMAIL: ${{ vars.ACME_EMAIL }}
+          EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          RESTIC_REPOSITORY: ${{ secrets.RESTIC_REPOSITORY }}
+          RESTIC_PASSWORD: ${{ secrets.RESTIC_PASSWORD }}
+          RESTIC_AWS_ACCESS_KEY_ID: ${{ secrets.RESTIC_AWS_ACCESS_KEY_ID }}
+          RESTIC_AWS_SECRET_ACCESS_KEY: ${{ secrets.RESTIC_AWS_SECRET_ACCESS_KEY }}
+          RESTIC_AWS_DEFAULT_REGION: ${{ vars.RESTIC_AWS_DEFAULT_REGION || 'sa-east-1' }}
+          BACKUP_MONGO_URI: ${{ inputs.environment == 'staging' && 'mongodb://mongo:27017/?directConnection=true' || '' }}
+          BACKUP_HOUR: ${{ vars.BACKUP_HOUR || '3' }}
+        run: |
+          python3 infra/scripts/render-env.py "$ENV_FILE" \
+            APP_ENV IMAGE_REGISTRY IMAGE_TAG COMPOSE_PROFILES \
+            MONGODB_URI MONGODB_DB JWT_SECRET AUTH_ENCRYPTION_KEY MEDIA_URL_SECRET MEDIA_DRIVER \
+            GOOGLE_CLIENT_ID GOOGLE_CLIENT_SECRET GOOGLE_OIDC_ISSUER \
+            APPLE_SERVICES_ID APPLE_BUNDLE_IDS APPLE_CLIENT_ID APPLE_TEAM_ID APPLE_KEY_ID APPLE_PRIVATE_KEY APPLE_OIDC_ISSUER \
+            OAUTH_MOBILE_SCHEMES PLATFORM_ADMIN_EMAILS PLATFORM_SUPPORT_WHATSAPP TRIAL_DAYS TERMS_VERSION \
+            SITE_HOST APP_HOST WS_HOST APP_URL SITE_URL ACME_EMAIL EXPO_ACCESS_TOKEN SENTRY_DSN \
+            RESTIC_REPOSITORY RESTIC_PASSWORD RESTIC_AWS_ACCESS_KEY_ID RESTIC_AWS_SECRET_ACCESS_KEY RESTIC_AWS_DEFAULT_REGION \
+            BACKUP_MONGO_URI BACKUP_HOUR
+
+      # Rejects the local OIDC mock, placeholder secrets and missing keys before touching the VM.
+      - name: Validate the environment file
+        run: bash infra/scripts/validate-env.sh "$TARGET" "$ENV_FILE"
+
+      - name: Check for the site package
+        id: site
+        run: |
+          if [[ -f apps/site/package.json ]]; then echo "present=true" >> "$GITHUB_OUTPUT"; else echo "present=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build the static site
+        if: ${{ steps.site.outputs.present == 'true' }}
+        run: pnpm --filter site build
+
+      - name: Set up SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_SSH_KEY DEPLOY_KNOWN_HOSTS; do
+            if [[ -z "${!name}" ]]; then echo "::error::The $TARGET environment has no $name secret."; exit 1; fi
+          done
+          install -d -m 700 ~/.ssh
+          install -m 600 /dev/null ~/.ssh/agrorende_deploy
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/agrorende_deploy
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          cat > ~/.ssh/config <<EOF
+          Host agrorende-vm
+            HostName $DEPLOY_HOST
+            User $DEPLOY_USER
+            IdentityFile ~/.ssh/agrorende_deploy
+            IdentitiesOnly yes
+            StrictHostKeyChecking yes
+            ServerAliveInterval 30
+          EOF
+          chmod 600 ~/.ssh/config ~/.ssh/known_hosts
+
+      - name: Copy compose files, Caddyfile, site and environment
+        run: |
+          ssh agrorende-vm 'install -d -m 755 /srv/agrorende/site /srv/agrorende/restore'
+          scp infra/compose/app.yml infra/compose/vm.yml infra/caddy/Caddyfile agrorende-vm:/srv/agrorende/
+          ssh agrorende-vm 'umask 077 && cat > /srv/agrorende/.env.next && mv /srv/agrorende/.env.next /srv/agrorende/.env && chmod 600 /srv/agrorende/.env' < "$ENV_FILE"
+          if [[ -d apps/site/out ]]; then
+            rsync -a --delete apps/site/out/ agrorende-vm:/srv/agrorende/site/
+          fi
+
+      - name: Pull images
+        env:
+          GHCR_READ_USER: ${{ vars.GHCR_READ_USER }}
+          GHCR_READ_TOKEN: ${{ secrets.GHCR_READ_TOKEN }}
+        run: |
+          # shellcheck disable=SC2029 # the user name is expanded on the runner on purpose
+          printf '%s' "$GHCR_READ_TOKEN" | ssh agrorende-vm "docker login ghcr.io --username '$GHCR_READ_USER' --password-stdin"
+          ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml --profile migrate pull --quiet'
+
+      # Release order (ARCHITECTURE §18.4): migrations, then worker and realtime, then web, then edge.
+      - name: Run migrations
+        run: |
+          # Naming a service enables its profile, so mongo is listed only on staging.
+          services=redis
+          if [[ "$TARGET" == "staging" ]]; then services="redis mongo"; fi
+          # shellcheck disable=SC2029 # the service list is expanded on the runner on purpose
+          ssh agrorende-vm "cd /srv/agrorende && docker compose -f app.yml -f vm.yml up -d --wait $services"
+          ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml run --rm migrate'
+
+      - name: Roll worker and realtime
+        run: ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml up -d --wait --no-deps worker realtime'
+
+      - name: Roll web
+        run: ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml up -d --wait --no-deps web'
+
+      - name: Roll caddy and backup
+        run: |
+          ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml up -d --wait --no-deps caddy backup'
+          ssh agrorende-vm 'docker compose -f /srv/agrorende/app.yml -f /srv/agrorende/vm.yml exec -T caddy caddy reload --config /etc/caddy/Caddyfile'
+
+      - name: Record the running images
+        run: |
+          {
+            echo "### $TARGET runs ${{ inputs.image_tag }}"
+            echo
+            echo '```'
+            ssh agrorende-vm 'cd /srv/agrorende && docker compose -f app.yml -f vm.yml images'
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Wait for public health
+        env:
+          APP_HOST: ${{ vars.APP_HOST }}
+          WS_HOST: ${{ vars.WS_HOST }}
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS "https://$APP_HOST/api/v1/health" > /dev/null && curl -fsS "https://$WS_HOST/health" > /dev/null; then
+              echo "Healthy after $attempt attempt(s)."
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::https://$APP_HOST/api/v1/health or https://$WS_HOST/health did not become healthy."
+          exit 1
+
+      # Staging always runs the smoke. Production runs it only when a dedicated smoke account exists,
+      # because the smoke writes a field report and an export.
+      - name: Smoke
+        env:
+          APP_HOST: ${{ vars.APP_HOST }}
+          WS_HOST: ${{ vars.WS_HOST }}
+          SMOKE_FIELD_EMAIL: ${{ secrets.SMOKE_FIELD_EMAIL }}
+          SMOKE_FIELD_PASSWORD: ${{ secrets.SMOKE_FIELD_PASSWORD }}
+          SMOKE_OFFICE_EMAIL: ${{ secrets.SMOKE_OFFICE_EMAIL }}
+          SMOKE_OFFICE_PASSWORD: ${{ secrets.SMOKE_OFFICE_PASSWORD }}
+        run: |
+          if [[ -z "$SMOKE_FIELD_EMAIL" ]]; then
+            if [[ "$TARGET" == "staging" ]]; then
+              echo "::error::Staging needs the SMOKE_FIELD_EMAIL, SMOKE_FIELD_PASSWORD, SMOKE_OFFICE_EMAIL and SMOKE_OFFICE_PASSWORD secrets."
+              exit 1
+            fi
+            echo "::notice::No smoke account for $TARGET; the health checks above are the deploy check."
+            exit 0
+          fi
+          pnpm smoke --base-url "https://$APP_HOST" --ws-url "https://$WS_HOST"
+
+      - name: Clean up
+        if: ${{ always() }}
+        run: |
+          ssh agrorende-vm 'docker logout ghcr.io >/dev/null; docker image prune -f >/dev/null' || true
+          rm -f "$ENV_FILE" ~/.ssh/agrorende_deploy ~/.ssh/config

@@ -1,0 +1,231 @@
+# Mobile releases with EAS (T18, ARCHITECTURE §13.6, §18.2 and §18.4, docs/RELEASING.md).
+#
+# The runtime version is the Expo fingerprint (`runtimeVersion: { policy: "fingerprint" }`):
+#   - when a finished EAS build of the profile already has this runtime version, the JavaScript
+#     ships over the air with `eas update --channel <profile>`;
+#   - otherwise a native change happened, so EAS cloud builds start (`eas build --non-interactive
+#     --no-wait`), and production builds are submitted to the stores when they finish
+#     (`--auto-submit`).
+# Builds run in the EAS cloud with the EXPO_TOKEN secret; nothing is built or published from a
+# developer machine. Tags vX.Y.Z run the production profile on both platforms.
+# Pull requests labelled `mobile-preview` get an update on the branch `pr-<number>` and a QR comment.
+name: mobile
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: EAS build profile and update channel
+        type: choice
+        options:
+          - preview
+          - production
+        required: true
+        default: preview
+      platform:
+        description: Platform
+        type: choice
+        options:
+          - android
+          - ios
+          - all
+        required: true
+        default: all
+  push:
+    tags:
+      - "v*"
+  pull_request:
+    types: [labeled, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile-${{ github.ref }}-${{ inputs.profile || 'production' }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    name: plan
+    if: ${{ github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    outputs:
+      profile: ${{ steps.plan.outputs.profile }}
+      platforms: ${{ steps.plan.outputs.platforms }}
+    steps:
+      - name: Choose profile and platforms
+        id: plan
+        env:
+          PROFILE: ${{ inputs.profile || 'production' }}
+          PLATFORM: ${{ inputs.platform || 'all' }}
+        run: |
+          echo "profile=$PROFILE" >> "$GITHUB_OUTPUT"
+          if [[ "$PLATFORM" == "all" ]]; then
+            echo 'platforms=["android","ios"]' >> "$GITHUB_OUTPUT"
+          else
+            echo "platforms=[\"$PLATFORM\"]" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    name: ${{ needs.plan.outputs.profile }} ${{ matrix.platform }}
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: ${{ needs.plan.outputs.profile == 'production' && 'production' || 'staging' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: ${{ fromJSON(needs.plan.outputs.platforms) }}
+    defaults:
+      run:
+        working-directory: apps/mobile
+    env:
+      PROFILE: ${{ needs.plan.outputs.profile }}
+      PLATFORM: ${{ matrix.platform }}
+      APP_VARIANT: ${{ needs.plan.outputs.profile }}
+      EAS_UPDATE_URL: ${{ vars.EAS_UPDATE_URL }}
+      # Read by app.config.ts once change request T18-004 is applied.
+      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
+      EXPO_PUBLIC_APP_ENV: ${{ needs.plan.outputs.profile == 'production' && 'production' || 'staging' }}
+      EXPO_PUBLIC_API_URL: https://${{ vars.APP_HOST }}
+      EXPO_PUBLIC_WS_URL: https://${{ vars.WS_HOST }}
+      EXPO_PUBLIC_SITE_URL: https://${{ vars.SITE_HOST }}
+      EXPO_PUBLIC_SUPPORT_WHATSAPP: ${{ vars.PLATFORM_SUPPORT_WHATSAPP }}
+      EXPO_PUBLIC_SENTRY_DSN: ${{ vars.EXPO_PUBLIC_SENTRY_DSN }}
+    steps:
+      - name: Require EXPO_TOKEN
+        working-directory: .
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [[ -z "$EXPO_TOKEN" ]]; then
+            echo "::error::Set the EXPO_TOKEN secret (an Expo robot access token) to run EAS builds and updates."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        working-directory: .
+        run: pnpm install --frozen-lockfile --filter "mobile..."
+
+      - name: Set up EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: pnpm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Compute the fingerprint
+        id: fingerprint
+        run: |
+          runtime="$(npx expo-updates runtimeversion:resolve --platform "$PLATFORM" | jq -r '.runtimeVersion')"
+          if [[ -z "$runtime" || "$runtime" == "null" ]]; then
+            echo "::error::Could not resolve the $PLATFORM runtime version."
+            exit 1
+          fi
+          echo "runtime=$runtime" >> "$GITHUB_OUTPUT"
+          builds="$(eas build:list --platform "$PLATFORM" --build-profile "$PROFILE" --runtime-version "$runtime" \
+            --status finished --limit 1 --json --non-interactive)"
+          if [[ "$(jq 'length' <<< "$builds")" -gt 0 ]]; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "$PROFILE $PLATFORM: runtime $runtime already has a build; shipping an EAS Update." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "$PROFILE $PLATFORM: runtime $runtime is new; starting an EAS cloud build." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Publish an EAS Update
+        if: ${{ steps.fingerprint.outputs.changed == 'false' }}
+        env:
+          MESSAGE: ${{ github.ref_name }} ${{ github.sha }}
+        run: |
+          eas update --channel "$PROFILE" --platform "$PLATFORM" --message "$MESSAGE" --non-interactive --json > "eas-update-$PLATFORM.json"
+          jq -r '.[] | "- update group \(.group) for \(.platform), runtime \(.runtimeVersion)"' "eas-update-$PLATFORM.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Start an EAS cloud build
+        if: ${{ steps.fingerprint.outputs.changed == 'true' }}
+        run: |
+          submit=()
+          if [[ "$PROFILE" == "production" ]]; then submit=(--auto-submit); fi
+          eas build --profile "$PROFILE" --platform "$PLATFORM" --non-interactive --no-wait --json "${submit[@]}" > "eas-build-$PLATFORM.json"
+          jq -r '.[] | "- build \(.id): https://expo.dev/accounts/\(.project.ownerAccount.name)/projects/\(.project.slug)/builds/\(.id)"' "eas-build-$PLATFORM.json" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload EAS results
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: eas-${{ needs.plan.outputs.profile }}-${{ matrix.platform }}
+          path: apps/mobile/eas-*.json
+          if-no-files-found: ignore
+          retention-days: 30
+
+  pr-preview:
+    name: pr preview
+    if: >-
+      ${{ github.event_name == 'pull_request'
+          && contains(github.event.pull_request.labels.*.name, 'mobile-preview')
+          && github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      APP_VARIANT: preview
+      EAS_UPDATE_URL: ${{ vars.EAS_UPDATE_URL }}
+      # Read by app.config.ts once change request T18-004 is applied.
+      EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
+      EXPO_PUBLIC_APP_ENV: staging
+    steps:
+      - name: Require EXPO_TOKEN
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [[ -z "$EXPO_TOKEN" ]]; then
+            echo "::error::Set the EXPO_TOKEN secret to publish pull request previews."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter "mobile..."
+
+      - name: Set up EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          packager: pnpm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Publish the preview and comment the QR code
+        uses: expo/expo-github-action/preview@v8
+        with:
+          working-directory: apps/mobile
+          command: eas update --branch pr-${{ github.event.pull_request.number }} --message "PR ${{ github.event.pull_request.number }}" --non-interactive
+          comment: true

@@ -1,0 +1,115 @@
+# AgroRende application services (T18, ARCHITECTURE §16.2 and §18.3).
+#
+# Local production-like run, as an override of the root compose file (MongoDB, Redis, OIDC mock):
+#
+#   WEB_PORT=3200 REALTIME_PORT=4201 WORKER_PORT=4202 MONGODB_DB=agrorende_t18 \
+#   MEDIA_ROOT_HOST=./.data/media-t18 \
+#   docker compose -f docker-compose.yml -f infra/compose/app.yml up -d --build --wait web realtime worker
+#   docker compose -f docker-compose.yml -f infra/compose/app.yml rm --stop --force web realtime worker
+#
+# On the Phase 1 VM it runs with infra/compose/vm.yml from /srv/agrorende (see infra/vm/README.md).
+#
+# Relative paths resolve against the folder of the first compose file: the repository root locally,
+# /srv/agrorende on the VM. Every setting comes from the environment at start; images contain no
+# .env file. WEB_PORT, REALTIME_PORT and WORKER_PORT are host ports only: inside the containers the
+# services always listen on 3000, 4001 and 4002.
+
+x-app-env: &app-env
+  APP_ENV: ${APP_ENV:-local}
+  MONGODB_DB: ${MONGODB_DB:-agrorende}
+  # Container addresses: localhost in the developer .env points at the container itself.
+  MONGODB_URI: ${APP_MONGODB_URI:-mongodb://mongo:27017/?directConnection=true}
+  REDIS_URL: ${APP_REDIS_URL:-redis://redis:6379}
+  MEDIA_ROOT: /data/media
+  APP_URL: ${APP_PUBLIC_URL:-http://localhost:${WEB_PORT:-3000}}
+  REALTIME_CORS_ORIGINS: ${APP_REALTIME_CORS_ORIGINS:-http://localhost:${WEB_PORT:-3000}}
+
+x-app-service: &app-service
+  env_file:
+    - path: .env
+      required: false
+  extra_hosts:
+    - host.docker.internal:host-gateway
+  # Media files are owned by uid 1000 (`node` in the images).
+  user: "1000:1000"
+
+services:
+  web:
+    <<: *app-service
+    image: ${IMAGE_REGISTRY:-ghcr.io/agrorende}/agrorende-web:${IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: runner
+      args:
+        APP_VERSION: ${APP_VERSION:-0.0.0-local}
+    environment:
+      <<: *app-env
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+      NEXT_PUBLIC_REALTIME_URL: ${APP_REALTIME_PUBLIC_URL:-http://localhost:${REALTIME_PORT:-4001}}
+    ports:
+      - 127.0.0.1:${WEB_PORT:-3000}:3000
+    volumes:
+      - ${MEDIA_ROOT_HOST:-./.data/media}:/data/media
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
+
+  realtime:
+    <<: *app-service
+    image: ${IMAGE_REGISTRY:-ghcr.io/agrorende}/agrorende-realtime:${IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: apps/realtime/Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-0.0.0-local}
+    environment:
+      <<: *app-env
+      REALTIME_PORT: "4001"
+    ports:
+      - 127.0.0.1:${REALTIME_PORT:-4001}:4001
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4001/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  worker:
+    <<: *app-service
+    image: ${IMAGE_REGISTRY:-ghcr.io/agrorende}/agrorende-worker:${IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: apps/worker/Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-0.0.0-local}
+    environment:
+      <<: *app-env
+      WORKER_HEALTH_PORT: "4002"
+    ports:
+      - 127.0.0.1:${WORKER_PORT:-4002}:4002
+    volumes:
+      - ${MEDIA_ROOT_HOST:-./.data/media}:/data/media
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4002/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  # One-off: `docker compose ... run --rm migrate` (the same code as `pnpm db:migrate`).
+  migrate:
+    <<: *app-service
+    profiles: ["migrate"]
+    image: ${IMAGE_REGISTRY:-ghcr.io/agrorende}/agrorende-migrate:${IMAGE_TAG:-local}
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      target: migrate
+    environment:
+      <<: *app-env
+    restart: "no"
