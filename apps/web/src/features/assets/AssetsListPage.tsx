@@ -2,23 +2,26 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Plus, Tractor } from "lucide-react";
+import { Plus, QrCode, Tractor, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { ConditionBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { EmptyState } from "@/components/data/States";
+import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
-import { buttonVariants } from "@/components/ui/Button";
+import { Button, buttonVariants } from "@/components/ui/Button";
 import { Checkbox, Input, Select } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatNumber } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
 import { useUrlState } from "@/lib/url-state";
 
+import { fetchQrSheet, QR_SHEET_MAX_ASSETS, saveFile } from "./qrSheetApi";
 import { CATEGORIES, CONDITIONS, type AssetDTO } from "./types";
 
 const KEYS = ["q", "category", "condition", "includeRetired", "cursor"] as const;
@@ -33,8 +36,47 @@ export function AssetsListPage() {
     queryKey: ["assets", filters],
     queryFn: () => api<ListPage<AssetDTO>>("/assets", { query: { ...filters, limit: 50 } }),
   });
+  const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
+  const [printing, setPrinting] = useState(false);
+  const [printError, setPrintError] = useState<unknown>(null);
+  const pageIds = useMemo(() => (query.data?.items ?? []).map((asset) => asset.id), [query.data]);
+  const allOnPage = pageIds.length > 0 && pageIds.every((id) => selected.has(id));
+  const toggle = (ids: readonly string[], on: boolean) =>
+    setSelected((current) => {
+      const next = new Set(current);
+      for (const id of ids) {
+        if (on) next.add(id);
+        else next.delete(id);
+      }
+      return next;
+    });
+  const printLabels = async () => {
+    setPrinting(true);
+    setPrintError(null);
+    try {
+      saveFile(await fetchQrSheet([...selected]));
+      toast.success(t("qr.ready", { count: selected.size }));
+    } catch (error) {
+      setPrintError(error);
+    } finally {
+      setPrinting(false);
+    }
+  };
   const columns = useMemo<ColumnDef<AssetDTO, unknown>[]>(
     () => [
+      {
+        id: "select",
+        header: () => (
+          <span className="flex size-12 items-center justify-center">
+            <input aria-label={t("qr.selectPage")} checked={allOnPage} className="size-5 accent-[var(--ar-primary)]" onChange={(e) => toggle(pageIds, e.target.checked)} type="checkbox" />
+          </span>
+        ),
+        cell: (c) => (
+          <span className="flex size-12 items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <input aria-label={t("qr.select", { code: c.row.original.code })} checked={selected.has(c.row.original.id)} className="size-5 accent-[var(--ar-primary)]" onChange={(e) => toggle([c.row.original.id], e.target.checked)} type="checkbox" />
+          </span>
+        ),
+      },
       { header: t("fields.code"), accessorKey: "code", cell: (c) => <span className="font-mono font-semibold">{c.row.original.code}</span> },
       { header: t("fields.name"), accessorKey: "name" },
       { header: t("fields.category"), accessorKey: "category", cell: (c) => common(`category.${c.row.original.category}`) },
@@ -42,7 +84,7 @@ export function AssetsListPage() {
       { header: t("fields.hourMeter"), accessorKey: "hourMeter", cell: (c) => formatNumber(c.row.original.hourMeter, locale, 1) },
       { header: t("fields.isRentable"), accessorKey: "isRentable", cell: (c) => (c.row.original.isRentable ? common("yes") : common("no")) },
     ],
-    [t, common, locale],
+    [t, common, locale, selected, allOnPage, pageIds],
   );
   const filtered = filters.q.length > 0 || filters.category.length > 0 || filters.condition.length > 0;
   return (
@@ -56,6 +98,19 @@ export function AssetsListPage() {
         }
         title={t("list.title")}
       />
+      {selected.size === 0 ? null : (
+        <div aria-live="polite" className="flex flex-wrap items-center gap-3 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface-muted)] p-3" role="region" aria-label={t("qr.bulkRegion")}>
+          <p className="font-semibold">{t("qr.selected", { count: selected.size })}</p>
+          <Button busy={printing} disabled={selected.size > QR_SHEET_MAX_ASSETS} icon={<QrCode aria-hidden="true" className="size-4" />} onClick={() => void printLabels()} variant="primary">
+            {t("qr.print")}
+          </Button>
+          <Button icon={<X aria-hidden="true" className="size-4" />} onClick={() => { setSelected(new Set()); setPrintError(null); }} variant="ghost">
+            {t("qr.clear")}
+          </Button>
+          {selected.size > QR_SHEET_MAX_ASSETS ? <p className="text-sm font-semibold text-[var(--ar-danger)]">{t("qr.tooMany", { max: QR_SHEET_MAX_ASSETS })}</p> : null}
+        </div>
+      )}
+      {printError === null ? null : <ErrorAlert compact error={printError} onRetry={() => void printLabels()} />}
       <DataTable
         caption={t("list.title")}
         columns={columns}

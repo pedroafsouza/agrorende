@@ -1,1 +1,74 @@
-{}
+{
+  "status": { "DRAFT": "Draft", "ISSUED": "Issued", "PAID": "Paid", "CANCELLED": "Cancelled" },
+  "source": { "WORK_ORDER": "Work order", "RENTAL": "Rental", "MANUAL": "Manual" },
+  "tabs": { "ALL": "All", "DRAFT": "Drafts", "ISSUED": "Issued", "PAID": "Paid", "CANCELLED": "Cancelled" },
+  "list": {
+    "title": "Billing",
+    "tabsLabel": "Filter billing documents by status",
+    "allSources": "All sources",
+    "emptyTitle": "No billing documents yet",
+    "emptyBody": "Bill a finished work order from its page, or create a manual document here. Closed rentals are billed automatically."
+  },
+  "actions": {
+    "new": "New billing document",
+    "pdf": "Billing PDF",
+    "edit": "Edit draft",
+    "issue": "Issue",
+    "pay": "Mark as paid",
+    "cancel": "Cancel document",
+    "createFromSource": "Create billing document",
+    "open": "Open billing document"
+  },
+  "fields": {
+    "number": "Number",
+    "source": "Source",
+    "customer": "Customer",
+    "status": "Status",
+    "issuedAt": "Issued at",
+    "dueAt": "Due date",
+    "paidAt": "Paid at",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "nfeNumber": "NF-e number",
+    "nfeKey": "NF-e access key",
+    "notes": "Notes"
+  },
+  "lines": {
+    "title": "Lines",
+    "row": "Line {index}",
+    "description": "Description",
+    "quantity": "Quantity",
+    "unitAmount": "Unit amount",
+    "amount": "Amount",
+    "invalid": "Fill in the description, quantity and unit amount.",
+    "remove": "Remove line {index}",
+    "removeShort": "Remove",
+    "add": "Add line",
+    "discountHint": "Subtracted from the subtotal. It cannot be more than the subtotal."
+  },
+  "create": {
+    "title": "New billing document",
+    "confirm": "Create draft",
+    "manualBody": "Choose the customer and add the lines. The document starts as a draft you can still edit.",
+    "sourceBody": "The lines come from the source. Review them; the document starts as a draft you can still edit.",
+    "customerRequired": "Choose the customer to bill.",
+    "customerHint": "The source has no customer. Choose who receives this document."
+  },
+  "detail": { "title": "Billing document {number}", "summary": "Summary" },
+  "issue": {
+    "title": "Issue billing document",
+    "body": "After issuing, the lines can no longer be edited. You can still cancel it.",
+    "nfeHint": "Optional. Reference to an NF-e issued in your fiscal system.",
+    "nfeKeyInvalid": "The access key has 44 digits. Check it and try again."
+  },
+  "pay": { "title": "Mark as paid", "body": "Confirm that {total} was received." },
+  "cancel": { "title": "Cancel billing document", "body": "The document stays in the history marked as cancelled. This cannot be undone.", "reason": "Reason" },
+  "edit": { "title": "Edit draft" },
+  "panel": {
+    "title": "Billing",
+    "noneBody": "No billing document yet for this record.",
+    "existsBody": "This record already has a billing document."
+  },
+  "toast": { "issued": "Billing document issued", "paid": "Marked as paid", "cancelled": "Billing document cancelled", "updated": "Draft saved" }
+}

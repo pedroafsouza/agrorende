@@ -1,1 +1,132 @@
-{}
+{
+  "title": "Analytics",
+  "subtitle": "How fast the team fixes machines, where breakdowns come from and what the fleet costs and earns.",
+  "filters": {
+    "label": "Analytics filters",
+    "from": "From",
+    "to": "To",
+    "season": "Season",
+    "allSeasons": "All seasons",
+    "defaultRange": "Showing the last 30 days. Dates follow the organisation time zone.",
+    "timezone": "Dates follow the organisation time zone."
+  },
+  "tabs": {
+    "label": "Analytics sections",
+    "operations": "Operations",
+    "costs": "Costs"
+  },
+  "metrics": {
+    "mttr": {
+      "title": "Mean time to repair",
+      "description": "Median hours from opening to completing a work order, per week.",
+      "summary": "Median for the period",
+      "key": "Week",
+      "value": "Median",
+      "secondary": "Completed work orders"
+    },
+    "first_time_fix": {
+      "title": "First-time fix rate",
+      "description": "Completed work orders never reopened and never held waiting for parts.",
+      "summary": "Share for the period",
+      "key": "Week",
+      "value": "Fixed first time",
+      "secondary": "Completed work orders"
+    },
+    "reports_by_category": {
+      "title": "Field reports by category",
+      "description": "Problems reported from the field in the period.",
+      "summary": "Reports in the period",
+      "key": "Category",
+      "value": "Reports"
+    },
+    "wos_by_field_user": {
+      "title": "Work orders by field user",
+      "description": "Completed work orders per assignee and their median working time.",
+      "summary": "Completed work orders",
+      "key": "Field user",
+      "value": "Completed",
+      "secondary": "Median work time"
+    },
+    "downtime": {
+      "title": "Downtime by machine",
+      "description": "Hours each machine spent out of operational condition. Retired machines are left out.",
+      "summary": "Total downtime",
+      "key": "Machine",
+      "value": "Downtime"
+    },
+    "top_failing": {
+      "title": "Machines with most failures",
+      "description": "Top 10 machines by field reports plus corrective work orders.",
+      "summary": "Reports and corrective work orders",
+      "key": "Machine",
+      "value": "Reports and work orders",
+      "secondary": "Corrective work orders"
+    },
+    "rental_utilization": {
+      "title": "Rental utilisation",
+      "description": "Share of the period each rentable machine spent rented out.",
+      "summary": "Fleet utilisation",
+      "key": "Machine",
+      "value": "Utilisation",
+      "secondary": "Days rented"
+    },
+    "rental_revenue": {
+      "title": "Rental revenue",
+      "description": "Closed rentals per month. Rented-in machines appear as cost.",
+      "summary": "Revenue in the period",
+      "key": "Month",
+      "value": "Revenue",
+      "secondary": "Rented-in cost"
+    }
+  },
+  "units": {
+    "hours": "{value} h",
+    "percent": "{value}%",
+    "minutes": "{value} min",
+    "days": "{value} d"
+  },
+  "noValue": "—",
+  "weekOf": "Week of {date}",
+  "unassigned": "Unassigned",
+  "table": {
+    "show": "Show the numbers",
+    "caption": "{metric}: data behind the chart"
+  },
+  "empty": {
+    "title": "Nothing in this period",
+    "body": "Pick a wider date range or another season."
+  },
+  "categories": {
+    "ENGINE": "Engine",
+    "HYDRAULIC": "Hydraulics",
+    "ELECTRICAL": "Electrical",
+    "TRANSMISSION": "Transmission",
+    "TIRES_TRACKS": "Tyres and tracks",
+    "BRAKES": "Brakes",
+    "STRUCTURE": "Structure",
+    "CAB": "Cab",
+    "IMPLEMENT": "Implement",
+    "LEAK": "Leak",
+    "SAFETY": "Safety",
+    "OTHER": "Other"
+  },
+  "cost": {
+    "title": "Cost dashboard",
+    "groupBy": "Group by",
+    "groups": {
+      "asset": "Machine",
+      "site": "Farm",
+      "season": "Season"
+    },
+    "details": "Open cost details",
+    "laborHidden": "Labour cost is hidden for managers in this organisation.",
+    "caption": "Costs by {group}",
+    "columns": {
+      "laborCents": "Labour",
+      "partsCents": "Parts",
+      "rentInCostCents": "Rented-in machines",
+      "totalCostCents": "Total cost",
+      "rentalRevenueCents": "Rental revenue"
+    }
+  }
+}

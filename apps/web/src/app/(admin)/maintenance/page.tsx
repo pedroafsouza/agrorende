@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { MaintenanceIntl } from "@/features/maintenance/MaintenanceIntl";
+import { MaintenancePage } from "@/features/maintenance/MaintenancePage";
 
-export default function Adminmaintenancepage() {
-  return <PlaceholderPage descriptionKey="page.maintenance.description" route="/maintenance" titleKey="page.maintenance.title" />;
+export default function AdminMaintenancePage() {
+  return (
+    <MaintenanceIntl>
+      <MaintenancePage />
+    </MaintenanceIntl>
+  );
 }

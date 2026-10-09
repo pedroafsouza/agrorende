@@ -81,7 +81,7 @@
     "notificationsLabel": "{count, plural, =0 {Notificações} one {Notificações, # não lida} other {Notificações, # não lidas}}",
     "openMenu": "Abrir menu",
     "search": "Buscar",
-    "searchSoon": "A busca global chega em breve",
+    "searchSoon": "Buscar… pressione Ctrl+K ou ⌘K",
     "sidebar": "Menu lateral",
     "signOut": "Sair",
     "skipToContent": "Pular para o conteúdo",
@@ -124,5 +124,33 @@
     "themeVars": "Variáveis do tema atual",
     "title": "Guia visual — Campo claro",
     "tokens": "Tokens"
+  },
+  "commandPalette": {
+    "label": "Busca e comandos",
+    "inputLabel": "Buscar máquinas, ordens de serviço, relatos, locações, clientes e fazendas",
+    "placeholder": "Busque ou digite um comando…",
+    "close": "Fechar busca",
+    "loading": "Buscando…",
+    "minLength": "Digite pelo menos {count} caracteres para buscar registros.",
+    "error": "A busca falhou. Verifique a conexão e tente de novo.",
+    "retry": "Tentar de novo",
+    "empty": "Nada encontrado para “{query}”.",
+    "hint": "Use as setas para navegar, Enter para abrir e Esc para fechar.",
+    "goTo": "Ir para {page}",
+    "groups": {
+      "assets": "Máquinas",
+      "workOrders": "Ordens de serviço",
+      "fieldReports": "Relatos de campo",
+      "rentals": "Locações",
+      "customers": "Clientes",
+      "sites": "Fazendas",
+      "actions": "Ações rápidas",
+      "pages": "Páginas"
+    },
+    "actions": {
+      "newWorkOrder": "Nova ordem de serviço",
+      "newRental": "Nova locação",
+      "newAsset": "Nova máquina"
+    }
   }
 }

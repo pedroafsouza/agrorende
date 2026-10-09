@@ -1,0 +1,26 @@
+# Offline comments queue locally, show as pending and send when the signal returns.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "tecnico1@agrorende.dev"
+- tapOn:
+    id: "home-next-job-open"
+- setAirplaneMode: enabled
+- scrollUntilVisible:
+    element:
+      id: "comment-input"
+- tapOn:
+    id: "comment-input"
+- inputText: "Chego em 20 minutos"
+- tapOn:
+    id: "comment-send"
+- assertVisible:
+    id: "comment-pending-.*"
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    notVisible:
+      id: "comment-pending-.*"
+    timeout: 60000

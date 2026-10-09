@@ -1,3 +1,5 @@
-import { notImplemented } from "@/server/withApi";
+import { maintenanceCore } from "@/features/maintenance/server";
+import { OFFICE, param, route } from "@/lib/core.server";
 
-export const GET = notImplemented("GET", "/api/v1/maintenance-plans/:id/due");
+/** Next due hour meter and date per asset of the plan. */
+export const GET = route(OFFICE, (_request, ctx, params) => maintenanceCore.due(ctx, param(params, "id")));

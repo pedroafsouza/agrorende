@@ -1,1 +1,32 @@
-{}
+{
+  "picker": {
+    "fromCatalog": "Do catálogo",
+    "freeText": "Texto livre",
+    "search": "Buscar peça ou código",
+    "searchHint": "As peças da sua viatura aparecem primeiro.",
+    "inVan": "{quantity} na sua viatura",
+    "notInVan": "Não está na sua viatura",
+    "noVan": "Você ainda não tem estoque na viatura. Peça à central para cadastrar sua viatura.",
+    "emptyTitle": "Nenhuma peça do catálogo encontrada",
+    "emptyBody": "Confira a escrita ou anote a peça em texto livre.",
+    "notInCatalog": "Não está no catálogo? Escreva a peça",
+    "chosen": "Escolhida: {name}",
+    "change": "Trocar peça",
+    "vanName": "Sua viatura: {name}"
+  },
+  "line": {
+    "catalog": "Catálogo",
+    "freeText": "Texto livre",
+    "fromVan": "Saiu da sua viatura"
+  },
+  "stock": {
+    "useFreeText": "Salvar em texto livre",
+    "holdWaitingParts": "Em espera · aguardando peças",
+    "holdNote": "Aguardando {name} ({quantity} {unit})",
+    "keptDraft": "Sua peça foi mantida. Escolha como seguir.",
+    "rejectedTitle": "Esta peça não estava na sua viatura quando a OS sincronizou",
+    "rejectedBody": "{name} ({quantity} {unit}) não saiu do estoque. Escolha como seguir.",
+    "savedFreeText": "Peça salva como texto livre",
+    "savedHold": "OS em espera, aguardando peças"
+  }
+}

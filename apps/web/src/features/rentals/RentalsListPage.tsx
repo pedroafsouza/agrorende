@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
-import { Plus, Truck } from "lucide-react";
+import { CalendarDays, List, Plus, Truck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
@@ -21,10 +21,11 @@ import type { ListPage } from "@/lib/forms";
 import { useUrlState } from "@/lib/url-state";
 
 import { OverdueBadge } from "./OverdueBadge";
+import { RentalsCalendar, todayIn } from "./RentalsCalendar";
 import { RENTAL_TABS, tabStatus, type RentalListItem } from "./types";
 
-const KEYS = ["tab", "q", "cursor"] as const;
-const DEFAULTS = { tab: "ALL" } as const;
+const KEYS = ["tab", "q", "cursor", "view", "from", "assetId"] as const;
+const DEFAULTS = { tab: "ALL", view: "list" } as const;
 
 /** Office rental list (RN-11): status tabs and search live in the URL so a link reproduces the view. */
 export function RentalsListPage() {
@@ -33,7 +34,9 @@ export function RentalsListPage() {
   const locale = useLocale();
   const router = useRouter();
   const [filters, setFilters] = useUrlState(KEYS, DEFAULTS);
+  const calendar = filters.view === "calendar";
   const query = useQuery({
+    enabled: !calendar,
     queryKey: ["rentals", "list", filters],
     queryFn: () =>
       api<ListPage<RentalListItem>>("/rentals", {
@@ -88,13 +91,23 @@ export function RentalsListPage() {
     <div className="flex flex-col gap-4">
       <PageHeader
         actions={
-          <Link className={buttonVariants({ variant: "primary" })} href="/rentals/new">
-            <Plus aria-hidden="true" className="size-4" />
-            {t("actions.new")}
-          </Link>
+          <>
+            <button className={buttonVariants({ variant: "secondary" })} onClick={() => setFilters({ view: calendar ? null : "calendar", cursor: null })} type="button">
+              {calendar ? <List aria-hidden="true" className="size-4" /> : <CalendarDays aria-hidden="true" className="size-4" />}
+              {calendar ? t("calendar.showList") : t("calendar.show")}
+            </button>
+            <Link className={buttonVariants({ variant: "primary" })} href="/rentals/new">
+              <Plus aria-hidden="true" className="size-4" />
+              {t("actions.new")}
+            </Link>
+          </>
         }
         title={t("list.title")}
       />
+      {calendar ? (
+        <RentalsCalendar anchor={/^\d{4}-\d{2}-\d{2}$/.test(filters.from) ? filters.from : todayIn()} assetId={filters.assetId.length > 0 ? filters.assetId : null} onAnchor={(from) => setFilters({ from })} />
+      ) : (
+        <>
       <div aria-label={t("list.tabsLabel")} className="flex flex-wrap gap-2" role="tablist">
         {RENTAL_TABS.map((tab) => (
           <button
@@ -139,6 +152,8 @@ export function RentalsListPage() {
         rows={query.data?.items}
         toolbar={<Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value, cursor: null })} placeholder={t("list.searchPlaceholder")} type="search" />}
       />
+        </>
+      )}
     </div>
   );
 }

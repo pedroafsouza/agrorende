@@ -1,0 +1,26 @@
+# EC-PLT-10 PERMISSION_MEDIA_BLOCKED: camera denied keeps the report draft and offers the gallery path.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- tapOn:
+    id: "home-quick-report-new"
+- tapOn:
+    id: "media-open-camera"
+- tapOn:
+    text: "Don.t allow|Deny|Não permitir"
+    optional: true
+- extendedWaitUntil:
+    visible:
+      id: "permission-camera-(denied|blocked)"
+    timeout: 10000
+- assertVisible:
+    id: "permission-camera-alt"
+- tapOn:
+    id: "camera-close"
+    optional: true
+- assertVisible:
+    id: "report-wizard"

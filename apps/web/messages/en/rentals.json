@@ -25,7 +25,10 @@
     "cancel": "Cancel rental",
     "close": "Close rental",
     "checkoutPdf": "Check-out PDF",
-    "checkinPdf": "Check-in PDF"
+    "checkinPdf": "Check-in PDF",
+    "extend": "Extend",
+    "receive": "Receive",
+    "return": "Return"
   },
   "fields": {
     "number": "Number",
@@ -48,7 +51,11 @@
     "actualStart": "Checked out at",
     "actualEnd": "Returned at",
     "termsVersion": "Terms version",
-    "cancelReason": "Cancellation reason"
+    "cancelReason": "Cancellation reason",
+    "direction": "Direction",
+    "supplier": "Partner (supplier)",
+    "actualStartInbound": "Received at",
+    "actualEndInbound": "Returned to partner at"
   },
   "documentLocale": {
     "ptBR": "Portuguese (Brazil)",
@@ -190,7 +197,11 @@
     "confirmUpdated": "Confirm new totals and close",
     "paymentNote": "Payment note",
     "paymentNoteHint": "For example: paid by PIX on delivery.",
-    "heldBlocked": "{count, plural, one {# damage is still held. Accept, waive or resolve it before closing.} other {# damages are still held. Accept, waive or resolve them before closing.}}"
+    "heldBlocked": "{count, plural, one {# damage is still held. Accept, waive or resolve it before closing.} other {# damages are still held. Accept, waive or resolve them before closing.}}",
+    "billingFailedTitle": "Billing is not ready",
+    "billingFailedBody": "The rental is saved. Try again or let the office finish it.",
+    "billingRetry": "Try again",
+    "billingLeave": "Leave for the office"
   },
   "cancel": {
     "title": "Cancel rental",
@@ -205,7 +216,8 @@
     "workOrderCreated": "Work order {number} created",
     "lineAdded": "Charge added",
     "lineDeleted": "Charge removed",
-    "recomputed": "Charges recomputed"
+    "recomputed": "Charges recomputed",
+    "extended": "Rental extended"
   },
   "activity": {
     "rental": {
@@ -230,5 +242,46 @@
       "repaired": "Damage repaired"
     },
     "update": "Updated"
+  },
+  "direction": {
+    "OUTBOUND": "Rent out to customer",
+    "INBOUND": "Rent in from partner",
+    "hint": {
+      "OUTBOUND": "Our machine goes to a customer.",
+      "INBOUND": "A partner's machine comes to us. Receive it at check-out and return it at check-in."
+    }
+  },
+  "inbound": {
+    "incompleteTitle": "Partner rental details are missing",
+    "incompleteBody": "The draft is saved. Complete partner, machine, and site to continue.",
+    "missing": {
+      "supplier": "Choose a customer marked as supplier.",
+      "partnerAsset": "Choose a machine owned by a partner.",
+      "site": "Choose the site where the machine will work.",
+      "season": "Open a season so the cost lands on it."
+    }
+  },
+  "extend": {
+    "title": "Extend rental",
+    "body": "The rental now ends at {end}. Choose the new end.",
+    "confirm": "Extend",
+    "newEnd": "New end",
+    "invalid": "Choose a date and time after the current end.",
+    "conflictTitle": "No availability to extend",
+    "conflictBody": "The rental is saved. Choose another date or contact the office.",
+    "openCalendar": "Open calendar"
+  },
+  "calendar": {
+    "title": "Availability calendar",
+    "range": "{from} to {to}",
+    "previous": "Previous week",
+    "next": "Next week",
+    "today": "Today",
+    "legend": "Legend",
+    "emptyTitle": "No bookings in these weeks",
+    "emptyBody": "Every machine is free in this period.",
+    "bar": "{number}, {party}, {status}, {start} to {end}",
+    "show": "Calendar",
+    "showList": "List"
   }
 }

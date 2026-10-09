@@ -1,0 +1,43 @@
+# EC-WO-12 WO_SIGNATURE_EXCEPTION and EC-RN-16 RENTAL_DRAFT_INTERRUPTED.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "tecnico1@agrorende.dev"
+- tapOn:
+    id: "home-next-job-open"
+- tapOn:
+    id: "job-open-complete"
+- tapOn:
+    id: "signature-open"
+- tapOn:
+    id: "signature-reason"
+- assertVisible:
+    id: "signature-confirm-reason"
+- tapOn:
+    id: "signature-confirm-reason"
+- assertVisible:
+    id: "job-complete-signature-status"
+- assertNotVisible:
+    id: "signature-canvas"
+# A rental hand-over is interrupted, then resumed from the saved step.
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "locacao@agrorende.dev"
+- tapOn:
+    id: "home-rentals-today-open"
+- tapOn:
+    text: "Entregar|Hand over"
+    optional: true
+- tapOn:
+    id: "insp-identity-confirm"
+    optional: true
+- killApp
+- launchApp
+- tapOn:
+    id: "home-rentals-today-open"
+- assertVisible:
+    id: "rental-draft"

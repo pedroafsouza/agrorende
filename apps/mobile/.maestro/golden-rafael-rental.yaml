@@ -1,0 +1,44 @@
+# PRD §8 steps 8–10: Rafael hands over a rental with the guided inspection and two signatures.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [golden, rafael]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "locacao@agrorende.dev"
+- tapOn:
+    id: "home-rentals-today-open"
+- extendedWaitUntil:
+    visible:
+      id: "rentals-list"
+    timeout: 10000
+- tapOn:
+    id: "rentals-new"
+- extendedWaitUntil:
+    visible:
+      id: "rental-new"
+    timeout: 10000
+- tapOn:
+    id: "rental-new-save"
+- extendedWaitUntil:
+    visible:
+      id: "rental-detail"
+    timeout: 15000
+- tapOn:
+    text: "Entregar|Hand over"
+- tapOn:
+    id: "insp-identity-confirm"
+- tapOn:
+    id: "insp-hour-meter"
+- inputText: "4320"
+- hideKeyboard
+- tapOn:
+    id: "insp-briefing-given"
+- tapOn:
+    id: "insp-terms-accept"
+- tapOn:
+    id: "insp-customer-signed"
+- tapOn:
+    id: "insp-agent-signed"
+- assertVisible:
+    id: "insp-review"

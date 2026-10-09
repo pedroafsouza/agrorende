@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { BillingIntl } from "@/features/billing/BillingIntl";
+import { BillingListPage } from "@/features/billing/BillingListPage";
 
-export default function Adminbillingpage() {
-  return <PlaceholderPage descriptionKey="page.billing.description" route="/billing" titleKey="page.billing.title" />;
+export default function AdminBillingPage() {
+  return (
+    <BillingIntl>
+      <BillingListPage />
+    </BillingIntl>
+  );
 }

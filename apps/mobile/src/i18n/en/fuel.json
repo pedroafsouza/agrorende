@@ -1,0 +1,38 @@
+{
+  "new": {
+    "offlineHint": "Saved on this phone first. It is sent when there is signal.",
+    "machine": "Machine",
+    "photo": "Pump photo",
+    "total": "Total: {total}",
+    "readingsHint": "The hour meter lets the office see litres per hour.",
+    "save": "Save fuel log"
+  },
+  "fields": {
+    "liters": "Litres",
+    "pricePerLiter": "Price per litre (R$)",
+    "hourMeter": "Hour meter",
+    "odometerKm": "Odometer",
+    "notes": "Notes"
+  },
+  "units": {
+    "liters": "L",
+    "perLiter": "R$/L",
+    "hours": "h",
+    "km": "km"
+  },
+  "errors": {
+    "assetRequired": "Choose the machine that was filled.",
+    "litersRequired": "Enter how many litres went in.",
+    "litersPositive": "Litres must be more than zero.",
+    "notNegative": "This value cannot be negative."
+  },
+  "history": {
+    "title": "Fuel",
+    "add": "Add fuel",
+    "empty": "No fuel logged for this machine yet.",
+    "row": "{liters} L",
+    "pending": "Waiting to send",
+    "consumption": "Consumption: {litersPerHour} L/h over {hours} h",
+    "noConsumption": "Log the hour meter twice to see litres per hour."
+  }
+}

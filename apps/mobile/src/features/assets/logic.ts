@@ -167,3 +167,38 @@ export function scanDestination(purpose: ScanPurpose, assetId: string): string {
 export function parseScanPurpose(value: unknown): ScanPurpose {
   return value === "report" || value === "checkout" || value === "checkin" ? value : "find";
 }
+
+/** Office roles see money on the machine profile (PLT-06); field roles never do. */
+export function canSeeAssetCosts(role: string | undefined): boolean {
+  return role === "ADMIN" || role === "MANAGER";
+}
+
+export interface AssetCostSummary {
+  readonly laborCents: number;
+  readonly partsCents: number;
+  readonly externalCents: number;
+  readonly fuelCents: number;
+  readonly rentInCostCents: number;
+  readonly totalCostCents: number;
+  readonly rentalRevenueCents: number;
+}
+
+const COST_FIELDS = ["laborCents", "partsCents", "externalCents", "fuelCents", "rentInCostCents", "totalCostCents", "rentalRevenueCents"] as const;
+
+function readCostFields(source: Record<string, unknown>): AssetCostSummary {
+  const entries = COST_FIELDS.map((field) => [field, typeof source[field] === "number" ? source[field] : 0] as const);
+  return Object.fromEntries(entries) as unknown as AssetCostSummary;
+}
+
+/**
+ * Typed adapter for `GET /costs/rollup?groupBy=asset&assetId=`. The server returns
+ * `{ rows, totals }` while the frozen api-client types it as a list (`items`), so this reads either
+ * shape and picks the machine's row (CR T15-004). Undefined when the machine has no cost yet.
+ */
+export function assetCostSummary(response: unknown, assetId: string): AssetCostSummary | undefined {
+  if (typeof response !== "object" || response === null) return undefined;
+  const body = response as { rows?: unknown; items?: unknown };
+  const rows = Array.isArray(body.rows) ? body.rows : Array.isArray(body.items) ? body.items : [];
+  const row = rows.find((candidate): candidate is Record<string, unknown> => typeof candidate === "object" && candidate !== null && (candidate as { key?: unknown }).key === assetId);
+  return row === undefined ? undefined : readCostFields(row);
+}

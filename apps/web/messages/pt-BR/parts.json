@@ -1,1 +1,97 @@
-{}
+{
+  "catalog": {
+    "title": "Peças",
+    "subtitle": "Catálogo de peças da oficina e dos furgões.",
+    "emptyTitle": "Nenhuma peça no catálogo",
+    "emptyBody": "Cadastre as peças que você mantém em estoque para os técnicos escolherem na OS.",
+    "search": "Buscar por código ou nome",
+    "showArchived": "Mostrar peças arquivadas",
+    "new": "Nova peça",
+    "editTitle": "Editar peça",
+    "newTitle": "Nova peça",
+    "archived": "Arquivada",
+    "active": "Ativa",
+    "archive": "Arquivar",
+    "restore": "Restaurar",
+    "archivedToast": "Peça arquivada",
+    "restoredToast": "Peça restaurada"
+  },
+  "fields": {
+    "sku": "Código",
+    "name": "Nome",
+    "unit": "Unidade",
+    "unitCost": "Custo unitário",
+    "minStock": "Estoque mínimo",
+    "minStockHint": "O escritório é avisado uma vez por dia quando um local chega a essa quantidade ou menos.",
+    "categories": "Tipos de máquina compatíveis",
+    "location": "Local",
+    "locationType": "Tipo",
+    "technician": "Técnico",
+    "quantity": "Quantidade",
+    "movementType": "Movimento",
+    "from": "De",
+    "to": "Para",
+    "note": "Observação",
+    "status": "Situação",
+    "createdAt": "Data"
+  },
+  "stock": {
+    "title": "Estoque",
+    "subtitle": "Quantidades por almoxarifado e furgão. Toda mudança é um movimento registrado.",
+    "levelsTitle": "Saldos de estoque",
+    "locationsTitle": "Locais",
+    "movementsTitle": "Movimentos recentes",
+    "lowOnly": "Só estoque baixo",
+    "allLocations": "Todos os locais",
+    "low": "Estoque baixo",
+    "ok": "Em estoque",
+    "negative": "Abaixo de zero",
+    "emptyTitle": "Nenhum estoque registrado",
+    "emptyBody": "Registre uma entrada para começar a contar peças em um local.",
+    "noLocationsTitle": "Nenhum local de estoque",
+    "noLocationsBody": "Crie um almoxarifado e um furgão por técnico antes de registrar estoque.",
+    "noMovements": "Nenhum movimento ainda.",
+    "newLocation": "Novo local",
+    "newMovement": "Registrar movimento",
+    "locationTitle": "Novo local de estoque",
+    "movementTitle": "Registrar movimento de estoque",
+    "movementToast": "Movimento de estoque registrado",
+    "locationToast": "Local criado",
+    "vanHint": "Um furgão pertence a um técnico, que vê e usa só o estoque desse furgão.",
+    "workOrder": "OS {number}"
+  },
+  "locationType": {
+    "WAREHOUSE": "Almoxarifado",
+    "VAN": "Furgão"
+  },
+  "movementType": {
+    "IN": "Entrada",
+    "TRANSFER": "Transferência",
+    "ADJUSTMENT": "Ajuste",
+    "OUT_TO_WORK_ORDER": "Usada em OS"
+  },
+  "movementHint": {
+    "IN": "Peças recebidas em um local. A quantidade é somada.",
+    "TRANSFER": "Leva peças de um local para outro, por exemplo do almoxarifado para um furgão.",
+    "ADJUSTMENT": "Corrige uma contagem. Use quantidade negativa para retirar peças."
+  },
+  "panel": {
+    "catalog": "Catálogo",
+    "freeText": "Texto livre",
+    "freeTextHint": "Não sai do estoque",
+    "takenFrom": "Retirada de {location}",
+    "left": "Restam {quantity} lá",
+    "sku": "Código"
+  },
+  "externalCost": {
+    "title": "Custo externo",
+    "none": "Nenhum custo externo registrado.",
+    "add": "Lançar custo externo",
+    "edit": "Editar custo externo",
+    "note": "Observação",
+    "lockedHint": "O custo externo pode ser lançado quando a OS estiver concluída.",
+    "cancelledHint": "Esta OS foi cancelada, então não há custo externo.",
+    "rollUp": "Entra no total da OS e no custo da máquina.",
+    "saved": "Custo externo salvo"
+  }
+}

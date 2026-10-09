@@ -7,7 +7,8 @@
     "monitor": "Manter em observação",
     "openWorkOrder": "Abrir OS {number}",
     "startReview": "Iniciar análise",
-    "viewAsset": "Ver máquina"
+    "viewAsset": "Ver máquina",
+    "linkAsset": "Vincular a uma máquina"
   },
   "activity": {
     "fieldReport": {
@@ -20,7 +21,8 @@
       "monitoring": "Mantido em observação",
       "reviewStarted": "Análise iniciada",
       "updated": "Relato atualizado",
-      "withdrawn": "Retirado por quem relatou"
+      "withdrawn": "Retirado por quem relatou",
+      "assetLinked": "Vinculado a uma máquina cadastrada"
     }
   },
   "category": {
@@ -75,6 +77,20 @@
       "body": "O relato fica em observação. Escreva o que deve ser acompanhado.",
       "note": "Nota de observação",
       "title": "Manter em observação"
+    },
+    "linkAsset": {
+      "title": "Vincular a uma máquina",
+      "body": "O relator descreveu: {description}. Escolha a máquina cadastrada ou cadastre-a a partir deste relato.",
+      "mode": "Como deseja vincular?",
+      "modes": {
+        "existing": "Escolher uma máquina existente",
+        "create": "Cadastrar uma nova máquina"
+      },
+      "name": "Nome da máquina",
+      "category": "Categoria",
+      "submit": "Vincular máquina",
+      "pickRequired": "Escolha uma máquina da lista.",
+      "nameRequired": "Escreva o nome da máquina."
     }
   },
   "fields": {
@@ -141,7 +157,8 @@
     "dismissed": "Relato dispensado.",
     "markedForRepair": "OS {number} criada.",
     "monitoring": "Relato em observação.",
-    "reviewStarted": "Análise iniciada."
+    "reviewStarted": "Análise iniciada.",
+    "assetLinked": "Relato vinculado à máquina."
   },
   "unregistered": "Máquina não cadastrada: {description}"
 }

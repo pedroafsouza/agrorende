@@ -1,0 +1,14 @@
+{
+  "title": "Comments",
+  "empty": "No comments yet. Write the first note for the team.",
+  "you": "You",
+  "teammate": "Team member",
+  "pending": "Waiting to send",
+  "offlineHint": "You are offline. The comment is saved and sends when there is signal.",
+  "label": "New comment",
+  "placeholder": "Write a note for the team",
+  "send": "Send comment",
+  "required": "Write something before sending.",
+  "tooLong": "Keep the comment under 4000 characters.",
+  "loadError": "Could not read the comments on this phone."
+}

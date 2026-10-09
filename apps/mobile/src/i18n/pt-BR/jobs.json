@@ -168,5 +168,25 @@
     "hours": "h",
     "send": "Reenviar",
     "sent": "Leitura reenviada. Será sincronizada quando houver sinal."
+  },
+  "arrival": {
+    "title": "Chegou em {name}?",
+    "body": "Parece que você está no local. A OS só muda quando você confirmar.",
+    "confirm": "Cheguei",
+    "notYet": "Ainda não",
+    "wrongPlace": "Lugar errado: enviar este ponto",
+    "pointComment": "Atualização de ponto do campo: estou em {point}. O ponto do local parece errado.",
+    "pointSent": "Ponto enviado à central nos comentários."
+  },
+  "map": {
+    "toggleList": "Lista",
+    "toggleMap": "Mapa",
+    "pinLabel": "{title}, prioridade {priority}",
+    "noPins": "Nenhuma destas OS tem ponto no mapa ainda.",
+    "legend": "A cor do alfinete mostra a urgência."
+  },
+  "whileHere": {
+    "action": "Já que estou aqui: relatar problema",
+    "hint": "Abre um novo relato para esta máquina e este local."
   }
 }

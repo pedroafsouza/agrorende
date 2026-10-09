@@ -49,4 +49,5 @@ export const OPS_QUERY_KEYS = {
   alerts: ["ops", "alerts"] as const,
   activity: ["ops", "activity"] as const,
   trail: (userId: string) => ["ops", "trail", userId] as const,
+  boundaries: ["ops", "boundaries"] as const,
 };

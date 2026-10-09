@@ -9,7 +9,9 @@ import { createWorkOrderFromSource } from "../../seams.js";
 import { touchDependents } from "../../sync/touch.js";
 import { assertVersion, dbTx, newId, parseInput, stampCreate, stampUpdate, writeActivity } from "../assets/kit.js";
 import { getSummary, recomputeCondition } from "../assets/service.js";
+import { createAndIssueForRental } from "../billing/service.js";
 import { currentSeasonId } from "../seasons/service.js";
+import { assertInboundComplete } from "./inbound.js";
 import {
   DamagePatchInputSchema,
   DamageWorkOrderInputSchema,
@@ -225,6 +227,7 @@ export async function reserveRental(tx: Tx, ctx: Ctx, rentalId: string, ifMatch?
     },
   });
   if (rental.plannedEnd.getTime() <= Date.now()) reject("RENTAL_DATES_INVALID", { reason: "endInPast" });
+  await assertInboundComplete(tx, rental);
   const result = await evaluateEligibility(tx, {
     direction: rental.direction,
     assetId: rental.assetId,
@@ -312,7 +315,20 @@ export async function closeRental(tx: Tx, ctx: Ctx, rentalId: string, raw: Renta
     { _id: rentalId },
     { $set: { status: "CLOSED", closedAt: now, closedById: ctx.userId, settlementRef: input.paymentNote ?? null, ...stampUpdate(t, now) } },
   );
-  await writeActivity(t, { entityType: "RENTAL", entityId: rentalId, action: "rental.closed", actorId: ctx.userId, fromStatus: "RETURNED", toStatus: "CLOSED", meta: { totalCents: rental.chargesTotalCents ?? 0 }, occurredAt: now });
+  // P1 (RN-10, EC-RN-33): an OUTBOUND close issues one RENTAL billing document in the same
+  // transaction. A failure rolls the close back, so the rental stays RETURNED with its charges and
+  // a retry finds or creates exactly one document. Rent-in (INBOUND) is a cost, never billed.
+  const billing = rental.direction === "OUTBOUND" ? await createAndIssueForRental(tx, ctx, rentalId) : null;
+  await writeActivity(t, {
+    entityType: "RENTAL",
+    entityId: rentalId,
+    action: "rental.closed",
+    actorId: ctx.userId,
+    fromStatus: "RETURNED",
+    toStatus: "CLOSED",
+    meta: { totalCents: rental.chargesTotalCents ?? 0, ...(billing === null ? {} : { billingDocumentId: billing.id, billingNumber: billing.number }) },
+    occurredAt: now,
+  });
   const updated = await loadRental(tx, rentalId);
   await emitRental(tx, updated, t.syncVersion);
   return rentalDto(tx, ctx, updated);

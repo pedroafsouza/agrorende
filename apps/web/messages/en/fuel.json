@@ -1,1 +1,48 @@
-{}
+{
+  "title": "Fuel",
+  "noSeason": "No season",
+  "list": {
+    "assetFilter": "Machine",
+    "emptyTitle": "No fill-ups yet",
+    "emptyBody": "Fill-ups recorded in the field app or on this page appear here."
+  },
+  "actions": {
+    "new": "Record fill-up",
+    "save": "Save fill-up"
+  },
+  "fields": {
+    "filledAt": "Filled at",
+    "asset": "Machine",
+    "liters": "Litres",
+    "pricePerLiter": "Price per litre",
+    "total": "Total",
+    "hourMeter": "Hour meter",
+    "odometerKm": "Odometer (km)",
+    "site": "Site",
+    "notes": "Notes"
+  },
+  "consumption": {
+    "title": "Consumption",
+    "loading": "Loading consumption…",
+    "average": "Average",
+    "perHour": "{value} L/h",
+    "interval": "{liters} L over {hours} h",
+    "none": "Consumption needs two fill-ups with a rising hour meter.",
+    "chooseAsset": "Choose a machine to see its consumption in litres per hour."
+  },
+  "new": {
+    "title": "Record fill-up",
+    "litersHint": "Use a comma or a dot for decimals.",
+    "readingsHint": "A reading lower than the machine's current one is kept on the fill-up but does not change the machine.",
+    "filledAtHint": "Leave empty to use now. Times use the organisation time zone."
+  },
+  "errors": {
+    "assetId": { "required": "Choose the machine.", "invalid": "Choose the machine." },
+    "liters": { "required": "Enter the litres filled.", "invalid": "Enter litres above zero, for example 150 or 150,5." },
+    "hourMeter": { "required": "Enter the hour meter.", "invalid": "Enter a number, for example 1010 or 1010,5." },
+    "odometerKm": { "required": "Enter the odometer.", "invalid": "Enter a number, for example 12500." }
+  },
+  "toast": {
+    "saved": "Fill-up saved"
+  }
+}

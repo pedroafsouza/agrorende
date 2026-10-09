@@ -1,1 +1,132 @@
-{}
+{
+  "title": "Análises",
+  "subtitle": "Quão rápido a equipe conserta as máquinas, de onde vêm as quebras e quanto a frota custa e rende.",
+  "filters": {
+    "label": "Filtros das análises",
+    "from": "De",
+    "to": "Até",
+    "season": "Safra",
+    "allSeasons": "Todas as safras",
+    "defaultRange": "Mostrando os últimos 30 dias. As datas seguem o fuso horário da organização.",
+    "timezone": "As datas seguem o fuso horário da organização."
+  },
+  "tabs": {
+    "label": "Seções das análises",
+    "operations": "Operação",
+    "costs": "Custos"
+  },
+  "metrics": {
+    "mttr": {
+      "title": "Tempo médio de reparo",
+      "description": "Mediana de horas entre abrir e concluir uma ordem de serviço, por semana.",
+      "summary": "Mediana do período",
+      "key": "Semana",
+      "value": "Mediana",
+      "secondary": "Ordens concluídas"
+    },
+    "first_time_fix": {
+      "title": "Resolução na primeira visita",
+      "description": "Ordens concluídas que nunca foram reabertas nem pausadas aguardando peças.",
+      "summary": "Percentual do período",
+      "key": "Semana",
+      "value": "Resolvidas de primeira",
+      "secondary": "Ordens concluídas"
+    },
+    "reports_by_category": {
+      "title": "Relatos de campo por categoria",
+      "description": "Problemas relatados pelo campo no período.",
+      "summary": "Relatos no período",
+      "key": "Categoria",
+      "value": "Relatos"
+    },
+    "wos_by_field_user": {
+      "title": "Ordens por usuário de campo",
+      "description": "Ordens concluídas por responsável e a mediana do tempo de trabalho.",
+      "summary": "Ordens concluídas",
+      "key": "Usuário de campo",
+      "value": "Concluídas",
+      "secondary": "Mediana do tempo de trabalho"
+    },
+    "downtime": {
+      "title": "Máquina parada",
+      "description": "Horas que cada máquina ficou fora da condição operacional. Máquinas baixadas ficam de fora.",
+      "summary": "Total de horas paradas",
+      "key": "Máquina",
+      "value": "Horas paradas"
+    },
+    "top_failing": {
+      "title": "Máquinas que mais falham",
+      "description": "As 10 máquinas com mais relatos de campo e ordens corretivas.",
+      "summary": "Relatos e ordens corretivas",
+      "key": "Máquina",
+      "value": "Relatos e ordens",
+      "secondary": "Ordens corretivas"
+    },
+    "rental_utilization": {
+      "title": "Ocupação da locação",
+      "description": "Parte do período em que cada máquina locável ficou alugada.",
+      "summary": "Ocupação da frota",
+      "key": "Máquina",
+      "value": "Ocupação",
+      "secondary": "Dias alugada"
+    },
+    "rental_revenue": {
+      "title": "Receita de locação",
+      "description": "Locações encerradas por mês. Máquinas alugadas de terceiros aparecem como custo.",
+      "summary": "Receita no período",
+      "key": "Mês",
+      "value": "Receita",
+      "secondary": "Custo de máquinas alugadas"
+    }
+  },
+  "units": {
+    "hours": "{value} h",
+    "percent": "{value}%",
+    "minutes": "{value} min",
+    "days": "{value} d"
+  },
+  "noValue": "—",
+  "weekOf": "Semana de {date}",
+  "unassigned": "Sem responsável",
+  "table": {
+    "show": "Ver os números",
+    "caption": "{metric}: dados do gráfico"
+  },
+  "empty": {
+    "title": "Nada neste período",
+    "body": "Escolha um intervalo de datas maior ou outra safra."
+  },
+  "categories": {
+    "ENGINE": "Motor",
+    "HYDRAULIC": "Hidráulico",
+    "ELECTRICAL": "Elétrico",
+    "TRANSMISSION": "Transmissão",
+    "TIRES_TRACKS": "Pneus e esteiras",
+    "BRAKES": "Freios",
+    "STRUCTURE": "Estrutura",
+    "CAB": "Cabine",
+    "IMPLEMENT": "Implemento",
+    "LEAK": "Vazamento",
+    "SAFETY": "Segurança",
+    "OTHER": "Outro"
+  },
+  "cost": {
+    "title": "Painel de custos",
+    "groupBy": "Agrupar por",
+    "groups": {
+      "asset": "Máquina",
+      "site": "Fazenda",
+      "season": "Safra"
+    },
+    "details": "Ver detalhes de custos",
+    "laborHidden": "O custo de mão de obra está oculto para gerentes nesta organização.",
+    "caption": "Custos por {group}",
+    "columns": {
+      "laborCents": "Mão de obra",
+      "partsCents": "Peças",
+      "rentInCostCents": "Máquinas alugadas de terceiros",
+      "totalCostCents": "Custo total",
+      "rentalRevenueCents": "Receita de locação"
+    }
+  }
+}

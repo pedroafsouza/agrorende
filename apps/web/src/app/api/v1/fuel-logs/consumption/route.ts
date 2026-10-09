@@ -1,3 +1,5 @@
-import { notImplemented } from "@/server/withApi";
+import { fuelCore } from "@/features/fuel/server";
+import { OFFICE, query, route } from "@/lib/core.server";
 
-export const GET = notImplemented("GET", "/api/v1/fuel-logs/consumption");
+/** Litres per engine hour between consecutive fill-ups of one `assetId` (ERP-07). */
+export const GET = route(OFFICE, (request, ctx) => fuelCore.fuelConsumption(ctx, query(request)));

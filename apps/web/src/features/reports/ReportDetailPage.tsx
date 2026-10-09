@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertOctagon, AlertTriangle, Eye, PlayCircle, Tractor, Wrench, XCircle } from "lucide-react";
+import { AlertOctagon, AlertTriangle, Eye, Link2, PlayCircle, Tractor, Wrench, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -21,10 +21,11 @@ import { api, isApiError } from "@/lib/api";
 import { formatDateTime, formatNumber } from "@/lib/format";
 import { useSave } from "@/lib/useSave";
 
+import { LinkAssetDialog } from "./LinkAssetDialog";
 import { MarkForRepairDialog } from "./MarkForRepairDialog";
 import { reportFlagKeys, type FieldReportDetail } from "./types";
 
-type Dialog = "monitor" | "dismiss" | "repair" | null;
+type Dialog = "monitor" | "dismiss" | "repair" | "link" | null;
 
 const OFFICE_OPEN = new Set(["SUBMITTED", "IN_REVIEW", "MONITORING"]);
 
@@ -111,7 +112,12 @@ export function ReportDetailPage({ id }: { readonly id: string }) {
               label={t("fields.asset")}
               value={
                 report.asset === null ? (
-                  t("unregistered", { description: report.unregisteredAssetDesc ?? "—" })
+                  <span className="flex flex-col items-start gap-2">
+                    {t("unregistered", { description: report.unregisteredAssetDesc ?? "—" })}
+                    <Button icon={<Link2 aria-hidden="true" className="size-4" />} onClick={() => setDialog("link")}>
+                      {t("actions.linkAsset")}
+                    </Button>
+                  </span>
                 ) : (
                   <Link className="inline-flex items-center gap-1 font-semibold text-[var(--ar-link)]" href={`/assets/${report.asset.id}`}>
                     <Tractor aria-hidden="true" className="size-4" />
@@ -163,6 +169,17 @@ export function ReportDetailPage({ id }: { readonly id: string }) {
             }))}
         />
       </section>
+      {dialog === "link" ? (
+        <LinkAssetDialog
+          onClose={() => setDialog(null)}
+          onDone={() => {
+            setDialog(null);
+            toast.success(t("toast.assetLinked"));
+            void refresh();
+          }}
+          report={report}
+        />
+      ) : null}
       {dialog === "repair" ? (
         <MarkForRepairDialog
           onClose={() => setDialog(null)}

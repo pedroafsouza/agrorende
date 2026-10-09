@@ -1,1 +1,70 @@
-{}
+{
+  "title": "Preventive maintenance",
+  "subtitle": "Plans by hour meter or calendar. A preventive work order opens automatically when a plan comes due.",
+  "emptyTitle": "No maintenance plans",
+  "emptyBody": "Create a plan for one machine or for every machine of a type.",
+  "showInactive": "Show inactive plans",
+  "actions": {
+    "new": "New plan",
+    "edit": "Edit",
+    "due": "See due machines",
+    "deactivate": "Deactivate",
+    "activate": "Activate"
+  },
+  "dialog": {
+    "newTitle": "New maintenance plan",
+    "editTitle": "Edit maintenance plan",
+    "dueTitle": "Due machines · {name}",
+    "targetHint": "Choose one machine, or a machine type to cover every machine of that type."
+  },
+  "fields": {
+    "name": "Plan name",
+    "target": "Applies to",
+    "targetAsset": "One machine",
+    "targetCategory": "Machine type",
+    "asset": "Machine",
+    "category": "Machine type",
+    "trigger": "Trigger",
+    "intervalHours": "Every (hours)",
+    "intervalDays": "Every (days)",
+    "lastDoneHourMeter": "Last done at hour meter",
+    "lastDoneAt": "Last done on",
+    "leadHours": "Open the job this many hours early",
+    "leadDays": "Open the job this many days early",
+    "status": "Status",
+    "hourMeter": "Hour meter",
+    "nextDue": "Next due",
+    "remaining": "Remaining"
+  },
+  "trigger": {
+    "HOURS": "Hour meter",
+    "CALENDAR": "Calendar",
+    "HOURS_OR_CALENDAR": "Hour meter or calendar, whichever first"
+  },
+  "interval": {
+    "hours": "every {hours} h",
+    "days": "every {days, plural, one {# day} other {# days}}"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "due": "Due",
+    "overdue": "Overdue",
+    "ok": "On schedule",
+    "open": "Job open"
+  },
+  "due": {
+    "count": "{count, plural, =0 {Nothing due} one {# machine due} other {# machines due}}",
+    "machines": "{count, plural, one {# machine} other {# machines}}",
+    "atHours": "at {hours} h",
+    "hoursLeft": "{hours} h left",
+    "hoursOver": "{hours} h over",
+    "daysLeft": "{days, plural, one {# day left} other {# days left}}",
+    "daysOver": "{days, plural, one {# day late} other {# days late}}",
+    "emptyTitle": "No machines covered",
+    "emptyBody": "No active machine matches this plan yet."
+  },
+  "toast": {
+    "saved": "Maintenance plan saved"
+  }
+}

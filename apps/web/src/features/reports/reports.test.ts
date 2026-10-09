@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import en from "../../../messages/en/reports.json";
 import ptBR from "../../../messages/pt-BR/reports.json";
 
+import { linkAssetErrors } from "./LinkAssetDialog";
 import { markForRepairBody } from "./MarkForRepairDialog";
 import { reportFlagKeys, statusQuery } from "./types";
 
@@ -38,5 +39,14 @@ describe("report helpers", () => {
     const values = { title: "  Leak  ", priority: "HIGH" as const, assigneeId: null, scheduledFor: "" };
     expect(markForRepairBody(values)).toEqual({ title: "Leak", priority: "HIGH", assigneeId: undefined, scheduledFor: undefined, existing: undefined, reason: undefined });
     expect(markForRepairBody(values, { mode: "createAnyway", reason: "Second machine" })).toMatchObject({ existing: "createAnyway", reason: "Second machine" });
+  });
+});
+
+describe("link-asset form (FR-22)", () => {
+  it("requires a picked asset or a name for a new one", () => {
+    expect(linkAssetErrors({ mode: "existing", assetId: null, name: "", category: "OTHER" })).toEqual({ assetId: "pickRequired" });
+    expect(linkAssetErrors({ mode: "existing", assetId: "a1", name: "", category: "OTHER" })).toEqual({});
+    expect(linkAssetErrors({ mode: "create", assetId: null, name: "  ", category: "OTHER" })).toEqual({ name: "nameRequired" });
+    expect(linkAssetErrors({ mode: "create", assetId: null, name: "Carreta", category: "IMPLEMENT" })).toEqual({});
   });
 });

@@ -1,1 +1,74 @@
-{}
+{
+  "status": { "DRAFT": "Rascunho", "ISSUED": "Emitido", "PAID": "Pago", "CANCELLED": "Cancelado" },
+  "source": { "WORK_ORDER": "Ordem de serviço", "RENTAL": "Locação", "MANUAL": "Manual" },
+  "tabs": { "ALL": "Todos", "DRAFT": "Rascunhos", "ISSUED": "Emitidos", "PAID": "Pagos", "CANCELLED": "Cancelados" },
+  "list": {
+    "title": "Cobrança",
+    "tabsLabel": "Filtrar documentos de cobrança por situação",
+    "allSources": "Todas as origens",
+    "emptyTitle": "Nenhum documento de cobrança ainda",
+    "emptyBody": "Cobre uma OS concluída pela página dela ou crie um documento manual aqui. Locações encerradas são cobradas automaticamente."
+  },
+  "actions": {
+    "new": "Novo documento de cobrança",
+    "pdf": "PDF da cobrança",
+    "edit": "Editar rascunho",
+    "issue": "Emitir",
+    "pay": "Marcar como pago",
+    "cancel": "Cancelar documento",
+    "createFromSource": "Criar documento de cobrança",
+    "open": "Abrir documento de cobrança"
+  },
+  "fields": {
+    "number": "Número",
+    "source": "Origem",
+    "customer": "Cliente",
+    "status": "Situação",
+    "issuedAt": "Emitido em",
+    "dueAt": "Vencimento",
+    "paidAt": "Pago em",
+    "total": "Total",
+    "subtotal": "Subtotal",
+    "discount": "Desconto",
+    "nfeNumber": "Número da NF-e",
+    "nfeKey": "Chave de acesso da NF-e",
+    "notes": "Observações"
+  },
+  "lines": {
+    "title": "Itens",
+    "row": "Item {index}",
+    "description": "Descrição",
+    "quantity": "Quantidade",
+    "unitAmount": "Valor unitário",
+    "amount": "Valor",
+    "invalid": "Preencha descrição, quantidade e valor unitário.",
+    "remove": "Remover item {index}",
+    "removeShort": "Remover",
+    "add": "Adicionar item",
+    "discountHint": "Subtraído do subtotal. Não pode ser maior que o subtotal."
+  },
+  "create": {
+    "title": "Novo documento de cobrança",
+    "confirm": "Criar rascunho",
+    "manualBody": "Escolha o cliente e adicione os itens. O documento começa como rascunho e ainda pode ser editado.",
+    "sourceBody": "Os itens vêm da origem. Revise; o documento começa como rascunho e ainda pode ser editado.",
+    "customerRequired": "Escolha o cliente a cobrar.",
+    "customerHint": "A origem não tem cliente. Escolha quem recebe este documento."
+  },
+  "detail": { "title": "Documento de cobrança {number}", "summary": "Resumo" },
+  "issue": {
+    "title": "Emitir documento de cobrança",
+    "body": "Depois de emitido, os itens não podem mais ser editados. Ainda é possível cancelar.",
+    "nfeHint": "Opcional. Referência a uma NF-e emitida no seu sistema fiscal.",
+    "nfeKeyInvalid": "A chave de acesso tem 44 dígitos. Confira e tente de novo."
+  },
+  "pay": { "title": "Marcar como pago", "body": "Confirme que {total} foi recebido." },
+  "cancel": { "title": "Cancelar documento de cobrança", "body": "O documento fica no histórico como cancelado. Não é possível desfazer.", "reason": "Motivo" },
+  "edit": { "title": "Editar rascunho" },
+  "panel": {
+    "title": "Cobrança",
+    "noneBody": "Ainda não há documento de cobrança para este registro.",
+    "existsBody": "Este registro já tem documento de cobrança."
+  },
+  "toast": { "issued": "Documento de cobrança emitido", "paid": "Marcado como pago", "cancelled": "Documento de cobrança cancelado", "updated": "Rascunho salvo" }
+}

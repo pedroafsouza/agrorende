@@ -24,9 +24,11 @@
     "useLocation": "Usar minha localização",
     "locationReady": "Local salvo (±{meters} m)",
     "locationFailed": "Não foi possível pegar o local. O relato ainda pode ser enviado.",
-    "openExisting": "Ver o existente",
+    "openExisting": "Adicionar informação ao existente",
     "continueNew": "Continuar novo relato",
-    "sent": "Relato salvo. Ele será enviado quando houver sinal."
+    "sent": "Relato salvo. Ele será enviado quando houver sinal.",
+    "dragPin": "Arraste o alfinete se o problema estiver em outro lugar.",
+    "locationAdjusted": "Você moveu o alfinete. Este local será enviado."
   },
   "field": {
     "category": "Tipo de problema",
@@ -99,7 +101,13 @@
     "withdrawReasonPlaceholder": "Exemplo: relatei a máquina errada",
     "withdrawn": "Você retirou este relato.",
     "notFoundTitle": "Relato não encontrado",
-    "notFoundBody": "Ele pode ainda estar baixando. Sincronize ou volte para Meus relatos."
+    "notFoundBody": "Ele pode ainda estar baixando. Sincronize ou volte para Meus relatos.",
+    "edit": "Editar relato",
+    "editTitle": "Editar relato",
+    "addPhoto": "Adicionar fotos",
+    "saveEdit": "Salvar alterações",
+    "lockedTitle": "Sua alteração não foi salva",
+    "lockedBody": "O escritório já começou a cuidar deste relato, então ele não pode mais ser alterado. Escreva um comentário abaixo."
   },
   "widget": {
     "quickReport": "Relatar problema",

@@ -1,7 +1,7 @@
 import type { HoldReason, Role, WorkOrderStatus } from "@agrorende/contracts/enums";
 import type { WorkOrderCompletePayload } from "@agrorende/contracts/mutations";
 import { useRouter } from "expo-router";
-import { ClipboardCheck, FileQuestion, MapPin, Navigation, Package, Phone, Tractor, Wrench } from "lucide-react-native";
+import { ClipboardCheck, FileQuestion, MapPin, MapPinCheck, MapPinX, Megaphone, Navigation, Package, Phone, Timer, Tractor, Wrench } from "lucide-react-native";
 import { useState, useSyncExternalStore } from "react";
 import { Linking, StyleSheet, View } from "react-native";
 
@@ -11,16 +11,21 @@ import type { AppErrorCode } from "@agrorende/contracts/errors";
 import { errorCodeOf } from "../../lib/errors";
 import { openNavigation } from "../../lib/navigation";
 import { useServices } from "../../lib/services";
+import { createComment } from "../../sync/mutators/comments";
 import { completeWorkOrder, transitionWorkOrder } from "../../sync/mutators/jobs";
+import { getSyncRuntime } from "../../sync/runtime";
+import { useT } from "../../i18n/useT";
 import { Banner, BottomSheet, Button, Card, Chip, EmptyState, ErrorState, ListItem, Screen, Skeleton, StatusPill, Text, TextField, showToast } from "../../ui";
 import { ErrorSheet } from "../../ui/recovery/ErrorSheet";
 import { InlineError } from "../../ui/recovery/InlineError";
 import { CommentThread } from "../comments";
 import { loadUserSettings } from "../settings/logic";
 import "./i18n";
+import { pointUpdateText, type ArrivalTarget } from "./arrivalPrompt";
 import { replaceRejected } from "./meterJump";
 import { MeterJumpReview, type MeterJumpResubmit } from "./MeterJumpReview";
 import { ACTION_LABEL, actionPlan, checklistOf, HOLD_REASONS, jobDestination, jobNotice, PRIORITY_TONE, STATUS_TONE, type JobStep } from "./logic";
+import { useArrivalPrompt } from "./useArrivalPrompt";
 import { useJob } from "./useJob";
 
 type FieldAction = "accept" | "startRoute" | "arrive" | "abortRoute" | "startWork" | "resume";
@@ -40,6 +45,9 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
   const [sheetError, setSheetError] = useState<string | undefined>();
   const [errorCode, setErrorCode] = useState<AppErrorCode | undefined>();
   const [busy, setBusy] = useState(false);
+  const t = useT();
+  const loaded = query.status === "ready" ? query.data : undefined;
+  const arrival = useArrivalPrompt(arrivalTarget(id, loaded?.workOrder, loaded?.site), now ?? Date.now);
 
   if (query.status === "loading") return <Screen testID="job-detail-loading"><Skeleton lines={8} /></Screen>;
   if (query.status === "error") return <Screen testID="job-detail-error"><ErrorState onRetry={query.reload} /></Screen>;
@@ -186,7 +194,51 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
         </Card>
       ) : null}
       {status === "IN_PROGRESS" ? <ListItem testID="job-open-complete" icon={Wrench} titleKey="jobs.actions.complete" subtitleKey="jobs.detail.completeHint" onPress={() => router.push(`/jobs/${id}/complete`)} /> : null}
+      {inField ? (
+        <ListItem
+          testID="job-while-here"
+          icon={Megaphone}
+          titleKey="jobs.whileHere.action"
+          subtitleKey="jobs.whileHere.hint"
+          onPress={() => {
+            const params = new URLSearchParams();
+            if (typeof wo.assetId === "string") params.set("assetId", wo.assetId);
+            if (typeof wo.siteId === "string") params.set("siteId", wo.siteId);
+            router.push(`/reports/new?${params.toString()}`);
+          }}
+        />
+      ) : null}
       <CommentThread entityType="WORK_ORDER" entityId={id} />
+
+      <BottomSheet testID="job-arrival-sheet" visible={arrival.fix !== undefined} onClose={arrival.close} titleKey="jobs.arrival.title" titleValues={{ name: String(site?.name ?? wo.title ?? "") }}>
+        <View style={styles.sheet}>
+          <Text i18nKey="jobs.arrival.body" />
+          <Button
+            testID="job-arrival-confirm"
+            icon={MapPinCheck}
+            labelKey="jobs.arrival.confirm"
+            onPress={() => {
+              arrival.close();
+              void run("arrive");
+            }}
+          />
+          <Button testID="job-arrival-not-yet" variant="secondary" icon={Timer} labelKey="jobs.arrival.notYet" onPress={arrival.decline} />
+          <Button
+            testID="job-arrival-wrong-place"
+            variant="ghost"
+            icon={MapPinX}
+            labelKey="jobs.arrival.wrongPlace"
+            onPress={() => {
+              const fix = arrival.fix;
+              arrival.decline();
+              if (fix === undefined) return;
+              createComment({ id: getSyncRuntime().newId(), entityType: "WORK_ORDER", entityId: id, body: t("jobs.arrival.pointComment", { point: pointUpdateText(fix) }) })
+                .then(() => showToast({ messageKey: "jobs.arrival.pointSent", tone: "success" }))
+                .catch((error: unknown) => setErrorCode(errorCodeOf(error) as AppErrorCode));
+            }}
+          />
+        </View>
+      </BottomSheet>
 
       <BottomSheet testID={`job-sheet-${sheet ?? "none"}`} visible={sheet !== undefined} onClose={() => setSheet(undefined)} titleKey={sheet === "decline" ? "jobs.decline.title" : "jobs.hold.title"}>
         {sheet === "hold" ? (
@@ -205,7 +257,17 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
   );
 }
 
+/** The arrival prompt aims at the job pin, else the site pin (WO-05 order), with the site's radius. */
+function arrivalTarget(id: string, wo: Record<string, unknown> | undefined, site: Record<string, unknown> | undefined): ArrivalTarget | undefined {
+  if (wo === undefined) return undefined;
+  const lat = typeof wo.destLat === "number" ? wo.destLat : typeof site?.lat === "number" ? site.lat : undefined;
+  const lng = typeof wo.destLng === "number" ? wo.destLng : typeof site?.lng === "number" ? site.lng : undefined;
+  if (lat === undefined || lng === undefined) return undefined;
+  return { workOrderId: id, status: String(wo.status ?? ""), lat, lng, radiusM: typeof site?.radiusM === "number" ? site.radiusM : null };
+}
+
 const styles = StyleSheet.create({
+  sheet: { gap: 12 },
   footer: { gap: 8 },
   pills: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginVertical: 8 },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginBottom: 12 },

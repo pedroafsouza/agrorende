@@ -1,17 +1,19 @@
 import type { MediaMeta } from "@agrorende/contracts/sync";
 import { Camera } from "lucide-react-native";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { errorCodeOf, LocalError } from "../../lib/errors";
 import { useServices } from "../../lib/services";
 import { Button, Chip, Text } from "../../ui";
 import { InlineError } from "../../ui/recovery/InlineError";
+import { annotateCapture } from "./annotation";
 import { CameraSheet } from "./CameraSheet";
 import { captureToDraft, countByTag, removeDraft, type CaptureDeps, type MediaDraft, type RawCapture } from "./drafts";
 import { Thumbnails } from "./Thumbnails";
 import { VoiceNoteButton } from "./VoiceNoteButton";
 
+export * from "./annotation";
 export * from "./drafts";
 export { Silhouette } from "./Silhouette";
 export { Thumbnails } from "./Thumbnails";
@@ -38,6 +40,7 @@ export function MediaCapture({ parent, allowedTags, silhouette, onChange, value,
   const [tag, setTag] = useState(allowedTags[0] ?? "GENERAL");
   const [cameraOpen, setCameraOpen] = useState(false);
   const [error, setError] = useState<string | undefined>();
+  const [annotating, setAnnotating] = useState<MediaDraft | undefined>();
   const resolved: CaptureDeps | undefined =
     deps ?? (services.db !== undefined && services.files !== undefined ? { db: services.db, files: services.files, newId: services.newId ?? (() => `${Date.now()}`), now: services.now ?? Date.now } : undefined);
   const counts = countByTag(drafts);
@@ -72,6 +75,7 @@ export function MediaCapture({ parent, allowedTags, silhouette, onChange, value,
       {drafts.length > 0 ? <Text testID="media-count" i18nKey="media.capture.count" values={{ count: drafts.length, tagged: counts[tag] ?? 0 }} tone="secondary" variant="caption" /> : null}
       <Thumbnails
         drafts={drafts}
+        {...(resolved?.files.writeTemp === undefined ? {} : { onAnnotate: (id: string) => setAnnotating(drafts.find((d) => d.id === id)) })}
         onDelete={(id) => {
           if (resolved === undefined) return;
           removeDraft(resolved, drafts, id)
@@ -80,6 +84,19 @@ export function MediaCapture({ parent, allowedTags, silhouette, onChange, value,
         }}
       />
       {error === undefined ? null : <InlineError code={error} />}
+      {annotating === undefined || resolved === undefined ? null : (
+        <Suspense fallback={null}>
+          <AnnotateSheet
+            uri={annotating.localUri}
+            onClose={() => setAnnotating(undefined)}
+            onSave={async (base64) => {
+              const updated = await annotateCapture(resolved, annotating, base64);
+              publish(drafts.map((d) => (d.id === updated.id ? updated : d)));
+              setAnnotating(undefined);
+            }}
+          />
+        </Suspense>
+      )}
       <CameraSheet
         visible={cameraOpen}
         tag={tag}
@@ -98,5 +115,8 @@ export function MediaCapture({ parent, allowedTags, silhouette, onChange, value,
     </View>
   );
 }
+
+// Skia loads only when a photo is being marked, keeping it out of the capture path and of unit tests.
+const AnnotateSheet = lazy(() => import("./AnnotateSheet").then((m) => ({ default: m.AnnotateSheet })));
 
 const styles = StyleSheet.create({ chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 }, wrap: { gap: 12 } });

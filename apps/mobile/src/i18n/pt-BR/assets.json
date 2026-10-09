@@ -66,5 +66,19 @@
     "RETURNED": "Devolvida",
     "SUBMITTED": "Enviado",
     "VERIFIED": "Verificado"
+  },
+  "costs": {
+    "title": "Custos até hoje",
+    "labor": "Mão de obra",
+    "parts": "Peças",
+    "external": "Serviços de terceiros",
+    "fuel": "Combustível",
+    "rentIn": "Máquinas alugadas de terceiros",
+    "total": "Custo total",
+    "revenue": "Receita de locação",
+    "toDate": "Dos registros do escritório. Atualizado quando houver conexão.",
+    "empty": "Nenhum custo registrado para esta máquina.",
+    "offline": "Os custos precisam de conexão. Tente de novo quando houver sinal.",
+    "retry": "Tentar de novo"
   }
 }

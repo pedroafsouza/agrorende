@@ -48,6 +48,17 @@
     "voice": {
       "record": "Record audio",
       "stop": "Stop audio"
+    },
+    "annotate": {
+      "open": "Mark the problem",
+      "title": "Mark the problem",
+      "circle": "Circle",
+      "arrow": "Arrow",
+      "freehand": "Draw",
+      "undo": "Undo",
+      "save": "Save marks",
+      "hint": "Drag on the photo to circle or point at the problem. The original photo is kept.",
+      "failed": "The marks could not be saved. The original photo is still attached."
     }
   },
   "permissions": {
@@ -391,5 +402,16 @@
       "progress": "Step {current} of {total}",
       "submit": "Submit"
     }
+  },
+  "notificationCentre": {
+    "title": "Notifications",
+    "empty": {
+      "title": "No notifications",
+      "body": "Messages from the office and new jobs show up here."
+    },
+    "unread": "{count, plural, =0 {No unread notifications} one {# unread} other {# unread}}",
+    "markAllRead": "Mark all as read",
+    "unreadLabel": "Unread",
+    "loadError": "Could not read the notifications on this phone."
   }
 }

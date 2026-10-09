@@ -122,7 +122,39 @@
       "crop": "Cultura",
       "name": "Nome"
     },
-    "title": "Talhões"
+    "title": "Talhões",
+    "boundary": {
+      "area": "Área pelo limite: {area} ha",
+      "clear": "Limpar desenho",
+      "coordinates": "Vértices (longitude, latitude)",
+      "coordinatesHint": "Um vértice por linha, por exemplo -55.721534, -12.545812. O desenho e esta lista ficam sincronizados.",
+      "draw": "Desenhar novo limite",
+      "drawAction": "Desenhar limite",
+      "drawingHint": "Clique no mapa para marcar cada vértice. Clique no primeiro vértice, ou pressione Enter, para fechar a forma. Esc cancela.",
+      "editAction": "Editar limite",
+      "editHint": "Arraste um vértice para movê-lo, arraste um ponto do meio para criar um vértice ou clique com o botão direito num vértice para apagá-lo.",
+      "noArea": "Ainda sem limite. Desenhe no mapa ou digite os vértices abaixo.",
+      "open": "Limite de {name}",
+      "problem": {
+        "format": "Cada linha precisa de longitude e latitude separadas por vírgula.",
+        "range": "A longitude deve estar entre -180 e 180 e a latitude entre -90 e 90.",
+        "tooFew": "Um limite precisa de pelo menos três vértices."
+      },
+      "remove": "Remover limite",
+      "save": "Salvar limite",
+      "saved": "Limite salvo. Área: {area} ha",
+      "title": "Limite de {name}"
+    }
+  },
+  "qr": {
+    "bulkRegion": "Ativos selecionados",
+    "clear": "Limpar seleção",
+    "print": "Imprimir etiquetas QR",
+    "ready": "{count, plural, one {Folha de etiquetas QR de # ativo baixada} other {Folha de etiquetas QR de # ativos baixada}}",
+    "select": "Selecionar {code}",
+    "selectPage": "Selecionar todos os ativos desta página",
+    "selected": "{count, plural, one {# ativo selecionado} other {# ativos selecionados}}",
+    "tooMany": "Selecione no máximo {max} ativos por folha."
   },
   "retire": {
     "body": "A máquina sai das listas e não pode receber novas ordens nem locações. O histórico é mantido.",

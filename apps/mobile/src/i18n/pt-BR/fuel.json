@@ -1,0 +1,38 @@
+{
+  "new": {
+    "offlineHint": "Salvo primeiro neste celular. É enviado quando houver sinal.",
+    "machine": "Máquina",
+    "photo": "Foto da bomba",
+    "total": "Total: {total}",
+    "readingsHint": "O horímetro permite ao escritório ver litros por hora.",
+    "save": "Salvar abastecimento"
+  },
+  "fields": {
+    "liters": "Litros",
+    "pricePerLiter": "Preço por litro (R$)",
+    "hourMeter": "Horímetro",
+    "odometerKm": "Hodômetro",
+    "notes": "Observações"
+  },
+  "units": {
+    "liters": "L",
+    "perLiter": "R$/L",
+    "hours": "h",
+    "km": "km"
+  },
+  "errors": {
+    "assetRequired": "Escolha a máquina abastecida.",
+    "litersRequired": "Informe quantos litros foram colocados.",
+    "litersPositive": "Os litros devem ser maiores que zero.",
+    "notNegative": "Este valor não pode ser negativo."
+  },
+  "history": {
+    "title": "Combustível",
+    "add": "Registrar abastecimento",
+    "empty": "Nenhum abastecimento registrado para esta máquina.",
+    "row": "{liters} L",
+    "pending": "Aguardando envio",
+    "consumption": "Consumo: {litersPerHour} L/h em {hours} h",
+    "noConsumption": "Registre o horímetro duas vezes para ver litros por hora."
+  }
+}

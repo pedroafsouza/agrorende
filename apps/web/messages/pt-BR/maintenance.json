@@ -1,1 +1,70 @@
-{}
+{
+  "title": "Manutenção preventiva",
+  "subtitle": "Planos por horímetro ou calendário. Uma OS preventiva abre sozinha quando o plano vence.",
+  "emptyTitle": "Nenhum plano de manutenção",
+  "emptyBody": "Crie um plano para uma máquina ou para todas as máquinas de um tipo.",
+  "showInactive": "Mostrar planos inativos",
+  "actions": {
+    "new": "Novo plano",
+    "edit": "Editar",
+    "due": "Ver máquinas a vencer",
+    "deactivate": "Desativar",
+    "activate": "Ativar"
+  },
+  "dialog": {
+    "newTitle": "Novo plano de manutenção",
+    "editTitle": "Editar plano de manutenção",
+    "dueTitle": "Máquinas a vencer · {name}",
+    "targetHint": "Escolha uma máquina, ou um tipo de máquina para cobrir todas desse tipo."
+  },
+  "fields": {
+    "name": "Nome do plano",
+    "target": "Vale para",
+    "targetAsset": "Uma máquina",
+    "targetCategory": "Tipo de máquina",
+    "asset": "Máquina",
+    "category": "Tipo de máquina",
+    "trigger": "Gatilho",
+    "intervalHours": "A cada (horas)",
+    "intervalDays": "A cada (dias)",
+    "lastDoneHourMeter": "Última vez no horímetro",
+    "lastDoneAt": "Última vez em",
+    "leadHours": "Abrir a OS com estas horas de antecedência",
+    "leadDays": "Abrir a OS com estes dias de antecedência",
+    "status": "Situação",
+    "hourMeter": "Horímetro",
+    "nextDue": "Próximo vencimento",
+    "remaining": "Falta"
+  },
+  "trigger": {
+    "HOURS": "Horímetro",
+    "CALENDAR": "Calendário",
+    "HOURS_OR_CALENDAR": "Horímetro ou calendário, o que vier primeiro"
+  },
+  "interval": {
+    "hours": "a cada {hours} h",
+    "days": "a cada {days, plural, one {# dia} other {# dias}}"
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "due": "A vencer",
+    "overdue": "Vencido",
+    "ok": "Em dia",
+    "open": "OS aberta"
+  },
+  "due": {
+    "count": "{count, plural, =0 {Nada a vencer} one {# máquina a vencer} other {# máquinas a vencer}}",
+    "machines": "{count, plural, one {# máquina} other {# máquinas}}",
+    "atHours": "em {hours} h",
+    "hoursLeft": "faltam {hours} h",
+    "hoursOver": "{hours} h passado",
+    "daysLeft": "{days, plural, one {falta # dia} other {faltam # dias}}",
+    "daysOver": "{days, plural, one {# dia de atraso} other {# dias de atraso}}",
+    "emptyTitle": "Nenhuma máquina coberta",
+    "emptyBody": "Nenhuma máquina ativa corresponde a este plano ainda."
+  },
+  "toast": {
+    "saved": "Plano de manutenção salvo"
+  }
+}

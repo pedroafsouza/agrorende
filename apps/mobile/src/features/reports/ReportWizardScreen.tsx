@@ -1,8 +1,9 @@
 import { getCurrentPositionAsync, requestForegroundPermissionsAsync } from "expo-location";
 import { useRouter } from "expo-router";
 import { MapPin, Video } from "lucide-react-native";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 
 import { AssetPicker } from "../../components/AssetPicker";
 import { MediaCapture, type MediaDraft } from "../../components/MediaCapture";
@@ -12,12 +13,13 @@ import { discardCapture } from "../../media/capture";
 import { useServices } from "../../lib/services";
 import { useLocalQuery } from "../../lib/useLocalQuery";
 import { createReport } from "../../sync/mutators/reports";
-import { Banner, Button, Card, Chip, Segmented, StatusPill, Text, TextField } from "../../ui";
+import { Banner, Button, Card, Chip, Segmented, StatusPill, Text, TextField, useTheme } from "../../ui";
 import { InlineError } from "../../ui/recovery/InlineError";
 import { getAsset } from "../assets/logic";
 import "./i18n";
 import {
   acceptMediaChange,
+  adjustLocation,
   assetAttention,
   buildCreatePayload,
   countVideos,
@@ -40,23 +42,35 @@ import {
 export type ReportWizardScreenProps = {
   /** Prefills the Machine step (asset profile, QR scan). */
   readonly assetId?: string;
+  /** Prefills the site ("While I'm here" from a job). */
+  readonly siteId?: string;
   /** Resumes a saved draft (EC-FR-12). */
   readonly draftId?: string;
 };
 
 /** F1 report wizard: Machine → Evidence → Details → Review, autosaved after every change (FR-01..FR-07). */
-export function ReportWizardScreen({ assetId, draftId }: ReportWizardScreenProps) {
+export function ReportWizardScreen({ assetId, siteId, draftId }: ReportWizardScreenProps) {
   const router = useRouter();
   const services = useServices();
   const t = useT();
   const [id] = useState(() => draftId ?? services.newId?.() ?? `${Date.now()}`);
-  const [initial] = useState(() => newReportDraft(id, assetId));
+  const [initial] = useState(() => newReportDraft(id, assetId, siteId));
+  const [showRestored, setShowRestored] = useState(draftId !== undefined);
+  // EC-FR-12: the restored banner sits above whichever step the draft resumes on.
+  const withRestored = (node: ReactNode) => (
+    <View style={styles.stack}>
+      {showRestored ? (
+        <Banner testID="report-draft-restored" tone="success" titleKey="errors.REPORT_DRAFT_RESTORED.title" bodyKey="errors.REPORT_DRAFT_RESTORED.body" onDismiss={() => setShowRestored(false)} />
+      ) : null}
+      {node}
+    </View>
+  );
 
   const steps: readonly WizardStep<ReportDraft>[] = [
-    { id: "machine", titleKey: "reports.wizard.step.machine", render: () => <MachineStep restored={draftId !== undefined} />, validate: validateMachine },
-    { id: "evidence", titleKey: "reports.wizard.step.evidence", render: () => <EvidenceStep />, validate: validateEvidence },
-    { id: "details", titleKey: "reports.wizard.step.details", render: () => <DetailsStep />, validate: validateDetails },
-    { id: "review", titleKey: "reports.wizard.step.review", render: () => <ReviewStep />, validate: validateReview },
+    { id: "machine", titleKey: "reports.wizard.step.machine", render: () => withRestored(<MachineStep />), validate: validateMachine },
+    { id: "evidence", titleKey: "reports.wizard.step.evidence", render: () => withRestored(<EvidenceStep />), validate: validateEvidence },
+    { id: "details", titleKey: "reports.wizard.step.details", render: () => withRestored(<DetailsStep />), validate: validateDetails },
+    { id: "review", titleKey: "reports.wizard.step.review", render: () => withRestored(<ReviewStep />), validate: validateReview },
   ];
 
   return (
@@ -77,10 +91,9 @@ export function ReportWizardScreen({ assetId, draftId }: ReportWizardScreenProps
   );
 }
 
-function MachineStep({ restored }: { readonly restored: boolean }) {
+function MachineStep() {
   const router = useRouter();
   const { payload, update } = useWizard<ReportDraft>();
-  const [showRestored, setShowRestored] = useState(restored);
   const [ignoreDuplicates, setIgnoreDuplicates] = useState(false);
   const context = useLocalQuery(
     async (db) => {
@@ -96,9 +109,6 @@ function MachineStep({ restored }: { readonly restored: boolean }) {
 
   return (
     <View style={styles.stack}>
-      {showRestored ? (
-        <Banner testID="report-draft-restored" tone="success" titleKey="errors.REPORT_DRAFT_RESTORED.title" bodyKey="errors.REPORT_DRAFT_RESTORED.body" onDismiss={() => setShowRestored(false)} />
-      ) : null}
       <AssetPicker
         value={{ ...(payload.assetId === undefined ? {} : { assetId: payload.assetId }), ...(payload.unregisteredAssetDesc === undefined ? {} : { unregisteredAssetDescription: payload.unregisteredAssetDesc }) }}
         initialTab={payload.assetId === undefined ? (payload.unregisteredAssetDesc === undefined ? "scan" : "unregistered") : "recent"}
@@ -200,6 +210,7 @@ function DetailsStep() {
 }
 
 function ReviewStep() {
+  const theme = useTheme();
   const { payload, update, goTo } = useWizard<ReportDraft>();
   const [locating, setLocating] = useState(false);
   const [locationFailed, setLocationFailed] = useState(false);
@@ -214,7 +225,10 @@ function ReviewStep() {
       const permission = await requestForegroundPermissionsAsync();
       if (permission.status !== "granted") throw new Error("denied");
       const position = await getCurrentPositionAsync({});
-      update({ lat: position.coords.latitude, lng: position.coords.longitude, ...(position.coords.accuracy === null ? {} : { accuracyM: Math.round(position.coords.accuracy) }) });
+      update((current) => {
+        const { locationAdjusted: _adjusted, accuracyM: _accuracy, ...rest } = current;
+        return { ...rest, lat: position.coords.latitude, lng: position.coords.longitude, ...(position.coords.accuracy === null ? {} : { accuracyM: Math.round(position.coords.accuracy) }) };
+      });
     } catch {
       setLocationFailed(true);
     } finally {
@@ -245,6 +259,25 @@ function ReviewStep() {
           <Button variant="secondary" icon={Video} labelKey="reports.wizard.step.evidence" onPress={() => goTo("evidence")} />
         </View>
       )}
+      {payload.lat !== undefined && payload.lng !== undefined ? (
+        <View testID="report-location-map" style={styles.map}>
+          <MapView
+            style={StyleSheet.absoluteFill}
+            initialRegion={{ latitude: payload.lat, longitude: payload.lng, latitudeDelta: 0.005, longitudeDelta: 0.005 }}
+            toolbarEnabled={false}
+          >
+            <Marker
+              testID="report-location-pin"
+              draggable
+              coordinate={{ latitude: payload.lat, longitude: payload.lng }}
+              pinColor={theme.danger}
+              onDragEnd={(event) => update((current) => adjustLocation(current, event.nativeEvent.coordinate.latitude, event.nativeEvent.coordinate.longitude))}
+            />
+          </MapView>
+        </View>
+      ) : null}
+      {payload.lat !== undefined ? <Text i18nKey="reports.wizard.dragPin" variant="caption" tone="secondary" /> : null}
+      {payload.locationAdjusted === true ? <Text testID="report-location-adjusted" i18nKey="reports.wizard.locationAdjusted" tone="secondary" /> : null}
       {payload.lat !== undefined && payload.accuracyM !== undefined ? <Text i18nKey="reports.wizard.locationReady" values={{ meters: payload.accuracyM }} tone="secondary" /> : null}
       {isLocationWeak(payload) ? (
         <Banner testID="report-location-weak" tone="warning" titleKey="errors.REPORT_LOCATION_WEAK.title" bodyKey={locationFailed ? "reports.wizard.locationFailed" : "errors.REPORT_LOCATION_WEAK.body"} />
@@ -256,6 +289,7 @@ function ReviewStep() {
 
 const styles = StyleSheet.create({
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  map: { borderRadius: 12, height: 200, overflow: "hidden" },
   row: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
   stack: { gap: 12 },
 });

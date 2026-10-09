@@ -37,6 +37,8 @@ export interface ReportDraft {
   readonly id: string;
   readonly assetId?: string;
   readonly unregisteredAssetDesc?: string;
+  /** Prefilled from "While I'm here" on a job (the job's site). */
+  readonly siteId?: string;
   readonly media: readonly MediaDraft[];
   readonly category?: IssueCategory;
   readonly priority: Priority;
@@ -47,10 +49,18 @@ export interface ReportDraft {
   readonly lat?: number;
   readonly lng?: number;
   readonly accuracyM?: number;
+  /** FR-06: the reporter dragged the pin away from the GPS fix. */
+  readonly locationAdjusted?: boolean;
 }
 
-export function newReportDraft(id: string, assetId?: string): ReportDraft {
-  return { id, ...(assetId === undefined || assetId.length === 0 ? {} : { assetId }), media: [], priority: "MEDIUM", machineOperable: true, suggestedAction: "REPAIR_SOON" };
+/** FR-06: the pin was dragged; the GPS accuracy no longer describes the point. */
+export function adjustLocation(draft: ReportDraft, lat: number, lng: number): ReportDraft {
+  const { accuracyM: _accuracyM, ...rest } = draft;
+  return { ...rest, lat, lng, locationAdjusted: true };
+}
+
+export function newReportDraft(id: string, assetId?: string, siteId?: string): ReportDraft {
+  return { id, ...(assetId === undefined || assetId.length === 0 ? {} : { assetId }), ...(siteId === undefined || siteId.length === 0 ? {} : { siteId }), media: [], priority: "MEDIUM", machineOperable: true, suggestedAction: "REPAIR_SOON" };
 }
 
 export type ReportValidation = true | MessageKey;
@@ -112,6 +122,7 @@ export function buildCreatePayload(draft: ReportDraft, fallbackTitle: string): F
   return {
     id: draft.id,
     ...(has(draft.assetId) ? { assetId: draft.assetId } : { unregisteredAssetDesc: (draft.unregisteredAssetDesc ?? "").trim() }),
+    ...(has(draft.siteId) ? { siteId: draft.siteId } : {}),
     category,
     priority: draft.priority,
     machineOperable: draft.machineOperable,
@@ -120,12 +131,14 @@ export function buildCreatePayload(draft: ReportDraft, fallbackTitle: string): F
     ...(has(draft.description) ? { description: draft.description.trim() } : {}),
     ...(draft.lat === undefined || draft.lng === undefined ? {} : { lat: draft.lat, lng: draft.lng }),
     ...(draft.accuracyM === undefined ? {} : { accuracyM: draft.accuracyM }),
+    ...(draft.locationAdjusted === true && draft.lat !== undefined ? { locationAdjusted: true } : {}),
     media: draft.media.map(({ localUri: _localUri, thumbUri: _thumbUri, ...meta }) => ({ ...meta, parent: { type: "FIELD_REPORT", id: draft.id } })),
   };
 }
 
 /** EC-FR-10: no fix, or a fix worse than the threshold. */
-export function isLocationWeak(draft: Pick<ReportDraft, "lat" | "lng" | "accuracyM">): boolean {
+export function isLocationWeak(draft: Pick<ReportDraft, "lat" | "lng" | "accuracyM" | "locationAdjusted">): boolean {
+  if (draft.locationAdjusted === true && draft.lat !== undefined && draft.lng !== undefined) return false;
   return draft.lat === undefined || draft.lng === undefined || (draft.accuracyM !== undefined && draft.accuracyM > REPORT_WEAK_ACCURACY_M);
 }
 
@@ -229,6 +242,20 @@ export async function getReportDetail(db: SqlDb, id: string): Promise<ReportDeta
 }
 
 /** Only the reporter can withdraw, and only before the office picks the report up. */
+/** FR-11: the reporter may edit (and add photos) while nobody has picked the report up. */
+export function canEdit(report: MirrorRow, userId: string | undefined): boolean {
+  return canWithdraw(report, userId);
+}
+
+/** FR-11 / REPORT_LOCKED: the newest edit of this report the server refused, if any. */
+export async function rejectedReportEdit(db: SqlDb, reportId: string): Promise<string | undefined> {
+  const row = await db.get<{ lastError: string | null }>(
+    "SELECT lastError FROM outbox WHERE name = 'fieldReport.update' AND entityId = ? AND status = 'REJECTED' ORDER BY seq DESC LIMIT 1",
+    [reportId],
+  );
+  return row === undefined ? undefined : (row.lastError ?? "REPORT_LOCKED");
+}
+
 export function canWithdraw(report: MirrorRow, userId: string | undefined): boolean {
   return userId !== undefined && report.reporterId === userId && report.status === "SUBMITTED";
 }

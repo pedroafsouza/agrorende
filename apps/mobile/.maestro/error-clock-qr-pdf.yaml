@@ -1,0 +1,40 @@
+# EC-PLT-17 DEVICE_CLOCK_SKEWED, EC-PLT-24 SCAN_UNREADABLE and EC-PLT-30 PDF_SHARE_UNAVAILABLE.
+# Move the emulator clock 3 h ahead first (adb shell date) to see the clock warning.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0, manual-setup]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "tecnico1@agrorende.dev"
+- assertVisible:
+    text: "Horário do celular diferente|Phone time looks different"
+    optional: true
+- tapOn:
+    id: "assets"
+    optional: true
+- tapOn:
+    id: "assets-scan"
+- tapOn:
+    id: "scan-toggle-manual"
+- tapOn:
+    id: "scan-manual-input"
+- inputText: "AGR-000012"
+- tapOn:
+    id: "scan-manual-submit"
+- extendedWaitUntil:
+    visible:
+      id: "asset-detail"
+    timeout: 10000
+- setAirplaneMode: enabled
+- back
+- tapOn:
+    id: "home-next-job-open"
+    optional: true
+- tapOn:
+    text: "Compartilhar PDF|Share PDF"
+    optional: true
+- assertVisible:
+    id: "error-sheet-PDF_SHARE_UNAVAILABLE"
+    optional: true
+- setAirplaneMode: disabled

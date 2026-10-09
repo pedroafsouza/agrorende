@@ -81,7 +81,7 @@
     "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
     "openMenu": "Open menu",
     "search": "Search",
-    "searchSoon": "Global search is coming soon",
+    "searchSoon": "Search… press Ctrl+K or ⌘K",
     "sidebar": "Sidebar",
     "signOut": "Sign out",
     "skipToContent": "Skip to content",
@@ -124,5 +124,33 @@
     "themeVars": "Current theme variables",
     "title": "Style guide — Campo claro",
     "tokens": "Tokens"
+  },
+  "commandPalette": {
+    "label": "Search and commands",
+    "inputLabel": "Search machines, work orders, reports, rentals, customers and farms",
+    "placeholder": "Search or type a command…",
+    "close": "Close search",
+    "loading": "Searching…",
+    "minLength": "Type at least {count} characters to search records.",
+    "error": "Search failed. Check your connection and try again.",
+    "retry": "Try again",
+    "empty": "Nothing found for “{query}”.",
+    "hint": "Use the arrow keys to move, Enter to open and Esc to close.",
+    "goTo": "Go to {page}",
+    "groups": {
+      "assets": "Machines",
+      "workOrders": "Work orders",
+      "fieldReports": "Field reports",
+      "rentals": "Rentals",
+      "customers": "Customers",
+      "sites": "Farms",
+      "actions": "Quick actions",
+      "pages": "Pages"
+    },
+    "actions": {
+      "newWorkOrder": "New work order",
+      "newRental": "New rental",
+      "newAsset": "New machine"
+    }
   }
 }

@@ -7,7 +7,8 @@
     "monitor": "Keep monitoring",
     "openWorkOrder": "Open job {number}",
     "startReview": "Start review",
-    "viewAsset": "View machine"
+    "viewAsset": "View machine",
+    "linkAsset": "Link to a machine"
   },
   "activity": {
     "fieldReport": {
@@ -20,7 +21,8 @@
       "monitoring": "Kept under monitoring",
       "reviewStarted": "Review started",
       "updated": "Report updated",
-      "withdrawn": "Withdrawn by the reporter"
+      "withdrawn": "Withdrawn by the reporter",
+      "assetLinked": "Linked to a registered machine"
     }
   },
   "category": {
@@ -75,6 +77,20 @@
       "body": "The report stays under monitoring. Write what should be followed up.",
       "note": "Monitoring note",
       "title": "Keep monitoring"
+    },
+    "linkAsset": {
+      "title": "Link to a machine",
+      "body": "The reporter described: {description}. Pick the registered machine or create it from this report.",
+      "mode": "How do you want to link?",
+      "modes": {
+        "existing": "Pick an existing machine",
+        "create": "Create a new machine"
+      },
+      "name": "Machine name",
+      "category": "Category",
+      "submit": "Link machine",
+      "pickRequired": "Pick a machine from the list.",
+      "nameRequired": "Write the machine name."
     }
   },
   "fields": {
@@ -141,7 +157,8 @@
     "dismissed": "Report dismissed.",
     "markedForRepair": "Job {number} created.",
     "monitoring": "Report under monitoring.",
-    "reviewStarted": "Review started."
+    "reviewStarted": "Review started.",
+    "assetLinked": "Report linked to the machine."
   },
   "unregistered": "Unregistered machine: {description}"
 }

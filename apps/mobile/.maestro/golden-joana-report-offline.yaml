@@ -1,0 +1,47 @@
+# PRD §8 step 1–2: Joana reports a hydraulic leak offline, and the report waits to send.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [golden, joana]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- setAirplaneMode: enabled
+- tapOn:
+    id: "home-quick-report-new"
+- extendedWaitUntil:
+    visible:
+      id: "report-wizard"
+    timeout: 10000
+- tapOn:
+    id: "media-open-camera"
+- tapOn:
+    id: "camera-shutter"
+- tapOn:
+    id: "camera-shutter"
+- tapOn:
+    id: "camera-shutter"
+- tapOn:
+    id: "camera-close"
+- assertVisible:
+    id: "media-thumbnails"
+- tapOn:
+    id: "report-title"
+- inputText: "Vazamento hidráulico"
+- tapOn:
+    id: "report-description"
+- inputText: "Mangueira estourada no Talhão 2"
+- hideKeyboard
+- tapOn:
+    id: "report-operable"
+- assertVisible:
+    id: "report-review-summary"
+- tapOn:
+    id: "report-wizard-next"
+- assertVisible:
+    id: "offline-banner"
+- setAirplaneMode: disabled
+- extendedWaitUntil:
+    notVisible:
+      id: "offline-banner"
+    timeout: 60000

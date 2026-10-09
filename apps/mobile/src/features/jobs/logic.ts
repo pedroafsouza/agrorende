@@ -54,6 +54,9 @@ export interface JobListItem {
   readonly siteName: string | null;
   readonly holdReason: HoldReason | null;
   readonly pending: boolean;
+  /** Map point: the job pin, else the site pin (WO-05 order). */
+  readonly lat: number | null;
+  readonly lng: number | null;
 }
 
 const str = (value: unknown): string | null => (typeof value === "string" && value.length > 0 ? value : null);
@@ -62,6 +65,7 @@ const str = (value: unknown): string | null => (typeof value === "string" && val
 export async function listMyJobs(db: SqlDb, userId: string): Promise<JobListItem[]> {
   const rows = await db.all<Record<string, unknown>>(
     `SELECT w."id", w."number", w."title", w."status", w."priority", w."dueAt", w."scheduledFor", w."completedAt", w."cancelledAt", w."updatedAt", w."holdReason", w."_dirty" AS "dirty",
+            w."destLat", w."destLng", s."lat" AS "siteLat", s."lng" AS "siteLng",
             a."name" AS "assetName", s."name" AS "siteName"
        FROM "work_orders" w
        LEFT JOIN "assets" a ON a."id" = w."assetId"
@@ -84,7 +88,43 @@ export async function listMyJobs(db: SqlDb, userId: string): Promise<JobListItem
     siteName: str(row.siteName),
     holdReason: (str(row.holdReason) as HoldReason | null) ?? null,
     pending: row.dirty === 1,
+    ...mapPoint(row),
   }));
+}
+
+const num = (value: unknown): number | null => (typeof value === "number" && Number.isFinite(value) ? value : null);
+
+function mapPoint(row: Record<string, unknown>): { lat: number | null; lng: number | null } {
+  const destLat = num(row.destLat);
+  const destLng = num(row.destLng);
+  if (destLat !== null && destLng !== null) return { lat: destLat, lng: destLng };
+  return { lat: num(row.siteLat), lng: num(row.siteLng) };
+}
+
+export interface JobPin {
+  readonly id: string;
+  readonly lat: number;
+  readonly lng: number;
+  readonly title: string;
+  readonly priority: Priority;
+  readonly tone: StatusTone;
+}
+
+/** Jobs map (P1): one pin per job with a point, most urgent first so it draws on top last. */
+export function jobPins(jobs: readonly JobListItem[]): JobPin[] {
+  return jobs
+    .filter((job): job is JobListItem & { lat: number; lng: number } => job.lat !== null && job.lng !== null)
+    .map((job) => ({ id: job.id, lat: job.lat, lng: job.lng, title: job.number === null ? job.title : `${job.number} · ${job.title}`, priority: job.priority, tone: PRIORITY_TONE[job.priority] }))
+    .sort((a, b) => PRIORITY_RANK[b.priority] - PRIORITY_RANK[a.priority]);
+}
+
+/** Region that fits every pin with a margin; undefined when there are none. */
+export function pinsRegion(pins: readonly Pick<JobPin, "lat" | "lng">[]): { latitude: number; longitude: number; latitudeDelta: number; longitudeDelta: number } | undefined {
+  if (pins.length === 0) return undefined;
+  const lats = pins.map((p) => p.lat);
+  const lngs = pins.map((p) => p.lng);
+  const [minLat, maxLat, minLng, maxLng] = [Math.min(...lats), Math.max(...lats), Math.min(...lngs), Math.max(...lngs)];
+  return { latitude: (minLat + maxLat) / 2, longitude: (minLng + maxLng) / 2, latitudeDelta: Math.max(0.02, (maxLat - minLat) * 1.4), longitudeDelta: Math.max(0.02, (maxLng - minLng) * 1.4) };
 }
 
 export type JobBucket = "today" | "upcoming" | "done";

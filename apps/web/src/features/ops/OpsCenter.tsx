@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Layers, PauseCircle } from "lucide-react";
+import { Layers, Map as MapIcon, PauseCircle, Satellite, Shapes } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
@@ -21,7 +21,7 @@ import { ActivityFeed } from "./ActivityFeed";
 import { AlertsPanel } from "./AlertsPanel";
 import { opsApi } from "./api";
 import { ExportsPanel } from "./exports/ExportsPanel";
-import { applyKpiFilter, filterAlerts, MAP_LAYERS, type MapLayerKey } from "./filters";
+import { applyKpiFilter, filterAlerts, MAP_LAYERS, satelliteTilesUrl, type BaseMap, type MapLayerKey } from "./filters";
 import { KpiStrip } from "./KpiStrip";
 import { OperatorList, OperatorPanel } from "./OperatorPanel";
 import { OperatorStore } from "./operatorStore";
@@ -33,6 +33,8 @@ const URL_KEYS = ["kpi", "range", "operator"] as const;
 const URL_DEFAULTS = { range: "today" };
 const LIVE_ACTIVITY_MAX = 50;
 const STALE_CHECK_MS = 30_000;
+const LAYER_TOGGLE =
+  "inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-controls border border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 text-sm font-medium has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--ar-focus)] aria-pressed:border-[var(--ar-primary)] aria-pressed:bg-[var(--ar-surface-muted)]";
 
 function toActivityItem(payload: unknown): OpsActivityItemDTO | null {
   const parsed = ActivityEventDTOSchema.safeParse(payload);
@@ -54,9 +56,11 @@ function toActivityItem(payload: unknown): OpsActivityItemDTO | null {
 
 export interface OpsCenterProps {
   readonly store?: OperatorStore;
+  /** Satellite XYZ template; defaults to `NEXT_PUBLIC_SATELLITE_TILES_URL` and hides the toggle when unset (T16.4). */
+  readonly satelliteUrl?: string | null;
 }
 
-export function OpsCenter({ store: injected }: OpsCenterProps) {
+export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() }: OpsCenterProps) {
   const t = useTranslations("ops");
   const locale = useLocale();
   const queryClient = useQueryClient();
@@ -66,12 +70,15 @@ export function OpsCenter({ store: injected }: OpsCenterProps) {
   const range: KpiRange = url.range === "7d" || url.range === "30d" ? url.range : "today";
   const selectedId = url.operator === "" ? null : url.operator;
   const [layers, setLayers] = useState<ReadonlySet<MapLayerKey>>(() => new Set(MAP_LAYERS));
+  const [showBoundaries, setShowBoundaries] = useState(true);
+  const [baseMap, setBaseMap] = useState<BaseMap>("map");
   const [liveActivity, setLiveActivity] = useState<readonly OpsActivityItemDTO[]>([]);
   const me = useMe();
 
   const live = useQuery({ queryKey: OPS_QUERY_KEYS.live, queryFn: ({ signal }) => opsApi.live(signal) });
   const kpis = useQuery({ queryKey: OPS_QUERY_KEYS.kpis(range), queryFn: ({ signal }) => opsApi.kpis(range, signal), refetchInterval: 60_000 });
   const alerts = useQuery({ queryKey: OPS_QUERY_KEYS.alerts, queryFn: ({ signal }) => opsApi.alerts(signal), refetchInterval: 60_000 });
+  const boundaries = useQuery({ queryKey: OPS_QUERY_KEYS.boundaries, queryFn: ({ signal }) => opsApi.boundaries(signal), enabled: showBoundaries, staleTime: 5 * 60_000 });
   const trail = useQuery({ queryKey: OPS_QUERY_KEYS.trail(selectedId ?? ""), queryFn: ({ signal }) => opsApi.trail(selectedId ?? "", signal), enabled: selectedId !== null, retry: false });
 
   useEffect(() => {
@@ -161,13 +168,25 @@ export function OpsCenter({ store: injected }: OpsCenterProps) {
             <legend className="sr-only">{t("layers.label")}</legend>
             <Layers aria-hidden="true" className="size-5 text-[var(--ar-text-muted)]" />
             {MAP_LAYERS.map((layer) => (
-              <label className="inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-controls border border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 text-sm font-medium has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--ar-focus)]" key={layer}>
+              <label className={LAYER_TOGGLE} key={layer}>
                 <input checked={layers.has(layer)} className="size-5 accent-[var(--ar-primary)]" onChange={() => toggleLayer(layer)} type="checkbox" />
                 <span aria-hidden="true">{t(`legend.glyph.${layer}`)}</span>
                 {t(`layers.${layer}`)}
               </label>
             ))}
+            <label className={LAYER_TOGGLE}>
+              <input checked={showBoundaries} className="size-5 accent-[var(--ar-primary)]" onChange={() => setShowBoundaries((v) => !v)} type="checkbox" />
+              <Shapes aria-hidden="true" className="size-4" />
+              {t("layers.boundaries")}
+            </label>
+            {satelliteUrl === null ? null : (
+              <button aria-pressed={baseMap === "satellite"} className={LAYER_TOGGLE} onClick={() => setBaseMap((b) => (b === "satellite" ? "map" : "satellite"))} type="button">
+                {baseMap === "satellite" ? <MapIcon aria-hidden="true" className="size-4" /> : <Satellite aria-hidden="true" className="size-4" />}
+                {t("layers.satellite")}
+              </button>
+            )}
           </fieldset>
+          {showBoundaries && boundaries.error !== null ? <ErrorAlert compact error={boundaries.error} onRetry={() => void boundaries.refetch()} /> : null}
           {live.isLoading ? <LoadingState rows={6} /> : null}
           {live.error === null ? null : <ErrorAlert error={live.error} onRetry={() => void live.refetch()} />}
           <div className="h-[60vh] min-h-[420px]">
@@ -181,6 +200,9 @@ export function OpsCenter({ store: injected }: OpsCenterProps) {
               store={store}
               trail={selectedId === null ? null : (trail.data?.points ?? null)}
               view={view}
+              baseMap={baseMap}
+              boundaries={showBoundaries ? (boundaries.data ?? null) : null}
+              satelliteUrl={satelliteUrl}
               visibleLayers={layers}
             />
           </div>

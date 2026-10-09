@@ -254,7 +254,9 @@
     "reports": "Reports",
     "workOrders": "Jobs",
     "assets": "Machines",
-    "rentals": "Rentals"
+    "rentals": "Rentals",
+    "boundaries": "Plot boundaries",
+    "satellite": "Satellite view"
   },
   "legend": {
     "label": "Map legend",

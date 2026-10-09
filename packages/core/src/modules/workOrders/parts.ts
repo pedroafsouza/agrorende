@@ -4,6 +4,7 @@ import type { Tx } from "@agrorende/contracts/seams";
 import type { Ctx } from "../../context.js";
 import { reject } from "../../errors.js";
 import { dbTx, stampCreate, stampUpdate } from "../assets/kit.js";
+import { assertWorkOrderOut, recordWorkOrderOut, reverseWorkOrderOut } from "../parts/service.js";
 import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity } from "./common.js";
 import { evidenceMode, flagLateEvidence } from "./evidence.js";
 
@@ -17,7 +18,12 @@ export function partsCostCents(parts: readonly PartCostLine[]): number {
   return parts.reduce((sum, part) => sum + Math.round(part.quantity * (part.unitCostCents ?? 0)), 0);
 }
 
-/** `workOrder.addPart`. Idempotent on the client-generated part id. */
+/**
+ * `workOrder.addPart`. Idempotent on the client-generated part id. A catalog line with
+ * `partId` + `stockLocationId` also writes an `OUT_TO_WORK_ORDER` movement and decrements the
+ * level in the same transaction (WO-09 P1); FIELD users may only use their own van, and a van
+ * without enough stock rejects with `WO_PART_NOT_IN_VAN_STOCK` before anything is written (EC-WO-20).
+ */
 export async function addPart(tx: Tx, ctx: Ctx, payload: WorkOrderAddPartPayload, occurredAt: Date): Promise<void> {
   const scoped = dbTx(tx);
   const wo = await loadWorkOrder(tx, payload.workOrderId);
@@ -27,6 +33,14 @@ export async function addPart(tx: Tx, ctx: Ctx, payload: WorkOrderAddPartPayload
     if (existing.workOrderId !== wo._id) reject("CONFLICT", { id: payload.id });
     return;
   }
+  const stockLocationId = payload.partId === undefined ? null : (payload.stockLocationId ?? null);
+  const catalog =
+    payload.partId === undefined
+      ? null
+      : stockLocationId === null
+        ? null
+        : await assertWorkOrderOut(tx, ctx, { partId: payload.partId, stockLocationId, quantity: payload.quantity });
+  const unitCostCents = payload.unitCostCents ?? catalog?.unitCostCents ?? null;
   const now = new Date();
   await scoped.db.work_order_parts.insertOne({
     _id: payload.id,
@@ -38,11 +52,19 @@ export async function addPart(tx: Tx, ctx: Ctx, payload: WorkOrderAddPartPayload
     partNumber: payload.partNumber ?? null,
     quantity: payload.quantity,
     unit: payload.unit,
-    unitCostCents: payload.unitCostCents ?? null,
+    unitCostCents,
     partId: payload.partId ?? null,
-    stockLocationId: payload.stockLocationId ?? null,
+    stockLocationId,
     addedById: ctx.userId,
   });
+  if (payload.partId !== undefined && stockLocationId !== null) {
+    await recordWorkOrderOut(
+      tx,
+      ctx,
+      { partId: payload.partId, stockLocationId, quantity: payload.quantity, workOrderId: wo._id, workOrderPartId: payload.id, unitCostCents },
+      now,
+    );
+  }
   await recordWoActivity(tx, {
     workOrderId: wo._id,
     action: "workOrder.addPart",
@@ -50,14 +72,14 @@ export async function addPart(tx: Tx, ctx: Ctx, payload: WorkOrderAddPartPayload
     fromStatus: null,
     toStatus: null,
     occurredAt,
-    meta: { partId: payload.id, name: payload.name, quantity: payload.quantity, unit: payload.unit },
+    meta: { partId: payload.id, name: payload.name, quantity: payload.quantity, unit: payload.unit, catalogPartId: payload.partId ?? null, stockLocationId },
   });
   await refreshPartsCost(tx, wo._id, wo.status === "COMPLETED" || wo.status === "VERIFIED");
   if (mode === "late") await flagLateEvidence(tx, wo, ctx.userId, "part", occurredAt);
   await emitWorkOrderChanged(tx, wo._id, wo.status);
 }
 
-/** `workOrder.removePart`: soft delete; a part already removed is a no-op. */
+/** `workOrder.removePart`: soft delete; a part already removed is a no-op. Stock taken for it is given back. */
 export async function removePart(tx: Tx, ctx: Ctx, partId: string, occurredAt: Date): Promise<void> {
   const scoped = dbTx(tx);
   const part = await scoped.db.work_order_parts.findOne({ _id: partId });
@@ -67,6 +89,7 @@ export async function removePart(tx: Tx, ctx: Ctx, partId: string, occurredAt: D
   if ((part.deletedAt ?? null) !== null) return;
   const now = new Date();
   await scoped.db.work_order_parts.updateOne({ _id: partId }, { $set: { deletedAt: now, ...stampUpdate(scoped, now) } });
+  const restored = await reverseWorkOrderOut(tx, ctx, partId, now);
   await recordWoActivity(tx, {
     workOrderId: wo._id,
     action: "workOrder.removePart",
@@ -74,7 +97,7 @@ export async function removePart(tx: Tx, ctx: Ctx, partId: string, occurredAt: D
     fromStatus: null,
     toStatus: null,
     occurredAt,
-    meta: { partId, name: part.name },
+    meta: { partId, name: part.name, restoredQuantity: restored },
   });
   await refreshPartsCost(tx, wo._id, wo.status === "COMPLETED" || wo.status === "VERIFIED");
   if (mode === "late") await flagLateEvidence(tx, wo, ctx.userId, "part", occurredAt);

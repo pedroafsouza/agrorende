@@ -1,0 +1,24 @@
+# EC-PLT-09: signing out with unsent work warns first and keeps the rows for the next sign-in.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- setAirplaneMode: enabled
+- tapOn:
+    id: "home-quick-report-new"
+- tapOn:
+    id: "report-title"
+- inputText: "Teste aparelho compartilhado"
+- back
+- tapOn:
+    id: "more"
+- tapOn:
+    id: "settings-nav"
+- tapOn:
+    id: "settings-logout"
+- assertVisible:
+    id: "settings-pending"
+- setAirplaneMode: disabled

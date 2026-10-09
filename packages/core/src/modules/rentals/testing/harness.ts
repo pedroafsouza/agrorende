@@ -26,9 +26,9 @@ export interface Harness {
   close(): Promise<void>;
 }
 
-/** Isolated database per test file: `agrorende_t08_<suffix>` (R6). */
-export async function createHarness(suffix: string): Promise<Harness> {
-  const name = `agrorende_t08_${suffix}`;
+/** Isolated database per test file: `<prefix>_<suffix>`, `agrorende_t08_<suffix>` by default (R6). */
+export async function createHarness(suffix: string, prefix = "agrorende_t08"): Promise<Harness> {
+  const name = `${prefix}_${suffix}`;
   process.env.MONGODB_URI ??= "mongodb://localhost:27017/?directConnection=true";
   process.env.MONGODB_DB = name;
   const handle = await setupTestDb(name);

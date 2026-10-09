@@ -1,1 +1,32 @@
-{}
+{
+  "picker": {
+    "fromCatalog": "From catalog",
+    "freeText": "Free text",
+    "search": "Search part or code",
+    "searchHint": "Parts in your van come first.",
+    "inVan": "{quantity} in your van",
+    "notInVan": "Not in your van",
+    "noVan": "You have no van stock yet. Ask the office to set up your van.",
+    "emptyTitle": "No catalog part found",
+    "emptyBody": "Check the spelling or write the part as free text.",
+    "notInCatalog": "Not in the catalog? Write it",
+    "chosen": "Chosen: {name}",
+    "change": "Change part",
+    "vanName": "Your van: {name}"
+  },
+  "line": {
+    "catalog": "Catalog",
+    "freeText": "Free text",
+    "fromVan": "Taken from your van"
+  },
+  "stock": {
+    "useFreeText": "Save as free text",
+    "holdWaitingParts": "On hold · waiting for parts",
+    "holdNote": "Waiting for {name} ({quantity} {unit})",
+    "keptDraft": "Your part is kept. Choose how to go on.",
+    "rejectedTitle": "This part was not in your van when the job synced",
+    "rejectedBody": "{name} ({quantity} {unit}) was not taken from stock. Choose how to go on.",
+    "savedFreeText": "Part saved as free text",
+    "savedHold": "Job on hold, waiting for parts"
+  }
+}

@@ -34,6 +34,8 @@ export const MANUAL_CHARGE_TYPES = ["FUEL", "DAMAGE", "CLEANING", "DELIVERY", "D
 export type ManualChargeType = (typeof MANUAL_CHARGE_TYPES)[number];
 
 export interface NewRentalValues {
+  /** OUTBOUND rents a machine out to a customer; INBOUND rents a partner machine in (RN-12). */
+  readonly direction: RentalDirectionValue;
   readonly assetId: string | null;
   readonly customerId: string | null;
   readonly siteId: string | null;
@@ -50,6 +52,7 @@ export interface NewRentalValues {
 }
 
 export const EMPTY_NEW_RENTAL: NewRentalValues = {
+  direction: "OUTBOUND",
   assetId: null,
   customerId: null,
   siteId: null,
@@ -83,6 +86,7 @@ export function eligibilityQuery(values: NewRentalValues, excludeRentalId: strin
     ...(values.customerId === null ? {} : { customerId: values.customerId }),
     ...(values.siteId === null ? {} : { siteId: values.siteId }),
     ...(excludeRentalId === null ? {} : { excludeRentalId }),
+    ...(values.direction === "INBOUND" ? { direction: "INBOUND" } : {}),
   };
 }
 
@@ -91,6 +95,7 @@ export function newRentalBody(values: NewRentalValues): Record<string, unknown> 
   const address = values.deliveryAddress.trim();
   const notes = values.notes.trim();
   return {
+    direction: values.direction,
     assetId: values.assetId ?? undefined,
     customerId: values.customerId ?? undefined,
     siteId: values.siteId,
@@ -170,8 +175,9 @@ export function heldDamagesOf(error: unknown): string[] | null {
 }
 
 /** Office actions available for each rental status (check-out and check-in stay on mobile). */
-export function rentalActions(status: string): { reserve: boolean; cancel: boolean; close: boolean; editCharges: boolean } {
+export function rentalActions(status: string): { reserve: boolean; cancel: boolean; close: boolean; editCharges: boolean; extend: boolean } {
   return {
+    extend: canExtend(status),
     reserve: status === "DRAFT",
     cancel: status === "DRAFT" || status === "RESERVED",
     close: status === "RETURNED",
@@ -183,4 +189,89 @@ export function rentalActions(status: string): { reserve: boolean; cancel: boole
 export function meterDelta(checkOut: number | null | undefined, checkIn: number | null | undefined): number | null {
   if (checkOut === null || checkOut === undefined || checkIn === null || checkIn === undefined) return null;
   return Math.round((checkIn - checkOut) * 10) / 10;
+}
+
+/** One booking bar of `GET /rentals/calendar`. */
+export interface CalendarItem {
+  readonly rentalId: string;
+  readonly number: string;
+  readonly assetId: string;
+  readonly assetCode: string | null;
+  readonly direction: string;
+  readonly customerName: string | null;
+  readonly status: string;
+  readonly start: string;
+  readonly end: string;
+  readonly isOverdue: boolean;
+}
+
+export const RENTAL_DIRECTIONS = ["OUTBOUND", "INBOUND"] as const;
+export type RentalDirectionValue = (typeof RENTAL_DIRECTIONS)[number];
+
+/** Field labels per direction (RN-12): a rent-in rental is received from and returned to a partner. */
+export function directionLabels(direction: string): { checkout: "checkout" | "receive"; checkin: "checkin" | "return"; party: "customer" | "supplier" } {
+  return direction === "INBOUND" ? { checkout: "receive", checkin: "return", party: "supplier" } : { checkout: "checkout", checkin: "checkin", party: "customer" };
+}
+
+/** Parts an INBOUND rental still misses (EC-RN-34), from `INBOUND_RENTAL_INCOMPLETE.details.missing`. */
+export function inboundMissingOf(error: unknown): string[] | null {
+  if (!isApiError(error, "INBOUND_RENTAL_INCOMPLETE")) return null;
+  const missing = error.details.missing;
+  return Array.isArray(missing) ? missing.filter((m): m is string => typeof m === "string") : [];
+}
+
+/** EC-RN-33: the close was rolled back because the billing document could not be created and issued. */
+export function isBillingFailure(error: unknown): boolean {
+  return isApiError(error, "RENTAL_BILLING_DOCUMENT_FAILED");
+}
+
+/** Extension is offered while the machine is reserved or out (RN-06). */
+export function canExtend(status: string): boolean {
+  return status === "RESERVED" || status === "ACTIVE";
+}
+
+/** Body for `POST /rentals/:id/extend`, or null when the new end is empty or not after the current end. */
+export function extendBody(local: string, currentEndIso: string, timeZone = DEFAULT_TIME_ZONE): { newPlannedEnd: string } | null {
+  const iso = localToIso(local, timeZone);
+  if (iso === null) return null;
+  return new Date(iso).getTime() > new Date(currentEndIso).getTime() ? { newPlannedEnd: iso } : null;
+}
+
+const DAY_MS = 86_400_000;
+
+/** Calendar window starting at local midnight of `anchor` (a `YYYY-MM-DD` day) and spanning `days`. */
+export function calendarWindow(anchor: string, days: number, timeZone = DEFAULT_TIME_ZONE): { from: string; to: string; days: string[] } {
+  const start = fromZonedTime(`${anchor}T00:00:00`, timeZone);
+  const end = fromZonedTime(`${shiftDay(anchor, days)}T00:00:00`, timeZone);
+  return { from: start.toISOString(), to: end.toISOString(), days: Array.from({ length: days }, (_, i) => shiftDay(anchor, i)) };
+}
+
+/** `YYYY-MM-DD` plus `delta` calendar days. */
+export function shiftDay(day: string, delta: number): string {
+  const base = new Date(`${day}T12:00:00Z`).getTime() + delta * DAY_MS;
+  return new Date(base).toISOString().slice(0, 10);
+}
+
+/** Horizontal placement of a booking bar inside the window, clamped to its edges, in percent. */
+export function barPosition(item: { readonly start: string; readonly end: string }, window: { readonly from: string; readonly to: string }): { left: number; width: number } | null {
+  const from = new Date(window.from).getTime();
+  const to = new Date(window.to).getTime();
+  const start = Math.max(new Date(item.start).getTime(), from);
+  const end = Math.min(new Date(item.end).getTime(), to);
+  if (end <= start || to <= from) return null;
+  const span = to - from;
+  return { left: Math.round(((start - from) / span) * 10_000) / 100, width: Math.max(Math.round(((end - start) / span) * 10_000) / 100, 1) };
+}
+
+/** Calendar rows: one per machine, ordered by machine code, bookings ordered by start. */
+export function groupByAsset<T extends { readonly assetId: string; readonly assetCode: string | null; readonly start: string }>(items: readonly T[]): { assetId: string; assetCode: string | null; items: T[] }[] {
+  const rows = new Map<string, { assetId: string; assetCode: string | null; items: T[] }>();
+  for (const item of items) {
+    const row = rows.get(item.assetId) ?? { assetId: item.assetId, assetCode: item.assetCode, items: [] };
+    row.items.push(item);
+    rows.set(item.assetId, row);
+  }
+  return [...rows.values()]
+    .map((row) => ({ ...row, items: [...row.items].sort((a, b) => a.start.localeCompare(b.start)) }))
+    .sort((a, b) => (a.assetCode ?? "").localeCompare(b.assetCode ?? ""));
 }

@@ -20,10 +20,12 @@ import { OPEN_STATUSES, recomputeCondition, REPAIR_STATUSES } from "../assets/se
 import { registerMedia } from "../media/service.js";
 import {
   DismissInputSchema,
+  LinkAssetInputSchema,
   MarkForRepairInputSchema,
   MonitorInputSchema,
   type DismissInput,
   type FieldReportDTO,
+  type LinkAssetInput,
   type MarkForRepairInput,
   type MarkForRepairResult,
   type MonitorInput,
@@ -560,5 +562,41 @@ export async function updateReport(tx: Tx, ctx: Ctx, payload: FieldReportUpdateP
   if (report.assetId !== null && report.assetId !== undefined) await recomputeCondition(tx, report.assetId, ctx.userId);
   if (!isCriticalReport(report) && isCriticalReport(updated)) await notifyCritical(tx, updated, "");
   await emitChanged(tx, updated);
+  return toFieldReportDto(updated);
+}
+
+/**
+ * `POST /field-reports/:id/link-asset` (P1, FR-22) — office only. Links a report about an unregistered
+ * machine to an existing asset (the web creates the asset first when "create from report" is chosen),
+ * keeps the original description in the activity row and recomputes the asset's condition.
+ */
+export async function linkAsset(tx: Tx, ctx: Ctx, id: string, raw: LinkAssetInput): Promise<FieldReportDTO> {
+  if (!OFFICE.includes(ctx.role)) return reject("OFFICE_ROLE_REQUIRED");
+  const input = parseInput(LinkAssetInputSchema, raw);
+  const report = await loadReport(tx, id);
+  if (report.assetId === input.assetId) return toFieldReportDto(report);
+  if (report.assetId !== null && report.assetId !== undefined) {
+    return reject("VALIDATION_FAILED", { fieldErrors: [{ path: "assetId", code: "REPORT_ALREADY_LINKED" }] });
+  }
+  const scoped = dbTx(tx);
+  const asset = await scoped.db.assets.findOne({ _id: input.assetId, deletedAt: null }, { projection: { _id: 1, siteId: 1 } });
+  if (asset === null) return reject("VALIDATION_FAILED", { fieldErrors: [{ path: "assetId", code: "NOT_FOUND" }] });
+  const now = new Date();
+  const stamp = stampUpdate(scoped, now);
+  const set = { assetId: asset._id, unregisteredAssetDesc: null, ...stamp };
+  await scoped.db.field_reports.updateOne({ _id: report._id }, { $set: set });
+  const updated = { ...report, ...set } as FieldReport;
+  await activity(tx, {
+    entityType: "FIELD_REPORT",
+    entityId: report._id,
+    action: "fieldReport.assetLinked",
+    actorId: ctx.userId,
+    meta: { assetId: asset._id, unregisteredAssetDesc: report.unregisteredAssetDesc ?? null },
+    occurredAt: now,
+  });
+  await activity(tx, { entityType: "ASSET", entityId: asset._id, action: "fieldReport.assetLinked", actorId: ctx.userId, meta: { fieldReportId: report._id, number: report.number ?? null }, occurredAt: now });
+  await recomputeCondition(tx, asset._id, ctx.userId);
+  await emitChanged(tx, updated);
+  await pokeReporter(tx, report, "fieldReport.assetLinked");
   return toFieldReportDto(updated);
 }

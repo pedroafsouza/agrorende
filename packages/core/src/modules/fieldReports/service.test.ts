@@ -10,7 +10,7 @@ import { createAsset } from "../assets/service.js";
 import { newId } from "../assets/kit.js";
 import { mutations } from "./mutations.js";
 import { countOpenReports, getFieldReportDetail, listFieldReports } from "./queries.js";
-import { createFromDamage, createReport, dismiss, markForRepair, monitor, startReview, updateReport, withdraw } from "./service.js";
+import { createFromDamage, createReport, dismiss, linkAsset, markForRepair, monitor, startReview, updateReport, withdraw } from "./service.js";
 import { ADMIN_ID, createHarness, MANAGER_ID, OPERATOR_ID, OTHER_OPERATOR_ID, type Harness, userRow } from "./testing/harness.js";
 
 const seamMocks = vi.hoisted(() => ({
@@ -305,6 +305,24 @@ describe("reporter actions", () => {
     const updated = await h.run((tx) => updateReport(tx, operator, { id: base.id, patch: { priority: "CRITICAL" } }));
     expect(updated.priority).toBe("CRITICAL");
     expect(await h.raw("notifications").countDocuments({ type: "REPORT_CRITICAL" })).toBe(2);
+  });
+});
+
+describe("link-asset (FR-22)", () => {
+  it("links an unregistered machine to an asset once and keeps the description in the activity", async () => {
+    const base = payload({ unregisteredAssetDesc: "Carreta azul sem placa" });
+    await h.run((tx) => createReport(tx, operator, base));
+    const assetId = await seedAsset("Carreta 4");
+    await expect(h.run((tx) => linkAsset(tx, operator, base.id, { assetId }))).rejects.toMatchObject({ code: "OFFICE_ROLE_REQUIRED" });
+    await expect(h.run((tx) => linkAsset(tx, manager, base.id, { assetId: newId() }))).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+    const linked = await h.run((tx) => linkAsset(tx, manager, base.id, { assetId }));
+    expect(linked).toMatchObject({ assetId, unregisteredAssetDesc: null });
+    await expect(h.run((tx) => linkAsset(tx, manager, base.id, { assetId }))).resolves.toMatchObject({ assetId });
+    const other = await seedAsset("Carreta 5");
+    await expect(h.run((tx) => linkAsset(tx, manager, base.id, { assetId: other }))).rejects.toMatchObject({ code: "VALIDATION_FAILED" });
+    const event = await h.raw("activity_events").findOne({ entityId: base.id, action: "fieldReport.assetLinked" });
+    expect(event?.meta).toMatchObject({ assetId, unregisteredAssetDesc: "Carreta azul sem placa" });
+    expect(await h.raw("activity_events").countDocuments({ entityId: assetId, action: "fieldReport.assetLinked" })).toBe(1);
   });
 });
 

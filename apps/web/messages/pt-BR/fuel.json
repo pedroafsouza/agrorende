@@ -1,1 +1,48 @@
-{}
+{
+  "title": "Combustível",
+  "noSeason": "Sem safra",
+  "list": {
+    "assetFilter": "Máquina",
+    "emptyTitle": "Nenhum abastecimento ainda",
+    "emptyBody": "Os abastecimentos registrados no app de campo ou nesta página aparecem aqui."
+  },
+  "actions": {
+    "new": "Registrar abastecimento",
+    "save": "Salvar abastecimento"
+  },
+  "fields": {
+    "filledAt": "Abastecido em",
+    "asset": "Máquina",
+    "liters": "Litros",
+    "pricePerLiter": "Preço por litro",
+    "total": "Total",
+    "hourMeter": "Horímetro",
+    "odometerKm": "Hodômetro (km)",
+    "site": "Local",
+    "notes": "Observações"
+  },
+  "consumption": {
+    "title": "Consumo",
+    "loading": "Carregando consumo…",
+    "average": "Média",
+    "perHour": "{value} L/h",
+    "interval": "{liters} L em {hours} h",
+    "none": "O consumo precisa de dois abastecimentos com horímetro crescente.",
+    "chooseAsset": "Escolha uma máquina para ver o consumo em litros por hora."
+  },
+  "new": {
+    "title": "Registrar abastecimento",
+    "litersHint": "Use vírgula ou ponto para decimais.",
+    "readingsHint": "Uma leitura menor que a atual da máquina fica no abastecimento, mas não altera a máquina.",
+    "filledAtHint": "Deixe vazio para usar agora. Os horários usam o fuso da organização."
+  },
+  "errors": {
+    "assetId": { "required": "Escolha a máquina.", "invalid": "Escolha a máquina." },
+    "liters": { "required": "Informe os litros abastecidos.", "invalid": "Informe litros acima de zero, por exemplo 150 ou 150,5." },
+    "hourMeter": { "required": "Informe o horímetro.", "invalid": "Informe um número, por exemplo 1010 ou 1010,5." },
+    "odometerKm": { "required": "Informe o hodômetro.", "invalid": "Informe um número, por exemplo 12500." }
+  },
+  "toast": {
+    "saved": "Abastecimento salvo"
+  }
+}

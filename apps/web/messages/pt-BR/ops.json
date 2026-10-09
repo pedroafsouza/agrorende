@@ -254,7 +254,9 @@
     "reports": "Relatos",
     "workOrders": "OS",
     "assets": "Máquinas",
-    "rentals": "Locações"
+    "rentals": "Locações",
+    "boundaries": "Limites dos talhões",
+    "satellite": "Vista de satélite"
   },
   "legend": {
     "label": "Legenda do mapa",

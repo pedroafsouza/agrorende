@@ -4,6 +4,15 @@ import type { AlertType, KpiKey, LiveAssetDTO, LiveRentalDTO, LiveReportDTO, Liv
 export const MAP_LAYERS = ["operators", "reports", "workOrders", "assets", "rentals"] as const;
 export type MapLayerKey = (typeof MAP_LAYERS)[number];
 
+/** Base map choice (T16.4). Satellite exists only when `NEXT_PUBLIC_SATELLITE_TILES_URL` is set. */
+export type BaseMap = "map" | "satellite";
+
+/** XYZ raster template for the satellite base map, or null when the deployment has none (A§18 env table). */
+export function satelliteTilesUrl(value: string | undefined = process.env.NEXT_PUBLIC_SATELLITE_TILES_URL): string | null {
+  const trimmed = value?.trim() ?? "";
+  return trimmed === "" ? null : trimmed;
+}
+
 export interface OpsView {
   readonly operators: readonly OperatorMarker[];
   readonly reports: readonly LiveReportDTO[];

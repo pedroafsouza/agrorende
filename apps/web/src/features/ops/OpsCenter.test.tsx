@@ -86,7 +86,11 @@ vi.mock("react-map-gl/maplibre", () => {
     default: FakeMap,
     Layer: () => null,
     NavigationControl: () => null,
-    Source: ({ children }: { readonly children?: ReactNode }) => <>{children}</>,
+    Source: ({ children, id, data, tiles }: { readonly children?: ReactNode; readonly id: string; readonly data?: { readonly features?: readonly unknown[] }; readonly tiles?: readonly string[] }) => (
+      <div data-features={data?.features?.length ?? ""} data-source={id} data-tiles={tiles?.join(",") ?? ""}>
+        {children}
+      </div>
+    ),
   };
 });
 
@@ -156,6 +160,17 @@ function setResponses(liveData: OpsLiveDTO, alerts: readonly OpsAlertDTO[] = [])
   apiMock.responses.set("/ops/alerts", { generatedAt: NOW.toISOString(), items: alerts });
   apiMock.responses.set("/ops/activity", { items: [], nextCursor: null });
   apiMock.responses.set("/auth/me", { user: { id: "me", name: "Admin", role: "MANAGER" }, settings: null });
+  apiMock.responses.set("/ops/boundaries", {
+    type: "FeatureCollection",
+    features: [
+      {
+        type: "Feature",
+        id: "p1",
+        geometry: { type: "Polygon", coordinates: [[[-47.8, -15.6], [-47.7, -15.6], [-47.7, -15.5], [-47.8, -15.6]]] },
+        properties: { plotId: "p1", siteId: "s1", name: "Talhão 1", crop: "SOY", areaHa: 120.5 },
+      },
+    ],
+  });
   apiMock.responses.set(`/ops/operators/${OP_ID}/trail`, { userId: OP_ID, from: NOW.toISOString(), to: NOW.toISOString(), points: [] });
 }
 
@@ -287,5 +302,28 @@ describe("OpsCenter", () => {
     const link = screen.getByRole("link", { name: /See phone sync health/u });
     expect(link.getAttribute("href")).toBe("/team/devices?device=dev-1");
     expect(screen.getByText("No one is live right now")).toBeTruthy();
+  });
+
+  it("hides the satellite toggle when no tile URL is configured and keeps the boundary layer toggle", async () => {
+    setResponses(live([operator()]));
+    const { container } = renderWithProviders(<OpsCenter satelliteUrl={null} store={new OperatorStore(() => NOW.getTime())} />);
+    const boundaries = await screen.findByRole("checkbox", { name: "Plot boundaries" });
+    expect((boundaries as HTMLInputElement).checked).toBe(true);
+    expect(screen.queryByRole("button", { name: "Satellite view" })).toBeNull();
+    expect(container.querySelector('[data-source="ops-satellite"]')).toBeNull();
+    await waitFor(() => expect(container.querySelector('[data-source="ops-boundaries"]')?.getAttribute("data-features")).toBe("1"));
+    await userEvent.click(boundaries);
+    expect(container.querySelector('[data-source="ops-boundaries"]')?.getAttribute("data-features")).toBe("0");
+  });
+
+  it("shows an accessible satellite toggle when a tile URL is configured", async () => {
+    setResponses(live([operator()]));
+    const url = "https://tiles.example.com/sat/{z}/{x}/{y}.jpg";
+    const { container } = renderWithProviders(<OpsCenter satelliteUrl={url} store={new OperatorStore(() => NOW.getTime())} />);
+    const toggle = await screen.findByRole("button", { name: "Satellite view" });
+    expect(toggle.getAttribute("aria-pressed")).toBe("false");
+    expect(container.querySelector('[data-source="ops-satellite"]')?.getAttribute("data-tiles")).toBe(url);
+    await userEvent.click(toggle);
+    expect(toggle.getAttribute("aria-pressed")).toBe("true");
   });
 });

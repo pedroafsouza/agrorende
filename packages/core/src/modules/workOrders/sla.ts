@@ -1,4 +1,4 @@
-import type { Priority, WorkOrderStatus } from "@agrorende/contracts/enums";
+import type { AssetCategory, Priority, WorkOrderStatus } from "@agrorende/contracts/enums";
 import type { CriticalWindow } from "@agrorende/contracts/checklist";
 
 /** SLA rules of BR-F2-2 and ARCHITECTURE §10 (`workOrders.slaScan`). */
@@ -79,4 +79,25 @@ export function slaNotificationDue(wo: SlaScanSubject, now: Date, settings: SlaS
   if (state === "BREACHED" && (wo.slaBreachedAt ?? null) === null) return "BREACHED";
   if (state === "AT_RISK" && (wo.slaAtRiskNotifiedAt ?? null) === null) return "AT_RISK";
   return null;
+}
+
+/**
+ * BR-F2-2 (P1): the due date of a work order created at `createdAt`. When the current season has a
+ * critical window that covers `createdAt` (in the organisation's time zone) and lists the asset's
+ * category, the priority window is halved. Jobs without an asset keep the default window.
+ * The season seam is loaded lazily so that this module stays free of database imports.
+ */
+export async function dueAtFor(
+  tx: unknown,
+  orgId: string,
+  assetCategory: AssetCategory | null,
+  createdAt: Date,
+  priority: Priority,
+  settings: SlaSettings,
+  timeZone?: string,
+): Promise<Date> {
+  if (assetCategory === null) return computeDueAt(createdAt, priority, settings);
+  const { criticalWindowFor } = await import("../seasons/service.js");
+  const window = await criticalWindowFor(tx, orgId, assetCategory, createdAt, timeZone);
+  return computeDueAt(createdAt, priority, settings, window);
 }

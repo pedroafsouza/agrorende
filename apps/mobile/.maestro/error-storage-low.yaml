@@ -1,0 +1,19 @@
+# EC-PLT-14 DEVICE_STORAGE_FULL: fill the emulator disk first (adb shell fallocate); capture is blocked and the draft stays.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0, manual-setup]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- tapOn:
+    id: "home-quick-report-new"
+- tapOn:
+    id: "media-open-camera"
+- extendedWaitUntil:
+    visible:
+      text: "Pouco espaço no aparelho|Device storage is low"
+    timeout: 10000
+- back
+- assertVisible:
+    id: "report-wizard"

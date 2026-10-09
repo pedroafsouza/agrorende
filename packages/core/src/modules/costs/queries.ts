@@ -59,6 +59,8 @@ interface Source {
 interface Bucket {
   laborCents: number;
   partsCents: number;
+  externalCents: number;
+  fuelCents: number;
   rentInCostCents: number;
   rentalRevenueCents: number;
 }
@@ -68,8 +70,8 @@ function cents(value: number | null | undefined): number {
 }
 
 /**
- * `GET /costs/rollup` (ERP-03, ERP-04): labour and parts from completed WOs, rental revenue from
- * OUTBOUND rentals and rent-in cost from INBOUND rentals, grouped by asset, site, plot, season,
+ * `GET /costs/rollup` (ERP-03, ERP-04): labour, parts and external services from completed WOs, fuel
+ * from fuel logs (by `filledAt`), rental revenue from OUTBOUND rentals and rent-in cost from INBOUND rentals, grouped by asset, site, plot, season,
  * category or crop. Records without the grouped reference roll up under the `none` key, so a
  * seasonless cost is never rejected (T09.12).
  */
@@ -91,12 +93,12 @@ export async function costRollup(ctx: CostsCtx, filters: CostRollupFilters = {},
   if (to !== null) range.$lt = to;
   const hasRange = Object.keys(range).length > 0;
 
-  const [workOrders, rentals] = await Promise.all([
+  const [workOrders, rentals, fuelLogs] = await Promise.all([
     collections
       .workOrders(db)
       .find(
         { ...scope, status: { $in: ["COMPLETED", "VERIFIED"] }, completedAt: hasRange ? { $ne: null, ...range } : { $ne: null } },
-        { projection: { assetId: 1, siteId: 1, plotId: 1, seasonId: 1, laborCostCents: 1, partsCostCents: 1 } },
+        { projection: { assetId: 1, siteId: 1, plotId: 1, seasonId: 1, laborCostCents: 1, partsCostCents: 1, externalCostCents: 1 } },
       )
       .toArray(),
     collections
@@ -110,18 +112,23 @@ export async function costRollup(ctx: CostsCtx, filters: CostRollupFilters = {},
         { projection: { assetId: 1, siteId: 1, seasonId: 1, direction: 1, chargesTotalCents: 1 } },
       )
       .toArray(),
+    collections
+      .fuelLogs(db)
+      .find({ ...scope, ...(hasRange ? { filledAt: range } : {}) }, { projection: { assetId: 1, siteId: 1, plotId: 1, seasonId: 1, totalCents: 1 } })
+      .toArray(),
   ]);
 
   const buckets = new Map<string, Bucket>();
   const keyOf = await groupKeyResolver(db, orgId, groupBy, [
     ...workOrders.map((w) => ({ assetId: w.assetId ?? null, siteId: w.siteId ?? null, plotId: w.plotId ?? null, seasonId: w.seasonId ?? null })),
     ...rentals.map((r) => ({ assetId: r.assetId, siteId: r.siteId ?? null, plotId: null, seasonId: r.seasonId ?? null })),
+    ...fuelLogs.map((f) => ({ assetId: f.assetId, siteId: f.siteId ?? null, plotId: f.plotId ?? null, seasonId: f.seasonId ?? null })),
   ]);
   const bucket = (source: Source): Bucket => {
     const key = keyOf.key(source);
     let entry = buckets.get(key);
     if (entry === undefined) {
-      entry = { laborCents: 0, partsCents: 0, rentInCostCents: 0, rentalRevenueCents: 0 };
+      entry = { laborCents: 0, partsCents: 0, externalCents: 0, fuelCents: 0, rentInCostCents: 0, rentalRevenueCents: 0 };
       buckets.set(key, entry);
     }
     return entry;
@@ -131,6 +138,10 @@ export async function costRollup(ctx: CostsCtx, filters: CostRollupFilters = {},
     const entry = bucket({ assetId: wo.assetId ?? null, siteId: wo.siteId ?? null, plotId: wo.plotId ?? null, seasonId: wo.seasonId ?? null });
     if (laborVisible) entry.laborCents += cents(wo.laborCostCents);
     entry.partsCents += cents(wo.partsCostCents);
+    entry.externalCents += cents(wo.externalCostCents);
+  }
+  for (const log of fuelLogs) {
+    bucket({ assetId: log.assetId, siteId: log.siteId ?? null, plotId: log.plotId ?? null, seasonId: log.seasonId ?? null }).fuelCents += cents(log.totalCents);
   }
   for (const rental of rentals) {
     const entry = bucket({ assetId: rental.assetId, siteId: rental.siteId ?? null, plotId: null, seasonId: rental.seasonId ?? null });
@@ -143,10 +154,10 @@ export async function costRollup(ctx: CostsCtx, filters: CostRollupFilters = {},
     label: key === COST_NONE_KEY ? noneLabel(groupBy, filters.locale) : keyOf.label(key),
     laborCents: b.laborCents,
     partsCents: b.partsCents,
-    externalCents: 0,
-    fuelCents: 0,
+    externalCents: b.externalCents,
+    fuelCents: b.fuelCents,
     rentInCostCents: b.rentInCostCents,
-    totalCostCents: b.laborCents + b.partsCents + b.rentInCostCents,
+    totalCostCents: b.laborCents + b.partsCents + b.externalCents + b.fuelCents + b.rentInCostCents,
     rentalRevenueCents: b.rentalRevenueCents,
   }));
   rows.sort((a, b) => (a.key === COST_NONE_KEY ? 1 : 0) - (b.key === COST_NONE_KEY ? 1 : 0) || b.totalCostCents - a.totalCostCents || a.label.localeCompare(b.label));
@@ -173,6 +184,7 @@ export async function costRollup(ctx: CostsCtx, filters: CostRollupFilters = {},
     totals,
     workOrderCount: workOrders.length,
     rentalCount: rentals.length,
+    fuelLogCount: fuelLogs.length,
   };
 }
 

@@ -2,10 +2,12 @@
 
 import type { PlotDTO, SiteDTO } from "@agrorende/contracts/dto";
 import { useQuery } from "@tanstack/react-query";
-import { Archive, ArchiveRestore, Pencil, Plus, Trash2 } from "lucide-react";
+import { campoClaroPalette } from "@agrorende/design-tokens";
+import { Archive, ArchiveRestore, Hexagon, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { Layer, Source } from "react-map-gl/maplibre";
 import { toast } from "sonner";
 
 import { Card, Detail } from "@/components/data/Detail";
@@ -24,6 +26,7 @@ import { formatNumber } from "@/lib/format";
 import { nullIfEmpty, numberOrNull, useFieldErrors, type ListPage } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
 
+import { PlotBoundaryDialog } from "./PlotBoundaryDialog";
 import { SiteFields, siteBody, siteFormValues } from "./SiteForm";
 
 interface PlotValues {
@@ -81,6 +84,14 @@ export function SiteDetailPage({ id }: { readonly id: string }) {
   const [deleting, setDeleting] = useState(false);
   const [plotOpen, setPlotOpen] = useState<PlotDTO | "new" | null>(null);
   const [plot, setPlot] = useState(plotValues());
+  const [boundaryPlot, setBoundaryPlot] = useState<PlotDTO | null>(null);
+  const plotShapes = useMemo(
+    () => ({
+      type: "FeatureCollection" as const,
+      features: (plots.data?.items ?? []).flatMap((p) => (p.boundary === null || p.boundary === undefined ? [] : [{ type: "Feature" as const, id: p.id, geometry: p.boundary, properties: { name: p.name } }])),
+    }),
+    [plots.data],
+  );
   const [saveSite, siteState] = useSave("sites", (body: Record<string, unknown>, version: string) => api<SiteDTO>(`/sites/${id}`, { method: "PATCH", body, version }), () => {
     setEditing(false);
     toast.success(common("toast.saved"));
@@ -143,7 +154,14 @@ export function SiteDetailPage({ id }: { readonly id: string }) {
           {s.notes === null || s.notes === undefined ? null : <p className="mt-4 whitespace-pre-wrap">{s.notes}</p>}
         </Card>
         <Card title={t("sites.detail.map")}>
-          {points.length === 0 ? <p>{t("detail.noLocation")}</p> : <MapView className="h-64 overflow-hidden rounded-cards border border-[var(--ar-border)]" mapId={`site-${id}`} points={points} />}
+          {points.length === 0 ? <p>{t("detail.noLocation")}</p> : (
+            <MapView className="h-64 overflow-hidden rounded-cards border border-[var(--ar-border)]" mapId={`site-${id}`} points={points}>
+              <Source data={plotShapes} id="site-plot-boundaries" type="geojson">
+                <Layer id="site-plot-fill" paint={{ "fill-color": campoClaroPalette["terra-600"], "fill-opacity": 0.15 }} type="fill" />
+                <Layer id="site-plot-line" paint={{ "line-color": campoClaroPalette["terra-600"], "line-width": 2 }} type="line" />
+              </Source>
+            </MapView>
+          )}
         </Card>
       </div>
       <Card
@@ -160,6 +178,9 @@ export function SiteDetailPage({ id }: { readonly id: string }) {
                 <p className="font-semibold">{p.name}</p>
                 <p className="text-sm text-[var(--ar-text-muted)]">{[p.code, p.crop, p.areaHa === null || p.areaHa === undefined ? null : `${formatNumber(p.areaHa, locale, 2)} ha`].filter(Boolean).join(" · ")}</p>
               </div>
+              <Button aria-label={t("plots.boundary.open", { name: p.name })} icon={<Hexagon aria-hidden="true" className="size-4" />} onClick={() => setBoundaryPlot(p)} variant="ghost">
+                {p.boundary === null || p.boundary === undefined ? t("plots.boundary.drawAction") : t("plots.boundary.editAction")}
+              </Button>
               <Button icon={<Pencil aria-hidden="true" className="size-4" />} onClick={() => { setPlot(plotValues(p)); plotState.reset(); setPlotOpen(p); }} variant="ghost">
                 {common("actions.edit")}
               </Button>
@@ -184,6 +205,19 @@ export function SiteDetailPage({ id }: { readonly id: string }) {
       <FormDialog busy={plotState.busy} dirty error={plotState.error} formId="plot-form" onClose={() => setPlotOpen(null)} onSubmit={() => plotOpen === null ? undefined : void savePlot({ body: plotBody(plot), target: plotOpen })} open={plotOpen !== null} title={plotOpen === "new" ? t("plots.actions.new") : t("plots.edit")}>
         <PlotFields error={plotState.error} onChange={setPlot} values={plot} />
       </FormDialog>
+      {boundaryPlot === null ? null : (
+        <PlotBoundaryDialog
+          center={boundaryPlot.centroidLat !== null && boundaryPlot.centroidLat !== undefined && boundaryPlot.centroidLng !== null && boundaryPlot.centroidLng !== undefined ? { lat: boundaryPlot.centroidLat, lng: boundaryPlot.centroidLng } : s.lat !== null && s.lat !== undefined && s.lng !== null && s.lng !== undefined ? { lat: s.lat, lng: s.lng } : null}
+          key={boundaryPlot.id}
+          onClose={() => setBoundaryPlot(null)}
+          onConflictReload={async () => {
+            const fresh = await api<PlotDTO>(`/plots/${boundaryPlot.id}`).catch(() => undefined);
+            if (fresh !== undefined) setBoundaryPlot(fresh);
+            return fresh;
+          }}
+          plot={boundaryPlot}
+        />
+      )}
       <ConfirmDialog
         body={t("sites.delete.body")}
         confirmLabel={common("actions.delete")}

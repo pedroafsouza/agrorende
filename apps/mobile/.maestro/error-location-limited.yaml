@@ -1,0 +1,20 @@
+# EC-PLT-11 PERMISSION_LOCATION_LIMITED: without location the report still continues with a hand-picked site.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- tapOn:
+    id: "home-quick-report-new"
+- tapOn:
+    id: "report-locate"
+    optional: true
+- tapOn:
+    text: "Don.t allow|Deny|Não permitir"
+    optional: true
+- assertVisible:
+    id: "report-wizard"
+- assertNotVisible:
+    id: "error-state"

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlarmClock, CalendarCheck, CheckCircle2, FileText, Tractor, XCircle } from "lucide-react";
+import { AlarmClock, CalendarCheck, CalendarPlus, CheckCircle2, FileText, Tractor, XCircle } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
@@ -15,6 +15,7 @@ import { ConfirmDialog } from "@/components/forms/ConfirmDialog";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button, buttonVariants } from "@/components/ui/Button";
+import { BillingActions } from "@/features/billing";
 import { api } from "@/lib/api";
 import { formatDateTime, formatMoney, maskTaxId } from "@/lib/format";
 import { useSave } from "@/lib/useSave";
@@ -22,11 +23,12 @@ import { useSave } from "@/lib/useSave";
 import { ChargesEditor } from "./ChargesEditor";
 import { CloseRentalDialog } from "./CloseRentalDialog";
 import { DamagesPanel } from "./DamagesPanel";
+import { ExtendRentalDialog } from "./ExtendRentalDialog";
 import { InspectionsCompare } from "./InspectionsCompare";
 import { OverdueBadge } from "./OverdueBadge";
-import { reserveCodesOf, rentalActions, type RentalDetail, type RentalDTO } from "./types";
+import { directionLabels, inboundMissingOf, reserveCodesOf, rentalActions, type RentalDetail, type RentalDTO } from "./types";
 
-type Dialog = "cancel" | "close" | null;
+type Dialog = "cancel" | "close" | "extend" | null;
 
 /** Office view of one rental (RN-11): summary, inspections side by side, damages, charges and close. */
 export function RentalDetailPage({ id }: { readonly id: string }) {
@@ -47,6 +49,9 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
   const taxId = customer?.taxId === null || customer?.taxId === undefined ? (customer?.taxIdMasked ?? null) : maskTaxId(customer.taxId);
   const reserveCodes = reserveCodesOf(reserveState.error);
   const compareId = rental.checkInInspectionId ?? rental.checkOutInspectionId ?? null;
+  const inboundMissing = inboundMissingOf(reserveState.error);
+  const labels = directionLabels(rental.direction);
+  const billable = rental.direction === "OUTBOUND" && (rental.status === "RETURNED" || rental.status === "CLOSED");
 
   return (
     <div className="flex flex-col gap-6">
@@ -70,6 +75,11 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
                 {t("actions.reserve")}
               </Button>
             ) : null}
+            {actions.extend ? (
+              <Button icon={<CalendarPlus aria-hidden="true" className="size-4" />} onClick={() => setDialog("extend")}>
+                {t("actions.extend")}
+              </Button>
+            ) : null}
             {actions.close ? (
               <Button icon={<CheckCircle2 aria-hidden="true" className="size-4" />} onClick={() => setDialog("close")} variant="primary">
                 {t("actions.close")}
@@ -91,7 +101,17 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
         }
         title={t("detail.title", { number: rental.number })}
       />
-      {reserveState.error === null ? null : reserveCodes.length > 0 ? (
+      {reserveState.error === null ? null : inboundMissing !== null ? (
+        <div className="flex flex-col gap-2 rounded-cards border-2 border-[var(--ar-danger)] p-4" role="alert">
+          <p className="font-semibold">{t("inbound.incompleteTitle")}</p>
+          <p>{t("inbound.incompleteBody")}</p>
+          <ul className="list-disc pl-5">
+            {inboundMissing.map((part) => (
+              <li key={part}>{t.has(`inbound.missing.${part}`) ? t(`inbound.missing.${part}`) : part}</li>
+            ))}
+          </ul>
+        </div>
+      ) : reserveCodes.length > 0 ? (
         <div className="flex flex-col gap-2 rounded-cards border-2 border-[var(--ar-danger)] p-4" role="alert">
           <p className="font-semibold">{t("new.reserveBlocked")}</p>
           <ul className="list-disc pl-5">
@@ -128,8 +148,9 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
               </Link>
             }
           />
+          <Detail label={t("fields.direction")} value={t(`direction.${rental.direction === "INBOUND" ? "INBOUND" : "OUTBOUND"}`)} />
           <Detail
-            label={t("fields.customer")}
+            label={t(`fields.${labels.party}`)}
             value={
               <Link className="font-semibold text-[var(--ar-link)]" href={`/customers/${rental.customerId}`}>
                 {customer?.name ?? "—"}
@@ -138,8 +159,8 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
           />
           <Detail label={t("fields.taxId")} value={taxId} />
           <Detail label={t("fields.period")} value={`${formatDateTime(rental.plannedStart, locale)} → ${formatDateTime(rental.plannedEnd, locale)}`} />
-          <Detail label={t("fields.actualStart")} value={rental.actualStart === null || rental.actualStart === undefined ? null : formatDateTime(rental.actualStart, locale)} />
-          <Detail label={t("fields.actualEnd")} value={rental.actualEnd === null || rental.actualEnd === undefined ? null : formatDateTime(rental.actualEnd, locale)} />
+          <Detail label={t(`fields.actualStart${labels.checkout === "receive" ? "Inbound" : ""}`)} value={rental.actualStart === null || rental.actualStart === undefined ? null : formatDateTime(rental.actualStart, locale)} />
+          <Detail label={t(`fields.actualEnd${labels.checkin === "return" ? "Inbound" : ""}`)} value={rental.actualEnd === null || rental.actualEnd === undefined ? null : formatDateTime(rental.actualEnd, locale)} />
           <Detail label={t("fields.rate")} value={`${formatMoney(rental.rateCents, locale)} / ${common(`rateUnit.${rental.rateUnit}`)}`} />
           <Detail label={t("fields.deposit")} value={formatMoney(rental.depositCents, locale)} />
           <Detail label={t("fields.deliveryMode")} value={t(`deliveryMode.${rental.deliveryMode}`)} />
@@ -160,6 +181,7 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
         <h2 className="mb-3 text-lg font-semibold">{t("charges.title")}</h2>
         <ChargesEditor editable={actions.editCharges} rentalId={id} />
       </section>
+      {billable ? <BillingActions entityId={id} entityType="RENTAL" /> : null}
       <section className="rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4">
         <h2 className="mb-3 text-lg font-semibold">{t("detail.activity")}</h2>
         <EntityTimeline
@@ -183,6 +205,18 @@ export function RentalDetailPage({ id }: { readonly id: string }) {
           open
           rentalId={id}
           totals={{ chargesVersion: rental.charges.chargesVersion, totalCents: rental.charges.totalCents, balanceDueCents: rental.charges.balanceDueCents }}
+        />
+      ) : null}
+      {dialog === "extend" ? (
+        <ExtendRentalDialog
+          assetId={rental.assetId}
+          onClose={() => setDialog(null)}
+          onDone={() => {
+            setDialog(null);
+            toast.success(t("toast.extended"));
+          }}
+          plannedEnd={rental.plannedEnd}
+          rentalId={id}
         />
       ) : null}
       <ConfirmDialog

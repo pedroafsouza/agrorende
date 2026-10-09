@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { RefreshCw } from "lucide-react";
+import { ReceiptText, RefreshCw } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ import { Field, Textarea } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 
-import { chargesUpdatedOf, closeBody, heldDamagesOf, type RentalDTO, type UpdatedTotals } from "./types";
+import { chargesUpdatedOf, closeBody, heldDamagesOf, isBillingFailure, type RentalDTO, type UpdatedTotals } from "./types";
 
 /**
  * Close with a payment note (RN-09). The dialog sends the charges version the user saw;
@@ -30,6 +30,7 @@ export function CloseRentalDialog({ rentalId, open, totals, onClose, onDone }: {
   const [updated, setUpdated] = useState<UpdatedTotals | null>(null);
   const shown = updated ?? totals;
   const held = heldDamagesOf(error);
+  const billingFailed = isBillingFailure(error);
   const close = () => {
     setError(null);
     setUpdated(null);
@@ -59,9 +60,9 @@ export function CloseRentalDialog({ rentalId, open, totals, onClose, onDone }: {
       closeLabel={common("actions.cancel")}
       footer={
         <>
-          <Button onClick={close}>{common("actions.cancel")}</Button>
+          <Button onClick={close}>{billingFailed ? t("close.billingLeave") : common("actions.cancel")}</Button>
           <Button busy={busy} onClick={() => void submit()} variant="primary">
-            {updated === null ? t("close.confirm") : t("close.confirmUpdated")}
+            {billingFailed ? t("close.billingRetry") : updated === null ? t("close.confirm") : t("close.confirmUpdated")}
           </Button>
         </>
       }
@@ -91,7 +92,15 @@ export function CloseRentalDialog({ rentalId, open, totals, onClose, onDone }: {
             <dd className="text-lg font-bold">{formatMoney(shown.balanceDueCents, locale)}</dd>
           </div>
         </dl>
-        {held === null ? (error === null ? null : <ErrorAlert error={error} />) : (
+        {billingFailed ? (
+          <div className="flex flex-col gap-1 rounded-cards border-2 border-[var(--ar-danger)] p-3" role="alert">
+            <p className="flex items-center gap-2 font-semibold">
+              <ReceiptText aria-hidden="true" className="size-5" />
+              {t("close.billingFailedTitle")}
+            </p>
+            <p>{t("close.billingFailedBody")}</p>
+          </div>
+        ) : held === null ? (error === null ? null : <ErrorAlert error={error} />) : (
           <p className="rounded-cards border-2 border-[var(--ar-danger)] p-3 font-semibold" role="alert">
             {t("close.heldBlocked", { count: held.length })}
           </p>

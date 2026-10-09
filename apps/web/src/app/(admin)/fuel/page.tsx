@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { FuelIntl } from "@/features/fuel/FuelIntl";
+import { FuelPage } from "@/features/fuel/FuelPage";
 
-export default function Adminfuelpage() {
-  return <PlaceholderPage descriptionKey="page.fuel.description" route="/fuel" titleKey="page.fuel.title" />;
+export default function AdminFuelPage() {
+  return (
+    <FuelIntl>
+      <FuelPage />
+    </FuelIntl>
+  );
 }

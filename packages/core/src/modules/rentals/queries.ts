@@ -1,4 +1,5 @@
 import type { ActivityEventDTO, DamageDTO, MediaDTO, RentalChargeDTO } from "@agrorende/contracts/dto";
+import type { RentalDirection } from "@agrorende/contracts/enums";
 import { collections, getDb, type ActivityEvent, type Damage, type Inspection, type Rental } from "@agrorende/db";
 import { z } from "zod";
 
@@ -143,7 +144,7 @@ export async function getRentalDetail(ctx: ReadCtx, rentalId: string): Promise<R
 export async function checkEligibility(ctx: Pick<Ctx, "orgId">, raw: EligibilityQuery): Promise<EligibilityResult> {
   const q = parseInput(EligibilityQuerySchema, raw);
   const result = await evaluateEligibility(await readTx(ctx), {
-    direction: "OUTBOUND",
+    direction: q.direction,
     assetId: q.assetId,
     customerId: q.customerId ?? null,
     siteId: q.siteId ?? null,
@@ -177,6 +178,7 @@ export interface CalendarItem {
   readonly number: string;
   readonly assetId: string;
   readonly assetCode: string | null;
+  readonly direction: RentalDirection;
   readonly customerName: string | null;
   readonly status: Rental["status"];
   readonly start: string;
@@ -210,6 +212,7 @@ export async function rentalCalendar(ctx: Pick<Ctx, "orgId">, raw: CalendarQuery
       number: doc.number,
       assetId: doc.assetId,
       assetCode: codes.get(doc.assetId) ?? null,
+      direction: doc.direction,
       customerName: names.get(doc.customerId) ?? null,
       status: doc.status,
       start: (doc.actualStart ?? doc.plannedStart).toISOString(),

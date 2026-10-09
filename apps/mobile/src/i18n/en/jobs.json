@@ -168,5 +168,25 @@
     "hours": "h",
     "send": "Send again",
     "sent": "Reading sent again. It syncs when there is signal."
+  },
+  "arrival": {
+    "title": "Arrived at {name}?",
+    "body": "You seem to be at the site. The job only changes when you confirm.",
+    "confirm": "I'm here",
+    "notYet": "Not here yet",
+    "wrongPlace": "Wrong place: send this point",
+    "pointComment": "Point update from the field: I am at {point}. The site pin looks wrong.",
+    "pointSent": "Point sent to the office in the comments."
+  },
+  "map": {
+    "toggleList": "List",
+    "toggleMap": "Map",
+    "pinLabel": "{title}, priority {priority}",
+    "noPins": "None of these jobs has a point on the map yet.",
+    "legend": "Pin colour shows urgency."
+  },
+  "whileHere": {
+    "action": "While I'm here: report a problem",
+    "hint": "Opens a new report for this machine and site."
   }
 }

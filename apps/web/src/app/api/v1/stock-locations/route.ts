@@ -1,4 +1,12 @@
-import { notImplemented } from "@/server/withApi";
+import { partsCore } from "@/features/parts/server";
+import { OFFICE, readJson, route, write } from "@/lib/core.server";
 
-export const GET = notImplemented("GET", "/api/v1/stock-locations");
-export const POST = notImplemented("POST", "/api/v1/stock-locations");
+const ANY_ROLE = ["ADMIN", "MANAGER", "FIELD"] as const;
+
+/** Warehouses and vans; a technician sees the warehouses and their own van. */
+export const GET = route(ANY_ROLE, (_request, ctx) => partsCore.listLocations(ctx));
+
+export const POST = route(OFFICE, async (request, ctx) => {
+  const body = await readJson(request);
+  return write(ctx, (tx) => partsCore.createLocation(tx, ctx, body));
+});

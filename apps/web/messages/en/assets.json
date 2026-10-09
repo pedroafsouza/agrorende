@@ -122,7 +122,39 @@
       "crop": "Crop",
       "name": "Name"
     },
-    "title": "Plots"
+    "title": "Plots",
+    "boundary": {
+      "area": "Area from the boundary: {area} ha",
+      "clear": "Clear drawing",
+      "coordinates": "Corners (longitude, latitude)",
+      "coordinatesHint": "One corner per line, for example -55.721534, -12.545812. The drawing and this list stay in sync.",
+      "draw": "Draw new boundary",
+      "drawAction": "Draw boundary",
+      "drawingHint": "Click the map to add each corner. Click the first corner, or press Enter, to close the shape. Esc cancels.",
+      "editAction": "Edit boundary",
+      "editHint": "Drag a corner to move it, drag a midpoint to add a corner, or right-click a corner to delete it.",
+      "noArea": "No boundary yet. Draw it on the map or type the corners below.",
+      "open": "Boundary of {name}",
+      "problem": {
+        "format": "Each line needs a longitude and a latitude separated by a comma.",
+        "range": "Longitude must be between -180 and 180 and latitude between -90 and 90.",
+        "tooFew": "A boundary needs at least three corners."
+      },
+      "remove": "Remove boundary",
+      "save": "Save boundary",
+      "saved": "Boundary saved. Area: {area} ha",
+      "title": "Boundary of {name}"
+    }
+  },
+  "qr": {
+    "bulkRegion": "Selected assets",
+    "clear": "Clear selection",
+    "print": "Print QR labels",
+    "ready": "{count, plural, one {QR label sheet for # asset downloaded} other {QR label sheet for # assets downloaded}}",
+    "select": "Select {code}",
+    "selectPage": "Select all assets on this page",
+    "selected": "{count, plural, one {# asset selected} other {# assets selected}}",
+    "tooMany": "Select at most {max} assets per sheet."
   },
   "retire": {
     "body": "The asset leaves the lists and cannot get new work orders or rentals. History is kept.",

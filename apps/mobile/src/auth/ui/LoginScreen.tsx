@@ -12,9 +12,14 @@ import { getApiClient, getDeviceId, platform } from "../../lib/app/session";
 import { BottomSheet, Button, Card, Screen, Text, TextField } from "../../ui";
 import { AskOfficeButton, ErrorBanner } from "../../ui/recovery";
 import { space } from "../../ui/theme";
+import { nativeDeviceUserSources } from "../deviceUsersNative";
+import { DeviceUsersCard } from "./DeviceUsersCard";
 import { finishLogin, loginErrorCode } from "./flow";
 
-/** Sign-in (PLT-01): Google and Apple with equal weight, email + password, invite code, trouble help. */
+/**
+ * Sign-in (PLT-01): Google and Apple with equal weight, email + password, invite code, trouble help.
+ * On a shared phone it also lists who has data here and their pending work (PLT-12).
+ */
 export function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -77,6 +82,7 @@ export function LoginScreen() {
           onPress={() => void run("password", () => getApiClient().login({ email: email.trim(), password, deviceId: getDeviceId(), platform }))}
         />
       </Card>
+      <DeviceUsersCard sources={nativeDeviceUserSources} />
       <Button testID="login-invite" labelKey="auth.login.haveInvite" icon={Ticket} variant="ghost" onPress={() => setInviteOpen(true)} />
       <Button testID="login-trouble" labelKey="auth.login.trouble" icon={LifeBuoy} variant="ghost" onPress={() => setTroubleOpen(true)} />
 

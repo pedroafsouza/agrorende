@@ -1,14 +1,14 @@
 import { Image } from "expo-image";
-import { FileAudio, Trash2, Video } from "lucide-react-native";
+import { FileAudio, PenLine, Trash2, Video } from "lucide-react-native";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { Icon, IconButton, Text, useTheme } from "../../ui";
 import type { MediaDraft } from "./drafts";
 
-export type ThumbnailsProps = { readonly drafts: readonly MediaDraft[]; readonly onDelete?: (id: string) => void };
+export type ThumbnailsProps = { readonly drafts: readonly MediaDraft[]; readonly onDelete?: (id: string) => void; readonly onAnnotate?: (id: string) => void };
 
 /** Horizontal strip of captured media with a labelled delete button per item. */
-export function Thumbnails({ drafts, onDelete }: ThumbnailsProps) {
+export function Thumbnails({ drafts, onDelete, onAnnotate }: ThumbnailsProps) {
   const theme = useTheme();
   if (drafts.length === 0) return null;
   return (
@@ -23,6 +23,7 @@ export function Thumbnails({ drafts, onDelete }: ThumbnailsProps) {
             </View>
           )}
           <Text i18nKey={`media.tag.${draft.tag}`} variant="caption" numberOfLines={1} />
+          {onAnnotate === undefined || draft.kind !== "PHOTO" ? null : <IconButton testID={`media-annotate-${draft.id}`} icon={PenLine} labelKey="media.annotate.open" onPress={() => onAnnotate(draft.id)} />}
           {onDelete === undefined ? null : <IconButton testID={`media-delete-${draft.id}`} icon={Trash2} labelKey="ui.action.delete" onPress={() => onDelete(draft.id)} />}
         </View>
       ))}

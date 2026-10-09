@@ -48,6 +48,17 @@
     "voice": {
       "record": "Gravar áudio",
       "stop": "Parar áudio"
+    },
+    "annotate": {
+      "open": "Marcar o problema",
+      "title": "Marcar o problema",
+      "circle": "Círculo",
+      "arrow": "Seta",
+      "freehand": "Desenhar",
+      "undo": "Desfazer",
+      "save": "Salvar marcas",
+      "hint": "Arraste na foto para circular ou apontar o problema. A foto original é mantida.",
+      "failed": "Não foi possível salvar as marcas. A foto original continua anexada."
     }
   },
   "permissions": {
@@ -391,5 +402,16 @@
       "progress": "Passo {current} de {total}",
       "submit": "Enviar"
     }
+  },
+  "notificationCentre": {
+    "title": "Notificações",
+    "empty": {
+      "title": "Nenhuma notificação",
+      "body": "Mensagens do escritório e novos serviços aparecem aqui."
+    },
+    "unread": "{count, plural, =0 {Nenhuma não lida} one {# não lida} other {# não lidas}}",
+    "markAllRead": "Marcar todas como lidas",
+    "unreadLabel": "Não lida",
+    "loadError": "Não foi possível ler as notificações neste celular."
   }
 }

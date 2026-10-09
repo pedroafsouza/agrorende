@@ -1,0 +1,24 @@
+# EC-WO-21 WO_ARRIVAL_PROMPT_MISMATCH: the arrival prompt never auto-arrives; "Wrong place" tells the office.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p1]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "tecnico1@agrorende.dev"
+- tapOn:
+    id: "home-next-job-open"
+- tapOn:
+    text: "Iniciar trajeto|Start route"
+    optional: true
+- setLocation:
+    latitude: ${SITE_LAT || "-15.6010"}
+    longitude: ${SITE_LNG || "-56.0970"}
+- extendedWaitUntil:
+    visible:
+      id: "job-arrival-sheet"
+    timeout: 45000
+- tapOn:
+    id: "job-arrival-wrong-place"
+- assertNotVisible:
+    id: "job-arrival-sheet"

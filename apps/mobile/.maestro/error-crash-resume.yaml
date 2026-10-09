@@ -1,0 +1,32 @@
+# EC-FR-12 REPORT_DRAFT_RESTORED and EC-FR-05 REPORT_EVIDENCE_REQUIRED: stop the app mid-wizard,
+# reopen it on the same step, and sending stays blocked without evidence.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [error, p0]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "inspetor@agrorende.dev"
+- tapOn:
+    id: "home-quick-report-new"
+- tapOn:
+    id: "report-wizard-next"
+    optional: true
+- killApp
+- launchApp
+- extendedWaitUntil:
+    visible:
+      id: "home-quick-report-resume"
+    timeout: 20000
+- tapOn:
+    id: "home-quick-report-resume"
+- assertVisible:
+    id: "report-draft-restored"
+- repeat:
+    times: 3
+    commands:
+      - tapOn:
+          id: "report-wizard-next"
+          optional: true
+- assertVisible:
+    id: "report-wizard"

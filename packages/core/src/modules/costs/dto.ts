@@ -18,9 +18,9 @@ export interface CostRollupRow {
   readonly label: string;
   readonly laborCents: number;
   readonly partsCents: number;
-  /** P1 (W6): third-party services; 0 until then. */
+  /** P1 (W6): third-party services from completed work orders (`externalCostCents`). */
   readonly externalCents: number;
-  /** P1 (W6): fuel logs; 0 until then. */
+  /** P1 (W6): fuel logs (`totalCents`), dated by `filledAt`. */
   readonly fuelCents: number;
   readonly rentInCostCents: number;
   readonly totalCostCents: number;
@@ -47,6 +47,8 @@ export interface CostRollupDTO {
   readonly totals: Omit<CostRollupRow, "key" | "label">;
   readonly workOrderCount: number;
   readonly rentalCount: number;
+  /** Fuel logs counted in the window (T15). Optional so earlier fixtures without it stay valid; the query always sets it. */
+  readonly fuelLogCount?: number;
 }
 
 /** @deprecated T01 skeleton placeholder kept for older imports. */

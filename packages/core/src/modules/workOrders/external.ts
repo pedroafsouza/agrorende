@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { WorkOrderDTO } from "@agrorende/contracts/dto";
+import type { WorkOrderStatus } from "@agrorende/contracts/enums";
 import type { Tx } from "@agrorende/contracts/seams";
 
 import type { Ctx } from "../../context.js";
@@ -43,4 +44,24 @@ export async function setExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown
   await emitWorkOrderChanged(tx, id, wo.status);
   const settings = await workOrderSettings(ctx.orgId);
   return redactForRole(toWorkOrderDto(await loadWorkOrder(tx, id)), ctx.role, settings);
+}
+
+/** Statuses from which the office may record external costs (A§8: "from COMPLETED on"). */
+export const EXTERNAL_COST_STATUSES: readonly WorkOrderStatus[] = ["COMPLETED", "VERIFIED"];
+
+export function canEditExternalCost(status: WorkOrderStatus): boolean {
+  return EXTERNAL_COST_STATUSES.includes(status);
+}
+
+/**
+ * `PATCH /work-orders/:id/external-cost` (T14.4): `setExternalCost` restricted to COMPLETED and
+ * VERIFIED jobs; earlier states answer `INVALID_TRANSITION`, a cancelled job `WO_CANCELLED`.
+ */
+export async function setExternalCostFromCompleted(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
+  sameTenant(dbTx(tx), ctx);
+  requireOffice(ctx);
+  const wo = await loadWorkOrder(tx, id);
+  if (wo.status === "CANCELLED") reject("WO_CANCELLED", { id });
+  if (!canEditExternalCost(wo.status)) reject("INVALID_TRANSITION", { from: wo.status, action: "externalCost" });
+  return setExternalCost(tx, ctx, id, raw, ifMatch);
 }

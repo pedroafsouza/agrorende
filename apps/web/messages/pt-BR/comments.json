@@ -1,1 +1,18 @@
-{}
+{
+  "title": "Comentários",
+  "count": "{count, plural, one {# comentário} other {# comentários}}",
+  "unknownAuthor": "Ex-usuário",
+  "empty": {
+    "title": "Nenhum comentário ainda",
+    "body": "Escreva a primeira nota para a equipe. Todos neste registro serão avisados."
+  },
+  "form": {
+    "label": "Novo comentário",
+    "placeholder": "Escreva uma nota para a equipe",
+    "submit": "Publicar comentário"
+  },
+  "errors": {
+    "required": "Escreva algo antes de publicar.",
+    "tooLong": "Mantenha o comentário com menos de {max, number} caracteres."
+  }
+}

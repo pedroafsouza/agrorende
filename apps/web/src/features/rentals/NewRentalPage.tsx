@@ -22,6 +22,9 @@ import {
   DOCUMENT_LOCALES,
   EMPTY_NEW_RENTAL,
   RATE_UNITS,
+  RENTAL_DIRECTIONS,
+  directionLabels,
+  inboundMissingOf,
   eligibilityByField,
   eligibilityQuery,
   newRentalBody,
@@ -65,6 +68,9 @@ export function NewRentalPage() {
   const reserveCodes = reserveCodesOf(error);
   const byField = eligibilityByField([...liveCodes, ...reserveCodes]);
   const fieldErrors = fieldErrorsOf(error);
+  const inboundMissing = inboundMissingOf(error);
+  const missingText = (part: string): string | undefined => (inboundMissing?.includes(part) === true ? t(`inbound.missing.${part}`) : undefined);
+  const labels = directionLabels(values.direction);
   const codeText = (codes: readonly string[] | undefined): string | undefined => (codes === undefined || codes.length === 0 ? undefined : codes.map((code) => errors(`${code}.title`)).join(" · "));
   const siteMismatch = eligibilityParams !== null && (eligibility.data?.warnings ?? []).includes("RENTAL_SITE_MISMATCH") && values.deliveryMode !== "DELIVERY";
   const dirty = JSON.stringify(values) !== JSON.stringify(EMPTY_NEW_RENTAL);
@@ -96,7 +102,7 @@ export function NewRentalPage() {
     }
   };
 
-  const inlineOnly = reserveCodes.length > 0;
+  const inlineOnly = reserveCodes.length > 0 || inboundMissing !== null;
   return (
     <div className="flex flex-col gap-4">
       <PageHeader back={{ href: "/rentals", label: t("list.title") }} subtitle={draft === null ? undefined : t("new.draftSaved")} title={t("new.title")} />
@@ -110,20 +116,45 @@ export function NewRentalPage() {
           void submit(true);
         }}
       >
-        {error === null ? null : inlineOnly ? (
+        {error === null ? null : inboundMissing !== null ? (
+          <div className="rounded-cards border-2 border-[var(--ar-danger)] p-3" role="alert">
+            <p className="font-semibold">{t("inbound.incompleteTitle")}</p>
+            <p>{t("inbound.incompleteBody")}</p>
+            {inboundMissing.includes("season") ? <p>{t("inbound.missing.season")}</p> : null}
+          </div>
+        ) : inlineOnly ? (
           <p className="rounded-cards border-2 border-[var(--ar-danger)] p-3 font-semibold" role="alert">
             {t("new.reserveBlocked")}
           </p>
         ) : (
           <ErrorAlert error={error} />
         )}
+        <Field hint={t(`direction.hint.${values.direction}`)} label={t("fields.direction")}>
+          {(p) => (
+            <Select {...p} disabled={draft !== null} onChange={(e) => set({ direction: e.target.value as NewRentalValues["direction"], customerId: null })} value={values.direction}>
+              {RENTAL_DIRECTIONS.map((d) => (
+                <option key={d} value={d}>
+                  {t(`direction.${d}`)}
+                </option>
+              ))}
+            </Select>
+          )}
+        </Field>
         <div className="grid gap-4 md:grid-cols-2">
-          <Field error={codeText(byField.assetId) ?? fieldErrors.assetId} label={t("fields.asset")} required>
+          <Field error={codeText(byField.assetId) ?? missingText("partnerAsset") ?? fieldErrors.assetId} label={t("fields.asset")} required>
             {(p) => <EntityPicker {...p} entity="assets" onChange={(assetId) => set({ assetId })} value={values.assetId} />}
           </Field>
           <div className="flex flex-col gap-2">
-            <Field error={codeText(byField.customerId) ?? fieldErrors.customerId} label={t("fields.customer")} required>
-              {(p) => <EntityPicker {...p} entity="customers" onChange={(customerId) => set({ customerId })} value={values.customerId} />}
+            <Field error={codeText(byField.customerId) ?? missingText("supplier") ?? fieldErrors.customerId} label={t(`fields.${labels.party}`)} required>
+              {(p) => (
+                <EntityPicker
+                  {...p}
+                  entity="customers"
+                  filters={values.direction === "INBOUND" ? { supplier: "true" } : undefined}
+                  onChange={(customerId) => set({ customerId })}
+                  value={values.customerId}
+                />
+              )}
             </Field>
             {byField.customerId !== undefined && values.customerId !== null ? (
               <Link className={buttonVariants({ variant: "secondary" })} href={`/customers/${values.customerId}`} target="_blank">
@@ -138,7 +169,7 @@ export function NewRentalPage() {
           <Field error={byField.dates === undefined ? fieldErrors.plannedEnd : undefined} label={t("fields.plannedEnd")} required>
             {(p) => <Input {...p} aria-invalid={p["aria-invalid"] || byField.dates !== undefined} onChange={(e) => set({ plannedEnd: e.target.value })} type="datetime-local" value={values.plannedEnd} />}
           </Field>
-          <Field error={fieldErrors.siteId} label={t("fields.site")}>
+          <Field error={missingText("site") ?? fieldErrors.siteId} label={t("fields.site")} required={values.direction === "INBOUND"}>
             {(p) => <EntityPicker {...p} entity="sites" onChange={(siteId) => set({ siteId })} value={values.siteId} />}
           </Field>
           <Field label={t("fields.documentLocale")}>

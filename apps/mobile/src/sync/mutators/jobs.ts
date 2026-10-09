@@ -2,7 +2,8 @@ import type { ChecklistItem, ChecklistResponse } from "@agrorende/contracts/chec
 import type { WorkOrderStatus } from "@agrorende/contracts/enums";
 import { workOrderMachine } from "@agrorende/contracts/machines";
 
-import { getMirrorRow, patchMirrorRow, upsertMirrorRow, type MirrorRow } from "../../db/mirror";
+import { getMirrorRow, listMirrorRows, patchMirrorRow, upsertMirrorRow, type MirrorRow } from "../../db/mirror";
+import type { SqlDb } from "../../db/sql";
 import { defineMutator } from "../mutator";
 
 export type { LocalMutationResult } from "../mutator";
@@ -135,12 +136,27 @@ export const saveChecklist = defineMutator({
   },
 });
 
-/** `workOrder.addPart` (WO-09): free-text part row; the server recomputes the parts cost. */
+/**
+ * Moves the local level of one part at one location by `delta`. The row stays clean so the
+ * next pull (or a scope reset and replay) replaces it with the server's number: server wins.
+ */
+export async function moveLocalStock(tx: SqlDb, partId: string, stockLocationId: string, delta: number, nowIso: string): Promise<void> {
+  const [level] = await listMirrorRows(tx, "stockLevels", `"partId" = ? AND "stockLocationId" = ?`, [partId, stockLocationId]);
+  if (level === undefined || typeof level.id !== "string") return;
+  const quantity = typeof level.quantity === "number" ? level.quantity : 0;
+  await patchMirrorRow(tx, "stockLevels", level.id, { quantity: quantity + delta, updatedAt: nowIso }, 0);
+}
+
+/**
+ * `workOrder.addPart` (WO-09): a free-text line, or a catalog line taken from the technician's
+ * van (P1), which lowers the local van level at once like the server's `OUT_TO_WORK_ORDER` movement.
+ */
 export const addPart = defineMutator({
   name: "workOrder.addPart",
   entityType: "WORK_ORDER_PART",
   entityId: (payload) => payload.id,
   apply: async (tx, payload, ctx) => {
+    const existing = await getMirrorRow(tx, "workOrderParts", payload.id);
     const wo = await getMirrorRow(tx, "workOrders", payload.workOrderId);
     await upsertMirrorRow(
       tx,
@@ -164,15 +180,24 @@ export const addPart = defineMutator({
       },
       1,
     );
+    const counted = existing !== undefined && existing.deletedAt == null;
+    if (!counted && payload.partId != null && payload.stockLocationId != null) {
+      await moveLocalStock(tx, payload.partId, payload.stockLocationId, -payload.quantity, ctx.now);
+    }
   },
 });
 
-/** `workOrder.removePart`: soft delete, like the server. */
+/** `workOrder.removePart`: soft delete, like the server; a catalog line puts its quantity back in the van. */
 export const removePart = defineMutator({
   name: "workOrder.removePart",
   entityType: "WORK_ORDER_PART",
   entityId: (payload) => payload.id,
   apply: async (tx, payload, ctx) => {
+    const line = await getMirrorRow(tx, "workOrderParts", payload.id);
     await patchMirrorRow(tx, "workOrderParts", payload.id, { deletedAt: ctx.now, updatedAt: ctx.now });
+    if (line === undefined || line.deletedAt != null) return;
+    if (typeof line.partId === "string" && typeof line.stockLocationId === "string" && typeof line.quantity === "number") {
+      await moveLocalStock(tx, line.partId, line.stockLocationId, line.quantity, ctx.now);
+    }
   },
 });

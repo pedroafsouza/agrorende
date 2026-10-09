@@ -1,1 +1,97 @@
-{}
+{
+  "catalog": {
+    "title": "Parts",
+    "subtitle": "Catalog of parts the workshop and the vans carry.",
+    "emptyTitle": "No parts in the catalog",
+    "emptyBody": "Add the parts you keep in stock so technicians can pick them on a job.",
+    "search": "Search by SKU or name",
+    "showArchived": "Show archived parts",
+    "new": "New part",
+    "editTitle": "Edit part",
+    "newTitle": "New part",
+    "archived": "Archived",
+    "active": "Active",
+    "archive": "Archive",
+    "restore": "Restore",
+    "archivedToast": "Part archived",
+    "restoredToast": "Part restored"
+  },
+  "fields": {
+    "sku": "SKU",
+    "name": "Name",
+    "unit": "Unit",
+    "unitCost": "Unit cost",
+    "minStock": "Minimum stock",
+    "minStockHint": "The office is notified once a day when a location falls to this quantity or below.",
+    "categories": "Compatible machine types",
+    "location": "Location",
+    "locationType": "Type",
+    "technician": "Technician",
+    "quantity": "Quantity",
+    "movementType": "Movement",
+    "from": "From",
+    "to": "To",
+    "note": "Note",
+    "status": "Status",
+    "createdAt": "Date"
+  },
+  "stock": {
+    "title": "Stock",
+    "subtitle": "Quantities per warehouse and van. Every change is a recorded movement.",
+    "levelsTitle": "Stock levels",
+    "locationsTitle": "Locations",
+    "movementsTitle": "Recent movements",
+    "lowOnly": "Only low stock",
+    "allLocations": "All locations",
+    "low": "Low stock",
+    "ok": "In stock",
+    "negative": "Below zero",
+    "emptyTitle": "No stock recorded yet",
+    "emptyBody": "Record a stock entry to start counting parts in a location.",
+    "noLocationsTitle": "No stock locations",
+    "noLocationsBody": "Create a warehouse and one van per technician before recording stock.",
+    "noMovements": "No movements yet.",
+    "newLocation": "New location",
+    "newMovement": "Record movement",
+    "locationTitle": "New stock location",
+    "movementTitle": "Record stock movement",
+    "movementToast": "Stock movement recorded",
+    "locationToast": "Location created",
+    "vanHint": "A van belongs to one technician, who sees and uses only that van's stock.",
+    "workOrder": "Work order {number}"
+  },
+  "locationType": {
+    "WAREHOUSE": "Warehouse",
+    "VAN": "Van"
+  },
+  "movementType": {
+    "IN": "Stock entry",
+    "TRANSFER": "Transfer",
+    "ADJUSTMENT": "Adjustment",
+    "OUT_TO_WORK_ORDER": "Used on a work order"
+  },
+  "movementHint": {
+    "IN": "Parts received into a location. The quantity is added.",
+    "TRANSFER": "Moves parts from one location to another, for example from the warehouse to a van.",
+    "ADJUSTMENT": "Corrects a count. Use a negative quantity to remove parts."
+  },
+  "panel": {
+    "catalog": "Catalog",
+    "freeText": "Free text",
+    "freeTextHint": "Not taken from stock",
+    "takenFrom": "Taken from {location}",
+    "left": "{quantity} left there",
+    "sku": "SKU"
+  },
+  "externalCost": {
+    "title": "External cost",
+    "none": "No external cost recorded.",
+    "add": "Add external cost",
+    "edit": "Edit external cost",
+    "note": "Note",
+    "lockedHint": "The external cost can be recorded once the job is completed.",
+    "cancelledHint": "This job was cancelled, so no external cost applies.",
+    "rollUp": "Included in the job total and in the machine cost.",
+    "saved": "External cost saved"
+  }
+}

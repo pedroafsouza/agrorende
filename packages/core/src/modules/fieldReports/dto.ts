@@ -69,6 +69,10 @@ export const DismissInputSchema = z.object({
 });
 export type DismissInput = z.input<typeof DismissInputSchema>;
 
+/** `POST /field-reports/:id/link-asset` (P1, FR-22): links an unregistered machine to an asset. */
+export const LinkAssetInputSchema = z.object({ assetId: z.string().uuid() });
+export type LinkAssetInput = z.input<typeof LinkAssetInputSchema>;
+
 export interface MarkForRepairResult {
   readonly workOrderId: string;
   readonly workOrderNumber: string;

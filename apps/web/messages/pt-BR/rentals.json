@@ -25,7 +25,10 @@
     "cancel": "Cancelar locação",
     "close": "Encerrar locação",
     "checkoutPdf": "PDF de saída",
-    "checkinPdf": "PDF de devolução"
+    "checkinPdf": "PDF de devolução",
+    "extend": "Estender",
+    "receive": "Receber",
+    "return": "Devolver"
   },
   "fields": {
     "number": "Número",
@@ -48,7 +51,11 @@
     "actualStart": "Saída em",
     "actualEnd": "Devolvida em",
     "termsVersion": "Versão dos termos",
-    "cancelReason": "Motivo do cancelamento"
+    "cancelReason": "Motivo do cancelamento",
+    "direction": "Tipo",
+    "supplier": "Parceiro (fornecedor)",
+    "actualStartInbound": "Recebido em",
+    "actualEndInbound": "Devolvido ao parceiro em"
   },
   "documentLocale": {
     "ptBR": "Português (Brasil)",
@@ -190,7 +197,11 @@
     "confirmUpdated": "Confirmar novos totais e encerrar",
     "paymentNote": "Observação de pagamento",
     "paymentNoteHint": "Por exemplo: pago por PIX na entrega.",
-    "heldBlocked": "{count, plural, one {# avaria ainda está retida. Aceite, isente ou resolva antes de encerrar.} other {# avarias ainda estão retidas. Aceite, isente ou resolva antes de encerrar.}}"
+    "heldBlocked": "{count, plural, one {# avaria ainda está retida. Aceite, isente ou resolva antes de encerrar.} other {# avarias ainda estão retidas. Aceite, isente ou resolva antes de encerrar.}}",
+    "billingFailedTitle": "Cobrança não ficou pronta",
+    "billingFailedBody": "A locação está salva. Tente de novo ou deixe para o escritório concluir.",
+    "billingRetry": "Tentar de novo",
+    "billingLeave": "Deixar para o escritório"
   },
   "cancel": {
     "title": "Cancelar locação",
@@ -205,7 +216,8 @@
     "workOrderCreated": "Ordem de serviço {number} criada",
     "lineAdded": "Cobrança adicionada",
     "lineDeleted": "Cobrança removida",
-    "recomputed": "Cobranças recalculadas"
+    "recomputed": "Cobranças recalculadas",
+    "extended": "Locação estendida"
   },
   "activity": {
     "rental": {
@@ -230,5 +242,46 @@
       "repaired": "Avaria reparada"
     },
     "update": "Alterada"
+  },
+  "direction": {
+    "OUTBOUND": "Locar para cliente",
+    "INBOUND": "Locar de parceiro",
+    "hint": {
+      "OUTBOUND": "Nossa máquina vai para um cliente.",
+      "INBOUND": "A máquina de um parceiro vem para nós. Receba na saída e devolva na entrada."
+    }
+  },
+  "inbound": {
+    "incompleteTitle": "Falta dado da locação de parceiro",
+    "incompleteBody": "O rascunho está salvo. Complete parceiro, máquina e local para continuar.",
+    "missing": {
+      "supplier": "Escolha um cliente marcado como fornecedor.",
+      "partnerAsset": "Escolha uma máquina de parceiro.",
+      "site": "Escolha o local onde a máquina vai trabalhar.",
+      "season": "Abra uma safra para o custo entrar nela."
+    }
+  },
+  "extend": {
+    "title": "Estender locação",
+    "body": "A locação termina em {end}. Escolha o novo fim.",
+    "confirm": "Estender",
+    "newEnd": "Novo fim",
+    "invalid": "Escolha data e hora depois do fim atual.",
+    "conflictTitle": "Não há disponibilidade para estender",
+    "conflictBody": "A locação está salva. Escolha outra data ou fale com o escritório.",
+    "openCalendar": "Abrir calendário"
+  },
+  "calendar": {
+    "title": "Calendário de disponibilidade",
+    "range": "{from} a {to}",
+    "previous": "Semana anterior",
+    "next": "Próxima semana",
+    "today": "Hoje",
+    "legend": "Legenda",
+    "emptyTitle": "Nenhuma reserva nessas semanas",
+    "emptyBody": "Todas as máquinas estão livres neste período.",
+    "bar": "{number}, {party}, {status}, {start} a {end}",
+    "show": "Calendário",
+    "showList": "Lista"
   }
 }

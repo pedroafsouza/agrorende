@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { AnalyticsIntl } from "@/features/analytics/AnalyticsIntl";
+import { AnalyticsPage } from "@/features/analytics/AnalyticsPage";
 
-export default function Adminanalyticspage() {
-  return <PlaceholderPage descriptionKey="page.analytics.description" route="/analytics" titleKey="page.analytics.title" />;
+export default function AdminAnalyticsPage() {
+  return (
+    <AnalyticsIntl>
+      <AnalyticsPage />
+    </AnalyticsIntl>
+  );
 }

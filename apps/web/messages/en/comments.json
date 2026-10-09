@@ -1,1 +1,18 @@
-{}
+{
+  "title": "Comments",
+  "count": "{count, plural, one {# comment} other {# comments}}",
+  "unknownAuthor": "Former user",
+  "empty": {
+    "title": "No comments yet",
+    "body": "Write the first note for the team. Everyone on this record will be notified."
+  },
+  "form": {
+    "label": "New comment",
+    "placeholder": "Write a note for the team",
+    "submit": "Post comment"
+  },
+  "errors": {
+    "required": "Write something before posting.",
+    "tooLong": "Keep the comment under {max, number} characters."
+  }
+}

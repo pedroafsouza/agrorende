@@ -1,5 +1,10 @@
-import { PlaceholderPage } from "@/components/foundation/StateScaffold";
+import { PartsIntl } from "@/features/parts/PartsIntl";
+import { StockPage } from "@/features/parts/StockPage";
 
-export default function Adminstockpage() {
-  return <PlaceholderPage descriptionKey="page.stock.description" route="/stock" titleKey="page.stock.title" />;
+export default function AdminStockPage() {
+  return (
+    <PartsIntl>
+      <StockPage />
+    </PartsIntl>
+  );
 }

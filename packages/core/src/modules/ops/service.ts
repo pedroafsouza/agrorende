@@ -6,3 +6,6 @@ export { getAlerts, getKpis, getLive, getOperatorTrail, listActivity, loadOpsSet
 export { listAttention, parseAttentionKind, resolveAttention, resolutionId, ATTENTION_RESOLVED_ACTION, type AttentionCtx } from "./attention.js";
 export { slaStateOf, isRentalOverdue, isOperatorStale, opsSettingsOf, startOfZonedDay, type OpsSettings } from "./rules.js";
 export type * from "./dto.js";
+export { getAnalytics, parseAnalyticsMetric, weekKey, ANALYTICS_METRICS, type AnalyticsCtx, type AnalyticsDTO, type AnalyticsFilters, type AnalyticsMetric, type AnalyticsPoint, type AnalyticsUnit } from "./analytics.js";
+export { search, SEARCH_LIMIT, SEARCH_MIN_LENGTH, SEARCH_TYPES, type SearchHitDTO, type SearchResultsDTO, type SearchType } from "./search.js";
+export { plotBoundaries, type PlotBoundariesDTO, type PlotBoundaryFeature } from "./boundaries.js";

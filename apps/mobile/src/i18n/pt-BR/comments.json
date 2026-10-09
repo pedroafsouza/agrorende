@@ -1,0 +1,14 @@
+{
+  "title": "Comentários",
+  "empty": "Nenhum comentário ainda. Escreva a primeira nota para a equipe.",
+  "you": "Você",
+  "teammate": "Colega de equipe",
+  "pending": "Aguardando envio",
+  "offlineHint": "Você está sem sinal. O comentário fica salvo e é enviado quando houver conexão.",
+  "label": "Novo comentário",
+  "placeholder": "Escreva uma nota para a equipe",
+  "send": "Enviar comentário",
+  "required": "Escreva algo antes de enviar.",
+  "tooLong": "Mantenha o comentário com menos de 4000 caracteres.",
+  "loadError": "Não foi possível ler os comentários neste celular."
+}

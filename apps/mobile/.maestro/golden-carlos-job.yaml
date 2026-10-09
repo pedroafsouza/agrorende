@@ -1,0 +1,78 @@
+# PRD §8 steps 4–6: Carlos accepts, routes, is asked about arrival, and completes with a signature.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+tags: [golden, carlos]
+---
+- runFlow:
+    file: subflows/login.yaml
+    env:
+      EMAIL: "tecnico1@agrorende.dev"
+- tapOn:
+    id: "home-next-job-open"
+- extendedWaitUntil:
+    visible:
+      id: "job-detail"
+    timeout: 10000
+- tapOn:
+    text: "Aceitar|Accept"
+    optional: true
+- tapOn:
+    text: "Iniciar trajeto|Start route"
+    optional: true
+# The arrival prompt (EC-WO-21) appears inside the site radius; the emulator location is set to the site.
+- setLocation:
+    latitude: ${SITE_LAT || "-15.6010"}
+    longitude: ${SITE_LNG || "-56.0970"}
+- extendedWaitUntil:
+    visible:
+      id: "job-arrival-sheet"
+    timeout: 45000
+    optional: true
+- tapOn:
+    id: "job-arrival-confirm"
+    optional: true
+- assertVisible:
+    id: "job-status"
+- tapOn:
+    id: "job-open-checklist"
+- assertVisible:
+    id: "job-checklist"
+- back
+- tapOn:
+    id: "job-open-parts"
+- tapOn:
+    id: "job-parts-add"
+- tapOn:
+    id: "job-part-name"
+- inputText: "Mangueira hidráulica 1/2"
+- tapOn:
+    id: "job-part-quantity"
+- inputText: "1"
+- hideKeyboard
+- tapOn:
+    id: "job-part-submit"
+- back
+- tapOn:
+    id: "job-open-complete"
+- tapOn:
+    id: "job-complete-hour-meter"
+- inputText: "4312"
+- tapOn:
+    id: "job-complete-resolution"
+- inputText: "Mangueira substituída"
+- hideKeyboard
+- tapOn:
+    id: "signature-open"
+- swipe:
+    from:
+      id: "signature-canvas"
+    direction: RIGHT
+- tapOn:
+    id: "signature-name"
+- inputText: "Gerente da fazenda"
+- hideKeyboard
+- tapOn:
+    id: "signature-save"
+- tapOn:
+    id: "job-complete-submit"
+- assertVisible:
+    id: "job-status"

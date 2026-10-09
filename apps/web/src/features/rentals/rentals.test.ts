@@ -14,8 +14,17 @@ import {
   localToIso,
   meterDelta,
   newRentalBody,
+  barPosition,
+  calendarWindow,
+  canExtend,
+  directionLabels,
+  extendBody,
+  groupByAsset,
+  inboundMissingOf,
+  isBillingFailure,
   rentalActions,
   reserveCodesOf,
+  shiftDay,
   tabStatus,
 } from "./types";
 
@@ -94,13 +103,64 @@ describe("rental helpers", () => {
   });
 
   it("offers office actions by status", () => {
-    expect(rentalActions("DRAFT")).toEqual({ reserve: true, cancel: true, close: false, editCharges: false });
-    expect(rentalActions("RETURNED")).toEqual({ reserve: false, cancel: false, close: true, editCharges: true });
-    expect(rentalActions("ACTIVE")).toEqual({ reserve: false, cancel: false, close: false, editCharges: false });
+    expect(rentalActions("DRAFT")).toEqual({ reserve: true, cancel: true, close: false, editCharges: false, extend: false });
+    expect(rentalActions("RETURNED")).toEqual({ reserve: false, cancel: false, close: true, editCharges: true, extend: false });
+    expect(rentalActions("ACTIVE")).toEqual({ reserve: false, cancel: false, close: false, editCharges: false, extend: true });
   });
 
   it("computes the hour-meter delta", () => {
     expect(meterDelta(100, 112.34)).toBe(12.3);
     expect(meterDelta(null, 5)).toBeNull();
+  });
+});
+
+describe("rentals P1 helpers", () => {
+  it("labels rent-in rentals as receive and return from a supplier", () => {
+    expect(directionLabels("OUTBOUND")).toEqual({ checkout: "checkout", checkin: "checkin", party: "customer" });
+    expect(directionLabels("INBOUND")).toEqual({ checkout: "receive", checkin: "return", party: "supplier" });
+  });
+
+  it("sends the direction on create and on the eligibility check of a rent-in", () => {
+    const values = { ...EMPTY_NEW_RENTAL, direction: "INBOUND" as const, assetId: ASSET, customerId: CUSTOMER, plannedStart: "2026-11-01T08:00", plannedEnd: "2026-11-03T08:00" };
+    expect(newRentalBody(values)).toMatchObject({ direction: "INBOUND", assetId: ASSET });
+    expect(eligibilityQuery(values)).toMatchObject({ direction: "INBOUND" });
+    expect(eligibilityQuery({ ...values, direction: "OUTBOUND" })).not.toHaveProperty("direction");
+  });
+
+  it("reads the missing rent-in parts and the billing failure", () => {
+    expect(inboundMissingOf(new ApiError({ status: 422, code: "INBOUND_RENTAL_INCOMPLETE", details: { missing: ["supplier", "site", 3] } }))).toEqual(["supplier", "site"]);
+    expect(inboundMissingOf(new ApiError({ status: 409, code: "CONFLICT" }))).toBeNull();
+    expect(isBillingFailure(new ApiError({ status: 502, code: "RENTAL_BILLING_DOCUMENT_FAILED" }))).toBe(true);
+    expect(isBillingFailure(null)).toBe(false);
+  });
+
+  it("extends only reserved or active rentals, and only to a later end", () => {
+    expect(canExtend("RESERVED")).toBe(true);
+    expect(canExtend("ACTIVE")).toBe(true);
+    expect(canExtend("RETURNED")).toBe(false);
+    expect(extendBody("2026-11-05T08:00", "2026-11-03T11:00:00.000Z")).toEqual({ newPlannedEnd: "2026-11-05T11:00:00.000Z" });
+    expect(extendBody("2026-11-03T08:00", "2026-11-03T11:00:00.000Z")).toBeNull();
+    expect(extendBody("", "2026-11-03T11:00:00.000Z")).toBeNull();
+  });
+
+  it("builds the calendar window and clamps booking bars to it", () => {
+    expect(shiftDay("2026-02-27", 2)).toBe("2026-03-01");
+    const range = calendarWindow("2026-11-01", 4);
+    expect(range).toEqual({ from: "2026-11-01T03:00:00.000Z", to: "2026-11-05T03:00:00.000Z", days: ["2026-11-01", "2026-11-02", "2026-11-03", "2026-11-04"] });
+    expect(barPosition({ start: "2026-11-02T03:00:00.000Z", end: "2026-11-03T03:00:00.000Z" }, range)).toEqual({ left: 25, width: 25 });
+    expect(barPosition({ start: "2026-10-20T00:00:00.000Z", end: "2026-11-02T03:00:00.000Z" }, range)).toEqual({ left: 0, width: 25 });
+    expect(barPosition({ start: "2026-12-01T00:00:00.000Z", end: "2026-12-02T00:00:00.000Z" }, range)).toBeNull();
+  });
+
+  it("groups bookings by machine code and start", () => {
+    const rows = groupByAsset([
+      { assetId: "b", assetCode: "AGR-2", start: "2026-11-02" },
+      { assetId: "a", assetCode: "AGR-1", start: "2026-11-03" },
+      { assetId: "a", assetCode: "AGR-1", start: "2026-11-01" },
+    ]);
+    expect(rows.map((r) => [r.assetCode, r.items.map((i) => i.start)])).toEqual([
+      ["AGR-1", ["2026-11-01", "2026-11-03"]],
+      ["AGR-2", ["2026-11-02"]],
+    ]);
   });
 });

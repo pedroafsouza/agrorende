@@ -1,0 +1,7 @@
+# Maestro workspace for the AgroRende field app (T17).
+# Run against a development build on an Android emulator with the demo seed loaded:
+#   maestro test -e APP_ID=app.agrorende.field.dev apps/mobile/.maestro
+flows:
+  - "*.yaml"
+executionOrder:
+  continueOnFailure: true

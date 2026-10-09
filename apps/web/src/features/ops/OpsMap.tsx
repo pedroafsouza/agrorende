@@ -11,7 +11,9 @@ import { campoClaroPalette } from "@agrorende/design-tokens";
 
 import { Button } from "@/components/ui/Button";
 
-import type { MapLayerKey, OpsView } from "./filters";
+import type { PlotBoundariesDTO } from "@agrorende/core/modules/ops/boundaries";
+
+import type { BaseMap, MapLayerKey, OpsView } from "./filters";
 import { trailSegments } from "./filters";
 import { startFrameLoop, type OperatorStore, type PointCollection } from "./operatorStore";
 import type { TrailPointDTO } from "./types";
@@ -28,7 +30,10 @@ const COLORS = {
   neutral: campoClaroPalette.neutral,
   muted: campoClaroPalette["graphite-500"],
   white: "#FFFFFF",
+  boundary: campoClaroPalette["terra-600"],
 } as const;
+
+const EMPTY_BOUNDARIES = { type: "FeatureCollection", features: [] } as const;
 
 /** Operator ring colour follows `OperatorState`; the legend and side list repeat it in words. */
 const STATE_RING = ["match", ["get", "state"], "WORKING", COLORS.primary, "EN_ROUTE", COLORS.info, "ON_SITE", COLORS.info, "ON_HOLD", COLORS.warning, "IDLE", COLORS.neutral, COLORS.muted] as unknown as string;
@@ -102,6 +107,11 @@ export interface OpsMapProps {
   readonly onSelectOperator: (userId: string) => void;
   readonly onSelectEntity: (kind: "report" | "workOrder" | "asset" | "rental", id: string) => void;
   readonly emptyOperators: boolean;
+  /** Plot boundaries layer (T16.4); null hides it. */
+  readonly boundaries?: PlotBoundariesDTO | null;
+  readonly baseMap?: BaseMap;
+  /** XYZ raster template used when `baseMap` is `satellite`. */
+  readonly satelliteUrl?: string | null;
 }
 
 /**
@@ -109,7 +119,7 @@ export interface OpsMapProps {
  * reports, WOs and assets are clustered sources (A§14.3). Tile or style failures show the
  * EC-OPS-18 banner and keep the lists usable.
  */
-export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, onSelectEntity, emptyOperators }: OpsMapProps) {
+export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, onSelectEntity, emptyOperators, boundaries = null, baseMap = "map", satelliteUrl = null }: OpsMapProps) {
   const t = useTranslations("ops");
   const ref = useRef<MapRef>(null);
   const [mapKey, setMapKey] = useState(0);
@@ -188,6 +198,27 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
           ref={ref}
         >
           <NavigationControl position="top-right" />
+          {satelliteUrl === null ? null : (
+            <Source id="ops-satellite" maxzoom={19} tileSize={256} tiles={[satelliteUrl]} type="raster">
+              <Layer id="ops-satellite-raster" layout={{ visibility: baseMap === "satellite" ? "visible" : "none" }} type="raster" />
+            </Source>
+          )}
+          <Source data={asData(boundaries ?? EMPTY_BOUNDARIES)} id="ops-boundaries" type="geojson">
+            <Layer id="ops-boundaries-fill" layout={{ visibility: boundaries === null ? "none" : "visible" }} paint={{ "fill-color": COLORS.boundary, "fill-opacity": 0.12 }} type="fill" />
+            <Layer
+              id="ops-boundaries-line"
+              layout={{ visibility: boundaries === null ? "none" : "visible" }}
+              paint={{ "line-color": baseMap === "satellite" ? COLORS.white : COLORS.boundary, "line-width": 2.5, "line-dasharray": [2, 1] }}
+              type="line"
+            />
+            <Layer
+              id="ops-boundaries-label"
+              layout={{ visibility: boundaries === null ? "none" : "visible", "text-field": ["get", "name"] as unknown as string, "text-size": 12, "text-font": ["Noto Sans Bold"] }}
+              minzoom={12}
+              paint={{ "text-color": campoClaroPalette["graphite-950"], "text-halo-color": COLORS.white, "text-halo-width": 1.5 }}
+              type="symbol"
+            />
+          </Source>
           <Source cluster clusterMaxZoom={14} clusterRadius={44} data={asData(reports)} id="ops-reports" type="geojson">
             <Layer filter={["has", "point_count"]} id="ops-reports-cluster" layout={{ visibility: visibility("reports") }} paint={{ "circle-color": COLORS.warning, "circle-radius": 18, "circle-stroke-color": COLORS.white, "circle-stroke-width": 2 }} type="circle" />
             <Layer filter={["has", "point_count"]} id="ops-reports-count" layout={{ visibility: visibility("reports"), "text-field": ["get", "point_count_abbreviated"], "text-size": 13, "text-font": ["Noto Sans Bold"] }} type="symbol" />

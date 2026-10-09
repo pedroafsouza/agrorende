@@ -1,0 +1,34 @@
+# Signs in with a seeded demo account. Expects EMAIL; the demo password is shared by every seeded user.
+appId: ${APP_ID || "app.agrorende.field.dev"}
+---
+- launchApp:
+    clearState: true
+- extendedWaitUntil:
+    visible:
+      id: "login"
+    timeout: 20000
+- tapOn:
+    id: "login-email"
+- inputText: ${EMAIL}
+- tapOn:
+    id: "login-password"
+- inputText: "agrorende123"
+- hideKeyboard
+- tapOn:
+    id: "login-submit"
+- runFlow:
+    when:
+      visible:
+        id: "onboarding-next"
+    commands:
+      - repeat:
+          while:
+            visible:
+              id: "onboarding-next"
+          commands:
+            - tapOn:
+                id: "onboarding-next"
+- extendedWaitUntil:
+    visible:
+      id: "home-quick-report"
+    timeout: 30000

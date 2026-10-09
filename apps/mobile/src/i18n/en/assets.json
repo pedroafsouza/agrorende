@@ -66,5 +66,19 @@
     "RETURNED": "Returned",
     "SUBMITTED": "Submitted",
     "VERIFIED": "Verified"
+  },
+  "costs": {
+    "title": "Costs to date",
+    "labor": "Labour",
+    "parts": "Parts",
+    "external": "Outside services",
+    "fuel": "Fuel",
+    "rentIn": "Rented-in machines",
+    "total": "Total cost",
+    "revenue": "Rental revenue",
+    "toDate": "From the office records. Updated when you are online.",
+    "empty": "No costs recorded for this machine yet.",
+    "offline": "Costs need a connection. Try again when there is signal.",
+    "retry": "Try again"
   }
 }
