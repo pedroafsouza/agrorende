@@ -19,6 +19,8 @@ import { api } from "@/lib/api";
 import { useFieldErrors } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
 
+import { NotificationPrefsCard } from "./NotificationPrefsCard";
+
 type Settings = OrgSettings & { readonly syncVersion?: string };
 
 const PRIORITIES = ["CRITICAL", "HIGH", "MEDIUM", "LOW"] as const;
@@ -40,7 +42,12 @@ export function SettingsPage() {
   const query = useQuery({ queryKey: ["settings"], queryFn: () => api<Settings>("/settings") });
   if (query.isLoading) return <LoadingState />;
   if (query.error !== null || query.data === undefined) return <ErrorAlert error={query.error} onRetry={() => void query.refetch()} />;
-  return <SettingsForm initial={query.data} key={query.data.syncVersion ?? JSON.stringify(query.data)} />;
+  return (
+    <div className="flex flex-col gap-6">
+      <SettingsForm initial={query.data} key={query.data.syncVersion ?? JSON.stringify(query.data)} />
+      <NotificationPrefsCard />
+    </div>
+  );
 }
 
 function SettingsForm({ initial }: { readonly initial: Settings }) {

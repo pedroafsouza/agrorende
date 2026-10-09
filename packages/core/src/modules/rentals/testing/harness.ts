@@ -1,4 +1,4 @@
-import { closeClient, withSyncTx, type SyncTx } from "@agrorende/db";
+import { closeClient, collections, withSyncTx, type SyncTx } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { CheckOutInspection, CheckInInspection } from "@agrorende/contracts/mutations";
 import type { MediaMeta } from "@agrorende/contracts/sync";
@@ -6,6 +6,7 @@ import type { MediaMeta } from "@agrorende/contracts/sync";
 import type { MutationMeta } from "../../../sync/types.js";
 import { makeTestCtx, type TestCtx } from "../../../testing/ctx.js";
 import { newId } from "../../assets/kit.js";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
 
 export type Row = { _id: string } & Record<string, unknown>;
 
@@ -16,12 +17,11 @@ export const AGENT_ID = "00000000-0000-7000-8000-0000000000a1";
 export const OTHER_AGENT_ID = "00000000-0000-7000-8000-0000000000a2";
 export const TEMPLATE_ID = "00000000-0000-7000-8000-0000000000c1";
 
-const rawCollection = (db: TestDbHandle["db"], name: string) => db.collection<Row>(name);
 
 export interface Harness {
   readonly handle: TestDbHandle;
   readonly ctx: TestCtx;
-  raw(name: string): ReturnType<typeof rawCollection>;
+  raw(name: string): RawCollection;
   run<T>(fn: (tx: SyncTx) => Promise<T>, ctx?: TestCtx): Promise<T>;
   close(): Promise<void>;
 }
@@ -33,7 +33,7 @@ export async function createHarness(suffix: string): Promise<Harness> {
   process.env.MONGODB_DB = name;
   const handle = await setupTestDb(name);
   const ctx = makeTestCtx();
-  const counters = handle.db.collection<{ _id: string; value: number; horizonVersion: number }>("sync_counters");
+  const counters = collections.syncCounters(handle.db);
   await counters.insertOne({ _id: ctx.orgId, value: 0, horizonVersion: 0 });
   await counters.insertOne({ _id: OTHER_ORG_ID, value: 0, horizonVersion: 0 });
   return {

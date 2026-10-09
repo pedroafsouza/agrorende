@@ -1,4 +1,4 @@
-import { getClient, getDb } from "@agrorende/db";
+import { collection, collections, getClient, getDb, scoped, type CollectionName } from "@agrorende/db";
 import { maskTaxId } from "@agrorende/contracts";
 import {
   PULL_PAGE_LIMIT,
@@ -31,7 +31,20 @@ type IdRow = { _id: string } & Row;
 type Database = Awaited<ReturnType<typeof getDb>>;
 type SnapshotSession = ReturnType<Awaited<ReturnType<typeof getClient>>["startSession"]>;
 
-export const TABLE_COLLECTIONS: Record<TableName, string> = {
+/** Pull reads synced tables generically through scope filters, so it sees them as plain id rows. */
+interface PullCollection {
+  find(
+    filter: Row,
+    options: { readonly session?: SnapshotSession; readonly projection?: Row; readonly sort?: Record<string, 1 | -1>; readonly limit?: number },
+  ): { toArray(): Promise<IdRow[]> };
+  findOne(filter: Row): Promise<IdRow | null>;
+}
+
+function rowsOf(db: Database, name: CollectionName): PullCollection {
+  return collection(db, name) as unknown as PullCollection;
+}
+
+export const TABLE_COLLECTIONS: Record<TableName, CollectionName> = {
   organization: "organizations",
   users: "users",
   sites: "sites",
@@ -65,7 +78,7 @@ export const PHASE_TABLES: Record<PullCursor["phase"], readonly TableName[]> = {
   3: TABLE_ORDER,
 };
 
-const USER_PRIVATE_FIELDS = ["passwordHash", "hourlyCostCents", "email", "invitedById", "mustChangePassword"] as const;
+const USER_PRIVATE_FIELDS = ["passwordHash", "hourlyCostCents", "email", "invitedById", "mustChangePassword", "notificationPrefs"] as const;
 
 function wireValue(value: unknown): unknown {
   if (value instanceof Date) {
@@ -162,9 +175,8 @@ interface PullScope {
   readonly ctx: Ctx;
 }
 
-async function idsOf(scope: PullScope, collectionName: string, filter: ScopeFilter): Promise<string[]> {
-  const docs = await scope.db
-    .collection<Row>(collectionName)
+async function idsOf(scope: PullScope, collectionName: CollectionName, filter: ScopeFilter): Promise<string[]> {
+  const docs = await rowsOf(scope.db, collectionName)
     .find(filter as Row, { session: scope.session, projection: { _id: 1 } })
     .toArray();
   return docs.map((doc) => String(doc._id));
@@ -172,8 +184,7 @@ async function idsOf(scope: PullScope, collectionName: string, filter: ScopeFilt
 
 /** Resolves the parent id sets used by dependent tables (ARCHITECTURE §7.5 scope table). */
 export async function resolveScopeIds(scope: PullScope, base: ScopeContext): Promise<ScopeIds> {
-  const workOrderDocs = await scope.db
-    .collection<Row>("work_orders")
+  const workOrderDocs = await rowsOf(scope.db, "work_orders")
     .find(workOrderScope(base) as Row, { session: scope.session, projection: { _id: 1, fieldReportId: 1 } })
     .toArray();
   const workOrders = workOrderDocs.map((doc) => String(doc._id));
@@ -191,18 +202,18 @@ export async function resolveScopeIds(scope: PullScope, base: ScopeContext): Pro
 }
 
 async function readTablePage(scope: PullScope, table: TableName, filter: ScopeFilter, after: number, snapshot: number, viewer: WireViewer): Promise<PageResult> {
-  const collection = scope.db.collection<IdRow>(TABLE_COLLECTIONS[table]);
+  const source = rowsOf(scope.db, TABLE_COLLECTIONS[table]);
   const { organizationId, ...rest } = filter;
   const base: Row = table === "organization" ? { _id: organizationId } : { organizationId, ...rest };
   const query: Row = { ...base, syncVersion: after === 0 ? { $lte: snapshot } : { $gt: after, $lte: snapshot } };
-  const docs = await collection
+  const docs = await source
     .find(query, { session: scope.session, sort: { syncVersion: 1, _id: 1 }, limit: PULL_PAGE_LIMIT })
     .toArray();
   let coveredThrough: number | null = null;
   if (docs.length >= PULL_PAGE_LIMIT) {
     const lastVersion = Number(docs[docs.length - 1]?.syncVersion ?? after);
     const seen = new Set(docs.map((doc) => String(doc._id)));
-    const sameVersion = await collection
+    const sameVersion = await source
       .find({ ...base, syncVersion: lastVersion }, { session: scope.session, sort: { _id: 1 } })
       .toArray();
     for (const doc of sameVersion) {
@@ -225,8 +236,7 @@ async function readTablePage(scope: PullScope, table: TableName, filter: ScopeFi
 }
 
 async function readResolvedMutations(scope: PullScope, after: number, snapshot: number): Promise<MutationResult[]> {
-  const docs = await scope.db
-    .collection<Row>("processed_mutations")
+  const docs = await rowsOf(scope.db, "processed_mutations")
     .find(
       { organizationId: scope.ctx.organizationId, userId: scope.ctx.userId, resolvedAt: { $ne: null }, syncVersion: { $gt: after, $lte: snapshot } },
       { session: scope.session, sort: { syncVersion: 1 } },
@@ -260,7 +270,7 @@ export async function loadScopedRow(ctx: Ctx, table: TableName, id: string, now:
   const filter = buildScopeFilter(table, { ...base, ids });
   const { organizationId, ...rest } = filter;
   const query: Row = table === "organization" ? { _id: organizationId } : { $and: [{ organizationId, ...rest }, { _id: id }] };
-  const doc = await db.collection<IdRow>(TABLE_COLLECTIONS[table]).findOne(query);
+  const doc = await rowsOf(db, TABLE_COLLECTIONS[table]).findOne(query);
   if (doc === null || (doc.deletedAt !== null && doc.deletedAt !== undefined)) return null;
   return toTableDto(table, doc, { userId: ctx.userId, role: ctx.role });
 }
@@ -274,7 +284,8 @@ export async function pull(ctx: Ctx, input: unknown, options: PullOptions = {}):
   const request = PullRequestSchema.parse(input);
   const now = options.now ?? new Date();
   const db = await getDb();
-  const user = await db.collection<IdRow>("users").findOne({ _id: ctx.userId, organizationId: ctx.organizationId }, { projection: { scopeEpoch: 1 } });
+  const tenant = scoped({ orgId: ctx.organizationId }, db);
+  const user = await tenant.users.findOne({ _id: ctx.userId }, { projection: { scopeEpoch: 1 } });
   const scopeEpoch = typeof user?.scopeEpoch === "number" ? user.scopeEpoch : 0;
   const decoded = decodeCursor(request.cursor);
   if (decoded === null || request.scopeEpoch !== scopeEpoch) {
@@ -285,7 +296,7 @@ export async function pull(ctx: Ctx, input: unknown, options: PullOptions = {}):
   const session = mongoClient.startSession({ snapshot: true });
   try {
     const scope: PullScope = { db, session, ctx };
-    const counter = await db.collection<IdRow>("sync_counters").findOne({ _id: ctx.organizationId }, { session });
+    const counter = await collections.syncCounters(db).findOne({ _id: ctx.organizationId }, { session });
     const horizon = Number(counter?.horizonVersion ?? 0);
     const current = Number(counter?.value ?? 0);
     const steady = decoded.phase === 3 && decoded.after >= decoded.snap && decoded.snap > 0;
@@ -327,8 +338,8 @@ export async function pull(ctx: Ctx, input: unknown, options: PullOptions = {}):
     }
     const resolvedMutations = await readResolvedMutations(scope, after, snapshot);
 
-    await db.collection<IdRow>("devices").updateOne(
-      { installationId: request.deviceId, organizationId: ctx.organizationId, userId: ctx.userId },
+    await tenant.devices.updateOne(
+      { installationId: request.deviceId, userId: ctx.userId },
       { $set: { lastPullVersion: cursor.after, lastSyncAt: now, lastSeenAt: now, updatedAt: now } },
     );
 

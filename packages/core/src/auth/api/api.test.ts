@@ -171,9 +171,9 @@ describe("auth", () => {
     expect((await call("GET /auth/invites/:code", { params: { code: "ZZZZZZZZZZ" } })).status).toBe(404);
   });
 
-  it("answers OAUTH_PROVIDER_ERROR while providers are not configured", async () => {
+  it("validates the native Apple sign-in body (full flows live in auth/oauth.test.ts)", async () => {
     const response = await call("POST /auth/apple", { body: {} });
-    expect(await response.json()).toMatchObject({ error: { code: "OAUTH_PROVIDER_ERROR" } });
+    expect(await response.json()).toMatchObject({ error: { code: "VALIDATION_FAILED" } });
   });
 });
 

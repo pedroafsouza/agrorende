@@ -1,7 +1,3 @@
-import { notImplemented } from "../../errors.js";
-import type { Ctx } from "../../context.js";
-import type { SyncTx } from "../../sync/types.js";
-
-export async function ensureFuelService(_tx: SyncTx, _ctx: Ctx): Promise<void> {
-  return notImplemented("modules.fuel.service.ensure");
-}
+// Wave 6 module (DELIVERY-PLAN §5 T15). The module exposes no service functions yet;
+// T15 adds them here together with its routes and mutations.
+export {};

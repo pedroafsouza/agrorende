@@ -24,11 +24,57 @@ export interface FieldUserSuggestion {
 
 export interface SuggestDeps {
   readonly lastFixes?: (orgId: string, userIds: string[]) => Promise<Map<string, LiveFix>>;
+  readonly liveFixTimeoutMs?: number;
   readonly now?: Date;
 }
 
 export const SUGGESTION_LIMIT = 5;
 const ONLINE_WINDOW_MS = 15 * 60_000;
+/** Upper bound for the Redis lookup before the suggestions fall back to `location_pings`. */
+export const LIVE_FIX_TIMEOUT_MS = 2_000;
+
+/** Latest stored fix per user, read from `location_pings` in the caller's transaction. */
+async function pingFixes(tx: Tx, userIds: readonly string[]): Promise<Map<string, LiveFix>> {
+  const scoped = dbTx(tx);
+  const result = new Map<string, LiveFix>();
+  for (const userId of userIds) {
+    const ping = await scoped.db.location_pings.findOne({ userId }, { sort: { recordedAt: -1 } });
+    if (ping === null) continue;
+    result.set(userId, {
+      userId,
+      lat: ping.lat,
+      lng: ping.lng,
+      ...(typeof ping.accuracyM === "number" ? { accuracyM: ping.accuracyM } : {}),
+      ...(typeof ping.heading === "number" ? { heading: ping.heading } : {}),
+      ...(typeof ping.speedMps === "number" ? { speedMps: ping.speedMps } : {}),
+      recordedAt: ping.recordedAt,
+    });
+  }
+  return result;
+}
+
+/**
+ * Live fixes come from the Redis hash (`locations.lastFixes`). When Redis is not configured
+ * (`REDIS_URL` unset), errors or does not answer in time, suggestions still rank technicians by
+ * their newest `location_pings` row instead of failing the request.
+ */
+async function fixesFor(tx: Tx, orgId: string, userIds: string[], deps: SuggestDeps): Promise<Map<string, LiveFix>> {
+  if (userIds.length === 0) return new Map();
+  const live = deps.lastFixes ?? ((id: string, ids: string[]) => lastFixes(id, ids));
+  let timer: NodeJS.Timeout | undefined;
+  try {
+    return await Promise.race([
+      live(orgId, userIds),
+      new Promise<never>((_resolve, rejectTimeout) => {
+        timer = setTimeout(() => rejectTimeout(new Error("live fixes timed out")), deps.liveFixTimeoutMs ?? LIVE_FIX_TIMEOUT_MS);
+      }),
+    ]);
+  } catch {
+    return pingFixes(tx, userIds);
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
 export function haversineKm(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
   const rad = (deg: number): number => (deg * Math.PI) / 180;
@@ -127,7 +173,7 @@ export async function suggestTechnicians(
   const target = await targetOf(tx, input);
   const users = ((await scoped.db.users.find({ deletedAt: null, isActive: true }).toArray()) as User[]).filter(isCandidate);
   const ids = users.map((user) => user._id);
-  const fixes = await (deps.lastFixes ?? ((orgId: string, userIds: string[]) => lastFixes(orgId, userIds)))(ctx.orgId, ids);
+  const fixes = await fixesFor(tx, ctx.orgId, ids, deps);
   const open = await openCountByAssignee(tx, ctx.orgId);
   const siteIds = [...new Set(users.map((user) => user.homeSiteId).filter((id): id is string => typeof id === "string"))];
   const sites = siteIds.length === 0 ? [] : await scoped.db.sites.find({ _id: { $in: siteIds } }).toArray();

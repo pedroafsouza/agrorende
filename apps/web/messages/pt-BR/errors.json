@@ -7,7 +7,7 @@
   "ACCOUNT_IN_OTHER_ORG": {
     "title": "Esta conta já está em outra empresa",
     "body": "Use outra conta Google/Apple ou peça para a outra empresa remover você.",
-    "action": "Use another account"
+    "action": "Usar outra conta"
   },
   "ACCOUNT_NOT_INVITED": {
     "title": "Esta conta ainda não está em uma equipe",
@@ -22,32 +22,32 @@
   "APP_UPDATE_REQUIRED": {
     "title": "Atualize o AgroRende",
     "body": "A atualização mantém seus dados locais. Depois, volte para enviar o que está pendente.",
-    "action": "Open store or reload update"
+    "action": "Atualizar aplicativo"
   },
   "ASSET_DOUBLE_BOOKED": {
     "title": "Máquina já reservada nesse horário",
     "body": "Seus dados estão salvos. Escolha outro horário ou outra máquina.",
-    "action": "change dates or asset"
+    "action": "Mudar datas ou máquina"
   },
   "ASSET_HAS_CRITICAL_REPORT": {
     "title": "Há relato crítico nesta máquina",
     "body": "A reserva está salva. Veja o relato e escolha outra máquina ou peça revisão ao escritório.",
-    "action": "choose another asset/review report"
+    "action": "Ver relato ou escolher outra máquina"
   },
   "ASSET_NOT_OPERATIONAL": {
     "title": "Máquina fora de operação",
     "body": "A reserva está salva. Escolha uma máquina operacional ou peça revisão ao escritório.",
-    "action": "choose another asset"
+    "action": "Escolher outra máquina"
   },
   "ASSET_NOT_RENTABLE": {
     "title": "Esta máquina não pode sair agora",
     "body": "Seus dados estão salvos. Veja o motivo e escolha outra máquina.",
-    "action": "pick another asset"
+    "action": "Escolher outra máquina"
   },
   "ASSET_REPAIR_ALREADY_OPEN": {
     "title": "Já existe uma OS aberta",
     "body": "Nada foi perdido. Anexe este relato à OS existente ou crie outra OS com motivo.",
-    "action": "Attach to the existing job"
+    "action": "Juntar à OS existente"
   },
   "ASSIGNEE_UNAVAILABLE": {
     "title": "Escolha outro responsável",
@@ -77,7 +77,7 @@
   "CUSTOMER_INCOMPLETE": {
     "title": "Falta dado do cliente",
     "body": "A reserva está salva. Informe CPF/CNPJ e telefone para continuar.",
-    "action": "edit customer in place"
+    "action": "Completar cliente"
   },
   "DIAGNOSTICS_UNAVAILABLE": {
     "title": "Diagnóstico indisponível",
@@ -92,32 +92,32 @@
   "GUARD_AFTER_PHOTO_REQUIRED": {
     "title": "Falta foto depois do reparo",
     "body": "A OS está salva. Tire uma foto final da máquina para concluir.",
-    "action": "Open camera with AFTER tag"
+    "action": "Tirar foto do depois"
   },
   "GUARD_CHECKIN_INCOMPLETE": {
     "title": "Falta uma etapa da devolução",
     "body": "Seus dados estão salvos. Abra a etapa marcada e complete o que falta.",
-    "action": "highlight missing step"
+    "action": "Ir para a etapa pendente"
   },
   "GUARD_CHECKLIST_INCOMPLETE": {
     "title": "Checklist incompleto",
     "body": "A OS está salva. Responda os itens destacados e adicione as fotos pedidas.",
-    "action": "focus first missing item"
+    "action": "Ir para o item pendente"
   },
   "GUARD_CHECKOUT_INCOMPLETE": {
     "title": "Falta uma etapa da entrega",
     "body": "Seus dados estão salvos. Abra a etapa marcada e complete o que falta.",
-    "action": "highlight missing step"
+    "action": "Ir para a etapa pendente"
   },
   "GUARD_RESOLUTION_REQUIRED": {
     "title": "Informe como foi resolvido",
     "body": "Nada foi fechado ainda. Escolha a resolução e salve a observação.",
-    "action": "focus missing resolution fields"
+    "action": "Preencher resolução"
   },
   "GUARD_SIGNATURE_REQUIRED": {
     "title": "Assinatura obrigatória",
     "body": "A vistoria está salva. Colete a assinatura ou registre a alternativa permitida.",
-    "action": "open signature step"
+    "action": "Abrir assinatura"
   },
   "IMPORT_ROW_ERRORS": {
     "title": "Algumas linhas precisam de revisão",
@@ -127,77 +127,77 @@
   "INBOUND_RENTAL_INCOMPLETE": {
     "title": "Falta dado da locação de parceiro",
     "body": "O rascunho está salvo. Complete parceiro, máquina e local para continuar.",
-    "action": "complete partner/asset/site"
+    "action": "Completar parceiro, máquina e local"
   },
   "INTERNAL": {
     "title": "Envio pausado por instabilidade",
     "body": "Seus dados estão guardados. O app vai tentar de novo sozinho.",
-    "action": "backoff"
+    "action": "Tentar novamente"
   },
   "INVALID_CREDENTIALS": {
     "title": "E-mail ou senha não conferem",
     "body": "Confira os dados e tente de novo. Seus rascunhos deste aparelho continuam salvos.",
-    "action": "focus password"
+    "action": "Tentar novamente"
   },
   "INVALID_TRANSITION": {
     "title": "Etapa não vale mais",
     "body": "Seu trabalho ficou salvo. Veja o estado atual e tente o próximo passo disponível.",
-    "action": "View latest state"
+    "action": "Ver estado atual"
   },
   "INVITE_EMAIL_MISMATCH": {
     "title": "Use o e-mail do convite",
     "body": "Este convite de {role} é para {emailHint}. Entre com essa conta ou peça outro convite.",
-    "action": "Use that account"
+    "action": "Usar essa conta"
   },
   "INVITE_EXPIRED": {
     "title": "Convite vencido ou já usado",
     "body": "Peça um convite novo a quem te chamou.",
-    "action": "ask for a new invite"
+    "action": "Pedir novo convite"
   },
   "LAST_ADMIN": {
     "title": "A empresa precisa de um Administrador",
     "body": "Promova outra pessoa a Administrador antes.",
-    "action": "promote another active person first"
+    "action": "Promover outra pessoa antes"
   },
   "LOCATION_CONSENT_REQUIRED": {
     "title": "Confirme o uso da localização",
     "body": "A central só vê sua localização enquanto você estiver em serviço. Sem aceitar, você fica fora de serviço e seus dados ficam salvos.",
-    "action": "Read and accept consent"
+    "action": "Ler e aceitar"
   },
   "MEDIA_LOCKED": {
     "title": "Arquivo já está protegido",
     "body": "O anexo original continua salvo. Veja o item enviado ou peça revisão à central.",
-    "action": "View sent item/read-only"
+    "action": "Ver item enviado"
   },
   "MEDIA_NOT_IN_STORAGE": {
     "title": "Vídeo original ainda enviando",
     "body": "O vídeo original ainda está sendo enviado. Mostramos a prévia e avisamos quando terminar.",
-    "action": "show thumbnail/poster"
+    "action": "Ver prévia"
   },
   "MEDIA_PART_MISSING": {
     "title": "Faltou um pedaço do arquivo",
     "body": "O arquivo está guardado. Vamos reenviar só a parte que faltou.",
-    "action": "request missing part URLs"
+    "action": "Acompanhar envio"
   },
   "MEDIA_TOO_LARGE": {
     "title": "Arquivo grande demais",
     "body": "Seu relato está guardado. Grave um vídeo menor ou mande fotos.",
-    "action": "Record/trim smaller"
+    "action": "Diminuir arquivo"
   },
   "MEDIA_TYPE_MISMATCH": {
     "title": "Formato do arquivo não combina",
     "body": "Seu relato está guardado. Escolha outro arquivo ou grave de novo.",
-    "action": "Choose/record another"
+    "action": "Escolher outro arquivo"
   },
   "METER_READING_JUMP": {
     "title": "Confira o horímetro",
     "body": "A OS está salva. Corrija a leitura, confirme o salto ou marque troca de medidor com foto.",
-    "action": "Edit reading"
+    "action": "Editar leitura"
   },
   "METER_READING_LOWER": {
     "title": "Confira o horímetro",
     "body": "A OS está salva. Corrija a leitura, confirme o salto ou marque troca de medidor com foto.",
-    "action": "Edit reading"
+    "action": "Editar leitura"
   },
   "NOT_FOUND": {
     "title": "Registro não encontrado",
@@ -207,27 +207,27 @@
   "OAUTH_PROVIDER_ERROR": {
     "title": "Google/Apple não respondeu",
     "body": "Tente de novo em instantes ou entre com e-mail e senha.",
-    "action": "try provider sign-in again"
+    "action": "Tentar entrar de novo"
   },
   "OAUTH_STATE_EXPIRED": {
     "title": "O login demorou demais",
     "body": "Toque para tentar de novo.",
-    "action": "start sign-in again"
+    "action": "Começar entrada de novo"
   },
   "OFFICE_ROLE_REQUIRED": {
     "title": "O escritório é para Administrador e Gestor",
     "body": "Use o app AgroRende no celular. Precisa de acesso? Fale com o administrador.",
-    "action": "store badges + QR"
+    "action": "Ver links da loja e QR"
   },
   "ORG_SUSPENDED": {
     "title": "Acesso da empresa pausado",
     "body": "Continue registrando: tudo fica salvo e será enviado quando a empresa voltar.",
-    "action": "keep working read/offline"
+    "action": "Continuar em modo leitura"
   },
   "PASSWORD_CHANGE_REQUIRED": {
     "title": "Troque a senha para continuar",
     "body": "A troca precisa de internet só desta vez. O que você já fez fica salvo.",
-    "action": "Change password in place"
+    "action": "Trocar senha"
   },
   "PLOT_GEOMETRY_INVALID": {
     "title": "Revise o talhão no mapa",
@@ -237,22 +237,22 @@
   "RATE_LIMITED": {
     "title": "Vamos enviar em pequenos grupos",
     "body": "Seus dados estão guardados. Há muitos pedidos agora, então o app vai esperar um pouco.",
-    "action": "respect `Retry-After`"
+    "action": "Tentar depois da espera"
   },
   "RECORD_IN_USE": {
     "title": "Este registro tem histórico",
     "body": "Nada foi apagado. Arquive para esconder sem perder relatórios, custos ou locações.",
-    "action": "Archive instead"
+    "action": "Arquivar em vez disso"
   },
   "REFRESH_REUSED": {
     "title": "Sessão protegida",
     "body": "Por segurança, entre de novo neste aparelho. Seus dados locais continuam salvos.",
-    "action": "Sign in in place"
+    "action": "Entrar de novo"
   },
   "RENTAL_ASSET_MISMATCH": {
     "title": "Esta não é a máquina da locação",
     "body": "A vistoria está salva. Escaneie a máquina correta ou digite o código.",
-    "action": "type code or search asset"
+    "action": "Digitar código ou buscar máquina"
   },
   "RENTAL_BILLING_DOCUMENT_FAILED": {
     "title": "Cobrança não ficou pronta",
@@ -262,17 +262,17 @@
   "RENTAL_CHARGES_UPDATED": {
     "title": "Valores atualizados pela central",
     "body": "Sua vistoria está salva. Revise os valores atualizados antes de fechar.",
-    "action": "open charges review"
+    "action": "Revisar cobranças"
   },
   "RENTAL_DAMAGE_REPORT_FAILED": {
     "title": "Dano guardado para revisão",
     "body": "A devolução está salva. O escritório vai criar o relato se precisar.",
-    "action": "idempotent retry"
+    "action": "Tentar novamente"
   },
   "RENTAL_DATES_INVALID": {
     "title": "Revise as datas da locação",
     "body": "Seus dados estão salvos. Use uma data futura e um fim depois do início.",
-    "action": "focus date fields"
+    "action": "Corrigir datas"
   },
   "RENTAL_NOT_ACTIVE": {
     "title": "Locação não está ativa",
@@ -282,22 +282,22 @@
   "RENTAL_NOT_FOUND": {
     "title": "Locação não encontrada",
     "body": "Seus dados locais continuam salvos. Atualize a lista ou peça ajuda ao escritório.",
-    "action": "return to list/refresh"
+    "action": "Voltar à lista"
   },
   "RENTAL_NOT_RESERVED": {
     "title": "Locação não está mais reservada",
     "body": "Suas fotos e assinaturas foram guardadas. O escritório foi avisado.",
-    "action": "keep inspection locally"
+    "action": "Guardar inspeção"
   },
   "RENTAL_SITE_MISMATCH": {
     "title": "Máquina em outro local",
     "body": "Seus dados estão salvos. Escolha entrega, ajuste o local ou peça ajuda ao escritório.",
-    "action": "switch to delivery or pick current site"
+    "action": "Trocar para entrega ou escolher local"
   },
   "REPORT_LOCKED": {
     "title": "Relato já está protegido",
     "body": "Seu relato continua salvo. Veja o histórico ou peça revisão à central.",
-    "action": "View history/read-only"
+    "action": "Ver histórico"
   },
   "RESET_LINK_EXPIRED": {
     "title": "Link vencido",
@@ -307,7 +307,7 @@
   "RESET_REQUIRED": {
     "title": "Seu acesso mudou",
     "body": "Vamos atualizar o que aparece para você. O que você já registrou fica salvo.",
-    "action": "Refresh local data"
+    "action": "Atualizar dados locais"
   },
   "SEASON_OVERLAP": {
     "title": "Safras com datas sobrepostas",
@@ -317,7 +317,7 @@
   "STORAGE_FULL": {
     "title": "Envio de arquivos pausado",
     "body": "Seus arquivos estão guardados no aparelho. Vamos tentar de novo quando houver espaço.",
-    "action": "retry with long backoff"
+    "action": "Acompanhar envio"
   },
   "TEMPLATE_VERSION_IN_USE": {
     "title": "A nova versão vale daqui para frente",
@@ -327,12 +327,12 @@
   "TOKEN_EXPIRED": {
     "title": "Entre de novo para enviar",
     "body": "Você pode continuar trabalhando. Seus itens ficam salvos até você entrar.",
-    "action": "same-user sign-in in place with password"
+    "action": "Entrar de novo"
   },
   "UNAUTHENTICATED": {
     "title": "Entre para continuar",
     "body": "Seus rascunhos deste aparelho continuam salvos. Entre com a mesma conta para enviar.",
-    "action": "Sign in"
+    "action": "Entrar"
   },
   "UNKNOWN_MUTATION": {
     "title": "Atualize para enviar esta ação",
@@ -342,51 +342,51 @@
   "UPLOAD_URL_EXPIRED": {
     "title": "Envio demorou demais",
     "body": "O arquivo está guardado. O app vai pedir um novo caminho e continuar.",
-    "action": "request fresh URL"
+    "action": "Tentar novamente"
   },
   "VALIDATION_FAILED": {
     "title": "Atualize para enviar este item",
     "body": "O item está salvo. Atualize o AgroRende e tente enviar de novo.",
-    "action": "store/OTA for schema updates"
+    "action": "Corrigir agora"
   },
   "WO_ALREADY_VERIFIED": {
     "title": "A OS já foi conferida",
     "body": "Seu trabalho está salvo como evidência extra. A central vai revisar se precisar.",
-    "action": "View verified job"
+    "action": "Ver OS verificada"
   },
   "WO_ASSET_RETIRED": {
     "title": "Máquina aposentada",
     "body": "A OS está salva. A central recebeu o pedido de revisão; volte para Hoje enquanto isso.",
-    "action": "Office review queued"
+    "action": "Enviar para a central"
   },
   "WO_ASSIGNEE_OFF_DUTY": {
     "title": "Responsável fora de serviço",
     "body": "A OS não foi perdida. Escolha alguém em serviço ou confirme a atribuição com aviso.",
-    "action": "Choose an on-duty person"
+    "action": "Escolher pessoa em serviço"
   },
   "WO_CANCELLED": {
     "title": "Esta OS foi cancelada",
     "body": "Suas fotos e anotações estão seguras e foram enviadas para a central como evidência.",
-    "action": "View read-only job"
+    "action": "Ver OS"
   },
   "WO_DESTINATION_MISSING": {
     "title": "Falta o local da OS",
     "body": "A OS está salva. Ligue para o cliente ou peça a localização para a central.",
-    "action": "Call customer"
+    "action": "Ligar para o cliente"
   },
   "WO_PART_NOT_IN_VAN_STOCK": {
     "title": "Peça não está na sua viatura",
     "body": "A OS está salva. Use texto livre, coloque em espera por peças ou peça transferência.",
-    "action": "Free-text part"
+    "action": "Digitar peça"
   },
   "WO_REASSIGNED": {
     "title": "Esta OS foi para outra pessoa",
     "body": "Seu trabalho está salvo e a central foi avisada.",
-    "action": "View read-only job"
+    "action": "Ver OS"
   },
   "WO_SAFETY_STOP_REQUIRED": {
     "title": "Pare por segurança",
     "body": "A OS está salva. Coloque em espera por segurança e avise a central.",
-    "action": "On hold · safety"
+    "action": "Pausar por segurança"
   }
 }

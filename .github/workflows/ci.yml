@@ -49,7 +49,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Start local services
-        run: docker compose up -d --wait mongo redis
+        run: |
+          docker compose up -d --wait mongo redis oidc-mock
+          # The OAuth and golden-path tests sign in through the mock OIDC provider on :4003.
+          for attempt in $(seq 1 30); do curl -fsS http://localhost:4003/google/.well-known/openid-configuration > /dev/null && break; sleep 2; done
 
       - name: Run workspace checks
         run: pnpm check

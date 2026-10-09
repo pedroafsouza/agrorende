@@ -1,0 +1,46 @@
+import { z } from "zod";
+import type { WorkOrderDTO } from "@agrorende/contracts/dto";
+import type { Tx } from "@agrorende/contracts/seams";
+
+import type { Ctx } from "../../context.js";
+import { reject } from "../../errors.js";
+import { assertVersion, dbTx, parseInput, stampUpdate } from "../assets/kit.js";
+import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity, redactForRole, requireOffice, sameTenant, toWorkOrderDto, workOrderSettings } from "./common.js";
+
+/**
+ * External (third-party) costs of a work order, P1 ERP-03 (`PATCH /work-orders/:id/external-cost`, A§8).
+ * Kept in its own file so the wave 6 owner (T14) extends it without touching `service.ts`.
+ */
+export const ExternalCostInputSchema = z.object({
+  externalCostCents: z.number().int().nonnegative(),
+  externalCostNote: z.string().optional(),
+});
+export type ExternalCostInput = z.infer<typeof ExternalCostInputSchema>;
+
+/** Office-only; needs `If-Match` and bumps `syncVersion`. */
+export async function setExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
+  const scoped = dbTx(tx);
+  sameTenant(scoped, ctx);
+  requireOffice(ctx);
+  const input = parseInput(ExternalCostInputSchema, raw);
+  const wo = await loadWorkOrder(tx, id);
+  assertVersion(wo, ifMatch);
+  if (wo.status === "CANCELLED") reject("WO_CANCELLED", { id });
+  const now = new Date();
+  await scoped.db.work_orders.updateOne(
+    { _id: id },
+    { $set: { externalCostCents: input.externalCostCents, externalCostNote: input.externalCostNote ?? null, ...stampUpdate(scoped, now) } },
+  );
+  await recordWoActivity(tx, {
+    workOrderId: id,
+    action: "workOrder.externalCost",
+    actorId: ctx.userId,
+    fromStatus: null,
+    toStatus: null,
+    occurredAt: now,
+    meta: { from: wo.externalCostCents ?? null, to: input.externalCostCents },
+  });
+  await emitWorkOrderChanged(tx, id, wo.status);
+  const settings = await workOrderSettings(ctx.orgId);
+  return redactForRole(toWorkOrderDto(await loadWorkOrder(tx, id)), ctx.role, settings);
+}

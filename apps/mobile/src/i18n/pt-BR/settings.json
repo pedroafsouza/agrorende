@@ -32,6 +32,15 @@
     "title": "App de navegação",
     "waze": "Waze"
   },
+  "push": {
+    "body": "Para os alertas neste celular. As notificações continuam aparecendo dentro do app.",
+    "muted": "Notificações push silenciadas",
+    "offlineBody": "Conecte-se à internet para mudar esta configuração.",
+    "offlineTitle": "Você está sem internet",
+    "saveFailed": "Não foi possível salvar. Verifique a conexão e tente de novo.",
+    "title": "Silenciar notificações push",
+    "unmuted": "Notificações push ativadas"
+  },
   "theme": {
     "dark": "Escuro",
     "light": "Claro",

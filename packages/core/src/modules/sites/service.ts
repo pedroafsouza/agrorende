@@ -38,9 +38,17 @@ export async function getSummary(tx: Tx, siteId: string): Promise<SiteSummary> {
   return { id: site._id, name: site.name, type: site.type, lat: site.lat ?? null, lng: site.lng ?? null, radiusM: site.radiusM };
 }
 
+/** A site may only reference a customer of the caller's organisation (cross-tenant suite). */
+async function assertSiteCustomer(tx: Tx, customerId: string | null | undefined): Promise<void> {
+  if (!customerId) return;
+  const found = await dbTx(tx).db.customers.findOne({ _id: customerId }, { projection: { _id: 1 } });
+  if (found === null) reject("NOT_FOUND", { entityType: "CUSTOMER", entityId: customerId });
+}
+
 export async function createSite(tx: Tx, ctx: Ctx, raw: SiteCreateInput): Promise<SiteDTO> {
   const input = parseInput(SiteCreateInputSchema, raw);
   const scopedTx = dbTx(tx);
+  await assertSiteCustomer(tx, input.customerId);
   const now = new Date();
   const doc: Site = {
     _id: newId(now.getTime()),
@@ -70,6 +78,7 @@ export async function updateSite(tx: Tx, ctx: Ctx, siteId: string, raw: SiteUpda
   const scopedTx = dbTx(tx);
   const site = await loadSite(tx, siteId);
   assertVersion(site, ifMatch);
+  await assertSiteCustomer(tx, input.customerId);
   const { archived, ...fields } = input;
   const set: Record<string, unknown> = { ...fields, ...stampUpdate(scopedTx) };
   if (archived === true) {

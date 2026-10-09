@@ -5,10 +5,19 @@ import { jwtVerify, SignJWT } from "jose";
 import { z } from "zod";
 
 import { authConfig } from "../../auth/config.js";
+import { oauthConfig } from "../../auth/oidc.js";
 import { SIGNUP_LOGIN_CODE_TTL_S, SIGNUP_TICKET_TTL_S } from "./config.js";
 
 const SIGNUP_AUDIENCE = "signup";
-const APP_REDIRECT = /^agrorende:\/\/[\w./-]*$/;
+/** Shape of a custom-scheme app deep link; the scheme itself must also be in `OAUTH_MOBILE_SCHEMES`. */
+const APP_REDIRECT = /^[a-z][a-z0-9+.-]*:\/\/[\w./-]*$/i;
+
+/** Same allowlist as the OAuth start (`assertAppRedirect`): every scheme in `OAUTH_MOBILE_SCHEMES`. */
+export function isAllowedAppRedirect(uri: string): boolean {
+  if (!APP_REDIRECT.test(uri)) return false;
+  const scheme = uri.slice(0, uri.indexOf(":")).toLowerCase();
+  return oauthConfig().mobileSchemes.some((allowed) => allowed.toLowerCase() === scheme);
+}
 
 export const SignupIdentitySchema = z.object({
   provider: z.enum(["GOOGLE", "APPLE"]),
@@ -40,7 +49,7 @@ export type SignupLoginCodeClaims = z.infer<typeof LoginCodeClaimsSchema>;
 
 export interface IssueSignupTicketOptions {
   readonly client?: "web" | "app";
-  /** App deep link (`agrorende://…`) that receives the one-time login code after a mobile sign-up. */
+  /** App deep link (a scheme from `OAUTH_MOBILE_SCHEMES`, e.g. `agrorende-dev://…`) that receives the one-time login code after a mobile sign-up. */
   readonly appRedirectUri?: string;
   /** S256 PKCE challenge of the app's verifier; required with `appRedirectUri`. */
   readonly codeChallenge?: string;
@@ -60,7 +69,7 @@ function secret(): Uint8Array {
 export async function issueSignupTicket(identity: SignupIdentity, options: IssueSignupTicketOptions = {}): Promise<{ ticket: string; expiresAt: string }> {
   const parsed = SignupIdentitySchema.parse(identity);
   const client = options.client ?? "web";
-  if (client === "app" && (options.appRedirectUri === undefined || !APP_REDIRECT.test(options.appRedirectUri) || options.codeChallenge === undefined)) {
+  if (client === "app" && (options.appRedirectUri === undefined || !isAllowedAppRedirect(options.appRedirectUri) || options.codeChallenge === undefined)) {
     throw new AppError("VALIDATION_FAILED", { fieldErrors: [{ path: "appRedirectUri", code: "invalid" }] });
   }
   const now = options.now ?? new Date();

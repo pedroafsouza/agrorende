@@ -1,3 +1,4 @@
+import { notificationPrefsOf, type NotificationPrefs } from "@agrorende/contracts/dto";
 import { Expo } from "expo-server-sdk";
 
 import { readString, readStringArray, type Doc, type JobContext, type JobHandler } from "./index.js";
@@ -6,7 +7,8 @@ import { readString, readStringArray, type Doc, type JobContext, type JobHandler
  * `notifications.push` (ARCHITECTURE §10): sends pending notifications through the Expo Push
  * API in batches of 100, stores tickets, checks receipts after 15 minutes and deactivates
  * `DeviceNotRegistered` tokens. Each notification is claimed with a conditional update on
- * `pushedAt`, so the same outbox event processed twice sends one push.
+ * `pushedAt`, so the same outbox event processed twice sends one push. Users who muted push, or
+ * muted the notification's type, are skipped (T05-008); the claim still marks those rows pushed.
  */
 
 export const PUSH_BATCH_SIZE = 100;
@@ -69,7 +71,7 @@ function receiptsKey(ctx: JobContext): string {
 
 async function deactivateDevice(ctx: JobContext, deviceId: string): Promise<boolean> {
   const result = await ctx.platform
-    .collection("devices")
+    .table("devices")
     .updateOne({ _id: deviceId, pushStatus: { $ne: "TOKEN_INVALID" } }, { $set: { pushStatus: "TOKEN_INVALID", pushToken: null, updatedAt: ctx.now } });
   return result.modifiedCount === 1;
 }
@@ -84,7 +86,7 @@ async function pendingNotificationIds(ctx: JobContext, data: Doc): Promise<strin
     return explicit;
   }
   const rows = await ctx.platform
-    .collection("notifications")
+    .table("notifications")
     .find({ pushedAt: null, deletedAt: null, createdAt: { $gte: new Date(ctx.now.getTime() - SCAN_WINDOW_MS) } }, { projection: { _id: 1 }, limit: SCAN_LIMIT, sort: { createdAt: 1 } })
     .toArray();
   return rows.map((row) => String(row._id));
@@ -95,7 +97,7 @@ async function claim(ctx: JobContext, ids: readonly string[]): Promise<Doc[]> {
   const claimed: Doc[] = [];
   for (const id of ids) {
     const row = await ctx.platform
-      .collection("notifications")
+      .table("notifications")
       .findOneAndUpdate({ _id: id, pushedAt: null, deletedAt: null }, { $set: { pushedAt: ctx.now } }, { returnDocument: "after" });
     if (row !== null) {
       claimed.push(row);
@@ -110,24 +112,31 @@ interface Outgoing {
   readonly notificationId: string;
 }
 
+/** User mute settings (T05-008): the in-app notification exists already; only the push is skipped. */
+export function isMuted(prefs: NotificationPrefs | undefined, type: string | undefined): boolean {
+  if (prefs === undefined) return false;
+  return prefs.pushMuted || (type !== undefined && (prefs.mutedTypes as readonly string[]).includes(type));
+}
+
 async function buildMessages(ctx: JobContext, notifications: readonly Doc[]): Promise<Outgoing[]> {
   const userIds = [...new Set(notifications.map((row) => readString(row, "userId")).filter((id): id is string => id !== undefined))];
   if (userIds.length === 0) {
     return [];
   }
-  const activeUsers = new Set(
-    (await ctx.platform.collection("users").find({ _id: { $in: userIds }, isActive: true, deletedAt: null }, { projection: { _id: 1 } }).toArray()).map((row) =>
-      String(row._id),
-    ),
-  );
+  const users = await ctx.platform.table("users").find({ _id: { $in: userIds }, isActive: true, deletedAt: null }, { projection: { _id: 1, notificationPrefs: 1 } }).toArray();
+  const prefs = new Map(users.map((row) => [String(row._id), notificationPrefsOf(row.notificationPrefs)]));
+  const activeUsers = new Set(prefs.keys());
   const devices = await ctx.platform
-    .collection("devices")
+    .table("devices")
     .find({ userId: { $in: [...activeUsers] }, pushStatus: "OK", pushToken: { $type: "string" } }, { projection: { _id: 1, userId: 1, organizationId: 1, pushToken: 1 } })
     .toArray();
   const outgoing: Outgoing[] = [];
   for (const notification of notifications) {
     const userId = readString(notification, "userId");
     const orgId = readString(notification, "organizationId");
+    if (isMuted(userId === undefined ? undefined : prefs.get(userId), readString(notification, "type"))) {
+      continue;
+    }
     for (const device of devices) {
       const token = readString(device, "pushToken");
       if (device.userId !== userId || device.organizationId !== orgId || token === undefined || token === "") {
@@ -172,7 +181,7 @@ export async function sendPendingPushes(ctx: JobContext, data: Doc): Promise<Omi
     } catch (error) {
       // Release the claims of this and later batches so the BullMQ retry sends them.
       const retry = [...new Set(outgoing.slice(start).map((item) => item.notificationId))];
-      await ctx.platform.collection("notifications").updateMany({ _id: { $in: retry }, pushedAt: ctx.now }, { $set: { pushedAt: null } });
+      await ctx.platform.table("notifications").updateMany({ _id: { $in: retry }, pushedAt: ctx.now }, { $set: { pushedAt: null } });
       throw error;
     }
     batches += 1;

@@ -1,17 +1,17 @@
-import { closeClient, withSyncTx, type SyncTx } from "@agrorende/db";
+import { closeClient, collections, withSyncTx, type SyncTx } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
 import { makeTestCtx, type TestCtx } from "../../../testing/ctx.js";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
 
 export type Row = { _id: string } & Record<string, unknown>;
 
-const rawCollection = (db: TestDbHandle["db"], name: string) => db.collection<Row>(name);
 
 export interface Harness {
   readonly handle: TestDbHandle;
   readonly ctx: TestCtx;
   /** Untyped string-id collection for seeding rows owned by other modules. */
-  raw(name: string): ReturnType<typeof rawCollection>;
+  raw(name: string): RawCollection;
   run<T>(fn: (tx: SyncTx) => Promise<T>, ctx?: TestCtx): Promise<T>;
   close(): Promise<void>;
 }
@@ -23,7 +23,7 @@ export async function createHarness(suffix: string): Promise<Harness> {
   process.env.MONGODB_DB = name;
   const handle = await setupTestDb(name);
   const ctx = makeTestCtx();
-  const counters = handle.db.collection<{ _id: string; value: number; horizonVersion: number }>("sync_counters");
+  const counters = collections.syncCounters(handle.db);
   await counters.insertOne({ _id: ctx.orgId, value: 0, horizonVersion: 0 });
   const other = makeTestCtx({ organizationId: "00000000-0000-7000-8000-0000000000ff" });
   await counters.insertOne({ _id: other.orgId, value: 0, horizonVersion: 0 });

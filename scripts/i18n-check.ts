@@ -1,5 +1,6 @@
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
 import { basename, extname, join, relative } from "node:path";
+import { NotificationTypeEnum } from "../packages/contracts/src/enums.ts";
 import { ALL_ERROR_CODES } from "../packages/contracts/src/errors.ts";
 import { REQUIRED_LOCALES } from "../packages/i18n/src/locales.ts";
 import { error, ok, section, warn } from "./devloop/log.ts";
@@ -209,6 +210,17 @@ function nestedString(value: unknown, path: readonly string[]): string | undefin
   return typeof current === "string" ? current : undefined;
 }
 
+function validateNotificationTypes(namespace: LoadedNamespace, issues: Issue[]): void {
+  for (const type of NotificationTypeEnum.options) {
+    for (const field of ["title", "body"] as const) {
+      const value = nestedString(namespace.value, [type, field]);
+      if (value === undefined || value.trim().length === 0) {
+        issues.push({ path: namespace.file, message: `NotificationType ${type} missing notifications.${type}.${field}` });
+      }
+    }
+  }
+}
+
 function validateErrorMeta(namespace: LoadedNamespace, issues: Issue[]): void {
   for (const code of ALL_ERROR_CODES) {
     for (const field of ["title", "body", "action"] as const) {
@@ -238,6 +250,20 @@ function walkFiles(dir: string, files: string[]): void {
   }
 }
 
+const notificationTypes = new Set<string>(NotificationTypeEnum.options);
+
+/**
+ * Server-side keys that core reads with computed paths (`notifications.<TYPE>.*`, `exports.headers.*`,
+ * `exports.boolean.*`). Their coverage is enforced structurally, so the text scan skips them.
+ */
+function isComputedServerKey(fullKey: string): boolean {
+  const [namespace, first] = fullKey.split(".");
+  if (namespace === "notifications") {
+    return first !== undefined && notificationTypes.has(first);
+  }
+  return namespace === "exports" && (first === "headers" || first === "boolean");
+}
+
 function warnUnusedKeys(referenceNamespaces: readonly LoadedNamespace[]): void {
   const files: string[] = [];
   for (const dir of [rootPath("apps"), rootPath("packages")]) {
@@ -251,6 +277,9 @@ function warnUnusedKeys(referenceNamespaces: readonly LoadedNamespace[]): void {
   for (const namespace of referenceNamespaces) {
     for (const key of namespace.flat.keys()) {
       const fullKey = `${namespace.namespace}.${key}`;
+      if (isComputedServerKey(fullKey)) {
+        continue;
+      }
       if (!searchable.includes(fullKey)) {
         warn(`unused i18n key: ${fullKey}`);
         count += 1;
@@ -320,6 +349,9 @@ async function main(): Promise<number> {
       validateMessages(reference, candidate, issues);
       if (namespace === "errors") {
         validateErrorMeta(candidate, issues);
+      }
+      if (namespace === "notifications") {
+        validateNotificationTypes(candidate, issues);
       }
     }
   }

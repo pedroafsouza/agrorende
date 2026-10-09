@@ -420,6 +420,57 @@ export async function lastFixes(orgId: string, userIds: string[], deps: Location
   return result;
 }
 
+/** How far back `hydrateLiveHash` looks for a last fix when the live hash is empty. */
+export const LIVE_HYDRATE_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Rebuilds an empty `live:<orgId>` hash from the newest `location_pings` row of each user recorded in
+ * the last 24 h (after a Redis flush, a restart without persistence, or a fresh seed — ARCHITECTURE
+ * §17 expects the seeded fixes on the live map). Uses the same "newer only" write as `ingest`.
+ */
+async function hydrateLiveHash(db: Db, redis: Redis, orgId: string, dbName: string, now: Date): Promise<LiveRecord[]> {
+  const rows = await collections
+    .locationPings(db)
+    .aggregate<{ _id: string; ping: LocationPingDoc }>([
+      { $match: { organizationId: orgId, recordedAt: { $gte: new Date(now.getTime() - LIVE_HYDRATE_WINDOW_MS) } } },
+      { $sort: { userId: 1, recordedAt: -1 } },
+      { $group: { _id: "$userId", ping: { $first: "$$ROOT" } } },
+    ])
+    .toArray();
+  if (rows.length === 0) {
+    return [];
+  }
+  const active = await activeWorkOrders(
+    db,
+    orgId,
+    rows.map((row) => row._id),
+  );
+  const records: LiveRecord[] = [];
+  for (const row of rows) {
+    const ping = row.ping;
+    const recordedAt = new Date(ping.recordedAt);
+    const activeWo = active.get(row._id) ?? null;
+    const accuracyM = optionalNumber(ping.accuracyM);
+    const heading = optionalNumber(ping.heading);
+    const speedMps = optionalNumber(ping.speedMps);
+    const record: LiveRecord = {
+      userId: row._id,
+      lat: ping.lat,
+      lng: ping.lng,
+      ...(accuracyM === undefined ? {} : { accuracyM }),
+      ...(heading === undefined ? {} : { heading }),
+      ...(speedMps === undefined ? {} : { speedMps }),
+      recordedAt: recordedAt.toISOString(),
+      recordedAtMs: recordedAt.getTime(),
+      state: deriveOperatorState(recordedAt, false, activeWo?.status ?? null, now),
+      ...(activeWo === null ? {} : { workOrderId: activeWo.id }),
+    };
+    await redis.eval(NEWER_ONLY_HSET, 1, liveKey(orgId, dbName), record.userId, String(record.recordedAtMs), JSON.stringify(record));
+    records.push(record);
+  }
+  return records;
+}
+
 /**
  * Seam `locations.liveSnapshot`: every operator with a live fix, merged with the user row,
  * the presence ZSET and the active work order to derive `state`.
@@ -429,14 +480,17 @@ export async function liveSnapshot(orgId: string, deps: LocationDeps = {}): Prom
   const redis = resolveRedis(deps);
   const dbName = resolveDbName(deps);
   const hash = await redis.hgetall(liveKey(orgId, dbName));
-  const records = Object.values(hash)
+  let records = Object.values(hash)
     .map((raw) => parseLiveRecord(raw))
     .filter((record): record is LiveRecord => record !== null);
+  const db = await resolveDb(deps);
   if (records.length === 0) {
-    return [];
+    records = await hydrateLiveHash(db, redis, orgId, dbName, now);
+    if (records.length === 0) {
+      return [];
+    }
   }
   const userIds = records.map((record) => record.userId);
-  const db = await resolveDb(deps);
   const [users, presence, workOrders] = await Promise.all([
     collections
       .users(db)

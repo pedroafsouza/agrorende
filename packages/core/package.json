@@ -30,6 +30,7 @@
   "dependencies": {
     "@agrorende/contracts": "workspace:*",
     "@agrorende/db": "workspace:*",
+    "@agrorende/i18n": "workspace:*",
     "@node-rs/argon2": "^2.2.2",
     "@react-pdf/renderer": "^4.3.1",
     "arctic": "^3.7.0",

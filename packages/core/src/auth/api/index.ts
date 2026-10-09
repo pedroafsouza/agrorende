@@ -1,6 +1,7 @@
 import type { RouteHandler } from "../http.js";
 import * as auth from "./auth.js";
 import { healthHandler } from "./health.js";
+import * as oauth from "./oauth.js";
 import * as platform from "./platform.js";
 
 export { setHealthProbes, type HealthProbes } from "./health.js";
@@ -24,11 +25,11 @@ export const platformApi = {
   "POST /auth/invites/:code/password": auth.invitePasswordHandler,
   "GET /auth/reset/:code": auth.resetLookupHandler,
   "POST /auth/reset/:code": auth.resetRedeemHandler,
-  "GET /auth/oauth/:provider/start": auth.oauthUnavailableHandler,
-  "GET /auth/oauth/google/callback": auth.oauthUnavailableHandler,
-  "POST /auth/oauth/apple/callback": auth.oauthUnavailableHandler,
-  "POST /auth/oauth/exchange": auth.oauthUnavailableHandler,
-  "POST /auth/apple": auth.oauthUnavailableHandler,
+  "GET /auth/oauth/:provider/start": oauth.oauthStartHandler,
+  "GET /auth/oauth/google/callback": oauth.googleCallbackHandler,
+  "POST /auth/oauth/apple/callback": oauth.appleCallbackHandler,
+  "POST /auth/oauth/exchange": oauth.oauthExchangeHandler,
+  "POST /auth/apple": oauth.appleNativeHandler,
 
   "POST /sync/push": platform.syncPushHandler,
   "GET /sync/pull": platform.syncPullHandler,

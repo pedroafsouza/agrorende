@@ -1,4 +1,3 @@
-import { notImplemented } from "../errors.js";
 import { mediaRootFromEnv } from "./init.js";
 import { localMediaStore } from "./local.js";
 
@@ -81,8 +80,7 @@ export function setMediaStore(store: MediaStore | null): void {
 export function mediaStore(env: NodeJS.ProcessEnv = process.env): MediaStore {
   if (override !== null) return override;
   const driver = env.MEDIA_DRIVER ?? "local";
-  if (driver === "s3") return notImplemented("storage.s3");
-  if (driver !== "local") throw new Error(`Unknown MEDIA_DRIVER "${driver}".`);
+  if (driver !== "local") throw new Error(`Unsupported MEDIA_DRIVER "${driver}": only "local" ships in the MVP (s3 is Phase 2).`);
   const root = mediaRootFromEnv(env);
   if (cached === null || cached.root !== root) cached = { root, store: localMediaStore({ root }) };
   return cached.store;

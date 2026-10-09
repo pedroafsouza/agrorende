@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
+import { collection as dbCollection, type CollectionName } from "@agrorende/db";
 import { Queue, Worker, type JobsOptions } from "bullmq";
 import type { Redis } from "ioredis";
 
@@ -79,7 +80,8 @@ export interface WorkerPlatform {
   readonly keyPrefix: string;
   readonly mediaRoot: string;
   readonly redis: Redis;
-  readonly collection: (name: string) => WorkerCollection;
+  /** A collection of the platform database, resolved through the `@agrorende/db` accessor. */
+  readonly table: (name: string) => WorkerCollection;
   readonly store: ObjectStore;
   /** Creates notifications (and their outbox events) through the T02 notifications seam. */
   readonly notify: (orgId: string, input: NotifyInput) => Promise<void>;
@@ -250,7 +252,6 @@ export const EXTRA_SCHEDULES = [
 interface DbModule {
   documentSchemas: Record<string, { shape?: Record<string, unknown> }>;
   getDb(): Promise<unknown>;
-  collection(db: unknown, name: string): WorkerCollection;
   closeClient(): Promise<void>;
   withSyncTx<T>(ctx: { orgId: string }, fn: (tx: unknown) => Promise<T>, db?: unknown): Promise<T>;
 }
@@ -280,6 +281,16 @@ interface ExportsModule {
 
 interface AppleModule {
   revokeAppleRefreshToken?: (input: AppleRevokeInput) => Promise<void>;
+}
+
+type DriverDb = Parameters<typeof dbCollection>[0];
+
+/**
+ * Typed `@agrorende/db` collection accessor seen through the structural `WorkerCollection`
+ * interface. This is the only way worker code reaches a collection (ARCHITECTURE §11).
+ */
+export function workerTable(db: unknown, name: string): WorkerCollection {
+  return dbCollection(db as DriverDb, name as CollectionName) as unknown as WorkerCollection;
 }
 
 /*
@@ -356,15 +367,13 @@ export async function loadWorkerPlatform(options: PlatformOptions): Promise<Work
     keyPrefix: workerKeyPrefix(options.dbName),
     mediaRoot: options.mediaRoot,
     redis: options.redis,
-    collection: (name) => dbModule.collection(db, name),
+    table: (name) => workerTable(db, name),
     store,
     notify: async (orgId, input) => {
       await dbModule.withSyncTx({ orgId }, (tx) => seams.notificationSeams.create(tx, input), db);
     },
     nextSyncVersion: async (orgId) => {
-      const counter = await dbModule
-        .collection(db, "sync_counters")
-        .findOneAndUpdate({ _id: orgId }, { $inc: { value: 1 }, $setOnInsert: { horizonVersion: 0 } }, { upsert: true, returnDocument: "after" });
+      const counter = await workerTable(db, "sync_counters").findOneAndUpdate({ _id: orgId }, { $inc: { value: 1 }, $setOnInsert: { horizonVersion: 0 } }, { upsert: true, returnDocument: "after" });
       return Number(counter?.value ?? 0);
     },
     syncedCollections: Object.entries(dbModule.documentSchemas)

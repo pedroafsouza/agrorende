@@ -599,6 +599,9 @@ importers:
       '@agrorende/db':
         specifier: workspace:*
         version: link:../db
+      '@agrorende/i18n':
+        specifier: workspace:*
+        version: link:../i18n
       '@node-rs/argon2':
         specifier: ^2.2.2
         version: 2.2.2
@@ -11067,9 +11070,7 @@ snapshots:
       metro-runtime: 0.87.1
     transitivePeerDependencies:
       - '@babel/core'
-      - bufferutil
       - supports-color
-      - utf-8-validate
 
   '@react-native/normalize-colors@0.87.1': {}
 

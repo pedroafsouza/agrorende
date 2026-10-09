@@ -1,4 +1,4 @@
-import { closeClient } from "@agrorende/db";
+import { closeClient, collection, COLLECTION_NAMES, type CollectionName } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { Role } from "@agrorende/contracts/enums";
 
@@ -23,8 +23,22 @@ export function seedUuid(value: number): string {
 
 export type Row = { _id: string } & Record<string, unknown>;
 
-const rawOf = (db: TestDbHandle["db"], name: string) => db.collection<Row>(name);
-type RawCollection = ReturnType<typeof rawOf>;
+/**
+ * Loosely typed, string-id view of a collection for seeding and asserting rows in tests. It goes
+ * through the typed `@agrorende/db` accessor; only the document type is widened to `Row`.
+ */
+export function rawCollection(db: TestDbHandle["db"], name: string): ReturnType<typeof db.collection<Row>> {
+  if (!isCollectionName(name)) {
+    throw new Error(`Unknown collection ${name}.`);
+  }
+  return collection(db, name) as unknown as ReturnType<typeof db.collection<Row>>;
+}
+
+function isCollectionName(name: string): name is CollectionName {
+  return (COLLECTION_NAMES as readonly string[]).includes(name);
+}
+
+export type RawCollection = ReturnType<typeof rawCollection>;
 
 export interface SeededDb {
   readonly handle: TestDbHandle;
@@ -38,7 +52,11 @@ interface SeedModule {
 
 /** Isolated, seeded database `agrorende_t02_<suffix>` (R6). */
 export async function createSeededDb(suffix: string): Promise<SeededDb> {
-  const name = `agrorende_t02_${suffix}`;
+  return createNamedSeededDb(`agrorende_t02_${suffix}`);
+}
+
+/** Isolated, seeded database with an explicit name (for example `agrorende_t10_oauth`). */
+export async function createNamedSeededDb(name: string): Promise<SeededDb> {
   process.env.MONGODB_URI ??= "mongodb://localhost:27017/?directConnection=true";
   process.env.MONGODB_DB = name;
   const handle = await setupTestDb(name);
@@ -47,7 +65,7 @@ export async function createSeededDb(suffix: string): Promise<SeededDb> {
   await seed.seedDatabase(handle.db, { force: true });
   return {
     handle,
-    raw: (collectionName: string) => rawOf(handle.db, collectionName),
+    raw: (collectionName) => rawCollection(handle.db, collectionName),
     close: async () => {
       await handle.drop();
       await closeClient();

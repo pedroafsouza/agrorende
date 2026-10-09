@@ -57,7 +57,11 @@ export interface SyncDoc {
 export type Organization = z.infer<typeof OrganizationSchema>;
 export type SyncCounter = z.infer<typeof SyncCounterSchema>;
 export type NumberSequence = z.infer<typeof NumberSequenceSchema>;
-export type User = z.infer<typeof UserSchema>;
+/**
+ * `notificationPrefs` is optional on the stored type: the driver does not apply zod defaults on
+ * read, and users created before migration 0002-T05-008 have none until it runs.
+ */
+export type User = Omit<z.infer<typeof UserSchema>, "notificationPrefs"> & { notificationPrefs?: z.infer<typeof UserSchema>["notificationPrefs"] };
 export type RefreshToken = z.infer<typeof RefreshTokenSchema>;
 export type UserIdentity = z.infer<typeof UserIdentitySchema>;
 export type AuthLink = z.infer<typeof AuthLinkSchema>;

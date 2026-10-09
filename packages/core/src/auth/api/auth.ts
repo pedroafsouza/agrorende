@@ -1,3 +1,4 @@
+import { UpdateMeInputSchema } from "@agrorende/contracts/dto";
 import { PlatformEnum } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 import { z } from "zod";
@@ -21,6 +22,7 @@ import {
   updateMe,
   type AuthResult,
 } from "../service.js";
+import { updateNotificationPrefs, withNotificationPrefs } from "../../modules/users/notificationPrefs.js";
 import { currentDeviceFamily, findRefreshRow, revokeDeviceSessions, revokeRefreshFamily } from "../tokens.js";
 
 const LoginSchema = z.object({
@@ -120,12 +122,17 @@ export const logoutHandler: RouteHandler = route(async (request) => {
 
 export const meHandler: RouteHandler = route(async (request) => {
   const { ctx } = await authenticate(request, { allowPasswordChange: true });
-  return json(await me(ctx));
+  const view = await me(ctx);
+  return json({ ...view, user: withNotificationPrefs(view.user) });
 });
 
+/** `PATCH /me {locale?, notificationPrefs?}`: locale (T02) and push mute settings (T05-008). */
 export const updateMeHandler: RouteHandler = route(async (request) => {
   const { ctx } = await authenticate(request, { allowPasswordChange: true });
-  return json(await updateMe(ctx, await readJson(request)));
+  const body = await readBody(request, UpdateMeInputSchema);
+  let user = body.notificationPrefs === undefined ? null : await updateNotificationPrefs(ctx, body.notificationPrefs);
+  if (body.locale !== undefined) user = withNotificationPrefs(await updateMe(ctx, { locale: body.locale }));
+  return json(user);
 });
 
 export const deleteMeHandler: RouteHandler = route(async (request) => {
@@ -165,13 +172,4 @@ export const resetRedeemHandler: RouteHandler = route(async (request, params) =>
   const body = await readBody(request, PasswordSchema);
   await redeemReset(Code.parse(params.code), body);
   return noContent();
-});
-
-/**
- * Google and Apple sign-in need provider credentials that the MVP environment does not define;
- * the routes answer `OAUTH_PROVIDER_ERROR` so clients fall back to the password path
- * (docs/progress/T02.md, Gaps).
- */
-export const oauthUnavailableHandler: RouteHandler = route(async () => {
-  throw new AppError("OAUTH_PROVIDER_ERROR", { details: { reason: "not_configured" } });
 });

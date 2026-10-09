@@ -14,11 +14,11 @@ export const TOMBSTONE_EXCLUDED = new Set(["users", "media"]);
 
 export const handler: JobHandler = async (ctx) => {
   const cutoff = daysAgo(ctx.now, TOMBSTONE_RETENTION_DAYS);
-  const counters = ctx.platform.collection("sync_counters");
+  const counters = ctx.platform.table("sync_counters");
   const deletedByCollection: Record<string, number> = {};
   let deleted = 0;
   for (const name of ctx.platform.syncedCollections.filter((collection) => !TOMBSTONE_EXCLUDED.has(collection))) {
-    const target = ctx.platform.collection(name);
+    const target = ctx.platform.table(name);
     const groups = await target
       .aggregate([{ $match: { deletedAt: { $lt: cutoff } } }, { $group: { _id: "$organizationId", maxVersion: { $max: "$syncVersion" } } }])
       .toArray();

@@ -92,7 +92,7 @@ export class AgrorendeApiClient {
   async refresh(body: T.RefreshRequest = {}): Promise<T.RefreshResponse> { return this.request("POST", "/auth/refresh", { json: body, auth: false }); }
   async logout(): Promise<void> { await this.request("POST", "/auth/logout"); }
   async me(): Promise<T.MeResponse> { return this.request("GET", "/auth/me"); }
-  async updateMe(body: T.UpdateMeRequest, version?: string): Promise<DTO.UserDTO> { return this.request("PATCH", "/me", { json: body, version }); }
+  async updateMe(body: T.UpdateMeRequest, version?: string): Promise<DTO.SelfUserDTO> { return this.request("PATCH", "/me", { json: body, version }); }
   async getInvite(code: string): Promise<T.InviteLookupResponse> { return this.request("GET", `/auth/invites/${seg(code)}`, { auth: false }); }
   async redeemInvitePassword(code: string, body: T.InvitePasswordRequest): Promise<T.LoginResponse> { return this.request("POST", `/auth/invites/${seg(code)}/password`, { json: body, auth: false }); }
   async getReset(code: string): Promise<T.ResetLookupResponse> { return this.request("GET", `/auth/reset/${seg(code)}`, { auth: false }); }

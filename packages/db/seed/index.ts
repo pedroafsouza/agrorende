@@ -197,6 +197,7 @@ function buildSeed(): SeedBag {
     homeSiteId,
     vanStockLocationId: null,
     lastSeenAt: now(-index),
+    notificationPrefs: { pushMuted: false, mutedTypes: [] },
   }));
   users.push({
     ...base(userIds[9] ?? uuid(109), ORG_B),
@@ -222,6 +223,7 @@ function buildSeed(): SeedBag {
     homeSiteId: null,
     vanStockLocationId: null,
     lastSeenAt: now(-1),
+    notificationPrefs: { pushMuted: false, mutedTypes: [] },
   });
 
   const siteRows = [

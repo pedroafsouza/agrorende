@@ -24,5 +24,69 @@
       "title": "Devolução hoje",
       "body": "{customerName} devolve {assetName} hoje. Abra a locação para preparar a vistoria."
     }
+  },
+  "WO_ASSIGNED": {
+    "title": "Novo serviço atribuído",
+    "body": "{title}. Abra o serviço para ver o próximo passo."
+  },
+  "WO_UPDATED": {
+    "title": "Serviço atualizado",
+    "body": "{title} foi atualizado pelo escritório."
+  },
+  "WO_CANCELLED": {
+    "title": "Serviço cancelado",
+    "body": "{title} foi cancelado. Suas fotos e anotações foram guardadas."
+  },
+  "WO_REASSIGNED_AWAY": {
+    "title": "Serviço reatribuído",
+    "body": "{title} foi passado para outra pessoa. Seus dados foram guardados."
+  },
+  "REPORT_CRITICAL": {
+    "title": "Relato crítico",
+    "body": "{title}. Abra o relato para decidir o próximo passo."
+  },
+  "REPORT_MARKED_FOR_REPAIR": {
+    "title": "Relato enviado para reparo",
+    "body": "{title} agora tem reparo programado."
+  },
+  "RENTAL_DUE_SOON": {
+    "title": "Devolução próxima",
+    "body": "{title} deve ser devolvido em breve. Prepare a vistoria."
+  },
+  "RENTAL_OVERDUE": {
+    "title": "Locação atrasada",
+    "body": "{title} passou da data de devolução. Fale com o cliente."
+  },
+  "SLA_AT_RISK": {
+    "title": "Prazo em risco",
+    "body": "{title} está perto do prazo."
+  },
+  "DEVICE_STALE_SYNC": {
+    "title": "Celular sem sincronizar",
+    "body": "O celular de {name} tem dados esperando envio."
+  },
+  "LATE_EVIDENCE": {
+    "title": "Evidência tardia recebida",
+    "body": "Chegou nova evidência para {title}."
+  },
+  "JOINED_WITH_OTHER_EMAIL": {
+    "title": "Convite aceito",
+    "body": "{name} entrou com outro endereço de e-mail."
+  },
+  "COMMENT_ADDED": {
+    "title": "Novo comentário",
+    "body": "{name} comentou em {title}."
+  },
+  "EXPORT_READY": {
+    "title": "Exportação pronta",
+    "body": "Sua exportação está pronta para baixar."
+  },
+  "MAINTENANCE_DUE": {
+    "title": "Manutenção prevista",
+    "body": "{title} precisa de manutenção preventiva."
+  },
+  "LOW_STOCK": {
+    "title": "Estoque baixo",
+    "body": "{title} está acabando."
   }
 }

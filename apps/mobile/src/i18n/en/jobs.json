@@ -152,5 +152,21 @@
     "title": "Next job",
     "empty": "No jobs assigned",
     "error": "Could not read your jobs. Tap to try again."
+  },
+  "meterJump": {
+    "title": "Reading much higher",
+    "body": "This reading is much higher than the last one: {last, number} h → {next, number} h.",
+    "bodyUnknown": "This reading is much higher than the last one recorded.",
+    "confirm": "Confirm reading",
+    "fix": "Fix reading",
+    "confirmed": "Reading confirmed. The office will see a notice.",
+    "rejectedTitle": "The office did not accept the hour-meter reading",
+    "rejectedBody": "The reading you sent is much higher than the last one. Confirm or fix it to send again.",
+    "review": "Review reading",
+    "fixTitle": "Fix hour-meter reading",
+    "reading": "Hour-meter reading",
+    "hours": "h",
+    "send": "Send again",
+    "sent": "Reading sent again. It syncs when there is signal."
   }
 }

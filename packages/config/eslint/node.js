@@ -1,7 +1,7 @@
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-import base, { NO_DRIVER_RESTRICTED, TEST_FILES } from "./index.js";
+import base, { NO_DRIVER_RESTRICTED, TEST_FILES, TEST_RESTRICTED } from "./index.js";
 
 /**
  * Preset for Node services and server-side packages.
@@ -24,7 +24,7 @@ export function node({ restricted = NO_DRIVER_RESTRICTED } = {}) {
     {
       files: TEST_FILES,
       rules: {
-        "no-restricted-imports": "off",
+        "no-restricted-imports": ["error", TEST_RESTRICTED],
       },
     },
   );

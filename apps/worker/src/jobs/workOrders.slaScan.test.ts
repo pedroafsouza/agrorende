@@ -76,7 +76,7 @@ function setup(now: Date) {
   const notified: NotifyInput[] = [];
   let version = 0;
   const platform = {
-    collection: (name: string) => collection(tables[name] ?? []),
+    table: (name: string) => collection(tables[name] ?? []),
     notify: async (_orgId: string, input: NotifyInput) => void notified.push(input),
     nextSyncVersion: async () => ++version,
   } as unknown as WorkerPlatform;

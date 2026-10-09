@@ -1,3 +1,3 @@
 import { notImplemented } from "@/server/withApi";
 
-export const POST = notImplemented("POST", "/api/v1/imports/:entity");
+export const POST = notImplemented("POST", "/api/v1/imports/:entity", ["ADMIN", "MANAGER"]);

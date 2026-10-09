@@ -14,6 +14,7 @@ import type {
   RentalChargeDTO,
   RentalDTO,
   SeasonDTO,
+  SelfUserDTO,
   SiteDTO,
   StockLocationDTO,
   UserDTO,
@@ -29,6 +30,7 @@ import type {
   IssueCategory,
   MediaKind,
   MediaTag,
+  NotificationType,
   OrgStatus,
   Platform,
   Priority,
@@ -167,15 +169,23 @@ export interface AppleSignInRequest {
 }
 
 export interface MeResponse {
-  readonly user: UserDTO;
+  /** The caller's own user, including the push notification preferences. */
+  readonly user: SelfUserDTO;
   readonly role: Role;
   readonly signInMethods: readonly AuthMethod[];
   readonly org: OrganizationDTO;
   readonly settings: OrgSettings;
 }
 
+export interface NotificationPrefsRequest {
+  readonly pushMuted: boolean;
+  readonly mutedTypes: readonly NotificationType[];
+}
+
+/** `PATCH /me`: send at least one field; `notificationPrefs` is merged into the stored prefs. */
 export interface UpdateMeRequest {
-  readonly locale: Locale;
+  readonly locale?: Locale;
+  readonly notificationPrefs?: Partial<NotificationPrefsRequest>;
 }
 
 export interface InviteLookupResponse {

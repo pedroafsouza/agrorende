@@ -16,6 +16,7 @@ import { discardCapture } from "../../media/capture";
 import { Banner, BottomSheet, Button, Card, Chip, ListItem, NumberField, Segmented, Slider, StatusPill, Text, TextField } from "../../ui";
 import { InlineError } from "../../ui/recovery/InlineError";
 import { findAssetByCode } from "../assets/logic";
+import { MeterJumpDialog } from "../jobs/MeterJumpReview";
 import { ScanView } from "../assets/ScanView";
 import "./i18n";
 import {
@@ -168,6 +169,7 @@ const READING_TAGS = new Set(["HOUR_METER", "FUEL_GAUGE"]);
 export function ReadingsStep() {
   const { ctx, nowMs } = useEnv();
   const { payload, update } = useDraft();
+  const [jumpDialog, setJumpDialog] = useState(false);
   const group = useMediaGroup((item) => READING_TAGS.has(item.tag));
   const tank = hasTank(ctx);
   const error = readingError(payload, ctx, nowMs);
@@ -176,9 +178,26 @@ export function ReadingsStep() {
   return (
     <View style={styles.stack}>
       {ctx.baselineHourMeter === null ? null : <Text testID="insp-baseline" i18nKey="rentals.wizard.readings.baseline" values={{ value: ctx.baselineHourMeter }} tone="secondary" />}
-      <NumberField testID="insp-hour-meter" labelKey="rentals.wizard.readings.hourMeter" unitKey="rentals.wizard.readings.hours" step={1} min={0} value={payload.hourMeter} onChange={(value) => update((current) => ({ ...current, ...(value === undefined ? { hourMeter: undefined } : { hourMeter: value }) }))} {...(error === undefined ? {} : { errorKey: error })} />
+      <NumberField testID="insp-hour-meter" labelKey="rentals.wizard.readings.hourMeter" unitKey="rentals.wizard.readings.hours" step={1} min={0} value={payload.hourMeter} onChange={(value) => update((current) => ({ ...current, meterJumpConfirmed: false, ...(value === undefined ? { hourMeter: undefined } : { hourMeter: value }) }))} {...(error === undefined ? {} : { errorKey: error })} />
       {error === "errors.METER_READING_LOWER.title" ? <InlineError testID="insp-meter-lower" code="METER_READING_LOWER" /> : null}
-      {error === "errors.METER_READING_JUMP.title" ? <InlineError testID="insp-meter-jump" code="METER_READING_JUMP" /> : null}
+      {error === "errors.METER_READING_JUMP.title" ? (
+        <>
+          <InlineError testID="insp-meter-jump" code="METER_READING_JUMP" />
+          <Button testID="insp-meter-confirm-jump" variant="secondary" icon={AlertTriangle} labelKey="rentals.meterJump.confirm" onPress={() => setJumpDialog(true)} />
+        </>
+      ) : null}
+      {payload.meterJumpConfirmed === true && error === undefined ? <Text testID="insp-meter-jump-confirmed" i18nKey="rentals.meterJump.confirmed" tone="secondary" /> : null}
+      <MeterJumpDialog
+        ns="rentals"
+        visible={jumpDialog}
+        last={ctx.baselineHourMeter}
+        next={payload.hourMeter ?? null}
+        onConfirm={() => {
+          setJumpDialog(false);
+          update({ meterJumpConfirmed: true });
+        }}
+        onFix={() => setJumpDialog(false)}
+      />
       <Chip testID="insp-meter-replaced" icon={Wrench} labelKey="rentals.wizard.readings.meterReplaced" selected={payload.meterReplaced} onPress={() => update({ meterReplaced: !payload.meterReplaced })} />
       {payload.meterReplaced ? <Text i18nKey="rentals.wizard.readings.meterReplacedHint" tone="secondary" /> : null}
       {tank ? <Slider testID="insp-fuel" labelKey="rentals.wizard.readings.fuel" value={eighth ?? 0} onChange={(i) => update({ fuelPercent: Math.round((i / 8) * 100) })} /> : null}

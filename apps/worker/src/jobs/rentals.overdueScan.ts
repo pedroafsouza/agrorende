@@ -27,7 +27,7 @@ function hours(settings: unknown, key: string, fallback: number): number {
 
 async function officeIds(ctx: JobContext, orgId: string): Promise<string[]> {
   const rows = await ctx.platform
-    .collection("users")
+    .table("users")
     .find({ organizationId: orgId, role: { $in: ["ADMIN", "MANAGER"] }, isActive: true, deletedAt: null }, { projection: { _id: 1 } })
     .toArray();
   return rows.map((row) => String(row._id));
@@ -35,7 +35,7 @@ async function officeIds(ctx: JobContext, orgId: string): Promise<string[]> {
 
 async function titleOf(ctx: JobContext, orgId: string, row: Doc): Promise<string> {
   const assetId = readString(row, "assetId");
-  const asset = assetId === undefined ? null : await ctx.platform.collection("assets").findOne({ _id: assetId, organizationId: orgId }, { projection: { code: 1 } });
+  const asset = assetId === undefined ? null : await ctx.platform.table("assets").findOne({ _id: assetId, organizationId: orgId }, { projection: { code: 1 } });
   const code = asset === null ? undefined : readString(asset, "code");
   const number = readString(row, "number") ?? "";
   return code === undefined ? number : `${number} · ${code}`;
@@ -55,7 +55,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ dueSoon: num
   let office: string[] | null = null;
   for (const state of states) {
     const rows = await ctx.platform
-      .collection("rentals")
+      .table("rentals")
       .find({ ...state.filter, organizationId: orgId, [state.field]: null }, { projection })
       .toArray();
     for (const row of rows) {
@@ -63,7 +63,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ dueSoon: num
       const set: Doc = { [state.field]: ctx.now, syncVersion, updatedAt: ctx.now };
       // An overdue rental never needs the due-soon reminder afterwards.
       if (state.type === "RENTAL_OVERDUE") set.dueSoonNotifiedAt = row.dueSoonNotifiedAt ?? ctx.now;
-      const claimed = await ctx.platform.collection("rentals").updateOne({ _id: row._id, organizationId: orgId, [state.field]: null }, { $set: set });
+      const claimed = await ctx.platform.table("rentals").updateOne({ _id: row._id, organizationId: orgId, [state.field]: null }, { $set: set });
       if (claimed.modifiedCount === 0) continue;
       if (state.type === "RENTAL_OVERDUE") counts.overdue += 1;
       else counts.dueSoon += 1;
@@ -84,7 +84,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ dueSoon: num
 
 export const handler: JobHandler = async (ctx) => {
   const orgs = await ctx.platform
-    .collection("organizations")
+    .table("organizations")
     .find({ status: { $nin: ["SUSPENDED", "CANCELLED"] }, deletedAt: null }, { projection: { _id: 1, settings: 1 } })
     .toArray();
   let dueSoon = 0;

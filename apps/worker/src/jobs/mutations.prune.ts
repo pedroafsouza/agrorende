@@ -10,7 +10,7 @@ export const APPLIED_RETENTION_DAYS = 30;
 export const REJECTED_RETENTION_DAYS = 90;
 
 export const handler: JobHandler = async (ctx) => {
-  const target = ctx.platform.collection("processed_mutations");
+  const target = ctx.platform.table("processed_mutations");
   const applied = await deleteInChunks(target, { "result.status": "APPLIED", processedAt: { $lt: daysAgo(ctx.now, APPLIED_RETENTION_DAYS) } });
   const rejected = await deleteInChunks(target, { "result.status": "REJECTED", processedAt: { $lt: daysAgo(ctx.now, REJECTED_RETENTION_DAYS) } });
   ctx.logger.info("mutations.prune", { applied, rejected });

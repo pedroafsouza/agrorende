@@ -1,4 +1,9 @@
 {
+  "notifications": {
+    "title": "Notificações",
+    "pushMuted": "Silenciar notificações push no meu celular",
+    "pushMutedHint": "Você continua vendo todas as notificações no sino dentro do app."
+  },
   "org": {
     "atRisk": "Alerta de risco",
     "atRiskHint": "Fração do prazo restante que dispara o alerta (0,25 = 25%).",

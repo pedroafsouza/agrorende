@@ -12,17 +12,15 @@ import { Detail } from "@/components/data/Detail";
 import { EntityTimeline } from "@/components/data/EntityTimeline";
 import { LoadingState } from "@/components/data/States";
 import { ConfirmDialog } from "@/components/forms/ConfirmDialog";
-import { FormDialog } from "@/components/forms/FormDialog";
-import { MoneyInput } from "@/components/forms/MoneyInput";
 import { MediaGallery, type GalleryItem } from "@/components/media/MediaGallery";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button, buttonVariants } from "@/components/ui/Button";
-import { Field, Textarea } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatDate, formatDateTime, formatMoney, formatNumber } from "@/lib/format";
 
 import { AssignDialog } from "./AssignDialog";
+import { ExternalCostDialog, ExternalCostPanel, PartsPanel } from "./parts";
 import { LateEvidenceBadge, SlaBadge } from "./badges";
 import { officeActions, splitMinutes, type OfficeAction, type WorkOrderDetail, type WorkOrderListItem, type WorkOrderMediaItem } from "./types";
 
@@ -156,7 +154,8 @@ export function WorkOrderDetailPage({ id }: { readonly id: string }) {
         <TimesAndCosts detail={detail} locale={locale} />
       </div>
       <Checklist workOrder={wo} locale={locale} />
-      <Parts detail={detail} locale={locale} />
+      <PartsPanel parts={detail.parts} />
+      <ExternalCostPanel workOrder={wo} />
       <Evidence media={detail.media} />
       <Signature workOrder={wo} />
       <section className="rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4">
@@ -313,43 +312,6 @@ function Checklist({ workOrder, locale }: { readonly workOrder: WorkOrderListIte
   );
 }
 
-function Parts({ detail, locale }: { readonly detail: WorkOrderDetail; readonly locale: string }) {
-  const t = useTranslations("jobs");
-  return (
-    <section className="rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4">
-      <h2 className="mb-3 text-lg font-semibold">{t("detail.parts")}</h2>
-      {detail.parts.length === 0 ? (
-        <p className="text-[var(--ar-text-muted)]">{t("detail.noParts")}</p>
-      ) : (
-        <table className="w-full text-left">
-          <caption className="sr-only">{t("detail.parts")}</caption>
-          <thead>
-            <tr className="border-b border-[var(--ar-border)] text-sm">
-              <th className="py-2">{t("fields.partName")}</th>
-              <th className="py-2">{t("fields.quantity")}</th>
-              <th className="py-2">{t("fields.unitCost")}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {detail.parts.map((part) => (
-              <tr className="border-b border-[var(--ar-border)]" key={part.id}>
-                <td className="py-2">
-                  {part.name}
-                  {part.partNumber ? <span className="ml-2 font-mono text-sm text-[var(--ar-text-muted)]">{part.partNumber}</span> : null}
-                </td>
-                <td className="py-2">
-                  {formatNumber(part.quantity, locale, 2)} {part.unit}
-                </td>
-                <td className="py-2">{formatMoney(part.unitCostCents ?? null, locale)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </section>
-  );
-}
-
 function Evidence({ media }: { readonly media: readonly WorkOrderMediaItem[] }) {
   const t = useTranslations("jobs");
   const groups: ReadonlyArray<{ key: string; items: readonly WorkOrderMediaItem[] }> = [
@@ -394,34 +356,5 @@ function Signature({ workOrder }: { readonly workOrder: WorkOrderListItem }) {
         {workOrder.signatureReason ? <Detail label={t("fields.signatureReason")} value={workOrder.signatureReason} /> : null}
       </dl>
     </section>
-  );
-}
-
-function ExternalCostDialog({ workOrder, onClose, onDone }: { readonly workOrder: WorkOrderListItem; readonly onClose: () => void; readonly onDone: () => void }) {
-  const t = useTranslations("jobs");
-  const [cents, setCents] = useState<number | null>(workOrder.externalCostCents ?? null);
-  const [note, setNote] = useState(workOrder.externalCostNote ?? "");
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-  return (
-    <FormDialog
-      busy={busy}
-      dirty={cents !== (workOrder.externalCostCents ?? null) || note !== (workOrder.externalCostNote ?? "")}
-      error={error}
-      formId="wo-external-cost"
-      onClose={onClose}
-      onSubmit={() => {
-        setBusy(true);
-        setError(null);
-        api(`/work-orders/${workOrder.id}/external-cost`, { method: "PATCH", body: { externalCostCents: cents ?? 0, ...(note.trim().length > 0 ? { externalCostNote: note.trim() } : {}) }, version: workOrder.syncVersion })
-          .then(onDone, setError)
-          .finally(() => setBusy(false));
-      }}
-      open
-      title={t("dialogs.externalCost.title")}
-    >
-      <Field label={t("fields.externalCost")} required>{(p) => <MoneyInput {...p} cents={cents} onChange={setCents} />}</Field>
-      <Field label={t("dialogs.externalCost.note")}>{(p) => <Textarea {...p} onChange={(e) => setNote(e.target.value)} value={note} />}</Field>
-    </FormDialog>
   );
 }

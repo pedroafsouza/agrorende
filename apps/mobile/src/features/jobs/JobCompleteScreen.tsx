@@ -16,6 +16,7 @@ import { Banner, Button, Card, Chip, EmptyState, ErrorState, NumberField, Screen
 import { ErrorSheet } from "../../ui/recovery/ErrorSheet";
 import { InlineError } from "../../ui/recovery/InlineError";
 import "./i18n";
+import { MeterJumpDialog } from "./MeterJumpReview";
 import { afterPhotoCount, checklistOf, completionBlock, type CompletionBlock, type CompletionDraft } from "./logic";
 import { useJob } from "./useJob";
 
@@ -43,6 +44,7 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
   const [block, setBlock] = useState<CompletionBlock | undefined>();
   const [sheetCode, setSheetCode] = useState<string | undefined>();
   const [busy, setBusy] = useState(false);
+  const [jumpDialog, setJumpDialog] = useState(false);
   const registered = useRef(new Set<string>());
   const restored = useRef(false);
 
@@ -81,8 +83,8 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
   const hoursSinceReading = Number.isFinite(lastRead) ? Math.max(0, ((now?.() ?? Date.now()) - lastRead) / 3_600_000) : 24;
   const evidence = localMedia.filter((m) => (EVIDENCE_TAGS as readonly string[]).includes(m.tag));
 
-  const submit = async () => {
-    const found = completionBlock(draft, {
+  const submit = async (form: CompletionDraft = draft) => {
+    const found = completionBlock(form, {
       status,
       isAssignee: wo.assigneeId === userId,
       afterPhotoCount: afterPhotoCount(media),
@@ -95,22 +97,24 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
     if (found !== undefined) {
       setBlock(found);
       if (found.field === "checklist") setSheetCode(found.code);
+      if (found.code === "METER_READING_JUMP") setJumpDialog(true);
       return;
     }
     setBusy(true);
     try {
       await completeWorkOrder({
         id,
-        resolution: draft.resolution.trim(),
+        resolution: form.resolution.trim(),
         documentLocale: locale === "en" ? "en" : "pt-BR",
-        ...(draft.rootCause === undefined || draft.rootCause.trim() === "" ? {} : { rootCause: draft.rootCause.trim() }),
-        ...(draft.hourMeterReading === undefined ? {} : { hourMeterReading: draft.hourMeterReading }),
-        ...(draft.meterReplaced === true ? { meterReplaced: true, ...(draft.meterPhotoMediaId === undefined ? {} : { meterPhotoMediaId: draft.meterPhotoMediaId }) } : {}),
-        ...(draft.signatureStatus === undefined ? {} : { signatureStatus: draft.signatureStatus }),
-        ...(draft.customerSignerName === undefined ? {} : { customerSignerName: draft.customerSignerName }),
-        ...(draft.signatureReason === undefined ? {} : { signatureReason: draft.signatureReason }),
-        ...(draft.signatureWitnessName === undefined ? {} : { signatureWitnessName: draft.signatureWitnessName }),
-        ...(draft.signatureMediaId === undefined ? {} : { signatureMediaId: draft.signatureMediaId }),
+        ...(form.rootCause === undefined || form.rootCause.trim() === "" ? {} : { rootCause: form.rootCause.trim() }),
+        ...(form.hourMeterReading === undefined ? {} : { hourMeterReading: form.hourMeterReading }),
+        ...(form.meterReplaced === true ? { meterReplaced: true, ...(form.meterPhotoMediaId === undefined ? {} : { meterPhotoMediaId: form.meterPhotoMediaId }) } : {}),
+        ...(form.jumpConfirmed === true && form.meterReplaced !== true && form.hourMeterReading !== undefined ? { confirmMeterJump: true } : {}),
+        ...(form.signatureStatus === undefined ? {} : { signatureStatus: form.signatureStatus }),
+        ...(form.customerSignerName === undefined ? {} : { customerSignerName: form.customerSignerName }),
+        ...(form.signatureReason === undefined ? {} : { signatureReason: form.signatureReason }),
+        ...(form.signatureWitnessName === undefined ? {} : { signatureWitnessName: form.signatureWitnessName }),
+        ...(form.signatureMediaId === undefined ? {} : { signatureMediaId: form.signatureMediaId }),
       });
       if (db !== undefined) await deleteDraft(db, completionDraftId(id));
       showToast({ messageKey: "jobs.toast.complete", tone: "success" });
@@ -187,7 +191,7 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
             />
           ) : null}
           {fieldError("hourMeter")}
-          {block?.code === "METER_READING_JUMP" ? <Button testID="job-complete-confirm-jump" variant="secondary" labelKey="jobs.complete.confirmJump" onPress={() => update({ jumpConfirmed: true })} /> : null}
+          {block?.code === "METER_READING_JUMP" ? <Button testID="job-complete-confirm-jump" variant="secondary" labelKey="jobs.complete.confirmJump" onPress={() => setJumpDialog(true)} /> : null}
         </Card>
       )}
       <Card>
@@ -202,6 +206,19 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
         )}
         {fieldError("signature")}
       </Card>
+      <MeterJumpDialog
+        ns="jobs"
+        visible={jumpDialog}
+        last={assetHourMeter}
+        next={draft.hourMeterReading ?? null}
+        onConfirm={() => {
+          setJumpDialog(false);
+          const confirmed = { ...draft, jumpConfirmed: true };
+          update({ jumpConfirmed: true });
+          void submit(confirmed);
+        }}
+        onFix={() => setJumpDialog(false)}
+      />
       <ErrorSheet code={sheetCode as never} onClose={() => setSheetCode(undefined)} entityType="WORK_ORDER" entityId={id} handlers={{ fix: () => router.push(`/jobs/${id}/checklist`), retry: () => setSheetCode(undefined) }} />
     </Screen>
   );

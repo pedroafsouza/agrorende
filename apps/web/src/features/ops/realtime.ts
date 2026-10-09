@@ -1,44 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
 
 import { RealtimeServerEvents } from "@agrorende/contracts/realtime";
 
 import type { RealtimeStatusState } from "@/components/recovery/RealtimeStatus";
-import { api } from "@/lib/api";
-
-/** The slice of a socket.io client the Ops Center needs; tests inject a fake emitter. */
-export interface OpsSocket {
-  on(event: string, listener: (payload: unknown) => void): void;
-  disconnect(): void;
-}
-
-export type OpsSocketFactory = () => Promise<OpsSocket>;
-
-const REALTIME_URL = process.env.NEXT_PUBLIC_REALTIME_URL ?? "http://localhost:4001";
-
-/** Default factory: a dedicated socket for the Ops Center; office sockets join `opsRoom(orgId)` server side. */
-export const createOpsSocket: OpsSocketFactory = async () => {
-  const token = async () => (await api<{ token: string }>("/auth/socket-token", { method: "POST" })).token;
-  const first = await token();
-  const socket = io(REALTIME_URL, { auth: (cb) => void cb({ token: first }), transports: ["websocket"] });
-  socket.on("connect_error", (error: Error) => {
-    if (error.message === "UNAUTHENTICATED") {
-      void token().then((next) => {
-        socket.auth = { token: next };
-      });
-    }
-  });
-  return {
-    on: (event, listener) => {
-      socket.on(event, listener);
-    },
-    disconnect: () => {
-      socket.disconnect();
-    },
-  };
-};
+import { useRealtimeEvent, useRealtimeStatus } from "@/features/shell/useRealtime";
 
 export interface OpsRealtimeHandlers {
   readonly onLocation?: (payload: unknown) => void;
@@ -57,80 +24,49 @@ export interface OpsRealtime {
   readonly paused: boolean;
 }
 
-export function useOpsRealtime(factory: OpsSocketFactory, handlers: OpsRealtimeHandlers): OpsRealtime {
-  const [state, setState] = useState<RealtimeStatusState>("connecting");
+/**
+ * Live feed of the Ops Center on the tab's single admin socket (T09-002): it subscribes through
+ * `useRealtimeEvent` and derives the paused banner from `useRealtimeStatus`, so it never opens a
+ * socket of its own. Office sockets join `opsRoom(orgId)` server side.
+ */
+export function useOpsRealtime(handlers: OpsRealtimeHandlers): OpsRealtime {
+  const { state } = useRealtimeStatus();
   const [lastUpdateAt, setLastUpdateAt] = useState<Date | null>(null);
   const [paused, setPaused] = useState(false);
   const ref = useRef(handlers);
+  const everConnected = useRef(false);
   useEffect(() => {
     ref.current = handlers;
   });
 
   useEffect(() => {
-    let socket: OpsSocket | null = null;
-    let cancelled = false;
-    let everConnected = false;
-    const seen = () => setLastUpdateAt(new Date());
-    void (async () => {
-      try {
-        const next = await factory();
-        if (cancelled) {
-          next.disconnect();
-          return;
-        }
-        socket = next;
-        next.on("connect", () => {
-          setState("connected");
-          setPaused(false);
-          seen();
-          if (everConnected) ref.current.onReconnect?.();
-          everConnected = true;
-        });
-        next.on("disconnect", () => {
-          setState("reconnecting");
-          setPaused(true);
-        });
-        next.on("connect_error", () => {
-          setState("reconnecting");
-          if (everConnected) setPaused(true);
-        });
-        next.on(RealtimeServerEvents.operatorLocation, (payload) => {
-          seen();
-          ref.current.onLocation?.(payload);
-        });
-        next.on(RealtimeServerEvents.operatorPresence, (payload) => {
-          seen();
-          ref.current.onPresence?.(payload);
-        });
-        next.on(RealtimeServerEvents.activityNew, (payload) => {
-          seen();
-          ref.current.onActivity?.(payload);
-        });
-        next.on(RealtimeServerEvents.entityChanged, (payload) => {
-          seen();
-          ref.current.onEntityChanged?.(payload);
-        });
-      } catch {
-        if (!cancelled) {
-          setState("offline");
-          setPaused(true);
-        }
-      }
-    })();
-    const online = () => setState((s) => (s === "offline" ? "reconnecting" : s));
-    const offline = () => {
-      setState("offline");
+    if (state === "connected") {
+      setPaused(false);
+      setLastUpdateAt(new Date());
+      if (everConnected.current) ref.current.onReconnect?.();
+      everConnected.current = true;
+    } else if (state === "offline" || everConnected.current) {
       setPaused(true);
-    };
-    window.addEventListener("online", online);
-    window.addEventListener("offline", offline);
-    return () => {
-      cancelled = true;
-      window.removeEventListener("online", online);
-      window.removeEventListener("offline", offline);
-      socket?.disconnect();
-    };
-  }, [factory]);
+    }
+  }, [state]);
+
+  const seen = () => setLastUpdateAt(new Date());
+  useRealtimeEvent(RealtimeServerEvents.operatorLocation, (payload) => {
+    seen();
+    ref.current.onLocation?.(payload);
+  });
+  useRealtimeEvent(RealtimeServerEvents.operatorPresence, (payload) => {
+    seen();
+    ref.current.onPresence?.(payload);
+  });
+  useRealtimeEvent(RealtimeServerEvents.activityNew, (payload) => {
+    seen();
+    ref.current.onActivity?.(payload);
+  });
+  useRealtimeEvent(RealtimeServerEvents.entityChanged, (payload) => {
+    seen();
+    ref.current.onEntityChanged?.(payload);
+  });
 
   return { state, lastUpdateAt, paused };
 }

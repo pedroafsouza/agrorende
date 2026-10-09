@@ -1,4 +1,17 @@
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { parseEnv } from "node:util";
+
 import type { NextConfig } from "next";
+
+// `pnpm dev` starts Next.js inside apps/web, so load the monorepo root `.env` without overriding
+// variables already set in the shell (the realtime service and worker use `--env-file-if-exists`).
+const rootEnv = path.resolve(process.cwd(), "../../.env");
+if (existsSync(rootEnv)) {
+  for (const [key, value] of Object.entries(parseEnv(readFileSync(rootEnv, "utf8")))) {
+    if (process.env[key] === undefined && value !== undefined) process.env[key] = value;
+  }
+}
 
 const nextConfig: NextConfig = {
   output: "standalone",

@@ -6,6 +6,8 @@ import { assertOrganizationWritable } from "@agrorende/core/tenancy";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
+import { fastDispatch } from "./fastDispatch";
+
 export type RouteMethod = "DELETE" | "GET" | "PATCH" | "POST" | "PUT";
 export type ApiRole = "public" | "any" | "ADMIN" | "MANAGER" | "FIELD" | "ar_platform";
 
@@ -204,6 +206,7 @@ export function withApi(handler: ApiHandler, options: WithApiOptions = {}) {
         await assertOrganizationWritable(core);
       }
       const result = await handler(request, { requestId: ref, session, ...(core === undefined ? {} : { core }) }, routeContext);
+      fastDispatch();
       if (result instanceof NextResponse) {
         return result;
       }
@@ -215,7 +218,7 @@ export function withApi(handler: ApiHandler, options: WithApiOptions = {}) {
   };
 }
 
-export function notImplemented(method: RouteMethod, path: string) {
+export function notImplemented(method: RouteMethod, path: string, roles: readonly ApiRole[] = ["public"]) {
   return withApi(
     (_request, ctx) => ({
       error: {
@@ -226,6 +229,6 @@ export function notImplemented(method: RouteMethod, path: string) {
         ref: ctx.requestId,
       },
     }) satisfies NotImplementedEnvelope,
-    { roles: ["public"] },
+    { roles },
   );
 }

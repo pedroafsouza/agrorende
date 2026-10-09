@@ -1,8 +1,7 @@
+import { AppError } from "@agrorende/contracts/errors";
 import { collections, getDb } from "@agrorende/db";
 
 import type { Ctx } from "../context.js";
-import { notImplemented } from "../errors.js";
-import type { SyncTx } from "../sync/types.js";
 
 export type NumberSequencePrefix = "FR" | "WO" | "RN" | "BD" | "AGR";
 
@@ -18,11 +17,8 @@ export async function next(ctx: Pick<Ctx, "orgId">, input: NumberingNextInput): 
     { upsert: true, returnDocument: "after" },
   );
   if (result === null) {
-    return notImplemented("numbering.next.result");
+    throw new AppError("INTERNAL", { message: "NUMBER_SEQUENCE_UPSERT_FAILED", details: { key: input.key } });
   }
   return result.value;
 }
 
-export async function nextNumber(_tx: SyncTx, _prefix: NumberSequencePrefix): Promise<string> {
-  return notImplemented("numbering.nextNumber");
-}

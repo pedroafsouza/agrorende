@@ -34,12 +34,12 @@ export async function findStaleDevices(ctx: JobContext, org: Doc): Promise<Stale
   const cutoff = new Date(ctx.now.getTime() - staleHours(org) * HOUR_MS);
   const onDuty = (
     await ctx.platform
-      .collection("users")
+      .table("users")
       .find({ organizationId: orgId, dutyStatus: "ON_DUTY", isActive: true, deletedAt: null }, { projection: { _id: 1 } })
       .toArray()
   ).map((row) => String(row._id));
   const devices = await ctx.platform
-    .collection("devices")
+    .table("devices")
     .find(
       {
         organizationId: orgId,
@@ -64,7 +64,7 @@ function dedupeKey(ctx: JobContext, deviceId: string): string {
 
 async function admins(ctx: JobContext, orgId: string): Promise<string[]> {
   const rows = await ctx.platform
-    .collection("users")
+    .table("users")
     .find({ organizationId: orgId, role: "ADMIN", isActive: true, deletedAt: null }, { projection: { _id: 1 } })
     .toArray();
   return rows.map((row) => String(row._id));
@@ -72,7 +72,7 @@ async function admins(ctx: JobContext, orgId: string): Promise<string[]> {
 
 export const handler: JobHandler = async (ctx) => {
   const orgs = await ctx.platform
-    .collection("organizations")
+    .table("organizations")
     .find({ status: { $nin: ["SUSPENDED", "CANCELLED"] }, deletedAt: null }, { projection: { _id: 1, settings: 1 } })
     .toArray();
   let stale = 0;
@@ -92,7 +92,7 @@ export const handler: JobHandler = async (ctx) => {
       if (recipients.length === 0) {
         continue;
       }
-      const user = await ctx.platform.collection("users").findOne({ _id: device.userId, organizationId: device.orgId }, { projection: { name: 1 } });
+      const user = await ctx.platform.table("users").findOne({ _id: device.userId, organizationId: device.orgId }, { projection: { name: 1 } });
       try {
         await ctx.platform.notify(device.orgId, {
           type: "DEVICE_STALE_SYNC",

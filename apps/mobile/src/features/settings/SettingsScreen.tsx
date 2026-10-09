@@ -14,6 +14,7 @@ import { bumpLocalData, useLocalQuery } from "../../lib/useLocalQuery";
 import { BottomSheet, Button, Card, ConfirmDialog, ListItem, Screen, Segmented, Skeleton, Text, TextField, setThemePreference, showToast, useThemePreference, type ThemePreference } from "../../ui";
 import { AskOfficeButton } from "../../ui/recovery";
 import { deleteAccount, signOutHere } from "./account";
+import { PushMuteCard } from "./PushMuteCard";
 import { deleteConfirmationMatches, loadUserSettings, pendingItemCount, saveNavApp, saveWifiOnlyVideo } from "./logic";
 
 const THEMES: readonly ThemePreference[] = ["system", "light", "dark", "outdoor"];
@@ -124,6 +125,7 @@ export function SettingsScreen() {
           </Card>
         </>
       )}
+      <PushMuteCard />
       <Card>
         <ListItem icon={RefreshCw} titleKey="settings.help.syncCenter" subtitleKey="settings.help.syncCenterBody" onPress={() => router.push("/sync-center")} testID="settings-sync-center" />
         <ListItem icon={CircleHelp} titleKey="settings.help.title" subtitleKey="settings.help.body" />

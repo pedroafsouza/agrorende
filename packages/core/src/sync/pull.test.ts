@@ -76,6 +76,16 @@ describe("sync pull", () => {
     expect(users.some((row) => row.id === SEED.orgBUser)).toBe(false);
   });
 
+  it("sends notification preferences only to their own user", async () => {
+    const prefs = { pushMuted: true, mutedTypes: ["WO_ASSIGNED"] };
+    await seeded.raw("users").updateMany({ _id: { $in: [FIELD_104, SEED.admin] } }, { $set: { notificationPrefs: prefs } });
+    const users = (await pullAll(seedCtx(FIELD_104, "FIELD"))).changes.users ?? [];
+    expect(users.find((row) => row.id === FIELD_104)?.notificationPrefs).toEqual(prefs);
+    const other = users.find((row) => row.id === SEED.admin);
+    expect(other).toBeDefined();
+    expect(other).not.toHaveProperty("notificationPrefs");
+  });
+
   it("returns only later changes in steady state", async () => {
     const ctx = seedCtx(SEED.manager, "MANAGER");
     const initial = await pullAll(ctx);

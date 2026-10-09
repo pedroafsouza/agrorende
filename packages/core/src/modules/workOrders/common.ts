@@ -3,6 +3,7 @@ import type { WorkOrderDTO } from "@agrorende/contracts/dto";
 import type { Role, WorkOrderStatus } from "@agrorende/contracts/enums";
 import { RealtimeServerEvents, opsRoom, orgRoom } from "@agrorende/contracts/realtime";
 
+import { recordActivity } from "../../activity/index.js";
 import type { Ctx } from "../../context.js";
 import { reject } from "../../errors.js";
 import { writeOutbox } from "../../notify/index.js";
@@ -113,7 +114,7 @@ export interface StatusActivity {
 }
 
 export async function recordWoActivity(tx: unknown, row: StatusActivity): Promise<void> {
-  await writeActivity(dbTx(tx), {
+  const input = {
     entityType: "WORK_ORDER",
     entityId: row.workOrderId,
     action: row.action,
@@ -122,7 +123,13 @@ export async function recordWoActivity(tx: unknown, row: StatusActivity): Promis
     toStatus: row.toStatus,
     occurredAt: row.occurredAt,
     meta: row.meta ?? {},
-  });
+  } as const;
+  if (row.toStatus === null) {
+    await writeActivity(dbTx(tx), input);
+    return;
+  }
+  // A status change also publishes `activity:new` to the ops room (ARCHITECTURE §6.5).
+  await recordActivity(asSyncTx(tx), input, { publish: true });
 }
 
 /** Realtime `entity:changed` for the office boards and the ops map. */

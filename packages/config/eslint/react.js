@@ -2,7 +2,7 @@ import i18next from "eslint-plugin-i18next";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
-import base, { NO_DRIVER_RESTRICTED, TEST_FILES } from "./index.js";
+import base, { NO_DRIVER_RESTRICTED, TEST_FILES, TEST_RESTRICTED } from "./index.js";
 
 /**
  * Preset for the React surfaces: the admin web app, the public site and the mobile app.
@@ -34,7 +34,7 @@ export function react({ restricted = NO_DRIVER_RESTRICTED, devOnly = [] } = {}) 
       files: [...TEST_FILES, ...devOnly],
       rules: {
         "i18next/no-literal-string": "off",
-        "no-restricted-imports": "off",
+        "no-restricted-imports": ["error", TEST_RESTRICTED],
       },
     },
   );

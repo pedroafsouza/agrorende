@@ -122,6 +122,12 @@ export const NumberSequenceSchema = z.object({
   value: z.number().int().nonnegative().default(0),
 });
 
+/** Push mute settings (change request T05-008); documents written before it parse with the default. */
+export const UserNotificationPrefsSchema = z.object({
+  pushMuted: z.boolean().default(false),
+  mutedTypes: z.array(NotificationTypeEnum).default([]),
+});
+
 export const UserSchema = SyncDocSchema.extend({
   email: OptionalStringSchema,
   name: z.string().min(1),
@@ -145,6 +151,7 @@ export const UserSchema = SyncDocSchema.extend({
   homeSiteId: OptionalUuidSchema,
   vanStockLocationId: OptionalUuidSchema,
   lastSeenAt: OptionalDateSchema,
+  notificationPrefs: UserNotificationPrefsSchema.default({ pushMuted: false, mutedTypes: [] }),
 });
 
 export const RefreshTokenSchema = z.object({

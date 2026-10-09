@@ -9,10 +9,12 @@ import { ATTENTION_KINDS, type AttentionItemDTO, type AttentionKind, type Attent
 import { loadOpsSettings, opsDb, staleDeviceFilter, type OpsDeps } from "./queries.js";
 
 /**
- * Needs attention queue (ARCHITECTURE §21.2, REC-09). Rejected mutations keep their resolution on
- * `processed_mutations`; media, devices and diagnostics have no resolution fields, so a resolution
- * is an `attention.resolved` ActivityEvent whose `_id` is derived from the item. The unique `_id`
- * makes the second resolver lose the race with `ALREADY_RESOLVED` (EC-OPS-23). See T09-001.
+ * Needs attention queue (ARCHITECTURE §21.2, REC-09). Rejected mutations keep their resolution in
+ * the `resolvedAt`, `resolvedById` and `resolutionNote` fields of their `processed_mutations` row
+ * (T09-001 item 3, applied in T10), claimed atomically, plus an `attention.resolved` ActivityEvent for
+ * the audit trail. Media, devices and diagnostics have no resolution fields, so their resolution is
+ * an `attention.resolved` ActivityEvent whose `_id` is derived from the item. The unique `_id` makes
+ * the second resolver lose the race with `ALREADY_RESOLVED` (EC-OPS-23).
  */
 
 export type AttentionCtx = Pick<Ctx, "orgId" | "userId">;
@@ -216,12 +218,14 @@ export async function resolveAttention(
     return withSyncTx(
       { orgId },
       async (tx) => {
-        const updated = await pm.updateOne(
+        // Atomic claim: `resolvedAt: null` matches rows written with an explicit null (push.ts) and
+        // legacy rows without the field. The new syncVersion lets the device pull the resolution (A9).
+        const claimed = await pm.findOneAndUpdate(
           { _id: row._id, organizationId: orgId, resolvedAt: null },
-          { $set: { resolvedAt: now, resolvedById: ctx.userId, resolutionNote: note } },
-          { session: tx.session },
+          { $set: { resolvedAt: now, resolvedById: ctx.userId, resolutionNote: note, syncVersion: tx.syncVersion } },
+          { session: tx.session, returnDocument: "after" },
         );
-        if (updated.modifiedCount === 0) {
+        if (claimed === null) {
           const current = await pm.findOne({ _id: row._id, organizationId: orgId }, { session: tx.session });
           const names = await userNames(db, orgId, [current?.resolvedById]);
           return alreadyResolved({

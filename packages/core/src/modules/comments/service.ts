@@ -1,7 +1,3 @@
-import { notImplemented } from "../../errors.js";
-import type { Ctx } from "../../context.js";
-import type { SyncTx } from "../../sync/types.js";
-
-export async function ensureCommentsService(_tx: SyncTx, _ctx: Ctx): Promise<void> {
-  return notImplemented("modules.comments.service.ensure");
-}
+// Wave 6 module (DELIVERY-PLAN §5 T17). The module exposes no service functions yet;
+// T17 adds them here together with its routes and mutations.
+export {};

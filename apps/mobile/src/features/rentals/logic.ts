@@ -420,6 +420,8 @@ export interface InspectionDraft {
   readonly hourMeter?: number;
   readonly fuelPercent?: number;
   readonly meterReplaced: boolean;
+  /** The agent confirmed an unusually large hour-meter increase (EC-RN-26); cleared when the reading changes. */
+  readonly meterJumpConfirmed?: boolean;
   readonly damages: readonly DamageDraft[];
   readonly accessories: readonly AccessoryLine[];
   readonly safetyBriefingGiven: boolean;
@@ -501,14 +503,18 @@ export function validateWalkaround(draft: InspectionDraft): true | MessageKey {
   return WALKAROUND_TAGS.every((tag) => tags.has(tag)) ? true : "rentals.wizard.walkaround.missing";
 }
 
+/** True when the reading is above what the hire period allows (check-in only, same bound as the server). */
+export function isMeterJump(draft: InspectionDraft, ctx: InspectionContext, nowMs: number): boolean {
+  if (ctx.kind !== "CHECK_IN" || draft.meterReplaced || draft.hourMeter === undefined || ctx.baselineHourMeter === null) return false;
+  const start = Date.parse(ctx.charges.actualStart ?? ctx.charges.plannedStart);
+  const maxDelta = Math.max(0, (nowMs - start) / HOUR_MS) + 1;
+  return draft.hourMeter - ctx.baselineHourMeter > maxDelta;
+}
+
 export function readingError(draft: InspectionDraft, ctx: InspectionContext, nowMs: number): MessageKey | undefined {
   if (draft.meterReplaced || draft.hourMeter === undefined || ctx.baselineHourMeter === null) return undefined;
   if (draft.hourMeter < ctx.baselineHourMeter) return "errors.METER_READING_LOWER.title";
-  if (ctx.kind === "CHECK_IN") {
-    const start = Date.parse(ctx.charges.actualStart ?? ctx.charges.plannedStart);
-    const maxDelta = Math.max(0, (nowMs - start) / HOUR_MS) + 1;
-    if (draft.hourMeter - ctx.baselineHourMeter > maxDelta) return "errors.METER_READING_JUMP.title";
-  }
+  if (draft.meterJumpConfirmed !== true && isMeterJump(draft, ctx, nowMs)) return "errors.METER_READING_JUMP.title";
   return undefined;
 }
 
@@ -630,6 +636,7 @@ function baseInspection(draft: InspectionDraft) {
     responses: [...draft.responses],
     ...(draft.hourMeter === undefined ? {} : { hourMeter: draft.hourMeter }),
     ...(draft.meterReplaced ? { meterReplaced: true } : {}),
+    ...(draft.meterJumpConfirmed === true && !draft.meterReplaced && draft.hourMeter !== undefined ? { meterJumpConfirmed: true } : {}),
     ...(meterPhoto === undefined ? {} : { meterPhotoMediaId: meterPhoto.id }),
     ...(draft.fuelPercent === undefined ? {} : { fuelPercent: draft.fuelPercent }),
     accessories,

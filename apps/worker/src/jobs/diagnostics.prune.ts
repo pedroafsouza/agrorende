@@ -44,7 +44,7 @@ export function trimDiagnosticPayload(payload: unknown, maxBytes = DIAGNOSTIC_PA
 }
 
 export async function trimOversizedDiagnostics(ctx: JobContext): Promise<number> {
-  const diagnostics = ctx.platform.collection("device_diagnostics");
+  const diagnostics = ctx.platform.table("device_diagnostics");
   const oversized = await diagnostics
     .aggregate([
       { $match: { "payload.truncated": { $ne: true } } },
@@ -66,7 +66,7 @@ export async function trimOversizedDiagnostics(ctx: JobContext): Promise<number>
 }
 
 export const handler: JobHandler = async (ctx) => {
-  const deleted = await deleteInChunks(ctx.platform.collection("device_diagnostics"), { createdAt: { $lt: daysAgo(ctx.now, DIAGNOSTICS_RETENTION_DAYS) } });
+  const deleted = await deleteInChunks(ctx.platform.table("device_diagnostics"), { createdAt: { $lt: daysAgo(ctx.now, DIAGNOSTICS_RETENTION_DAYS) } });
   const trimmed = await trimOversizedDiagnostics(ctx);
   ctx.logger.info("diagnostics.prune", { deleted, trimmed });
   return { deleted, trimmed };

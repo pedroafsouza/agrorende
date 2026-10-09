@@ -350,6 +350,25 @@ describe("needs attention", () => {
     expect(list.items.some((i) => i.id === mutationId)).toBe(false);
     const events = await collections.activityEvents(handle.db).countDocuments({ organizationId: ORG, action: "attention.resolved" });
     expect(events).toBe(1);
+
+    const winner = ok[0]?.status === "fulfilled" ? ok[0].value : undefined;
+    const row = await collections.processedMutations(handle.db).findOne({ organizationId: ORG, mutationId });
+    expect(row).toMatchObject({ resolvedAt: NOW, resolvedById: winner?.resolvedById, resolutionNote: winner?.note });
+    expect(row?.syncVersion).toEqual(expect.any(Number));
+    expect(error.details).toMatchObject({ resolvedAt: NOW.toISOString(), note: winner?.note });
+  });
+
+  it("resolves a legacy rejected mutation stored without resolution fields", async () => {
+    const mutationId = await seedRejected();
+    await collections.processedMutations(handle.db).updateOne({ mutationId }, { $unset: { resolvedAt: "" } });
+    expect((await listAttention({ orgId: ORG }, deps())).items.some((i) => i.id === mutationId)).toBe(true);
+    const resolved = await resolveAttention({ orgId: ORG, userId: MANAGER }, "rejected-mutation", mutationId, { note: "Conferido" }, deps());
+    expect(resolved).toMatchObject({ kind: "REJECTED_MUTATION", id: mutationId, resolverName: "Marcos Gerente", note: "Conferido" });
+    expect(await collections.processedMutations(handle.db).findOne({ mutationId })).toMatchObject({ resolvedAt: NOW, resolvedById: MANAGER, resolutionNote: "Conferido" });
+    expect((await listAttention({ orgId: ORG }, deps())).items.some((i) => i.id === mutationId)).toBe(false);
+    await expect(resolveAttention({ orgId: ORG, userId: ADMIN }, "rejected-mutation", mutationId, { note: "x" }, deps())).rejects.toSatisfy(
+      (e) => code(e) === "ALREADY_RESOLVED" && ((e as DomainError).details as { resolverName?: string } | undefined)?.resolverName === "Marcos Gerente",
+    );
   });
 
   it("resolves a stale device through an activity event and hides it until it goes stale again", async () => {

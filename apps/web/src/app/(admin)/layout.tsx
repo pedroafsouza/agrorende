@@ -4,6 +4,7 @@ import "@/components/shell/theme.css";
 
 import { Providers } from "@/components/shell/Providers";
 import { ShellIntlProvider } from "@/components/shell/IntlProvider";
+import { CommandPalette } from "@/features/command-palette";
 import { AdminShell } from "@/features/shell/AdminShell";
 import { EnvRibbon } from "@/features/shell/EnvRibbon";
 import { OfficeRoleRequired } from "@/features/shell/OfficeRoleRequired";
@@ -24,6 +25,7 @@ export default async function AdminLayout({ children }: { readonly children: Rea
         ) : (
           <AdminShell banner={<OrgBanner supportWhatsApp={supportWhatsApp()} />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
             {children}
+            <CommandPalette />
           </AdminShell>
         )}
       </Providers>

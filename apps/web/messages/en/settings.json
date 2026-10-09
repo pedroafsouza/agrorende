@@ -1,4 +1,9 @@
 {
+  "notifications": {
+    "title": "Notifications",
+    "pushMuted": "Mute push notifications on my phone",
+    "pushMutedHint": "You still see every notification in the bell inside the app."
+  },
   "org": {
     "atRisk": "At-risk alert",
     "atRiskHint": "Remaining share of the deadline that triggers the alert (0.25 = 25%).",

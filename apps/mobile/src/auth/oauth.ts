@@ -1,5 +1,6 @@
 import type { AgrorendeApiClient, LoginResponse, OAuthIntent } from "@agrorende/api-client";
 import type { Platform } from "@agrorende/contracts/enums";
+import { isAppErrorCode } from "@agrorende/contracts/errors";
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as Crypto from "expo-crypto";
 import * as WebBrowser from "expo-web-browser";
@@ -45,7 +46,7 @@ export async function signInWithGoogle(ctx: OAuthContext): Promise<LoginResponse
   if (result.type !== "success") throw new LocalError("OAUTH_CANCELLED");
   const params = new URL(result.url).searchParams;
   const error = params.get("error");
-  if (error !== null) throw new LocalError(error === "OAUTH_STATE_EXPIRED" ? "OAUTH_STATE_EXPIRED" : "OAUTH_PROVIDER_ERROR", { details: { error } });
+  if (error !== null) throw new LocalError(isAppErrorCode(error) ? error : "OAUTH_PROVIDER_ERROR", { details: { error } });
   const code = params.get("code");
   if (code === null) throw new LocalError("OAUTH_PROVIDER_ERROR");
   return ctx.api.oauthExchange({ code, verifier, deviceId: ctx.deviceId, platform: ctx.platform });

@@ -32,6 +32,15 @@
     "title": "Navigation app",
     "waze": "Waze"
   },
+  "push": {
+    "body": "Stop alerts on this phone. Notifications still appear inside the app.",
+    "muted": "Push notifications muted",
+    "offlineBody": "Connect to the internet to change this setting.",
+    "offlineTitle": "You are offline",
+    "saveFailed": "Could not save. Check your connection and try again.",
+    "title": "Mute push notifications",
+    "unmuted": "Push notifications turned on"
+  },
   "theme": {
     "dark": "Dark",
     "light": "Light",

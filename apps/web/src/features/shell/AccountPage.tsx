@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/Badge";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { Dialog } from "@/components/ui/Dialog";
 import { Field, Input } from "@/components/ui/Field";
+import { NotificationPrefsCard } from "@/features/settings/NotificationPrefsCard";
 import { useMe } from "@/features/shell/useMe";
 import { api } from "@/lib/api";
 
@@ -75,6 +76,7 @@ export function AccountPage() {
           {t("account.changePassword")}
         </Link>
       </Card>
+      <NotificationPrefsCard />
       <Card title={t("account.dangerZone")}>
         <p className="mb-3 text-[var(--ar-text-muted)]">{t("account.deleteBody")}</p>
         <Button icon={<Trash2 aria-hidden="true" className="size-4" />} onClick={() => { setTyped(""); setError(null); setDeleting(true); }} variant="danger">

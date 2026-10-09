@@ -22,6 +22,17 @@ export const REPAIR_STATUSES: readonly WorkOrderStatus[] = ["IN_PROGRESS", "ON_H
 export const OPEN_STATUSES: readonly WorkOrderStatus[] = ["OPEN", "ASSIGNED", "ACCEPTED", "EN_ROUTE", "ON_SITE"];
 const MANUAL_CONDITIONS: readonly AssetCondition[] = ["OUT_OF_SERVICE", "RETIRED"];
 
+/** Referenced site, owner customer and cover photo must belong to the caller's organisation (cross-tenant suite). */
+async function assertAssetRefs(tx: Tx, refs: { homeSiteId?: string | null; ownerCustomerId?: string | null; coverMediaId?: string | null }): Promise<void> {
+  const { db } = dbTx(tx);
+  const only = { projection: { _id: 1 } };
+  if (refs.homeSiteId && (await db.sites.findOne({ _id: refs.homeSiteId }, only)) === null) reject("NOT_FOUND", { entityType: "SITE", entityId: refs.homeSiteId });
+  if (refs.ownerCustomerId && (await db.customers.findOne({ _id: refs.ownerCustomerId }, only)) === null) {
+    reject("NOT_FOUND", { entityType: "CUSTOMER", entityId: refs.ownerCustomerId });
+  }
+  if (refs.coverMediaId && (await db.media.findOne({ _id: refs.coverMediaId }, only)) === null) reject("NOT_FOUND", { entityType: "MEDIA", entityId: refs.coverMediaId });
+}
+
 export function toAssetDto(doc: Asset): AssetDTO {
   return toDto<AssetDTO>(doc);
 }
@@ -195,6 +206,7 @@ async function assertUniqueCode(tx: Tx, code: string, exceptId?: string): Promis
 export async function createAsset(tx: Tx, ctx: Ctx, raw: AssetCreateInput): Promise<AssetDTO> {
   const input = parseInput(AssetCreateInputSchema, raw);
   const scopedTx = dbTx(tx);
+  await assertAssetRefs(tx, input);
   const code = input.code ?? `AGR-${String(await nextNumber(ctx, { key: "AGR" })).padStart(6, "0")}`;
   await assertUniqueCode(tx, code);
   const now = new Date();
@@ -242,6 +254,7 @@ export async function updateAsset(tx: Tx, ctx: Ctx, assetId: string, raw: AssetU
   const scopedTx = dbTx(tx);
   const asset = await loadAsset(tx, assetId);
   assertVersion(asset, ifMatch);
+  await assertAssetRefs(tx, input);
   if (asset.condition === "RETIRED") {
     reject("INVALID_TRANSITION", { entityType: "ASSET", from: "RETIRED" });
   }

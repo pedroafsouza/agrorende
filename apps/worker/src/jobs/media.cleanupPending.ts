@@ -21,7 +21,7 @@ export const TMP_FILE_MAX_AGE_MS = HOUR_MS;
 /** PENDING media older than 24 h, counted per organisation (no ids, names or coordinates). */
 export async function mediaPendingAttention(ctx: JobContext): Promise<{ orgId: string; count: number }[]> {
   const rows = await ctx.platform
-    .collection("media")
+    .table("media")
     .aggregate([
       { $match: { status: "PENDING", deletedAt: null, createdAt: { $lt: new Date(ctx.now.getTime() - MEDIA_PENDING_ATTENTION_MS) } } },
       { $group: { _id: "$organizationId", count: { $sum: 1 } } },
@@ -33,7 +33,7 @@ export async function mediaPendingAttention(ctx: JobContext): Promise<{ orgId: s
 
 /** PENDING media older than 30 days becomes FAILED with a new `syncVersion`, so devices pull it. */
 async function markStalePendingFailed(ctx: JobContext): Promise<number> {
-  const media = ctx.platform.collection("media");
+  const media = ctx.platform.table("media");
   const filter = { status: "PENDING", deletedAt: null, createdAt: { $lt: daysAgo(ctx.now, MEDIA_PENDING_FAIL_DAYS) } };
   const orgIds = (await media.aggregate([{ $match: filter }, { $group: { _id: "$organizationId" } }]).toArray()).map((row) => String(row._id));
   let marked = 0;
@@ -59,7 +59,7 @@ function mediaKeys(row: Doc): string[] {
 }
 
 async function purgeSoftDeleted(ctx: JobContext): Promise<number> {
-  const media = ctx.platform.collection("media");
+  const media = ctx.platform.table("media");
   const filter = { deletedAt: { $lt: daysAgo(ctx.now, MEDIA_SOFT_DELETE_DAYS) } };
   let purged = 0;
   for (;;) {

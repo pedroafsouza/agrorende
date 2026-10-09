@@ -26,7 +26,7 @@ import { KpiStrip } from "./KpiStrip";
 import { OperatorList, OperatorPanel } from "./OperatorPanel";
 import { OperatorStore } from "./operatorStore";
 import { OpsMap } from "./OpsMap";
-import { createOpsSocket, useOpsRealtime, type OpsSocketFactory } from "./realtime";
+import { useOpsRealtime } from "./realtime";
 import { isKpiKey, OPS_QUERY_KEYS, type KpiRange, type OpsActivityItemDTO } from "./types";
 
 const URL_KEYS = ["kpi", "range", "operator"] as const;
@@ -53,11 +53,10 @@ function toActivityItem(payload: unknown): OpsActivityItemDTO | null {
 }
 
 export interface OpsCenterProps {
-  readonly socketFactory?: OpsSocketFactory;
   readonly store?: OperatorStore;
 }
 
-export function OpsCenter({ socketFactory = createOpsSocket, store: injected }: OpsCenterProps) {
+export function OpsCenter({ store: injected }: OpsCenterProps) {
   const t = useTranslations("ops");
   const locale = useLocale();
   const queryClient = useQueryClient();
@@ -90,7 +89,7 @@ export function OpsCenter({ socketFactory = createOpsSocket, store: injected }: 
     () => store.list(),
   );
 
-  const realtime = useOpsRealtime(socketFactory, {
+  const realtime = useOpsRealtime({
     onLocation: (payload) => {
       const parsed = OperatorLocationPayloadSchema.safeParse(payload);
       if (!parsed.success) return;

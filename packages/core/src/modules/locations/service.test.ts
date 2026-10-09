@@ -167,6 +167,27 @@ describe("locations module", () => {
     expect(await liveSnapshot(OTHER_ORG, deps())).toEqual([]);
   });
 
+  it("rebuilds an empty live hash from the newest recent ping of each user", async () => {
+    const ping = (id: string, minutes: number, lat: number) => ({
+      _id: `0190f5a0-0000-7000-8000-0000000e${id}`,
+      organizationId: ORG,
+      userId: ON_DUTY,
+      deviceId: null,
+      recordedAt: new Date(minutesAgo(minutes)),
+      receivedAt: new Date(minutesAgo(minutes)),
+      lat,
+      lng: -46.6,
+    });
+    await collections.locationPings(handle.db).insertMany([ping("0001", 30, -23.1), ping("0002", 5, -23.2), ping("0003", 2 * 24 * 60, -23.3)] as never);
+    await collections.locationPings(handle.db).insertOne({ ...ping("0004", 3, -22.9), userId: OFF_DUTY, recordedAt: new Date(minutesAgo(3 * 24 * 60)) } as never);
+
+    const snapshot = await liveSnapshot(ORG, deps());
+    expect(snapshot).toHaveLength(1);
+    expect(snapshot[0]).toMatchObject({ userId: ON_DUTY, lat: -23.2, state: "IDLE" });
+    expect(await redis.hlen(liveKey(ORG, handle.db.databaseName))).toBe(1);
+    expect(await liveSnapshot(OTHER_ORG, deps())).toEqual([]);
+  });
+
   it("prunes old pings in chunks", async () => {
     const old = Array.from({ length: 25 }, (_, index) => ({
       _id: `0190f5a0-0000-7000-8000-${String(index).padStart(12, "0")}`,

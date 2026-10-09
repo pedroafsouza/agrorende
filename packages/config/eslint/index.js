@@ -78,6 +78,28 @@ export const NO_DRIVER_RESTRICTED = {
   ],
 };
 
+/** Non-null assertions hide missing narrowing; tests may use them. */
+export const NO_NON_NULL_SYNTAX = {
+  selector: "TSNonNullExpression",
+  message: "No non-null assertions outside tests: narrow the type or validate with Zod.",
+};
+
+/**
+ * ARCHITECTURE §11: raw driver access exists only inside packages/db. A member call named
+ * `collection` (`db.collection(name)`) bypasses the typed accessors, so it is banned everywhere
+ * else, tests included. packages/db turns this selector off in its own config.
+ */
+export const NO_RAW_COLLECTION_SYNTAX = {
+  selector: "CallExpression[callee.type='MemberExpression'][callee.property.name='collection']",
+  message:
+    "Raw driver collection access (a member call named `collection`) exists only inside packages/db: use the `collection(db, name)` function, `collections.<name>(db)` or `scoped(ctx, db)` from @agrorende/db.",
+};
+
+/** `no-restricted-imports` for tests: the driver stays banned there too, other import rules are relaxed. */
+export const TEST_RESTRICTED = {
+  paths: [{ name: "mongodb", message: "Only packages/db may import the MongoDB driver." }],
+};
+
 /** Base rules shared by every package. */
 export const base = tseslint.config(
   { ignores: IGNORES },
@@ -91,13 +113,7 @@ export const base = tseslint.config(
     },
     rules: {
       "no-console": "error",
-      "no-restricted-syntax": [
-        "error",
-        {
-          selector: "TSNonNullExpression",
-          message: "No non-null assertions outside tests: narrow the type or validate with Zod.",
-        },
-      ],
+      "no-restricted-syntax": ["error", NO_NON_NULL_SYNTAX, NO_RAW_COLLECTION_SYNTAX],
       "@typescript-eslint/no-explicit-any": "error",
       "@typescript-eslint/consistent-type-imports": [
         "error",
@@ -113,7 +129,7 @@ export const base = tseslint.config(
     files: TEST_FILES,
     rules: {
       "no-console": "off",
-      "no-restricted-syntax": "off",
+      "no-restricted-syntax": ["error", NO_RAW_COLLECTION_SYNTAX],
     },
   },
 );

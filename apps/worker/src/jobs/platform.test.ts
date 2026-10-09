@@ -24,6 +24,7 @@ import {
   type ObjectStore,
   type WorkerLogger,
   type WorkerPlatform,
+  workerTable,
 } from "./index.js";
 import type { ExpoMessage, ExpoPushClient, ExpoReceipt, ExpoTicket } from "./notifications.push.js";
 
@@ -42,7 +43,7 @@ const DEVICE = "0190f5a0-0000-7000-8000-00000000c001";
 const DEVICE_2 = "0190f5a0-0000-7000-8000-00000000c002";
 
 interface TestDb {
-  db: { databaseName: string; collection(name: string): { insertMany(docs: Doc[]): Promise<unknown>; insertOne(doc: Doc): Promise<unknown> } };
+  db: { databaseName: string };
   drop(): Promise<void>;
   truncate(): Promise<void>;
 }
@@ -110,7 +111,7 @@ let logger: ReturnType<typeof recordingLogger>;
 const appleRevoke = vi.fn<(input: { orgId: string; identityId: string }) => Promise<void>>();
 
 function col(name: string) {
-  return platform.collection(name);
+  return platform.table(name);
 }
 
 function run(name: string, data: Doc = {}, now = new Date(), attemptsMade = 0) {
@@ -131,7 +132,7 @@ async function clearRedis(): Promise<void> {
 async function seedOrg(now: Date): Promise<void> {
   await col("organizations").insertOne({ _id: ORG, name: "Org", timezone: "America/Sao_Paulo", status: "ACTIVE", settings: { staleSyncAlertHours: 24 }, deletedAt: null });
   await col("sync_counters").updateOne({ _id: ORG }, { $setOnInsert: { value: 10, horizonVersion: 0 } }, { upsert: true });
-  await handle.db.collection("users").insertMany([
+  await workerTable(handle.db, "users").insertMany([
     base(now, { _id: ADMIN, name: "Alice", role: "ADMIN", locale: "pt-BR", isActive: true, dutyStatus: "OFF_DUTY" }),
     base(now, { _id: FIELD, name: "Bruno", role: "FIELD", locale: "pt-BR", isActive: true, dutyStatus: "ON_DUTY" }),
     base(now, { _id: FIELD_2, name: "Carla", role: "FIELD", locale: "en", isActive: true, dutyStatus: "OFF_DUTY" }),
@@ -193,12 +194,12 @@ describe("job registry", () => {
 describe("notifications.push", () => {
   async function seedPush(now: Date, count: number): Promise<string[]> {
     await seedOrg(now);
-    await handle.db.collection("devices").insertMany([
+    await workerTable(handle.db, "devices").insertMany([
       base(now, { _id: DEVICE, userId: FIELD, pushStatus: "OK", pushToken: "ExponentPushToken[field]" }),
       base(now, { _id: DEVICE_2, userId: FIELD_2, pushStatus: "OK", pushToken: "ExponentPushToken[gone]" }),
     ]);
     const ids = Array.from({ length: count }, (_, index) => `0190f5a0-0000-7000-8000-${String(index).padStart(12, "0")}`);
-    await handle.db.collection("notifications").insertMany(
+    await workerTable(handle.db, "notifications").insertMany(
       ids.map((id, index) =>
         base(now, { _id: id, userId: index === 0 ? FIELD_2 : FIELD, type: "WORK_ORDER_ASSIGNED", title: "T", body: "B", pushedAt: null, readAt: null, entityType: "WORK_ORDER", entityId: "wo" }),
       ),
@@ -247,7 +248,7 @@ describe("devices.staleSync", () => {
     const now = new Date();
     await seedOrg(now);
     const old = new Date(now.getTime() - 30 * 3_600_000);
-    await handle.db.collection("devices").insertMany([
+    await workerTable(handle.db, "devices").insertMany([
       base(old, { _id: DEVICE, userId: FIELD, lastSyncAt: old, pendingMutations: 0, oldestPendingAt: null, pushStatus: "OK", pushToken: null }),
       base(old, { _id: DEVICE_2, userId: FIELD_2, lastSyncAt: now, pendingMutations: 0, oldestPendingAt: null, pushStatus: "OK", pushToken: null }),
     ]);
@@ -265,7 +266,7 @@ describe("media.cleanupPending", () => {
     const now = new Date();
     await seedOrg(now);
     const hoursAgo = (hours: number) => new Date(now.getTime() - hours * 3_600_000);
-    await handle.db.collection("media").insertMany([
+    await workerTable(handle.db, "media").insertMany([
       base(hoursAgo(25), { _id: "m-pending", status: "PENDING", storageKey: "org/m-pending" }),
       base(hoursAgo(31 * 24), { _id: "m-stale", status: "PENDING", storageKey: "org/m-stale" }),
       base(hoursAgo(1), { _id: "m-fresh", status: "PENDING", storageKey: "org/m-fresh" }),
@@ -302,7 +303,7 @@ describe("retention jobs", () => {
   it("prunes processed mutations with 30/90-day retention", async () => {
     const now = new Date();
     const at = (days: number) => new Date(now.getTime() - days * DAY_MS);
-    await handle.db.collection("processed_mutations").insertMany([
+    await workerTable(handle.db, "processed_mutations").insertMany([
       { _id: "a-old", organizationId: ORG, result: { status: "APPLIED" }, processedAt: at(31) },
       { _id: "a-new", organizationId: ORG, result: { status: "APPLIED" }, processedAt: at(29) },
       { _id: "r-mid", organizationId: ORG, result: { status: "REJECTED" }, processedAt: at(60) },
@@ -316,7 +317,7 @@ describe("retention jobs", () => {
   it("prunes diagnostics after 30 days and trims oversized payloads idempotently", async () => {
     const now = new Date();
     const lines = Array.from({ length: 500 }, (_, index) => `line ${index} ${"x".repeat(1_000)}`);
-    await handle.db.collection("device_diagnostics").insertMany([
+    await workerTable(handle.db, "device_diagnostics").insertMany([
       { _id: "d-old", organizationId: ORG, deviceId: DEVICE, userId: FIELD, createdAt: new Date(now.getTime() - 31 * DAY_MS), appVersion: "1", payload: {} },
       { _id: "d-big", organizationId: ORG, deviceId: DEVICE, userId: FIELD, createdAt: now, appVersion: "1", payload: { appVersion: "1", logLines: lines } },
       { _id: "d-ok", organizationId: ORG, deviceId: DEVICE, userId: FIELD, createdAt: now, appVersion: "1", payload: { logLines: ["a"] } },
@@ -335,7 +336,7 @@ describe("retention jobs", () => {
     expect(platform.syncedCollections).toContain("assets");
     expect(platform.syncedCollections).not.toContain("processed_mutations");
     await col("sync_counters").updateOne({ _id: ORG }, { $set: { value: 50, horizonVersion: 3 } }, { upsert: true });
-    await handle.db.collection("assets").insertMany([
+    await workerTable(handle.db, "assets").insertMany([
       base(now, { _id: "asset-old", syncVersion: 7, deletedAt: new Date(now.getTime() - 91 * DAY_MS), name: "old", code: "A-1" }),
       base(now, { _id: "asset-recent", syncVersion: 9, deletedAt: new Date(now.getTime() - 10 * DAY_MS), name: "recent", code: "A-2" }),
       base(now, { _id: "asset-live", syncVersion: 12, name: "live", code: "A-3" }),

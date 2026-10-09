@@ -1,6 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 
-import { JobPartsScreen } from "../../../../src/features/jobs";
+import { JobPartsScreen } from "../../../../src/features/jobs/parts";
 import { routeKeys } from "../../../../src/i18n";
 
 export default function Route() {

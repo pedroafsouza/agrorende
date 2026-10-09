@@ -36,6 +36,7 @@ import {
 import { computeDueAt } from "./sla.js";
 
 export { toWorkOrderDto };
+export { ExternalCostInputSchema, setExternalCost, type ExternalCostInput } from "./external.js";
 
 // ───────── Inputs of the office REST actions ─────────
 
@@ -64,12 +65,6 @@ export const WorkOrderPatchSchema = z
   })
   .strict();
 export type WorkOrderPatch = z.infer<typeof WorkOrderPatchSchema>;
-
-export const ExternalCostInputSchema = z.object({
-  externalCostCents: z.number().int().nonnegative(),
-  externalCostNote: z.string().optional(),
-});
-export type ExternalCostInput = z.infer<typeof ExternalCostInputSchema>;
 
 export interface CreateOptions {
   /**
@@ -681,29 +676,3 @@ export async function patch(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?
   return getForRole(tx, ctx, id);
 }
 
-/** P1 ERP-03: external (third-party) cost entered by the office. */
-export async function setExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
-  const scoped = dbTx(tx);
-  sameTenant(scoped, ctx);
-  requireOffice(ctx);
-  const input = parseInput(ExternalCostInputSchema, raw);
-  const wo = await loadWorkOrder(tx, id);
-  assertVersion(wo, ifMatch);
-  if (wo.status === "CANCELLED") reject("WO_CANCELLED", { id });
-  const now = new Date();
-  await scoped.db.work_orders.updateOne(
-    { _id: id },
-    { $set: { externalCostCents: input.externalCostCents, externalCostNote: input.externalCostNote ?? null, ...stampUpdate(scoped, now) } },
-  );
-  await recordWoActivity(tx, {
-    workOrderId: id,
-    action: "workOrder.externalCost",
-    actorId: ctx.userId,
-    fromStatus: null,
-    toStatus: null,
-    occurredAt: now,
-    meta: { from: wo.externalCostCents ?? null, to: input.externalCostCents },
-  });
-  await emitWorkOrderChanged(tx, id, wo.status);
-  return getForRole(tx, ctx, id);
-}

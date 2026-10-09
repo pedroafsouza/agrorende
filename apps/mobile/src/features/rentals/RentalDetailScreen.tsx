@@ -1,3 +1,4 @@
+import type { RentalCheckinPayload, RentalCheckoutPayload } from "@agrorende/contracts/mutations";
 import { formatDateTime } from "@agrorende/i18n";
 import { useRouter } from "expo-router";
 import { ArrowDownToLine, ArrowUpFromLine, CalendarRange, IdCard, Phone, SearchX, Tractor, UserRound } from "lucide-react-native";
@@ -10,7 +11,11 @@ import { loadDraft } from "../../lib/drafts";
 import { useServices } from "../../lib/services";
 import { useLocalQuery } from "../../lib/useLocalQuery";
 import { Banner, Button, Card, EmptyState, ErrorState, ListItem, OfflineBanner, Screen, Skeleton, StatusPill, Text } from "../../ui";
+import { checkinRental, checkoutRental } from "../../sync/mutators/rentals";
 import { AskOfficeButton } from "../../ui/recovery";
+import { CommentThread } from "../comments";
+import { findMeterJumpConflict, replaceRejected, type MeterJumpConflict } from "../jobs/meterJump";
+import { MeterJumpReview, type MeterJumpResubmit } from "../jobs/MeterJumpReview";
 import "./i18n";
 import { canCheckIn, canCheckOut, displayTaxId, draftIdFor, getRentalDetail, isOverdue, STATUS_TONE } from "./logic";
 
@@ -26,14 +31,15 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
       const detail = await getRentalDetail(db, rentalId);
       const checkoutDraft = await loadDraft(db, draftIdFor("CHECK_OUT", rentalId));
       const checkinDraft = await loadDraft(db, draftIdFor("CHECK_IN", rentalId));
-      return { detail, hasDraft: checkoutDraft !== undefined || checkinDraft !== undefined };
+      const meterJump = await findMeterJumpConflict(db, "RENTAL", rentalId);
+      return { detail, hasDraft: checkoutDraft !== undefined || checkinDraft !== undefined, meterJump };
     },
     [rentalId],
   );
 
   if (query.status === "loading") return <Screen testID="rental-loading"><Skeleton lines={8} /></Screen>;
   if (query.status === "error") return <Screen testID="rental-error"><ErrorState onRetry={query.reload} /></Screen>;
-  const { detail, hasDraft } = query.data;
+  const { detail, hasDraft, meterJump } = query.data;
   if (detail === undefined) {
     return (
       <Screen testID="rental-not-found">
@@ -52,6 +58,24 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
   const checkout = canCheckOut(summary.status);
   const checkin = canCheckIn(summary.status);
   const resumeKey = hasDraft ? "rentals.detail.resume" : checkout ? "rentals.detail.checkOut" : "rentals.detail.checkIn";
+
+  const resubmitInspection = async (conflict: MeterJumpConflict, { reading, confirmJump }: MeterJumpResubmit) => {
+    const db = services.db;
+    if (db === undefined) return;
+    await replaceRejected(
+      db,
+      conflict,
+      () => {
+        const body = conflict.payload as RentalCheckoutPayload | RentalCheckinPayload;
+        const { meterJumpConfirmed: _previous, ...rest } = body.inspection;
+        const inspection = { ...rest, ...(reading === null ? {} : { hourMeter: reading }), ...(confirmJump ? { meterJumpConfirmed: true } : {}) };
+        return conflict.name === "rental.checkout"
+          ? checkoutRental({ ...(body as RentalCheckoutPayload), inspection: inspection as RentalCheckoutPayload["inspection"] })
+          : checkinRental({ ...(body as RentalCheckinPayload), inspection });
+      },
+      new Date(now).toISOString(),
+    );
+  };
 
   const footer =
     checkout || checkin ? (
@@ -82,6 +106,9 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
               {...(phone === null ? {} : { secondaryAction: { labelKey: "rentals.detail.callCustomer", onPress: () => void Linking.openURL(`tel:${phone}`) } })}
             />
           ) : null}
+          {meterJump === undefined || services.db === undefined ? null : (
+            <MeterJumpReview ns="rentals" testID="rental-meter-jump" conflict={meterJump} onResubmit={(input) => resubmitInspection(meterJump, input)} />
+          )}
           {hasDraft ? <Banner testID="rental-draft" tone="info" titleKey="errors.RENTAL_DRAFT_INTERRUPTED.title" bodyKey="errors.RENTAL_DRAFT_INTERRUPTED.body" /> : null}
         </View>
       }
@@ -117,6 +144,7 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
       </Card>
       {summary.status === "RETURNED" ? <Text testID="rental-returned-note" i18nKey="rentals.detail.returnedNote" tone="secondary" /> : null}
       {checkout || checkin ? null : <AskOfficeButton code="RENTAL_NOT_ACTIVE" entityType="RENTAL" entityId={rentalId} {...(summary.number === null ? {} : { reference: summary.number })} compact />}
+      <CommentThread entityType="RENTAL" entityId={rentalId} />
     </Screen>
   );
 }

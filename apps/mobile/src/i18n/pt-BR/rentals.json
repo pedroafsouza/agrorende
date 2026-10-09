@@ -238,5 +238,21 @@
       "lateNote": "A devolução passou do prazo; o tempo extra entra nas cobranças.",
       "note": "Prévia calculada no aparelho. O escritório confirma o valor final."
     }
+  },
+  "meterJump": {
+    "title": "Leitura muito alta",
+    "body": "Esta leitura está muito acima da última: {last, number} h → {next, number} h.",
+    "bodyUnknown": "Esta leitura está muito acima da última registrada.",
+    "confirm": "Confirmar leitura",
+    "fix": "Corrigir leitura",
+    "confirmed": "Leitura confirmada. O escritório verá o aviso.",
+    "rejectedTitle": "O escritório não aceitou a leitura do horímetro",
+    "rejectedBody": "A leitura enviada está muito acima da última. Confirme ou corrija para reenviar.",
+    "review": "Revisar leitura",
+    "fixTitle": "Corrigir leitura do horímetro",
+    "reading": "Leitura do horímetro",
+    "hours": "h",
+    "send": "Reenviar",
+    "sent": "Leitura reenviada. Será sincronizada quando houver sinal."
   }
 }

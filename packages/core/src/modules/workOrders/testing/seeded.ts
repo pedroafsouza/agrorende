@@ -3,6 +3,7 @@ import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { Role } from "@agrorende/contracts/enums";
 
 import type { Ctx } from "../../../context.js";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
 
 export const ORG_A = "018fd000-0000-7000-8000-000000000001";
 export const ORG_B = "018fd000-0000-7000-8000-000000000002";
@@ -27,7 +28,6 @@ export const PEOPLE = {
 
 export type Row = { _id: string } & Record<string, unknown>;
 
-const rawCollection = (db: TestDbHandle["db"], name: string) => db.collection<Row>(name);
 
 interface SeedModule {
   seedDatabase(db: TestDbHandle["db"], options: { readonly force?: boolean }): Promise<unknown>;
@@ -35,7 +35,7 @@ interface SeedModule {
 
 export interface SeededDb {
   readonly handle: TestDbHandle;
-  raw(name: string): ReturnType<typeof rawCollection>;
+  raw(name: string): RawCollection;
   run<T>(fn: (tx: SyncTx) => Promise<T>, orgId?: string): Promise<T>;
   close(): Promise<void>;
 }
@@ -51,7 +51,7 @@ export async function createSeededDb(suffix: string): Promise<SeededDb> {
   await seed.seedDatabase(handle.db, { force: true });
   return {
     handle,
-    raw: (collectionName: string) => rawCollection(handle.db, collectionName),
+    raw: (collectionName) => rawCollection(handle.db, collectionName),
     run: (fn, orgId = ORG_A) => withSyncTx({ orgId }, fn, handle.db),
     close: async () => {
       await handle.drop();

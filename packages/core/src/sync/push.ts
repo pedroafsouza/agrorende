@@ -1,6 +1,6 @@
 import { createHash, randomUUID } from "node:crypto";
 
-import { getDb } from "@agrorende/db";
+import { collections, getDb, platform, scoped } from "@agrorende/db";
 import { AppError } from "@agrorende/contracts/errors";
 import {
   CLOCK_SKEW_TOLERANCE_MS,
@@ -97,7 +97,7 @@ function isDuplicateKey(error: unknown): boolean {
 
 async function readProcessed(ctx: Ctx, mutationId: string): Promise<ProcessedMutationRow | null> {
   const db = await getDb();
-  return db.collection<ProcessedMutationRow>("processed_mutations").findOne({ _id: processedId(ctx, mutationId) });
+  return collections.processedMutations(db).findOne({ _id: processedId(ctx, mutationId) });
 }
 
 async function upsertDeviceStatus(ctx: Ctx, request: LenientPushRequest, receivedAt: Date): Promise<void> {
@@ -105,8 +105,8 @@ async function upsertDeviceStatus(ctx: Ctx, request: LenientPushRequest, receive
   const status = request.deviceStatus;
   const skewMs = receivedAt.getTime() - new Date(request.clientTime).getTime();
   try {
-    await db.collection<{ _id: string }>("devices").updateOne(
-      { installationId: request.deviceId, userId: ctx.userId, organizationId: ctx.organizationId },
+    await scoped({ orgId: ctx.organizationId }, db).devices.updateOne(
+      { installationId: request.deviceId, userId: ctx.userId },
       {
         $set: {
           appVersion: status.appVersion,
@@ -141,9 +141,7 @@ async function upsertDeviceStatus(ctx: Ctx, request: LenientPushRequest, receive
 /** `null` when writes are accepted, otherwise the RETRY delay (ARCHITECTURE §7.3, ORG_SUSPENDED). */
 export async function orgPushBackoff(ctx: Ctx, now: Date): Promise<number | null> {
   const db = await getDb();
-  const org = await db
-    .collection<{ _id: string; status?: string; suspendedAt?: Date | null; cancelledAt?: Date | null }>("organizations")
-    .findOne({ _id: ctx.organizationId }, { projection: { status: 1, suspendedAt: 1, cancelledAt: 1 } });
+  const org = await platform(db).organizations.findOne({ _id: ctx.organizationId }, { projection: { status: 1, suspendedAt: 1, cancelledAt: 1 } });
   if (org === null) return null;
   const since = org.status === "SUSPENDED" ? org.suspendedAt : org.status === "CANCELLED" ? org.cancelledAt : undefined;
   if (org.status !== "SUSPENDED" && org.status !== "CANCELLED") return null;

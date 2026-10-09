@@ -315,6 +315,31 @@ describe("field flow", () => {
     expect(await codeOf(db.run((tx) => addPart(tx, ctxOf(PEOPLE.joana, "FIELD"), { id: crypto.randomUUID(), workOrderId: id, name: "x", quantity: 1, unit: "un" }, new Date())))).toBe("FORBIDDEN");
   });
 
+  it("rejects an hour-meter jump unless the technician confirms it, then flags the completion (EC-WO-14)", async () => {
+    const id = await freshJob(432);
+    await walkToInProgress(id);
+    await addAfterPhoto(id);
+    await answerAll(id);
+    const asset = await db.raw("assets").findOne({ _id: seedUuid(432) });
+    const current = asset?.hourMeter as number;
+    const reading = current + 1_000_000;
+    let rejection: { code?: string; details?: Record<string, unknown> } | undefined;
+    try {
+      await db.run((tx) => complete(tx, carlos, completion(id, { hourMeterReading: reading }), meta(90)));
+    } catch (error) {
+      rejection = error as { code?: string; details?: Record<string, unknown> };
+    }
+    expect(rejection?.code).toBe("METER_READING_JUMP");
+    expect(rejection?.details).toMatchObject({ assetId: seedUuid(432), current, reading });
+    expect((await db.raw("work_orders").findOne({ _id: id }))?.status).toBe("IN_PROGRESS");
+
+    await db.run((tx) => complete(tx, carlos, completion(id, { hourMeterReading: reading, confirmMeterJump: true }), meta(90)));
+    expect((await db.raw("work_orders").findOne({ _id: id }))?.status).toBe("COMPLETED");
+    expect((await db.raw("assets").findOne({ _id: seedUuid(432) }))?.hourMeter).toBe(reading);
+    const event = await db.raw("activity_events").findOne({ entityId: id, action: "workOrder.complete" });
+    expect(event?.meta).toMatchObject({ meterJumpConfirmed: true, attention: true });
+  });
+
   it("sets the external cost with If-Match", async () => {
     const id = await freshJob(431);
     const current = await db.raw("work_orders").findOne({ _id: id });

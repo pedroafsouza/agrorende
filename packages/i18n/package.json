@@ -11,6 +11,7 @@
     "./format": "./src/format.ts",
     "./helpUrl": "./src/helpUrl.ts",
     "./pseudo": "./src/pseudo.ts",
+    "./server": "./src/server.ts",
     "./locales/*": "./locales/*"
   },
   "scripts": {

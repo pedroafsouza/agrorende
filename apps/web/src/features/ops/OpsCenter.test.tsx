@@ -8,7 +8,6 @@ import type * as ApiModule from "@/lib/api";
 
 import { OpsCenter } from "./OpsCenter";
 import { OperatorStore } from "./operatorStore";
-import type { OpsSocket } from "./realtime";
 import { intlErrors, renderWithProviders } from "./testing";
 import type { LiveOperatorDTO, OpsAlertDTO, OpsLiveDTO } from "./types";
 
@@ -21,6 +20,46 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/ops",
   useSearchParams: () => new URLSearchParams(navigation.search),
 }));
+
+/*
+ * The Ops Center listens on the shared admin socket (`useRealtimeEvent` / `useRealtimeStatus`);
+ * this fake stands in for it so a test can drive connection state and server events.
+ */
+const realtimeMock = vi.hoisted(() => ({
+  handlers: new Map<string, Set<(payload: unknown) => void>>(),
+  listeners: new Set<() => void>(),
+  status: { state: "connecting" as "connecting" | "connected" | "reconnecting" | "offline", lastMessageAt: null as Date | null, reconnectCount: 0 },
+}));
+
+vi.mock("@/features/shell/useRealtime", async () => {
+  const { useEffect, useRef, useSyncExternalStore } = await import("react");
+  return {
+    useRealtimeEvent: (event: string, handler: (payload: unknown) => void) => {
+      const latest = useRef(handler);
+      useEffect(() => {
+        latest.current = handler;
+      });
+      useEffect(() => {
+        const wrapped = (payload: unknown) => latest.current(payload);
+        const set = realtimeMock.handlers.get(event) ?? new Set();
+        set.add(wrapped);
+        realtimeMock.handlers.set(event, set);
+        return () => {
+          set.delete(wrapped);
+        };
+      }, [event]);
+    },
+    useRealtimeStatus: () =>
+      useSyncExternalStore(
+        (listener: () => void) => {
+          realtimeMock.listeners.add(listener);
+          return () => realtimeMock.listeners.delete(listener);
+        },
+        () => realtimeMock.status,
+        () => realtimeMock.status,
+      ),
+  };
+});
 
 vi.mock("sonner", () => ({ toast: { success: vi.fn(), error: vi.fn() } }));
 
@@ -121,19 +160,17 @@ function setResponses(liveData: OpsLiveDTO, alerts: readonly OpsAlertDTO[] = [])
 }
 
 function fakeSocket() {
-  const listeners = new Map<string, ((payload: unknown) => void)[]>();
-  const socket: OpsSocket = {
-    on: (event, listener) => {
-      listeners.set(event, [...(listeners.get(event) ?? []), listener]);
-    },
-    disconnect: vi.fn(),
+  const setState = (state: typeof realtimeMock.status.state) => {
+    realtimeMock.status = { ...realtimeMock.status, state };
+    for (const listener of realtimeMock.listeners) listener();
   };
   return {
-    factory: () => Promise.resolve(socket),
-    ready: () => waitFor(() => expect(listeners.size).toBeGreaterThan(0)),
+    ready: () => waitFor(() => expect(realtimeMock.handlers.size).toBeGreaterThan(0)),
     emit: (event: string, payload?: unknown) => {
       act(() => {
-        for (const listener of listeners.get(event) ?? []) listener(payload);
+        if (event === "connect") setState("connected");
+        else if (event === "disconnect") setState("reconnecting");
+        else for (const handler of realtimeMock.handlers.get(event) ?? []) handler(payload);
       });
     },
   };
@@ -150,6 +187,8 @@ describe("OpsCenter", () => {
     apiMock.calls.length = 0;
     intlErrors.length = 0;
     clock = 0;
+    realtimeMock.handlers.clear();
+    realtimeMock.status = { state: "connecting", lastMessageAt: null, reconnectCount: 0 };
     vi.stubGlobal("requestAnimationFrame", (cb: (time: number) => void) => setTimeout(() => cb(clock), 0) as unknown as number);
     vi.stubGlobal("cancelAnimationFrame", (handle: number) => clearTimeout(handle));
   });
@@ -164,7 +203,7 @@ describe("OpsCenter", () => {
     setResponses(live([operator()]));
     const socket = fakeSocket();
     const store = new OperatorStore(() => clock);
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} store={store} />);
+    renderWithProviders(<OpsCenter store={store} />);
     await socket.ready();
     await waitFor(() => expect(store.size).toBe(1));
     socket.emit("connect");
@@ -182,8 +221,7 @@ describe("OpsCenter", () => {
 
   it("writes the KPI filter to the URL when a tile is pressed", async () => {
     setResponses(live([operator()]));
-    const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     const tile = await screen.findByRole("button", { name: /SLA at risk/u });
     await userEvent.click(tile);
     expect(navigation.replace).toHaveBeenCalledWith("/ops?kpi=sla_at_risk", { scroll: false });
@@ -191,8 +229,7 @@ describe("OpsCenter", () => {
 
   it("groups 100 alerts behind one keyboard-reachable header without hiding any", async () => {
     setResponses(live([operator()]), Array.from({ length: 100 }, (_, i) => alert(i)));
-    const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     expect(await screen.findByText("Similar alerts were grouped")).toBeTruthy();
     const toggle = await screen.findByRole("button", { name: /Show all 100/u });
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
@@ -207,7 +244,7 @@ describe("OpsCenter", () => {
   it("shows the paused banner with the last update time and clears it on reconnect", async () => {
     setResponses(live([operator()]));
     const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     await socket.ready();
     socket.emit("connect");
     expect(screen.queryByTestId("realtime-paused")).toBeNull();
@@ -225,8 +262,7 @@ describe("OpsCenter", () => {
 
   it("keeps lists usable when the map fails and remounts it on Try again", async () => {
     setResponses(live([operator()]), [alert(1)]);
-    const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     await userEvent.click(await screen.findByRole("button", { name: "break map" }));
     const error = await screen.findByTestId("map-error");
     expect(error.textContent).toContain("Map unavailable right now");
@@ -238,8 +274,7 @@ describe("OpsCenter", () => {
 
   it("explains an empty map when no one is live", async () => {
     setResponses(live([]));
-    const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     expect(await screen.findByText("No one is live right now")).toBeTruthy();
   });
 
@@ -247,8 +282,7 @@ describe("OpsCenter", () => {
     const old = new Date(NOW.getTime() - 20 * 60_000).toISOString();
     setResponses(live([operator({ stale: true, recordedAt: old, lastSeenAt: old })]));
     navigation.search = `operator=${OP_ID}`;
-    const socket = fakeSocket();
-    renderWithProviders(<OpsCenter socketFactory={socket.factory} />);
+    renderWithProviders(<OpsCenter />);
     expect(await screen.findByText("Location is out of date")).toBeTruthy();
     const link = screen.getByRole("link", { name: /See phone sync health/u });
     expect(link.getAttribute("href")).toBe("/team/devices?device=dev-1");

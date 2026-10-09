@@ -13,6 +13,7 @@ import { localMediaUri } from "../../media/capture";
 import { withdrawReport } from "../../sync/mutators/reports";
 import { Banner, BottomSheet, Button, Card, EmptyState, ErrorState, ListItem, Screen, Skeleton, StatusPill, Text, TextField } from "../../ui";
 import { InlineError } from "../../ui/recovery/InlineError";
+import { CommentThread } from "../comments";
 import { formatRelative } from "../sync/format";
 import "./i18n";
 import { canWithdraw, getReportDetail, PRIORITY_TONE, reportFlags, STATUS_TONE } from "./logic";
@@ -122,6 +123,7 @@ export function ReportDetailScreen({ id }: { readonly id: string }) {
       <Text i18nKey="reports.detail.evidence" variant="heading" />
       {localMedia.length === 0 ? <Text i18nKey="reports.detail.noEvidence" tone="secondary" /> : <Thumbnails drafts={localMedia} />}
       {lat !== undefined && lng !== undefined ? <MapPreview destination={{ lat, lng, label: title }} markers={[{ id, lat, lng, label: title }]} /> : null}
+      <CommentThread entityType="FIELD_REPORT" entityId={id} />
       <BottomSheet testID="report-withdraw-sheet" visible={withdrawOpen} onClose={() => setWithdrawOpen(false)} titleKey="reports.detail.withdrawTitle">
         <View style={styles.sheet}>
           <Text i18nKey="reports.detail.withdrawBody" />

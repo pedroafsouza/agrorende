@@ -24,5 +24,69 @@
       "title": "Return due today",
       "body": "{customerName} returns {assetName} today. Open the rental to prepare the inspection."
     }
+  },
+  "WO_ASSIGNED": {
+    "title": "New job assigned",
+    "body": "{title}. Open the job to see the next step."
+  },
+  "WO_UPDATED": {
+    "title": "Job updated",
+    "body": "{title} was updated by the office."
+  },
+  "WO_CANCELLED": {
+    "title": "Job cancelled",
+    "body": "{title} was cancelled. Your photos and notes were kept."
+  },
+  "WO_REASSIGNED_AWAY": {
+    "title": "Job reassigned",
+    "body": "{title} was assigned to someone else. Your data was kept."
+  },
+  "REPORT_CRITICAL": {
+    "title": "Critical report",
+    "body": "{title}. Open the report to decide the next step."
+  },
+  "REPORT_MARKED_FOR_REPAIR": {
+    "title": "Report sent to repair",
+    "body": "{title} is now scheduled for repair."
+  },
+  "RENTAL_DUE_SOON": {
+    "title": "Return due soon",
+    "body": "{title} is due back soon. Prepare the inspection."
+  },
+  "RENTAL_OVERDUE": {
+    "title": "Rental overdue",
+    "body": "{title} is past its return date. Contact the customer."
+  },
+  "SLA_AT_RISK": {
+    "title": "Deadline at risk",
+    "body": "{title} is close to its deadline."
+  },
+  "DEVICE_STALE_SYNC": {
+    "title": "Phone not syncing",
+    "body": "{name}'s phone has data waiting to be sent."
+  },
+  "LATE_EVIDENCE": {
+    "title": "Late evidence received",
+    "body": "New evidence arrived for {title}."
+  },
+  "JOINED_WITH_OTHER_EMAIL": {
+    "title": "Invite accepted",
+    "body": "{name} joined with a different email address."
+  },
+  "COMMENT_ADDED": {
+    "title": "New comment",
+    "body": "{name} commented on {title}."
+  },
+  "EXPORT_READY": {
+    "title": "Export ready",
+    "body": "Your export is ready to download."
+  },
+  "MAINTENANCE_DUE": {
+    "title": "Maintenance due",
+    "body": "{title} needs preventive maintenance."
+  },
+  "LOW_STOCK": {
+    "title": "Low stock",
+    "body": "{title} is running low."
   }
 }

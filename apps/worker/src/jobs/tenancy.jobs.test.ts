@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { loadDbTesting, type Doc, type JobContext, type WorkerLogger, type WorkerPlatform } from "./index.js";
+import { loadDbTesting, workerTable, type Doc, type JobContext, type WorkerLogger, type WorkerPlatform } from "./index.js";
 import { handler as lifecycleHandler } from "./orgs.lifecycle.js";
 import { handler as purgeHandler } from "./orgs.purge.js";
 import { handler as usageHandler } from "./usage.daily.js";
@@ -25,7 +25,7 @@ const CANCELLED_KEEP = "0190f5a0-0000-7000-8000-0000000f0005";
 const NOW = new Date("2026-11-20T06:00:00Z");
 
 interface TestHandle {
-  db: { collection(name: string): { insertMany(docs: Doc[]): Promise<unknown>; insertOne(doc: Doc): Promise<unknown>; findOne(filter: Doc): Promise<Doc | null>; countDocuments(filter: Doc): Promise<number>; find(filter: Doc): { toArray(): Promise<Doc[]> } } };
+  db: unknown;
   drop(): Promise<void>;
 }
 
@@ -64,21 +64,21 @@ function user(id: string, organizationId: string, role: string): Doc {
 beforeAll(async () => {
   handle = (await (await loadDbTesting()).setupTestDb(DB_NAME)) as unknown as TestHandle;
   const ids = [TRIAL_DUE, TRIAL_OK, PAST_DUE_OLD, CANCELLED_DUE, CANCELLED_KEEP];
-  await handle.db.collection("organizations").insertMany([
+  await workerTable(handle.db, "organizations").insertMany([
     org(TRIAL_DUE, { trialEndsAt: new Date(NOW.getTime() - DAY) }),
     org(TRIAL_OK, { trialEndsAt: new Date(NOW.getTime() + DAY) }),
     org(PAST_DUE_OLD, { status: "PAST_DUE", pastDueAt: new Date(NOW.getTime() - 15 * DAY) }),
     org(CANCELLED_DUE, { status: "CANCELLED", cancelledAt: new Date(NOW.getTime() - 91 * DAY), purgeAfter: new Date(NOW.getTime() - DAY) }),
     org(CANCELLED_KEEP, { status: "CANCELLED", cancelledAt: new Date(NOW.getTime() - 30 * DAY), purgeAfter: new Date(NOW.getTime() + 60 * DAY) }),
   ]);
-  await handle.db.collection("sync_counters").insertMany(ids.map((id) => ({ _id: id, value: 1, horizonVersion: 0 })));
-  await handle.db.collection("users").insertMany([
+  await workerTable(handle.db, "sync_counters").insertMany(ids.map((id) => ({ _id: id, value: 1, horizonVersion: 0 })));
+  await workerTable(handle.db, "users").insertMany([
     user("0190f5a0-0000-7000-8000-0000000e0001", TRIAL_OK, "ADMIN"),
     user("0190f5a0-0000-7000-8000-0000000e0002", TRIAL_OK, "FIELD"),
     user("0190f5a0-0000-7000-8000-0000000e0003", CANCELLED_DUE, "ADMIN"),
     user("0190f5a0-0000-7000-8000-0000000e0004", CANCELLED_KEEP, "ADMIN"),
   ]);
-  await handle.db.collection("assets").insertMany([
+  await workerTable(handle.db, "assets").insertMany([
     { _id: "0190f5a0-0000-7000-8000-0000000d0001", organizationId: TRIAL_OK, deletedAt: null },
     { _id: "0190f5a0-0000-7000-8000-0000000d0002", organizationId: CANCELLED_DUE, deletedAt: null },
   ]);
@@ -99,32 +99,32 @@ describe("T20 worker jobs", () => {
   it("usage.daily writes one row per organisation and month, isolated per tenant", async () => {
     await usageHandler(ctx(), { name: "usage.daily", data: {} });
     await usageHandler(ctx(), { name: "usage.daily", data: {} });
-    const rows = await handle.db.collection("org_usage").find({ organizationId: TRIAL_OK }).toArray();
+    const rows = await workerTable(handle.db, "org_usage").find({ organizationId: TRIAL_OK }).toArray();
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ month: "2026-11-01", activeFieldUsers: 1, officeUsers: 1, assetCount: 1 });
-    expect(await handle.db.collection("org_usage").findOne({ organizationId: TRIAL_DUE })).toMatchObject({ activeFieldUsers: 0, officeUsers: 0, assetCount: 0 });
+    expect(await workerTable(handle.db, "org_usage").findOne({ organizationId: TRIAL_DUE })).toMatchObject({ activeFieldUsers: 0, officeUsers: 0, assetCount: 0 });
   });
 
   it("orgs.lifecycle moves expired trials to PAST_DUE and 14-day PAST_DUE to SUSPENDED", async () => {
     const result = await lifecycleHandler(ctx(), { name: "orgs.lifecycle", data: {} });
     expect(result).toEqual({ changed: 2 });
-    expect((await handle.db.collection("organizations").findOne({ _id: TRIAL_DUE }))?.status).toBe("PAST_DUE");
-    expect((await handle.db.collection("organizations").findOne({ _id: TRIAL_OK }))?.status).toBe("TRIAL");
-    expect((await handle.db.collection("organizations").findOne({ _id: PAST_DUE_OLD }))?.status).toBe("SUSPENDED");
-    expect(await handle.db.collection("event_outbox").countDocuments({ type: "org:status" })).toBe(2);
+    expect((await workerTable(handle.db, "organizations").findOne({ _id: TRIAL_DUE }))?.status).toBe("PAST_DUE");
+    expect((await workerTable(handle.db, "organizations").findOne({ _id: TRIAL_OK }))?.status).toBe("TRIAL");
+    expect((await workerTable(handle.db, "organizations").findOne({ _id: PAST_DUE_OLD }))?.status).toBe("SUSPENDED");
+    expect(await workerTable(handle.db, "event_outbox").countDocuments({ type: "org:status" })).toBe(2);
   });
 
   it("orgs.purge removes only CANCELLED organisations past purgeAfter, including their media", async () => {
     const result = await purgeHandler(ctx(), { name: "orgs.purge", data: {} });
     expect(result).toEqual({ purged: 1 });
-    expect(await handle.db.collection("organizations").findOne({ _id: CANCELLED_DUE })).toBeNull();
-    expect(await handle.db.collection("users").countDocuments({ organizationId: CANCELLED_DUE })).toBe(0);
-    expect(await handle.db.collection("assets").countDocuments({ organizationId: CANCELLED_DUE })).toBe(0);
-    expect(await handle.db.collection("organizations").findOne({ _id: CANCELLED_KEEP })).not.toBeNull();
-    expect(await handle.db.collection("users").countDocuments({ organizationId: CANCELLED_KEEP })).toBe(1);
+    expect(await workerTable(handle.db, "organizations").findOne({ _id: CANCELLED_DUE })).toBeNull();
+    expect(await workerTable(handle.db, "users").countDocuments({ organizationId: CANCELLED_DUE })).toBe(0);
+    expect(await workerTable(handle.db, "assets").countDocuments({ organizationId: CANCELLED_DUE })).toBe(0);
+    expect(await workerTable(handle.db, "organizations").findOne({ _id: CANCELLED_KEEP })).not.toBeNull();
+    expect(await workerTable(handle.db, "users").countDocuments({ organizationId: CANCELLED_KEEP })).toBe(1);
     const folders = await readdir(path.join(MEDIA_ROOT, "org"));
     expect(folders).not.toContain(CANCELLED_DUE);
     expect(folders).toContain(CANCELLED_KEEP);
-    expect(await handle.db.collection("platform_audit_events").countDocuments({ organizationId: CANCELLED_DUE, action: "org.purge" })).toBe(1);
+    expect(await workerTable(handle.db, "platform_audit_events").countDocuments({ organizationId: CANCELLED_DUE, action: "org.purge" })).toBe(1);
   });
 });

@@ -18,7 +18,7 @@ export interface SlaScanSummary {
 
 async function officeIds(ctx: JobContext, orgId: string): Promise<string[]> {
   const rows = await ctx.platform
-    .collection("users")
+    .table("users")
     .find({ organizationId: orgId, role: { $in: ["ADMIN", "MANAGER"] }, isActive: true, deletedAt: null }, { projection: { _id: 1 } })
     .toArray();
   return rows.map((row) => String(row._id));
@@ -29,7 +29,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ atRisk: numb
   const orgId = String(org._id);
   const settings = slaSettingsOf(org.settings);
   const rows = await ctx.platform
-    .collection("work_orders")
+    .table("work_orders")
     .find(
       {
         organizationId: orgId,
@@ -60,7 +60,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ atRisk: numb
     if (due === null) continue;
     const field = due === "BREACHED" ? "slaBreachedAt" : "slaAtRiskNotifiedAt";
     const syncVersion = await ctx.platform.nextSyncVersion(orgId);
-    const claimed = await ctx.platform.collection("work_orders").updateOne(
+    const claimed = await ctx.platform.table("work_orders").updateOne(
       { _id: row._id, organizationId: orgId, [field]: null },
       { $set: { [field]: ctx.now, ...(due === "BREACHED" && row.slaAtRiskNotifiedAt == null ? { slaAtRiskNotifiedAt: ctx.now } : {}), syncVersion, updatedAt: ctx.now } },
     );
@@ -83,7 +83,7 @@ export async function scanOrg(ctx: JobContext, org: Doc): Promise<{ atRisk: numb
 
 export const handler: JobHandler = async (ctx) => {
   const orgs = await ctx.platform
-    .collection("organizations")
+    .table("organizations")
     .find({ status: { $nin: ["SUSPENDED", "CANCELLED"] }, deletedAt: null }, { projection: { _id: 1, settings: 1 } })
     .toArray();
   let atRisk = 0;

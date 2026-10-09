@@ -3,15 +3,15 @@ import { Package, Plus, Trash2 } from "lucide-react-native";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { useLocale } from "../../i18n/useT";
-import { errorCodeOf } from "../../lib/errors";
-import { useServices } from "../../lib/services";
-import { addPart, removePart } from "../../sync/mutators/jobs";
-import { BottomSheet, Button, Card, EmptyState, ErrorState, IconButton, ListItem, NumberField, Screen, Skeleton, Text, TextField, showToast } from "../../ui";
-import { InlineError } from "../../ui/recovery/InlineError";
-import "./i18n";
-import { parseCents, partsTotalCents, validatePart, type PartDraft } from "./logic";
-import { useJob } from "./useJob";
+import { useLocale } from "../../../i18n/useT";
+import { errorCodeOf } from "../../../lib/errors";
+import { useServices } from "../../../lib/services";
+import { addPart, removePart } from "../../../sync/mutators/jobs";
+import { BottomSheet, Button, Card, EmptyState, ErrorState, IconButton, ListItem, NumberField, Screen, Skeleton, Text, TextField, showToast } from "../../../ui";
+import { InlineError } from "../../../ui/recovery/InlineError";
+import "../i18n";
+import { parseCents, partsTotalCents, validatePart, type PartDraft } from "../logic";
+import { useJob } from "../useJob";
 
 const EDITABLE: readonly WorkOrderStatus[] = ["ON_SITE", "IN_PROGRESS", "ON_HOLD", "COMPLETED"];
 const EMPTY: PartDraft = { name: "", quantity: 1, unit: "un", unitCost: "" };

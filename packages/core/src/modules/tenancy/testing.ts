@@ -1,17 +1,15 @@
 import { closeClient } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { SEED } from "../../auth/testing/seeded.js";
+import { rawCollection, SEED, type RawCollection } from "../../auth/testing/seeded.js";
 
 export { SEED, seedCtx } from "../../auth/testing/seeded.js";
 
 export type Row = { _id: string } & Record<string, unknown>;
 
-const rawOf = (db: TestDbHandle["db"], name: string) => db.collection<Row>(name);
-
 export interface TenancyTestDb {
   readonly handle: TestDbHandle;
-  raw(name: string): ReturnType<typeof rawOf>;
+  raw(name: string): RawCollection;
   close(): Promise<void>;
 }
 
@@ -30,7 +28,7 @@ export async function createTenancyDb(suffix: string): Promise<TenancyTestDb> {
   await seed.seedDatabase(handle.db, { force: true });
   return {
     handle,
-    raw: (collectionName: string) => rawOf(handle.db, collectionName),
+    raw: (collectionName) => rawCollection(handle.db, collectionName),
     close: async () => {
       await handle.drop();
       await closeClient();

@@ -1,4 +1,5 @@
 import type { HoldReason, Role, WorkOrderStatus } from "@agrorende/contracts/enums";
+import type { WorkOrderCompletePayload } from "@agrorende/contracts/mutations";
 import { useRouter } from "expo-router";
 import { ClipboardCheck, FileQuestion, MapPin, Navigation, Package, Phone, Tractor, Wrench } from "lucide-react-native";
 import { useState, useSyncExternalStore } from "react";
@@ -10,12 +11,15 @@ import type { AppErrorCode } from "@agrorende/contracts/errors";
 import { errorCodeOf } from "../../lib/errors";
 import { openNavigation } from "../../lib/navigation";
 import { useServices } from "../../lib/services";
-import { transitionWorkOrder } from "../../sync/mutators/jobs";
+import { completeWorkOrder, transitionWorkOrder } from "../../sync/mutators/jobs";
 import { Banner, BottomSheet, Button, Card, Chip, EmptyState, ErrorState, ListItem, Screen, Skeleton, StatusPill, Text, TextField, showToast } from "../../ui";
 import { ErrorSheet } from "../../ui/recovery/ErrorSheet";
 import { InlineError } from "../../ui/recovery/InlineError";
+import { CommentThread } from "../comments";
 import { loadUserSettings } from "../settings/logic";
 import "./i18n";
+import { replaceRejected } from "./meterJump";
+import { MeterJumpReview, type MeterJumpResubmit } from "./MeterJumpReview";
 import { ACTION_LABEL, actionPlan, checklistOf, HOLD_REASONS, jobDestination, jobNotice, PRIORITY_TONE, STATUS_TONE, type JobStep } from "./logic";
 import { useJob } from "./useJob";
 
@@ -27,7 +31,7 @@ const NOTICE_TONE: Readonly<Partial<Record<AppErrorCode, "warning" | "error" | "
 /** Job detail (WO-04, WO-05): one primary action from the state machine, navigation, links to checklist, parts and completion. */
 export function JobDetailScreen({ id }: { readonly id: string }) {
   const router = useRouter();
-  const { userId, db } = useServices();
+  const { userId, db, now } = useServices();
   const role = useSyncExternalStore(authStore.subscribe, authStore.getState).user?.role as Role | undefined;
   const query = useJob(id);
   const [sheet, setSheet] = useState<"decline" | "hold" | undefined>();
@@ -47,7 +51,7 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
     );
   }
 
-  const { workOrder: wo, asset, site, customer, parts, localMedia } = query.data;
+  const { workOrder: wo, asset, site, customer, parts, localMedia, meterJump } = query.data;
   const status = String(wo.status ?? "ASSIGNED") as WorkOrderStatus;
   const priority = String(wo.priority ?? "MEDIUM") as keyof typeof PRIORITY_TONE;
   const plan = actionPlan({ status, assigneeId: typeof wo.assigneeId === "string" ? wo.assigneeId : null, holdReason: (wo.holdReason as HoldReason | null) ?? null }, userId, role);
@@ -127,6 +131,24 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
         )
       }
     >
+      {meterJump === undefined || db === undefined ? null : (
+        <MeterJumpReview
+          ns="jobs"
+          testID="job-meter-jump"
+          conflict={meterJump}
+          onResubmit={({ reading, confirmJump }: MeterJumpResubmit) =>
+            replaceRejected(
+              db,
+              meterJump,
+              () => {
+                const { confirmMeterJump: _previous, ...rest } = meterJump.payload as WorkOrderCompletePayload;
+                return completeWorkOrder({ ...rest, ...(reading === null ? {} : { hourMeterReading: reading }), ...(confirmJump ? { confirmMeterJump: true } : {}) });
+              },
+              new Date(now?.() ?? Date.now()).toISOString(),
+            )
+          }
+        />
+      )}
       <Card>
         <Text variant="caption" tone="secondary">{typeof wo.number === "string" ? wo.number : ""}</Text>
         <Text variant="heading">{String(wo.title ?? "")}</Text>
@@ -164,6 +186,7 @@ export function JobDetailScreen({ id }: { readonly id: string }) {
         </Card>
       ) : null}
       {status === "IN_PROGRESS" ? <ListItem testID="job-open-complete" icon={Wrench} titleKey="jobs.actions.complete" subtitleKey="jobs.detail.completeHint" onPress={() => router.push(`/jobs/${id}/complete`)} /> : null}
+      <CommentThread entityType="WORK_ORDER" entityId={id} />
 
       <BottomSheet testID={`job-sheet-${sheet ?? "none"}`} visible={sheet !== undefined} onClose={() => setSheet(undefined)} titleKey={sheet === "decline" ? "jobs.decline.title" : "jobs.hold.title"}>
         {sheet === "hold" ? (

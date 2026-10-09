@@ -14,6 +14,7 @@
 
 ### Changelog
 
+- **v1.2.1 (2026-10-09):** T10 merged the error cases proposed in the W2/W3 progress files (T02, T05, T07, T08) into the existing entries EC-PLT-31, EC-PLT-42, EC-SYN-22, EC-SYN-28, EC-WO-14 and EC-RN-13; `WO_DECLINE_REASON_REQUIRED` was already catalogued as EC-WO-02. None needed a new user-facing code, so the entry and code counts are unchanged. `APPLE_REVOKE_FAILED` is recorded as an internal job failure reason, not as a catalogued code.
 - **v1.2 (2026-10-08):** MongoDB 8 replaces PostgreSQL/Prisma for the MVP; pnpm workspaces replace Turborepo; visual direction and single palette; review fixes (round 5).
 - **v1.1 (2026-10-08):** Round 4: multi-tenant SaaS (self-service sign-up, trial, subscription status, platform console), sign-in with Google, Apple or invite + password, three roles (ADMIN, MANAGER, FIELD).
 - **v1.0 (2026-10-08):** consolidated the five draft catalogs, applied the final gap decisions, deduplicated cross-area cases and produced the build-ready code index.
@@ -370,7 +371,7 @@ Worked example:
 - **Detected by:** `DIAGNOSTICS_SEND_FAILED` (client) — runtime check for this case.
 - **User sees:** banner. pt-BR: "Diagnóstico guardado" / "Vamos tentar enviar depois. Ele não inclui conteúdo dos formulários nem dados pessoais." en: "Diagnostics saved" / "We will try to send it later. It does not include form contents or personal data."
 - **Recovery:** `AUTO` (queue for later), `RETRY` (Try again), `OFFICE`.
-- **Data safety:** diagnostics are redacted; user work and PII are not included.
+- **Data safety:** diagnostics are redacted; user work and PII are not included. A diagnostics upload over 256 KB is rejected by the server with `VALIDATION_FAILED` (422) before redaction runs; the client then drops the oldest diagnostics rows and retries automatically, so the user still sees only this banner.
 - **Office sees:** queued diagnostics appear on the device page once sent.
 - **Priority / owner:** P0 · T03 · refs REC-08, A§21, A§7.10.
 - **Test:** diagnostics test: offline send queues redacted payload ≤ 256 KB and later retry creates a device diagnostic.
@@ -481,7 +482,7 @@ Worked example:
 - **User sees:** sheet. pt-BR: "Há itens para enviar" / "Envie agora ou salve uma cópia antes de excluir a conta. Nada será descartado neste aparelho." en: "Items are waiting to send" / "Send them now or save a copy before deleting the account. Nothing will be discarded on this device."
 - **Recovery:** `RETRY` (Enviar agora), `FIX` (Salvar cópia).
 - **Data safety:** the device refuses account deletion while the outbox or media queue is not empty; no local pending item is discarded. Server `DELETE /auth/me` anonymizes only after the device is clear.
-- **Office sees:** synced work if the user sends first; otherwise no deletion proceeds from this device until pending data is cleared or copied.
+- **Office sees:** synced work if the user sends first; otherwise no deletion proceeds from this device until pending data is cleared or copied. After deletion, the `auth.appleRevoke` job revokes the Apple token with retries; when all 5 attempts fail, the job stays in the BullMQ failed set with the internal reason `APPLE_REVOKE_FAILED` and the Apple identity is not deleted. Support retries the job (recovery `OFFICE`); this reason is not a catalogued code and the user sees no message.
 - **Priority / owner:** P0 · T03/T02/T12 · refs PLT-21, PLT-22, O15, A§8, A§11, A§13.
 - **Test:** account deletion with pending items shows Enviar agora and Salvar cópia, keeps the delete action disabled, and asserts no pending local item is discarded.
 
@@ -713,7 +714,7 @@ Worked example:
 - **User sees:** Sync Center banner. pt-BR: "Envio de arquivos pausado" / "Seus arquivos estão guardados no aparelho. Vamos tentar de novo quando houver espaço." en: "File sending paused" / "Your files are safe on this device. We’ll try again when there is room."
 - **Recovery:** `AUTO` (retry with long backoff), `RETRY` (Try now), `OFFICE`.
 - **Data safety:** media remains queued locally; server partials are cleaned by worker only after safe age.
-- **Office sees:** operations alert/health check for media storage; media remains PENDING.
+- **Office sees:** operations alert/health check for media storage; media remains PENDING. `GET /health` reports `media: false` when `MEDIA_ROOT` is not writable but keeps HTTP 200 while the database is up, so operators check the disk (T13 runbook).
 - **Priority / owner:** P0 · T03 · refs A§7.7, A§8, A§10, A§11.
 - **Test:** T02 storage test forces 507; chaos T12 confirms retryable queue state and no FAILED status.
 
@@ -772,7 +773,7 @@ Worked example:
 - **Detected by:** `LOCATION_BUFFER_TRIMMED` (client) — runtime check for this case.
 - **User sees:** duty banner. pt-BR: "Muitas posições guardadas" / "Seu trabalho está seguro. O app mantém as posições mais recentes e avisa a central se faltar trecho." en: "Many locations saved" / "Your work is safe. The app keeps the most recent locations and tells the office if a section is missing."
 - **Recovery:** `AUTO` (flush/compress/trim oldest low-value fixes), `HANDOFF` (office sees gap), `FALLBACK`.
-- **Data safety:** work records are unaffected; location trail may be summarized but never blocks field work.
+- **Data safety:** work records are unaffected; location trail may be summarized but never blocks field work. When the realtime gateway rejects a `location:batch` (validation failure, device not ON_DUTY or a database error) it nacks with `{ ok: false, code }`; the device keeps those fixes in `location_buffer` and sends them through the REST fallback (recovery `AUTO`, no user message), so only repeated rejections can grow the buffer toward this limit.
 - **Office sees:** trail gap marker and device alert; no false live position.
 - **Priority / owner:** P0 · T03 · refs OFF-09, A§7.8, A§7.10.
 - **Test:** chaos T12: fill location buffer beyond limit, assert bounded storage, newer fixes kept, office gap marker emitted, and duty stays usable.
@@ -1165,7 +1166,7 @@ Worked example:
 - **When:** completion hour meter is lower than the last known reading or jumps beyond `elapsedHours × 24`.
 - **Detected by:** `METER_READING_LOWER` / `METER_READING_JUMP` (server, new, HTTP 409) — client pre-check and server reading guard.
 - **User sees:** sheet. pt-BR: "Confira o horímetro" / "A OS está salva. Corrija a leitura, confirme o salto ou marque troca de medidor com foto." en: "Check the hour meter" / "The job is saved. Fix the reading, confirm the jump or mark that the meter was replaced with a photo."
-- **Recovery:** `FIX` (Edit reading), `ALT` (Meter was replaced with required photo; Confirm big jump), `OFFICE`.
+- **Recovery:** `FIX` (Edit reading), `ALT` (Meter was replaced with required photo; Confirm big jump, which resubmits with `confirmMeterJump`), `OFFICE`.
 - **Data safety:** completion stays as a draft until the reading is corrected or explicitly explained; master readings are not lowered automatically.
 - **Office sees:** activity note for ignored/lowered reading, confirmed jump or meter-replacement flag for review.
 - **Priority / owner:** P0 · T07 · refs WO-10, A§6.4 readings are monotonic.
@@ -1369,7 +1370,7 @@ Worked example:
 - **User sees:** sheet. `checkout` pt-BR: "Assinatura pendente na entrega" / "A entrega fica salva como rascunho até o cliente ou representante assinar." en: "Hand-over signature pending" / "The hand-over stays saved as a draft until the customer or representative signs." `checkin` pt-BR: "Assinatura pendente na devolução" / "A devolução está salva. Registre o motivo para finalizar sem assinatura." en: "Return signature pending" / "The return is saved. Record the reason to finish without a signature."
 - **Recovery:** `RETRY` (open pad again), `ALT` (representative signer or absence/refusal reason), `DRAFT`, `OFFICE`.
 - **Data safety:** check-out without a customer or representative signature remains a draft; check-in may finish with absent/refused reason and disputed damages marked not acknowledged.
-- **Office sees:** signer status, reason, representative data when used, or 48 h dispute window for return damages.
+- **Office sees:** signer status, reason, representative data when used, or 48 h dispute window for return damages. A check-in with new damages and an `ABSENT` or `REFUSED` signature writes the `rental.damagesNotAcknowledged` attention activity; the office reviews the damages within the 48 h dispute window.
 - **Priority / owner:** P0 · T08 · refs RN-04, RN-07, RN-08, G4.2, O27.
 - **Test:** component tests: `checkout` absent/refused cannot complete and saves draft; `checkin` absent/refused completes with reason and dispute marker.
 
