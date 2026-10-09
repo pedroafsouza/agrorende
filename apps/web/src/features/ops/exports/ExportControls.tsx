@@ -97,7 +97,7 @@ export function ExportJobCard({ jobId, initial, onReady }: { readonly jobId: str
       ) : null}
       {job.status === "READY" && job.downloadUrl !== null ? (
         <div className="mt-3 flex flex-wrap items-center gap-2">
-          <a className="inline-flex min-h-12 items-center gap-2 rounded-controls bg-[var(--ar-primary)] px-4 font-semibold text-white hover:bg-[var(--ar-primary-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]" download href={job.downloadUrl}>
+          <a className="inline-flex min-h-12 items-center gap-2 rounded-controls bg-[var(--ar-primary)] px-4 font-semibold text-[var(--ar-on-primary)] hover:bg-[var(--ar-primary-hover)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]" download href={job.downloadUrl}>
             <Download aria-hidden="true" className="size-4" />
             {t("download")}
           </a>

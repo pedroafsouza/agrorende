@@ -133,7 +133,7 @@ async function finishCallback(provider: OAuthProviderId, request: Request, value
     headers.append("set-cookie", serializeCookie(REFRESH_COOKIE, session.refreshToken, { path: REFRESH_COOKIE_PATH, maxAgeS: REFRESH_TOKEN_TTL_MS / 1000 }));
     return redirect(outcome.location, headers);
   } catch (error) {
-    return redirect(errorRedirect(state, redirectCode(error)), headers);
+    return redirect(errorRedirect(state, redirectCode(error), error instanceof AppError ? error.details : undefined), headers);
   }
 }
 

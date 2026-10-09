@@ -5,7 +5,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { decryptAppleRefreshToken, revokeAppleRefreshToken } from "./apple.js";
 import { platformApi } from "./api/index.js";
 import { setAuthConfigForTests } from "./config.js";
-import { readOAuthState } from "./oauth.js";
+import { errorRedirect, readOAuthState } from "./oauth.js";
 import { setOAuthConfigForTests } from "./oidc.js";
 import { memoryRateLimiter, setRateLimiter } from "./rateLimit.js";
 import { mockIdToken, mockProviderLogin, type MockCallback } from "./testing/mockOidc.js";
@@ -206,6 +206,16 @@ describe("Google web flow", () => {
     const again = await start("google", { intent: "login" });
     const second = await mockProviderLogin(again.authorizeUrl, { sub: subject, email });
     expect((await callback("google", second, again.cookie)).headers.get("location")).toBe(`${BASE}/`);
+  });
+
+  it("forwards the invite role and masked e-mail for INVITE_EMAIL_MISMATCH on the web only", () => {
+    const details = { role: "MANAGER", emailHint: "o***@example.com", internal: "dropped" };
+    expect(errorRedirect({ client: "web", appRedirectUri: null, intent: "invite" }, "INVITE_EMAIL_MISMATCH", details)).toBe(
+      `${BASE}/login?error=INVITE_EMAIL_MISMATCH&role=MANAGER&emailHint=o***%40example.com`,
+    );
+    expect(errorRedirect({ client: "app", appRedirectUri: "agrorende://oauth", intent: "invite" }, "INVITE_EMAIL_MISMATCH", details)).toBe(
+      "agrorende://oauth?error=INVITE_EMAIL_MISMATCH",
+    );
   });
 
   it("redirects a web start without the invite code back to /login", async () => {

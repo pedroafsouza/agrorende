@@ -47,7 +47,7 @@ export function KpiStrip({ kpis, active, onSelect, range, onRange }: KpiStripPro
           {KPI_RANGE_OPTIONS.map((r) => (
             <button
               aria-pressed={range === r}
-              className="min-h-12 rounded-controls px-3 text-sm font-semibold aria-pressed:bg-[var(--ar-primary)] aria-pressed:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
+              className="min-h-12 rounded-controls px-3 text-sm font-semibold aria-pressed:bg-[var(--ar-primary)] aria-pressed:text-[var(--ar-on-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
               key={r}
               onClick={() => onRange(r)}
               type="button"

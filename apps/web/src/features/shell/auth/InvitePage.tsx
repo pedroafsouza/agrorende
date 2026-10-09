@@ -19,7 +19,7 @@ import { MIN_PASSWORD, PasswordField } from "./PasswordField";
 
 /** Shape returned by `GET /auth/invites/:code` (T02). Fields are optional so a thinner payload still renders. */
 export interface InviteLookup {
-  readonly orgName?: string;
+  readonly organizationName?: string;
   readonly name?: string | null;
   readonly email?: string | null;
   readonly role?: "ADMIN" | "MANAGER" | "FIELD";
@@ -73,7 +73,7 @@ export function InvitePage({ code }: { readonly code: string }) {
   return (
     <AuthCard
       brand={admin("shell.brand")}
-      subtitle={t("invite.subtitle", { org: invite.orgName ?? "", role: invite.role === undefined ? "" : admin(`roles.${invite.role}`) })}
+      subtitle={t("invite.subtitle", { org: invite.organizationName ?? "", role: invite.role === undefined ? "" : admin(`roles.${invite.role}`) })}
       title={invite.name === null || invite.name === undefined ? t("invite.title") : t("invite.greeting", { name: invite.name })}
     >
       {invite.role === "FIELD" ? <p className="rounded-cards bg-[var(--ar-info-bg)] p-3 text-[var(--ar-info-text)]">{t("invite.fieldHint")}</p> : null}

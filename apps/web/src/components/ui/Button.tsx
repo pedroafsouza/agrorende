@@ -12,7 +12,7 @@ export const buttonVariants = cva(
         primary: "bg-[var(--ar-primary)] text-[var(--ar-on-primary)] hover:bg-[var(--ar-primary-hover)]",
         secondary: "border border-[var(--ar-border-strong)] bg-[var(--ar-surface)] text-[var(--ar-text)] hover:bg-[var(--ar-surface-muted)]",
         ghost: "text-[var(--ar-text)] hover:bg-[var(--ar-surface-muted)]",
-        danger: "bg-[var(--ar-danger)] text-white hover:opacity-90",
+        danger: "bg-[var(--ar-danger)] text-[var(--ar-on-danger)] hover:opacity-90",
         link: "min-h-0 px-0 text-[var(--ar-link)] underline-offset-4 hover:underline",
       },
       size: {

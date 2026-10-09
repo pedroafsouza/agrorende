@@ -260,13 +260,26 @@ export async function peekOAuthState(stateToken: string | null, now: Date = new 
 }
 
 /** Where an error goes: the app deep link, the sign-up start page or the web login page. */
-export function errorRedirect(state: Pick<OAuthState, "client" | "appRedirectUri" | "intent"> | null, code: OAuthRedirectCode): string {
+/** Error details the web pages need to word the message (EC-PLT-36: "This {role} invite is for {emailHint}"). */
+const WEB_ERROR_DETAILS = ["role", "emailHint"] as const;
+
+export function errorRedirect(
+  state: Pick<OAuthState, "client" | "appRedirectUri" | "intent"> | null,
+  code: OAuthRedirectCode,
+  details?: unknown,
+): string {
   if (state !== null && state.client === "app" && state.appRedirectUri !== null) {
     const separator = state.appRedirectUri.includes("?") ? "&" : "?";
     return `${state.appRedirectUri}${separator}error=${encodeURIComponent(code)}`;
   }
   const page = state?.intent === "signup" ? "/signup" : "/login";
-  return absoluteAppUrl(`${page}?error=${encodeURIComponent(code)}`);
+  const query = new URLSearchParams({ error: code });
+  const record = typeof details === "object" && details !== null ? (details as Readonly<Record<string, unknown>>) : {};
+  for (const key of WEB_ERROR_DETAILS) {
+    const value = record[key];
+    if (typeof value === "string" && value.length > 0) query.set(key, value);
+  }
+  return absoluteAppUrl(`${page}?${query.toString()}`);
 }
 
 // ---------------------------------------------------------------------------------------------

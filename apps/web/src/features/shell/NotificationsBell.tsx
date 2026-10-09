@@ -19,7 +19,7 @@ export function NotificationsBell() {
     <Link aria-label={t("shell.notificationsLabel", { count })} className="relative flex size-12 items-center justify-center rounded-controls hover:bg-[var(--ar-surface-muted)]" href="/notifications">
       <Bell aria-hidden="true" className="size-5" />
       {count > 0 ? (
-        <span aria-hidden="true" className="absolute right-1 top-1 min-w-5 rounded-full bg-[var(--ar-danger)] px-1 text-center text-xs font-bold text-white">
+        <span aria-hidden="true" className="absolute right-1 top-1 min-w-5 rounded-full bg-[var(--ar-danger)] px-1 text-center text-xs font-bold text-[var(--ar-on-danger)]">
           {count > 99 ? "99+" : count}
         </span>
       ) : null}

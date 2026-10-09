@@ -120,9 +120,48 @@ jobs:
   e2e:
     name: e2e
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    if: ${{ vars.ENABLE_E2E == 'true' }}
+    timeout-minutes: 45
     needs: build
     steps:
-      - name: E2E disabled until T11
-        run: echo "E2E is enabled by T11."
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      # @playwright/test and @axe-core/playwright are web devDependencies (change request T11-001).
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter web exec playwright install --with-deps chromium
+
+      # Playwright starts its own isolated stack (web :3100, realtime :4101, mock OIDC :4103,
+      # database agrorende_e2e, media .data/media-e2e); only MongoDB and Redis come from compose.
+      - name: Start local services
+        run: docker compose up -d --wait mongo redis
+
+      - name: Run Playwright
+        env:
+          MONGODB_DB: agrorende_e2e
+          MEDIA_ROOT: ./.data/media-e2e
+        run: pnpm --filter web exec playwright test
+
+      - name: Upload Playwright results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-results
+          path: |
+            .data/e2e-results/**
+            .data/reviews/T11/**
+            apps/web/junit-e2e.xml
+          if-no-files-found: ignore

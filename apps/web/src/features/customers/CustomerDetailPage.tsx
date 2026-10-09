@@ -22,7 +22,7 @@ import { api, isApiError } from "@/lib/api";
 import type { ListPage } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
 
-import { CustomerFields, customerBody, customerFormValues } from "./CustomerForm";
+import { changedFields, CustomerFields, customerBody, customerFormValues } from "./CustomerForm";
 
 export function CustomerDetailPage({ id }: { readonly id: string }) {
   const t = useTranslations("assets");
@@ -32,6 +32,8 @@ export function CustomerDetailPage({ id }: { readonly id: string }) {
   const sites = useQuery({ queryKey: ["sites", { customerId: id }], queryFn: () => api<ListPage<SiteDTO>>("/sites", { query: { customerId: id, limit: 50 } }) });
   const [editing, setEditing] = useState(false);
   const [values, setValues] = useState(customerFormValues());
+  // The values the edit started from, so "Keep mine" re-applies only what this user changed (EC-OPS-05).
+  const [base, setBase] = useState(customerFormValues());
   const [deleting, setDeleting] = useState(false);
   const [save, saveState] = useSave("customers", (body: Record<string, unknown>, version: string) => api<CustomerDTO>(`/customers/${id}`, { method: "PATCH", body, version }), () => {
     setEditing(false);
@@ -51,7 +53,7 @@ export function CustomerDetailPage({ id }: { readonly id: string }) {
       <PageHeader
         actions={
           <>
-            <Button icon={<Pencil aria-hidden="true" className="size-4" />} onClick={() => { setValues(initial); saveState.reset(); setEditing(true); }}>
+            <Button icon={<Pencil aria-hidden="true" className="size-4" />} onClick={() => { setValues(initial); setBase(initial); saveState.reset(); setEditing(true); }}>
               {common("actions.edit")}
             </Button>
             <Button busy={archiveState.busy} icon={archived ? <ArchiveRestore aria-hidden="true" className="size-4" /> : <Archive aria-hidden="true" className="size-4" />} onClick={() => void archive(!archived, c.syncVersion)}>
@@ -113,7 +115,7 @@ export function CustomerDetailPage({ id }: { readonly id: string }) {
         busy={saveState.busy}
         dirty
         error={saveState.error}
-        errorAction={saveState.conflict ? <ConflictActions onKeepMine={() => void query.refetch().then((r) => (r.data === undefined ? undefined : save(customerBody(values, initial), r.data.syncVersion)))} onUseTheirs={() => { setEditing(false); void query.refetch(); }} /> : undefined}
+        errorAction={saveState.conflict ? <ConflictActions onKeepMine={() => void query.refetch().then((r) => (r.data === undefined ? undefined : save(changedFields(customerBody(values, base), customerBody(base)), r.data.syncVersion)))} onUseTheirs={() => { setEditing(false); void query.refetch(); }} /> : undefined}
         formId="customer-edit"
         onClose={() => setEditing(false)}
         onSubmit={() => void save(customerBody(values, initial), c.syncVersion)}

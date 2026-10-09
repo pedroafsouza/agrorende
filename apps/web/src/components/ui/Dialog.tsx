@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useId, useRef, type ReactNode } from "react";
 
 import { cn } from "@/lib/cn";
 
@@ -21,6 +21,9 @@ export interface DialogProps {
 /** Native `<dialog>` modal: focus trap, Escape and inert background come from the platform. */
 export function Dialog({ open, onClose, title, description, closeLabel, children, footer, size = "md", dismissible = true }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
+  // Unique ids keep the accessible name right when several dialogs are mounted on one page.
+  const titleId = `${useId()}-title`;
+  const descriptionId = `${titleId}-description`;
 
   useEffect(() => {
     const dialog = ref.current;
@@ -31,8 +34,8 @@ export function Dialog({ open, onClose, title, description, closeLabel, children
 
   return (
     <dialog
-      aria-describedby={description === undefined ? undefined : "dialog-description"}
-      aria-labelledby="dialog-title"
+      aria-describedby={description === undefined ? undefined : descriptionId}
+      aria-labelledby={titleId}
       className={cn(
         "m-auto w-[calc(100%-2rem)] rounded-sheets border border-[var(--ar-border)] bg-[var(--ar-surface)] p-0 text-[var(--ar-text)] shadow-xl backdrop:bg-black/50",
         size === "lg" ? "max-w-3xl" : "max-w-lg",
@@ -47,11 +50,11 @@ export function Dialog({ open, onClose, title, description, closeLabel, children
         <div className="flex max-h-[85vh] flex-col">
           <header className="flex items-start gap-3 border-b border-[var(--ar-border)] p-4">
             <div className="flex-1">
-              <h2 className="text-lg font-semibold" id="dialog-title">
+              <h2 className="text-lg font-semibold" id={titleId}>
                 {title}
               </h2>
               {description === undefined ? null : (
-                <p className="mt-1 text-sm text-[var(--ar-text-muted)]" id="dialog-description">
+                <p className="mt-1 text-sm text-[var(--ar-text-muted)]" id={descriptionId}>
                   {description}
                 </p>
               )}

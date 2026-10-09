@@ -33,7 +33,14 @@ export function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<unknown>(() => {
     const code = params.get("error");
-    return code === null ? null : new ApiError({ code: code as ErrorCode, status: 400 });
+    if (code === null) return null;
+    // The OAuth callback forwards the invite role and masked e-mail for EC-PLT-36.
+    const role = params.get("role");
+    const emailHint = params.get("emailHint");
+    const details: Record<string, string> = {};
+    if (role !== null) details.role = admin.has(`roles.${role}`) ? admin(`roles.${role}`).toLowerCase() : role;
+    if (emailHint !== null) details.emailHint = emailHint;
+    return new ApiError({ code: code as ErrorCode, status: 400, details });
   });
 
   const submit = async () => {

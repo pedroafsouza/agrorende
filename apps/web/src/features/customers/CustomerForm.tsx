@@ -55,6 +55,11 @@ export function customerBody(v: CustomerFormValues, initial?: CustomerFormValues
   return body;
 }
 
+/** Keeps only the entries of `next` that differ from `base`, so a conflict merge never overwrites someone else's fields. */
+export function changedFields(next: Record<string, unknown>, base: Record<string, unknown>): Record<string, unknown> {
+  return Object.fromEntries(Object.entries(next).filter(([key, value]) => base[key] !== value));
+}
+
 export function CustomerFields({ values, onChange, error }: { readonly values: CustomerFormValues; readonly onChange: (v: CustomerFormValues) => void; readonly error: unknown }) {
   const t = useTranslations("assets");
   const common = useTranslations("common");

@@ -38,7 +38,7 @@ function NavLink({ item, pathname, attention, nested = false, onNavigate }: { re
         <Icon aria-hidden="true" className="size-5 shrink-0" />
         <span className="flex-1">{t(`nav.${item.key}`)}</span>
         {item.badge === "attention" && attention > 0 ? (
-          <span className="rounded-full bg-[var(--ar-danger)] px-2 text-xs font-bold text-white">
+          <span className="rounded-full bg-[var(--ar-danger)] px-2 text-xs font-bold text-[var(--ar-on-danger)]">
             <span className="sr-only">{t("shell.attentionCount", { count: attention })}</span>
             <span aria-hidden="true">{attention > 99 ? "99+" : attention}</span>
           </span>

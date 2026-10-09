@@ -1,12 +1,13 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Columns3, ImageOff, Plus, Rows3, Tractor, UserRound, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo } from "react";
+import { useMemo, useState, type DragEvent } from "react";
+import { toast } from "sonner";
 
 import { PriorityBadge, StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
@@ -20,6 +21,7 @@ import { formatDateTime } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
 import { useUrlState } from "@/lib/url-state";
 
+import { AssignDialog } from "./AssignDialog";
 import { LateEvidenceBadge, SlaBadge } from "./badges";
 import { BOARD_COLUMNS, DUE_FILTERS, PRIORITIES, WORK_ORDER_STATUSES, type WorkOrderListItem } from "./types";
 
@@ -189,33 +191,84 @@ export function WorkOrdersListPage() {
   );
 }
 
+const DRAG_TYPE = "application/x-agrorende-work-order";
+
+/** Dropping an unassigned card on the Assigned column opens the assign dialog (WO-02); nothing changes until it is confirmed. */
 function Board({ items }: { readonly items: readonly WorkOrderListItem[] }) {
   const t = useTranslations("jobs");
+  const client = useQueryClient();
+  const [dragging, setDragging] = useState<WorkOrderListItem | null>(null);
+  const [assigning, setAssigning] = useState<WorkOrderListItem | null>(null);
   const columns = BOARD_COLUMNS.map((column) => ({ ...column, items: items.filter((item) => column.statuses.includes(item.status)) }));
   const done = items.filter((item) => item.status === "VERIFIED" || item.status === "CANCELLED");
+  const accepts = (key: string): boolean => key === "assigned" && dragging?.status === "OPEN";
+  const onDrop = (event: DragEvent<HTMLElement>, key: string) => {
+    if (!accepts(key)) return;
+    event.preventDefault();
+    const id = event.dataTransfer.getData(DRAG_TYPE);
+    const item = items.find((candidate) => candidate.id === id) ?? dragging;
+    setDragging(null);
+    if (item !== null) setAssigning(item);
+  };
   return (
     <div className="flex flex-col gap-3">
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
         {columns.map((column) => (
-          <section aria-labelledby={`col-${column.key}`} className="flex min-w-0 flex-col gap-2 rounded-cards bg-[var(--ar-surface-muted)] p-2" key={column.key}>
+          <section
+            aria-labelledby={`col-${column.key}`}
+            className={`flex min-w-0 flex-col gap-2 rounded-cards bg-[var(--ar-surface-muted)] p-2 ${accepts(column.key) ? "outline-2 outline-dashed outline-[var(--ar-focus)]" : ""}`}
+            data-column={column.key}
+            key={column.key}
+            onDragOver={(event) => {
+              if (accepts(column.key)) event.preventDefault();
+            }}
+            onDrop={(event) => onDrop(event, column.key)}
+          >
             <h2 className="flex items-center justify-between px-1 font-semibold" id={`col-${column.key}`}>
               {t(`board.${column.key}`)}
               <span className="rounded-full bg-[var(--ar-surface)] px-2 text-sm">{column.items.length}</span>
             </h2>
-            {column.items.length === 0 ? <p className="px-1 text-sm text-[var(--ar-text-muted)]">{t("board.empty")}</p> : column.items.map((item) => <BoardCard item={item} key={item.id} />)}
+            {column.items.length === 0 ? (
+              <p className="px-1 text-sm text-[var(--ar-text-muted)]">{t("board.empty")}</p>
+            ) : (
+              column.items.map((item) => <BoardCard item={item} key={item.id} onDragEnd={() => setDragging(null)} onDragStart={() => setDragging(item)} />)
+            )}
           </section>
         ))}
       </div>
       {done.length === 0 ? null : <p className="text-sm text-[var(--ar-text-muted)]">{t("board.closedHidden", { count: done.length })}</p>}
+      {assigning === null ? null : (
+        <AssignDialog
+          mode="assign"
+          onClose={() => setAssigning(null)}
+          onDone={() => {
+            setAssigning(null);
+            toast.success(t("toast.assign"));
+            void client.invalidateQueries({ queryKey: ["work-orders"] });
+          }}
+          open
+          workOrder={assigning}
+        />
+      )}
     </div>
   );
 }
 
-function BoardCard({ item }: { readonly item: WorkOrderListItem }) {
+function BoardCard({ item, onDragStart, onDragEnd }: { readonly item: WorkOrderListItem; readonly onDragStart: () => void; readonly onDragEnd: () => void }) {
   const t = useTranslations("jobs");
   const locale = useLocale();
   return (
-    <Link className="flex min-h-12 flex-col gap-2 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-3 hover:border-[var(--ar-border-strong)] focus-visible:outline-3 focus-visible:outline-[var(--ar-focus)]" href={`/work-orders/${item.id}`}>
+    <Link className="flex min-h-12 flex-col gap-2 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-3 hover:border-[var(--ar-border-strong)] focus-visible:outline-3 focus-visible:outline-[var(--ar-focus)]"
+      data-work-order={item.number}
+      draggable={item.status === "OPEN"}
+      href={`/work-orders/${item.id}`}
+      onDragEnd={onDragEnd}
+      onDragStart={(event) => {
+        event.dataTransfer.setData(DRAG_TYPE, item.id);
+        event.dataTransfer.effectAllowed = "move";
+        onDragStart();
+      }}
+    >
       <span className="flex items-center justify-between gap-2">
         <span className="font-mono text-sm font-semibold">{item.number}</span>
         <PriorityBadge priority={item.priority} />
