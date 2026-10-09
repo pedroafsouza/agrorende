@@ -24,12 +24,34 @@ export interface DataTableProps<T> {
   readonly hasPrevious?: boolean;
   readonly caption: string;
   readonly toolbar?: ReactNode;
+  /** Row selection for bulk actions: a leading 48 dp checkbox column kept out of the row click. */
+  readonly selection?: DataTableSelection<T>;
+}
+
+export interface DataTableSelection<T> {
+  readonly selectedIds: ReadonlySet<string>;
+  readonly onChange: (ids: ReadonlySet<string>) => void;
+  /** Accessible name of the row checkbox, for example "Select TR-01". */
+  readonly label: (row: T) => string;
+  /** Accessible name of the header checkbox that selects every row on the page. */
+  readonly pageLabel: string;
+}
+
+function toggled(current: ReadonlySet<string>, ids: readonly string[], on: boolean): ReadonlySet<string> {
+  const next = new Set(current);
+  for (const id of ids) {
+    if (on) next.add(id);
+    else next.delete(id);
+  }
+  return next;
 }
 
 /** TanStack table with cursor paging; filters live in the URL via `useUrlState` (A§14.2). */
-export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry, empty, onRowClick, nextCursor, onNext, onFirst, hasPrevious = false, caption, toolbar }: DataTableProps<T>) {
+export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry, empty, onRowClick, nextCursor, onNext, onFirst, hasPrevious = false, caption, toolbar, selection }: DataTableProps<T>) {
   const t = useTranslations("common");
   const table = useReactTable({ data: rows as T[] ?? [], columns, getCoreRowModel: getCoreRowModel(), getRowId: rowKey });
+  const pageIds = (rows ?? []).map(rowKey);
+  const allOnPage = selection !== undefined && pageIds.length > 0 && pageIds.every((id) => selection.selectedIds.has(id));
   return (
     <div className="flex flex-col gap-3">
       {toolbar === undefined ? null : <div className="flex flex-wrap items-end gap-3">{toolbar}</div>}
@@ -40,6 +62,19 @@ export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry,
             <thead className="bg-[var(--ar-surface-muted)]">
               {table.getHeaderGroups().map((group) => (
                 <tr key={group.id}>
+                  {selection === undefined ? null : (
+                    <th className="w-12" scope="col">
+                      <span className="flex size-12 items-center justify-center">
+                        <input
+                          aria-label={selection.pageLabel}
+                          checked={allOnPage}
+                          className="size-5 accent-[var(--ar-primary)]"
+                          onChange={(e) => selection.onChange(toggled(selection.selectedIds, pageIds, e.target.checked))}
+                          type="checkbox"
+                        />
+                      </span>
+                    </th>
+                  )}
                   {group.headers.map((header) => (
                     <th className="px-4 py-3 font-semibold" key={header.id} scope="col">
                       {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
@@ -56,6 +91,19 @@ export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry,
                   key={row.id}
                   onClick={onRowClick === undefined ? undefined : () => onRowClick(row.original)}
                 >
+                  {selection === undefined ? null : (
+                    <td className="w-12 px-0" onClick={(e) => e.stopPropagation()}>
+                      <label className="flex size-12 cursor-pointer items-center justify-center">
+                        <input
+                          aria-label={selection.label(row.original)}
+                          checked={selection.selectedIds.has(row.id)}
+                          className="size-5 accent-[var(--ar-primary)]"
+                          onChange={(e) => selection.onChange(toggled(selection.selectedIds, [row.id], e.target.checked))}
+                          type="checkbox"
+                        />
+                      </label>
+                    </td>
+                  )}
                   {row.getVisibleCells().map((cell) => (
                     <td className="h-12 px-4 py-2 align-middle" key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}

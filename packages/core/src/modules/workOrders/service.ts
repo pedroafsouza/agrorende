@@ -33,7 +33,7 @@ import {
   workOrderSettings,
   type WorkOrderDoc,
 } from "./common.js";
-import { computeDueAt } from "./sla.js";
+import { dueAtFor } from "./sla.js";
 
 export { toWorkOrderDto };
 export { ExternalCostInputSchema, setExternalCost, type ExternalCostInput } from "./external.js";
@@ -218,7 +218,10 @@ export async function createFromSource(tx: Tx, seamCtx: SeamCtx, raw: z.input<ty
 
   const settings = await workOrderSettings(ctx.orgId);
   const now = new Date();
-  const dueAt = input.dueAt === undefined ? computeDueAt(now, input.priority, settings.sla) : new Date(input.dueAt);
+  const dueAt =
+    input.dueAt === undefined
+      ? await dueAtFor(tx, ctx.orgId, asset?.category ?? null, now, input.priority, settings.sla, settings.timeZone)
+      : new Date(input.dueAt);
 
   let checklistTemplateId = input.checklistTemplateId ?? null;
   if (checklistTemplateId === null && asset !== null) {
@@ -639,7 +642,14 @@ export async function patch(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?
   if (input.scheduledFor !== undefined) assignField("scheduledFor", input.scheduledFor);
   if (input.dueAt !== undefined) {
     const settings = await workOrderSettings(ctx.orgId);
-    assignField("dueAt", input.dueAt === null ? computeDueAt(wo.createdAt, input.priority ?? wo.priority, settings.sla) : new Date(input.dueAt));
+    let dueAt: Date;
+    if (input.dueAt === null) {
+      const assetCategory = wo.assetId === null || wo.assetId === undefined ? null : ((await scoped.db.assets.findOne({ _id: wo.assetId }, { projection: { category: 1 } }))?.category ?? null);
+      dueAt = await dueAtFor(tx, ctx.orgId, assetCategory, wo.createdAt, input.priority ?? wo.priority, settings.sla, settings.timeZone);
+    } else {
+      dueAt = new Date(input.dueAt);
+    }
+    assignField("dueAt", dueAt);
     set.slaAtRiskNotifiedAt = null;
     set.slaBreachedAt = null;
   }

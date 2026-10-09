@@ -81,7 +81,7 @@
     "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
     "openMenu": "Open menu",
     "search": "Search",
-    "searchSoon": "Search… press Ctrl+K or ⌘K",
+    "searchSoon": "Search or run a command (Ctrl+K)",
     "sidebar": "Sidebar",
     "signOut": "Sign out",
     "skipToContent": "Skip to content",

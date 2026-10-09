@@ -18,8 +18,8 @@ export const ExternalCostInputSchema = z.object({
 });
 export type ExternalCostInput = z.infer<typeof ExternalCostInputSchema>;
 
-/** Office-only; needs `If-Match` and bumps `syncVersion`. */
-export async function setExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
+/** Writes the external cost; callers have already checked the status. Bumps `syncVersion`. */
+async function writeExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
   const scoped = dbTx(tx);
   sameTenant(scoped, ctx);
   requireOffice(ctx);
@@ -54,14 +54,17 @@ export function canEditExternalCost(status: WorkOrderStatus): boolean {
 }
 
 /**
- * `PATCH /work-orders/:id/external-cost` (T14.4): `setExternalCost` restricted to COMPLETED and
- * VERIFIED jobs; earlier states answer `INVALID_TRANSITION`, a cancelled job `WO_CANCELLED`.
+ * `PATCH /work-orders/:id/external-cost` (T14.4): office-only, needs `If-Match`, and works from
+ * COMPLETED on. Earlier states answer `INVALID_TRANSITION`, a cancelled job `WO_CANCELLED`.
  */
-export async function setExternalCostFromCompleted(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
+export async function setExternalCost(tx: Tx, ctx: Ctx, id: string, raw: unknown, ifMatch?: string | null): Promise<WorkOrderDTO> {
   sameTenant(dbTx(tx), ctx);
   requireOffice(ctx);
   const wo = await loadWorkOrder(tx, id);
   if (wo.status === "CANCELLED") reject("WO_CANCELLED", { id });
   if (!canEditExternalCost(wo.status)) reject("INVALID_TRANSITION", { from: wo.status, action: "externalCost" });
-  return setExternalCost(tx, ctx, id, raw, ifMatch);
+  return writeExternalCost(tx, ctx, id, raw, ifMatch);
 }
+
+/** Name used by the route since T14; same rule as `setExternalCost` (CR T14-002). */
+export const setExternalCostFromCompleted = setExternalCost;

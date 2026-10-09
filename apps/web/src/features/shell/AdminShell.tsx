@@ -8,6 +8,7 @@ import { useState, type ReactNode } from "react";
 
 import type { Role } from "@agrorende/contracts/enums";
 
+import { openCommandPalette } from "@/features/command-palette";
 import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
 import { isActive, visibleNav, type NavItem } from "@/components/shell/nav";
 import { cn } from "@/lib/cn";
@@ -125,13 +126,16 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
             </button>
             <div className="relative max-w-md flex-1">
               <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--ar-text-muted)]" />
-              <input
+              <button
+                aria-keyshortcuts="Control+K Meta+K"
                 aria-label={t("shell.search")}
-                className="min-h-12 w-full rounded-controls border border-[var(--ar-border)] bg-[var(--ar-bg)] pl-9 pr-3 text-sm"
-                disabled
-                placeholder={t("shell.searchSoon")}
-                type="search"
-              />
+                className="min-h-12 w-full rounded-controls border border-[var(--ar-border)] bg-[var(--ar-bg)] pl-9 pr-3 text-left text-sm text-[var(--ar-text-muted)]"
+                data-testid="shell-search"
+                onClick={openCommandPalette}
+                type="button"
+              >
+                {t("shell.searchSoon")}
+              </button>
             </div>
             <div className="ml-auto flex items-center gap-1">
               <RealtimeStatus state={realtime} />

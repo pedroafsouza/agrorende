@@ -273,7 +273,7 @@ export class AgrorendeApiClient {
   async listDamages(query?: T.DamageListQuery): Promise<T.ListResponse<DTO.DamageDTO>> { return this.request("GET", "/damages", { query }); }
   async updateDamage(id: string, body: T.DamageUpdateRequest, version: string): Promise<DTO.DamageDTO> { return this.request("PATCH", `/damages/${seg(id)}`, { json: body, version }); }
   async createDamageWorkOrder(id: string): Promise<T.WorkOrderCreatedResponse> { return this.request("POST", `/damages/${seg(id)}/create-work-order`); }
-  async costsRollup(query: T.CostRollupQuery): Promise<T.ListResponse<T.CostRollupRow>> { return this.request("GET", "/costs/rollup", { query }); }
+  async costsRollup(query: T.CostRollupQuery): Promise<T.CostRollupResponse> { return this.request("GET", "/costs/rollup", { query }); }
 
   // ───────── Exports and imports ─────────
 

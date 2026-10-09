@@ -1,7 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
+import { createFromSource, patch } from "./service.js";
 import { dueAtFor, slaSettingsOf } from "./sla.js";
-import { createSeededDb, ORG_A, type SeededDb } from "./testing/seeded.js";
+import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded.js";
 
 let db: SeededDb;
 const HOUR_MS = 3_600_000;
@@ -39,5 +40,44 @@ describe("BR-F2-2 critical-window SLA (dueAtFor)", () => {
 
   it("keeps the default window for a job without an asset", async () => {
     expect(await windowHours(null, "2026-10-15T12:00:00-03:00")).toBe(24);
+  });
+});
+
+describe("BR-F2-2 wiring in the work-order service (CR T14-001)", () => {
+  const manager = ctxOf(PEOPLE.manager, "MANAGER");
+  const tractor = seedUuid(400);
+  const day = (offsetDays: number): string => new Date(Date.now() + offsetDays * 86_400_000).toISOString().slice(0, 10);
+
+  async function setWindow(categories: string[] | null): Promise<void> {
+    const windows = categories === null ? [] : [{ name: "Test", startsOn: day(-2), endsOn: day(2), assetCategories: categories }];
+    await db.raw("seasons").updateMany({ organizationId: ORG_A, isCurrent: true }, { $set: { criticalWindows: windows } });
+  }
+
+  async function createdWindowHours(): Promise<{ id: string; hours: number; version: number }> {
+    const { id } = await db.run((tx) => createFromSource(tx, manager, { source: "MANUAL", type: "CORRECTIVE", priority: "HIGH", title: "SLA window", assetId: tractor }));
+    const wo = await db.raw("work_orders").findOne({ _id: id });
+    const dueAt = wo?.dueAt as Date;
+    const createdAt = wo?.createdAt as Date;
+    return { id, hours: (dueAt.getTime() - createdAt.getTime()) / HOUR_MS, version: wo?.syncVersion as number };
+  }
+
+  it("halves the default due date of a new job inside a critical window that lists the category", async () => {
+    await setWindow(["TRACTOR"]);
+    expect((await createdWindowHours()).hours).toBe(12);
+  });
+
+  it("keeps the default due date when the window does not list the category or there is no window", async () => {
+    await setWindow(["TRUCK"]);
+    expect((await createdWindowHours()).hours).toBe(24);
+    await setWindow(null);
+    expect((await createdWindowHours()).hours).toBe(24);
+  });
+
+  it("applies the window when the office resets the due date with PATCH dueAt: null", async () => {
+    await setWindow(null);
+    const created = await createdWindowHours();
+    await setWindow(["TRACTOR"]);
+    const patched = await db.run((tx) => patch(tx, manager, created.id, { dueAt: null }, `"${created.version}"`));
+    expect((new Date(patched.dueAt ?? 0).getTime() - new Date(patched.createdAt).getTime()) / HOUR_MS).toBe(12);
   });
 });

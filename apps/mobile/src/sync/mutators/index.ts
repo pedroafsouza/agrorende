@@ -4,6 +4,8 @@
  * bootstrap imports this file once before the sync engine starts.
  */
 import "./assets";
+import "./comments";
+import "./fuel";
 import "./jobs";
 import "./media";
 import "./notifications";

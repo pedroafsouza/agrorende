@@ -10,7 +10,6 @@ import { formatMoney, formatNumber } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
 
 import type { WorkOrderDetail } from "../types";
-import { PartsMessages } from "./PartsMessages";
 
 /** The detail endpoint returns the full `WorkOrderPartDTO`; catalog lines carry the part and the stock location. */
 export type PartLine = WorkOrderDetail["parts"][number] & { readonly partId?: string | null; readonly stockLocationId?: string | null };
@@ -28,11 +27,7 @@ export function isCatalogLine(line: PartLine): boolean {
 
 /** Parts used on a work order (WO-09, WO-22): catalog lines show where they came from and what is left there. */
 export function PartsPanel({ parts }: { readonly parts: WorkOrderDetail["parts"] }) {
-  return (
-    <PartsMessages>
-      <PartsTable lines={parts as readonly PartLine[]} />
-    </PartsMessages>
-  );
+  return <PartsTable lines={parts as readonly PartLine[]} />;
 }
 
 function PartsTable({ lines }: { readonly lines: readonly PartLine[] }) {

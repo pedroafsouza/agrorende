@@ -81,7 +81,7 @@
     "notificationsLabel": "{count, plural, =0 {Notificações} one {Notificações, # não lida} other {Notificações, # não lidas}}",
     "openMenu": "Abrir menu",
     "search": "Buscar",
-    "searchSoon": "Buscar… pressione Ctrl+K ou ⌘K",
+    "searchSoon": "Buscar ou executar um comando (Ctrl+K)",
     "sidebar": "Menu lateral",
     "signOut": "Sair",
     "skipToContent": "Pular para o conteúdo",

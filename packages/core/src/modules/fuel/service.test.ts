@@ -110,7 +110,7 @@ describe("fuelLog.create (ERP-07, OFF-01)", () => {
     expect((error as AppError).code).toBe("NOT_FOUND");
     expect((await listFuelLogs(otherAdmin)).items).toHaveLength(0);
     expect((await listFuelLogs(otherAdmin, { assetId })).items).toHaveLength(0);
-    expect((await fuelConsumption(otherAdmin, { assetId })).points).toHaveLength(0);
+    await expect(fuelConsumption(otherAdmin, { assetId })).rejects.toMatchObject({ code: "NOT_FOUND" });
     expect((await listFuelLogs(admin, { assetId })).items).toHaveLength(1);
   });
 });

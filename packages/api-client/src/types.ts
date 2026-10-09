@@ -4,7 +4,6 @@ import type {
   ChecklistTemplateDTO,
   CustomerDTO,
   DamageDTO,
-  FieldReportDTO,
   InspectionDTO,
   LiveOperatorDTO,
   MaintenancePlanDTO,
@@ -20,7 +19,6 @@ import type {
   SiteDTO,
   StockLocationDTO,
   UserDTO,
-  WorkOrderDTO,
 } from "@agrorende/contracts/dto";
 import type {
   AuthMethod,
@@ -756,6 +754,20 @@ export interface CostRollupRow {
   readonly rentalRevenueCents: number;
 }
 
+/** `GET /costs/rollup` body (A§6.4): one row per group plus the totals of the window. */
+export interface CostRollupResponse {
+  readonly groupBy: CostGroupBy;
+  readonly from: string | null;
+  readonly to: string | null;
+  /** False when the caller is a MANAGER and labour cost is hidden from managers; labour is then 0. */
+  readonly laborVisible: boolean;
+  readonly rows: readonly CostRollupRow[];
+  readonly totals: Omit<CostRollupRow, "key" | "label">;
+  readonly workOrderCount: number;
+  readonly rentalCount: number;
+  readonly fuelLogCount?: number;
+}
+
 // ───────── Exports, imports ─────────
 
 export type ExportEntity = "field-reports" | "work-orders" | "rentals" | "assets" | "costs" | "location-pings";
@@ -1030,12 +1042,21 @@ export interface AnalyticsSeriesPoint {
   readonly key: string;
   readonly label: string;
   readonly value: number;
+  /** Second value of the point when the metric has one (for example the completed WO count for `mttr`). */
+  readonly secondary?: number | null;
 }
 
 export interface AnalyticsResponse {
   readonly metric: AnalyticsMetric;
   readonly unit: "hours" | "percent" | "count" | "cents";
+  readonly from: string;
+  readonly to: string;
+  readonly seasonId: string | null;
   readonly series: readonly AnalyticsSeriesPoint[];
+  /** Whole-range figure: overall median, share, total or average depending on the metric. */
+  readonly summary: number | null;
+  /** Full cost roll-up for the `cost` metric. */
+  readonly cost?: CostRollupResponse;
 }
 
 export interface SearchQuery {
@@ -1043,12 +1064,16 @@ export interface SearchQuery {
   readonly [param: string]: QueryValue;
 }
 
-export interface SearchResponse {
-  readonly assets: readonly AssetDTO[];
-  readonly fieldReports: readonly FieldReportDTO[];
-  readonly workOrders: readonly WorkOrderDTO[];
-  readonly rentals: readonly RentalDTO[];
-  readonly customers: readonly CustomerDTO[];
-  readonly sites: readonly SiteDTO[];
+export type SearchType = "assets" | "workOrders" | "fieldReports" | "rentals" | "customers" | "sites";
+
+/** One light search result: enough for the command palette to show and link it. */
+export interface SearchHit {
+  readonly id: string;
+  readonly type: SearchType;
+  readonly title: string;
+  readonly subtitle: string | null;
+  readonly href: string;
 }
+
+export type SearchResponse = { readonly q: string; readonly tookMs: number } & { readonly [K in SearchType]: readonly SearchHit[] };
 

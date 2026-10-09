@@ -7,6 +7,7 @@ import { uuidv7 } from "uuidv7";
 
 import { authStore, createAuthSession, type AuthSession } from "../../auth/session";
 import { secureTokenVault } from "../../auth/secureVault";
+import { pruneAnnotationOriginals } from "../../components/MediaCapture/annotation";
 import { openUserDatabase } from "../../db/client";
 import { expoDatabaseHost } from "../../db/expoDriver";
 import type { SqlDb } from "../../db/sql";
@@ -114,6 +115,8 @@ async function openSession(userId: string): Promise<UserSession> {
         slowLink: () => syncStore.getState().slowLink,
         onThroughput: (bytesPerSecond) => syncStore.setState({ slowLink: bytesPerSecond < SLOW_LINK_BYTES_PER_SECOND }),
       });
+      // FR-04: an annotated photo keeps its unannotated original only until the upload is DONE.
+      await pruneAnnotationOriginals(db, expoFileStore).catch(() => 0);
       // §7.7 step 8: DONE originals are kept 7 days, or removed at once when free space is low.
       await pruneMediaFiles(db, expoFileStore, Date.now(), await expoFileStore.freeBytes()).catch(() => 0);
     },

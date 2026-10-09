@@ -2,7 +2,8 @@
   "extends": "@agrorende/config/tsconfig/node.json",
   "compilerOptions": {
     "rootDir": "../..",
-    "noEmit": true
+    "noEmit": true,
+    "jsx": "react-jsx"
   },
   "include": ["src", "eslint.config.js", "vitest.config.ts"]
 }

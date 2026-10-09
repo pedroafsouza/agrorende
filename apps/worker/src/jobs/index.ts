@@ -209,6 +209,8 @@ const PEER_JOB_MODULES: Partial<Record<PeerJobName, () => Promise<Doc>>> = {
   "events.dispatch": () => import("./events.dispatch.js"),
   "rentals.overdueScan": () => import("./rentals.overdueScan.js"),
   "workOrders.slaScan": () => import("./workOrders.slaScan.js"),
+  "maintenance.dueScan": () => import("./maintenance.dueScan.js"),
+  "stock.lowScan": () => import("./stock.lowScan.js"),
 };
 
 /** Resolves a handler for every job name; peer jobs without a module run an explicit no-op. */

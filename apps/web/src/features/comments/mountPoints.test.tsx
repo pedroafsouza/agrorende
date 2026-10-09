@@ -2,10 +2,13 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
+import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import enCommon from "../../../messages/en/common.json";
 import enErrors from "../../../messages/en/errors.json";
+import enJobs from "../../../messages/en/jobs.json";
+import enParts from "../../../messages/en/parts.json";
 
 import { BillingActions } from "@/features/billing";
 import { CommandPalette } from "@/features/command-palette";
@@ -18,6 +21,7 @@ vi.mock("@/lib/api", async (importOriginal) => {
   const actual = await importOriginal<Record<string, unknown>>();
   return { ...actual, api: (...args: unknown[]) => api(...args) };
 });
+vi.mock("next/navigation", () => ({ useRouter: () => ({ push: vi.fn(), replace: vi.fn(), refresh: vi.fn() }), usePathname: () => "/work-orders/x", useSearchParams: () => new URLSearchParams() }));
 
 const id = "00000000-0000-4000-8000-000000000001";
 
@@ -25,6 +29,17 @@ afterEach(() => {
   cleanup();
   api.mockReset();
 });
+
+function renderWithIntl(children: ReactNode) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  return render(
+    <QueryClientProvider client={client}>
+      <NextIntlClientProvider locale="en" messages={{ common: enCommon, errors: enErrors, jobs: enJobs, parts: enParts }} timeZone="America/Sao_Paulo">
+        {children}
+      </NextIntlClientProvider>
+    </QueryClientProvider>,
+  );
+}
 
 function renderThread(entityType: "FIELD_REPORT" | "WORK_ORDER" | "RENTAL") {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -70,11 +85,27 @@ describe("wave 6 mount points", () => {
     expect(api).toHaveBeenCalledTimes(1);
   });
 
-  // The other wave 6 mount points now belong to their owners (T14, T15, T16), who test their behaviour;
-  // this file only guards that the imports the detail pages rely on still exist.
-  it("the other wave 6 mount points are still exported", () => {
-    expect(typeof BillingActions).toBe("function");
+  // The other wave 6 mount points are real components now (T14, T15, T16); their owners test the
+  // behaviour, and this file checks that each one mounts inside the providers the detail pages give it.
+  it("ExternalCostPanel mounts on a completed work order with the work-order messages", () => {
+    renderWithIntl(<ExternalCostPanel workOrder={{ id, status: "COMPLETED", syncVersion: "2", externalCostCents: 12_000, externalCostNote: "Lathe work" }} />);
+    expect(screen.getByText("Lathe work")).toBeTruthy();
+    expect(screen.getByRole("button", { name: "Edit external cost" })).toBeTruthy();
+  });
+
+  it("BillingActions mounts the billing panel on a work order", async () => {
+    api.mockResolvedValue({ lines: [], customerId: id, existingId: null });
+    renderWithIntl(<BillingActions entityId={id} entityType="WORK_ORDER" />);
+    await screen.findByRole("button", { name: "Create billing document" });
+  });
+
+  it("BillingActions links a rental to its billing document", async () => {
+    api.mockResolvedValue({ lines: [], customerId: id, existingId: id });
+    renderWithIntl(<BillingActions entityId={id} entityType="RENTAL" />);
+    await screen.findByRole("link", { name: "Open billing document" });
+  });
+
+  it("CommandPalette is exported for the admin shell", () => {
     expect(typeof CommandPalette).toBe("function");
-    expect(typeof ExternalCostPanel).toBe("function");
   });
 });

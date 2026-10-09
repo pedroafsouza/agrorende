@@ -172,6 +172,8 @@ export async function fuelConsumption(
   const assetId = filters.assetId ?? "";
   if (assetId === "") reject("VALIDATION_FAILED", { fieldErrors: [{ path: "assetId", code: "required" }] });
   const db = await readDb(ctx);
+  const asset = await db.assets.findOne({ _id: assetId }, { projection: { _id: 1 } });
+  if (asset === null) reject("NOT_FOUND", { entityType: "ASSET", id: assetId });
   const query: Record<string, unknown> = { assetId, deletedAt: null };
   const from = dateBound(filters.from, "from");
   const to = dateBound(filters.to, "to");

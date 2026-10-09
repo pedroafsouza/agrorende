@@ -34,8 +34,8 @@ export async function createHarness(suffix: string, prefix = "agrorende_t08"): P
   const handle = await setupTestDb(name);
   const ctx = makeTestCtx();
   const counters = collections.syncCounters(handle.db);
-  await counters.insertOne({ _id: ctx.orgId, value: 0, horizonVersion: 0 });
-  await counters.insertOne({ _id: OTHER_ORG_ID, value: 0, horizonVersion: 0 });
+  await counters.updateOne({ _id: ctx.orgId }, { $setOnInsert: { value: 0, horizonVersion: 0 } }, { upsert: true });
+  await counters.updateOne({ _id: OTHER_ORG_ID }, { $setOnInsert: { value: 0, horizonVersion: 0 } }, { upsert: true });
   return {
     handle,
     ctx,

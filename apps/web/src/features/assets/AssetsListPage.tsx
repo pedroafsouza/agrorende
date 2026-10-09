@@ -39,17 +39,6 @@ export function AssetsListPage() {
   const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
   const [printing, setPrinting] = useState(false);
   const [printError, setPrintError] = useState<unknown>(null);
-  const pageIds = useMemo(() => (query.data?.items ?? []).map((asset) => asset.id), [query.data]);
-  const allOnPage = pageIds.length > 0 && pageIds.every((id) => selected.has(id));
-  const toggle = (ids: readonly string[], on: boolean) =>
-    setSelected((current) => {
-      const next = new Set(current);
-      for (const id of ids) {
-        if (on) next.add(id);
-        else next.delete(id);
-      }
-      return next;
-    });
   const printLabels = async () => {
     setPrinting(true);
     setPrintError(null);
@@ -64,19 +53,6 @@ export function AssetsListPage() {
   };
   const columns = useMemo<ColumnDef<AssetDTO, unknown>[]>(
     () => [
-      {
-        id: "select",
-        header: () => (
-          <span className="flex size-12 items-center justify-center">
-            <input aria-label={t("qr.selectPage")} checked={allOnPage} className="size-5 accent-[var(--ar-primary)]" onChange={(e) => toggle(pageIds, e.target.checked)} type="checkbox" />
-          </span>
-        ),
-        cell: (c) => (
-          <span className="flex size-12 items-center justify-center" onClick={(e) => e.stopPropagation()}>
-            <input aria-label={t("qr.select", { code: c.row.original.code })} checked={selected.has(c.row.original.id)} className="size-5 accent-[var(--ar-primary)]" onChange={(e) => toggle([c.row.original.id], e.target.checked)} type="checkbox" />
-          </span>
-        ),
-      },
       { header: t("fields.code"), accessorKey: "code", cell: (c) => <span className="font-mono font-semibold">{c.row.original.code}</span> },
       { header: t("fields.name"), accessorKey: "name" },
       { header: t("fields.category"), accessorKey: "category", cell: (c) => common(`category.${c.row.original.category}`) },
@@ -84,7 +60,7 @@ export function AssetsListPage() {
       { header: t("fields.hourMeter"), accessorKey: "hourMeter", cell: (c) => formatNumber(c.row.original.hourMeter, locale, 1) },
       { header: t("fields.isRentable"), accessorKey: "isRentable", cell: (c) => (c.row.original.isRentable ? common("yes") : common("no")) },
     ],
-    [t, common, locale, selected, allOnPage, pageIds],
+    [t, common, locale],
   );
   const filtered = filters.q.length > 0 || filters.category.length > 0 || filters.condition.length > 0;
   return (
@@ -138,6 +114,7 @@ export function AssetsListPage() {
         onRowClick={(row) => router.push(`/assets/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        selection={{ selectedIds: selected, onChange: setSelected, label: (row) => t("qr.select", { code: row.code }), pageLabel: t("qr.selectPage") }}
         toolbar={
           <>
             <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value })} placeholder={t("list.searchPlaceholder")} type="search" />

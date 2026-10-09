@@ -340,8 +340,10 @@ describe("field flow", () => {
     expect(event?.meta).toMatchObject({ meterJumpConfirmed: true, attention: true });
   });
 
-  it("sets the external cost with If-Match", async () => {
+  it("sets the external cost with If-Match from COMPLETED on", async () => {
     const id = await freshJob(431);
+    expect(await codeOf(db.run((tx) => setExternalCost(tx, admin, id, { externalCostCents: 50_000 })))).toBe("INVALID_TRANSITION");
+    await db.raw("work_orders").updateOne({ _id: id }, { $set: { status: "COMPLETED", completedAt: new Date() } });
     const current = await db.raw("work_orders").findOne({ _id: id });
     const updated = await db.run((tx) => setExternalCost(tx, admin, id, { externalCostCents: 50_000, externalCostNote: "Workshop" }, String(current?.syncVersion)));
     expect(updated.externalCostCents).toBe(50_000);

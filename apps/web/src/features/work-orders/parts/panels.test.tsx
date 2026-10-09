@@ -8,6 +8,7 @@ import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import enCommon from "../../../../messages/en/common.json";
 import enErrors from "../../../../messages/en/errors.json";
 import enJobs from "../../../../messages/en/jobs.json";
+import enParts from "../../../../messages/en/parts.json";
 
 import { canEditExternalCost, ExternalCostPanel } from "./ExternalCostPanel";
 import { isCatalogLine, PartsPanel } from "./PartsPanel";
@@ -40,7 +41,7 @@ function wrap(children: ReactNode) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <NextIntlClientProvider locale="en" messages={{ common: enCommon, errors: enErrors, jobs: enJobs }} timeZone="America/Sao_Paulo">
+      <NextIntlClientProvider locale="en" messages={{ common: enCommon, errors: enErrors, jobs: enJobs, parts: enParts }} timeZone="America/Sao_Paulo">
         {children}
       </NextIntlClientProvider>
     </QueryClientProvider>,

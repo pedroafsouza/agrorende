@@ -27,16 +27,22 @@ import { memoryRateLimiter, setRateLimiter } from "../auth/rateLimit.js";
 import { createNamedSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded.js";
 import type { Ctx } from "../context.js";
 import * as assetQueries from "../modules/assets/queries.js";
+import * as assetQrSheet from "../modules/assets/qrSheet.js";
 import * as assetService from "../modules/assets/service.js";
+import * as billingService from "../modules/billing/service.js";
 import * as checklistQueries from "../modules/checklists/queries.js";
 import * as checklistService from "../modules/checklists/service.js";
+import * as commentService from "../modules/comments/service.js";
 import * as costs from "../modules/costs/service.js";
 import * as customerQueries from "../modules/customers/queries.js";
 import * as customerService from "../modules/customers/service.js";
 import * as exportsService from "../modules/exports/service.js";
 import * as fieldReportQueries from "../modules/fieldReports/queries.js";
 import * as fieldReportService from "../modules/fieldReports/service.js";
+import * as fuelService from "../modules/fuel/service.js";
+import * as maintenanceService from "../modules/maintenance/service.js";
 import * as ops from "../modules/ops/service.js";
+import * as partsService from "../modules/parts/service.js";
 import * as rentalQueries from "../modules/rentals/queries.js";
 import * as rentalService from "../modules/rentals/service.js";
 import * as seasonQueries from "../modules/seasons/queries.js";
@@ -103,6 +109,9 @@ let orgBToken: string;
 let staffToken: string;
 let orgAExportJobId: string;
 let orgAIds: ReadonlySet<string>;
+
+/** Organisation A records of the P1 modules (T14, T15), created in `beforeAll` because the seed has none. */
+const A1 = { billingDocument: "", fuelLog: "", catalogPart: "", warehouse: "", plan: "" };
 
 // ───────── Helpers ─────────
 
@@ -233,6 +242,20 @@ beforeAll(async () => {
   orgAExportJobId = created.job.id;
   await recordUsage(await getDb(), A.org, "2099-01", new Date());
 
+  const orgA: Ctx = { ...seedCtx(A.admin, "ADMIN"), requestId: "t10-tenancy-org-a" };
+  await withSyncTx(orgA, async (tx) => {
+    A1.billingDocument = (
+      await billingService.createBillingDocument(tx, orgA, { source: "MANUAL", customerId: A.customer, lines: [{ description: "Frete", quantity: 1, unitAmountCents: 10_000 }] })
+    ).id;
+    A1.fuelLog = (await fuelService.createFuelLogOffice(tx, orgA, { assetId: A.asset, liters: 120, hourMeter: 1_500 })).id;
+    A1.catalogPart = (await partsService.createPart(tx, orgA, { sku: "T10-FH", name: "Filtro hidráulico", unitCostCents: 4_500 })).id;
+    A1.warehouse = (await partsService.createLocation(tx, orgA, { name: "Almoxarifado A", type: "WAREHOUSE" })).id;
+    A1.plan = (await maintenanceService.createPlan(tx, orgA, { name: "Revisão 250 h", assetId: A.asset, trigger: "HOURS", intervalHours: 250 })).id;
+  });
+  await withSyncTx(orgA, (tx) =>
+    partsService.createMovement(tx, orgA, { type: "IN", partId: A1.catalogPart, quantity: 5, toLocationId: A1.warehouse, unitCostCents: 4_500 }),
+  );
+
   orgAIds = await collectOrgAIds();
 }, 120_000);
 
@@ -273,6 +296,14 @@ const coreRows: readonly RestRow[] = [
   { route: "GET assets/[id]/qr.png", kind: "byId", run: () => assetQueries.getAsset(B, A.asset) },
   { route: "POST assets/[id]/retire", kind: "byId", run: () => write((tx) => assetService.retireAsset(tx, B, A.asset, { reason: "hijack" })) },
   { route: "GET assets", kind: "list", run: () => assetQueries.listAssets(B, {}) },
+  {
+    route: "POST assets/qr-sheet",
+    kind: "byId",
+    run: () =>
+      assetQrSheet.renderQrSheet(B, { assetIds: [A.asset] }, () => {
+        throw new Error("the encoder must not run for another organisation's asset");
+      }),
+  },
   { route: "POST assets", kind: "byId", run: () => write((tx) => assetService.createAsset(tx, B, { name: "Ref", category: "TRACTOR", homeSiteId: A.site })) },
   // Sites and plots
   { route: "GET sites/[id]", kind: "byId", run: () => siteQueries.getSite(B, A.site) },
@@ -282,6 +313,7 @@ const coreRows: readonly RestRow[] = [
   { route: "POST sites/[id]/plots", kind: "byId", run: () => write((tx) => siteService.createPlot(tx, B, A.site, { name: "Hijack" })) },
   { route: "GET sites", kind: "list", run: () => siteQueries.listSites(B, {}) },
   { route: "POST sites", kind: "byId", run: () => write((tx) => siteService.createSite(tx, B, { name: "Ref", type: "FARM", customerId: A.customer })) },
+  { route: "GET plots/[id]", kind: "byId", run: () => siteQueries.getPlot(B, A.plot) },
   { route: "PATCH plots/[id]", kind: "byId", run: () => write((tx) => siteService.updatePlot(tx, B, A.plot, { name: "Hijack" })) },
   // Seasons
   { route: "PATCH seasons/[id]", kind: "byId", run: () => write((tx) => seasonService.updateSeason(tx, B, A.season, { name: "Hijack" })) },
@@ -350,6 +382,7 @@ const coreRows: readonly RestRow[] = [
   { route: "POST field-reports/[id]/mark-for-repair", kind: "byId", run: () => write((tx) => fieldReportService.markForRepair(tx, B, A.fieldReport, {})) },
   { route: "POST field-reports/[id]/monitor", kind: "byId", run: () => write((tx) => fieldReportService.monitor(tx, B, A.fieldReport, { note: "hijack" })) },
   { route: "POST field-reports/[id]/dismiss", kind: "byId", run: () => write((tx) => fieldReportService.dismiss(tx, B, A.fieldReport, { reason: "hijack" })) },
+  { route: "POST field-reports/[id]/link-asset", kind: "byId", run: () => write((tx) => fieldReportService.linkAsset(tx, B, A.fieldReport, { assetId: A.asset })) },
   { route: "GET field-reports", kind: "list", run: () => fieldReportQueries.listFieldReports(B, {}) },
   // Work orders
   { route: "GET work-orders/[id]", kind: "byId", run: () => write((tx) => workOrderQueries.get(tx, B, A.workOrder)) },
@@ -397,8 +430,63 @@ const coreRows: readonly RestRow[] = [
   { route: "GET ops/alerts", kind: "list", run: () => ops.getAlerts(B) },
   { route: "GET ops/activity", kind: "list", run: () => ops.listActivity(B, {}) },
   { route: "GET ops/operators/[userId]/trail", kind: "byId", run: () => ops.getOperatorTrail(B, A.field, {}) },
+  { route: "GET ops/analytics", kind: "list", run: () => ops.getAnalytics(B, { metric: "top_failing", from: "2020-01-01", to: "2030-12-31" }) },
+  { route: "GET ops/analytics", kind: "list", run: () => ops.getAnalytics(B, { metric: "rental_revenue", from: "2020-01-01", to: "2030-12-31" }) },
+  { route: "GET ops/analytics", kind: "scoped", run: () => ops.getAnalytics(B, { metric: "reports_by_category", seasonId: A.season }) },
+  { route: "GET ops/boundaries", kind: "list", run: () => ops.plotBoundaries(B) },
+  { route: "GET search", kind: "list", run: () => ops.search(B, "Trator") },
+  { route: "GET search", kind: "list", run: () => ops.search(B, "WO") },
   { route: "GET costs/rollup", kind: "list", run: () => costs.costRollup(B, { groupBy: "asset" }) },
   { route: "GET costs/rollup", kind: "scoped", run: () => costs.costRollup(B, { groupBy: "asset", assetId: A.asset, siteId: A.site, seasonId: A.season }) },
+  // Comments (T17)
+  { route: "GET comments", kind: "byId", run: () => commentService.listComments(B, { entityType: "WORK_ORDER", entityId: A.workOrder }) },
+  { route: "POST comments", kind: "byId", run: () => write((tx) => commentService.createCommentFromInput(tx, B, { entityType: "WORK_ORDER", entityId: A.workOrder, body: "hijack" })) },
+  // Parts and stock (T14)
+  { route: "GET parts", kind: "list", run: () => partsService.listParts(B, { includeArchived: true }) },
+  { route: "POST parts", kind: "list", run: () => write((tx) => partsService.createPart(tx, B, { sku: "T10-FH", name: "Same SKU as org A" })) },
+  { route: "PATCH parts/[id]", kind: "byId", run: () => write((tx) => partsService.updatePart(tx, B, A1.catalogPart, { name: "Hijack" })) },
+  { route: "PATCH parts/[id]", kind: "byId", run: () => write((tx) => partsService.updatePart(tx, B, A1.catalogPart, { archived: true })) },
+  { route: "GET stock-locations", kind: "list", run: () => partsService.listLocations(B) },
+  { route: "POST stock-locations", kind: "byId", run: () => write((tx) => partsService.createLocation(tx, B, { name: "Hijack van", type: "VAN", userId: A.field })) },
+  { route: "POST stock-locations", kind: "byId", run: () => write((tx) => partsService.createLocation(tx, B, { name: "Hijack", type: "WAREHOUSE", siteId: A.site })) },
+  { route: "GET stock-levels", kind: "list", run: () => partsService.listLevels(B, {}) },
+  { route: "GET stock-levels", kind: "scoped", run: () => partsService.listLevels(B, { locationId: A1.warehouse, partId: A1.catalogPart }) },
+  { route: "GET stock-movements", kind: "list", run: () => partsService.listMovements(B, {}) },
+  { route: "GET stock-movements", kind: "scoped", run: () => partsService.listMovements(B, { partId: A1.catalogPart, locationId: A1.warehouse, workOrderId: A.workOrderWithPart }) },
+  {
+    route: "POST stock-movements",
+    kind: "byId",
+    run: () => write((tx) => partsService.createMovement(tx, B, { type: "ADJUSTMENT", partId: A1.catalogPart, quantity: -5, toLocationId: A1.warehouse, note: "hijack" })),
+  },
+  // Maintenance plans (T14)
+  { route: "GET maintenance-plans", kind: "list", run: () => maintenanceService.listPlans(B, { includeInactive: true }) },
+  { route: "GET maintenance-plans", kind: "scoped", run: () => maintenanceService.listPlans(B, { assetId: A.asset, includeInactive: true }) },
+  { route: "POST maintenance-plans", kind: "byId", run: () => write((tx) => maintenanceService.createPlan(tx, B, { name: "Hijack", assetId: A.asset, trigger: "HOURS", intervalHours: 250 })) },
+  { route: "PATCH maintenance-plans/[id]", kind: "byId", run: () => write((tx) => maintenanceService.updatePlan(tx, B, A1.plan, { name: "Hijack" })) },
+  { route: "GET maintenance-plans/[id]/due", kind: "byId", run: () => maintenanceService.due(B, A1.plan) },
+  // Billing documents (T15)
+  { route: "GET billing-documents", kind: "list", run: () => billingService.listBillingDocuments(B, {}) },
+  { route: "GET billing-documents", kind: "scoped", run: () => billingService.listBillingDocuments(B, { customerId: A.customer, workOrderId: A.workOrder, rentalId: A.rental }) },
+  {
+    route: "POST billing-documents",
+    kind: "byId",
+    run: () => write((tx) => billingService.createBillingDocument(tx, B, { source: "MANUAL", customerId: A.customer, lines: [{ description: "x", quantity: 1, unitAmountCents: 1 }] })),
+  },
+  { route: "POST billing-documents", kind: "byId", run: () => write((tx) => billingService.createBillingDocument(tx, B, { source: "WORK_ORDER", workOrderId: A.workOrder })) },
+  { route: "POST billing-documents", kind: "byId", run: () => write((tx) => billingService.createBillingDocument(tx, B, { source: "RENTAL", rentalId: A.rentalWithCharge })) },
+  { route: "GET billing-documents/preview", kind: "byId", run: () => write((tx) => billingService.previewBillingLines(tx, B, { workOrderId: A.workOrder })) },
+  { route: "GET billing-documents/preview", kind: "byId", run: () => write((tx) => billingService.previewBillingLines(tx, B, { rentalId: A.rentalWithCharge })) },
+  { route: "GET billing-documents/[id]", kind: "byId", run: () => billingService.getBillingDocument(B, A1.billingDocument) },
+  { route: "PATCH billing-documents/[id]", kind: "byId", run: () => write((tx) => billingService.updateBillingDocument(tx, B, A1.billingDocument, { notes: "hijack" })) },
+  { route: "POST billing-documents/[id]/issue", kind: "byId", run: () => write((tx) => billingService.issueBillingDocument(tx, B, A1.billingDocument, {})) },
+  { route: "POST billing-documents/[id]/pay", kind: "byId", run: () => write((tx) => billingService.payBillingDocument(tx, B, A1.billingDocument, {})) },
+  { route: "POST billing-documents/[id]/cancel", kind: "byId", run: () => write((tx) => billingService.cancelBillingDocument(tx, B, A1.billingDocument, { reason: "hijack" })) },
+  { route: "GET billing-documents/[id]/pdf", kind: "byId", run: () => billingService.renderBillingPdf(B, A1.billingDocument) },
+  // Fuel logs (T15)
+  { route: "GET fuel-logs", kind: "list", run: () => fuelService.listFuelLogs(B, {}) },
+  { route: "GET fuel-logs", kind: "scoped", run: () => fuelService.listFuelLogs(B, { assetId: A.asset, seasonId: A.season }) },
+  { route: "POST fuel-logs", kind: "byId", run: () => write((tx) => fuelService.createFuelLogOffice(tx, B, { assetId: A.asset, liters: 10 })) },
+  { route: "GET fuel-logs/consumption", kind: "scoped", run: () => fuelService.fuelConsumption(B, { assetId: A.asset }) },
   // Exports
   {
     route: "GET exports/[id]",
@@ -628,8 +716,7 @@ const pushRows: Readonly<Record<string, { payload: () => unknown; expected: "NOT
   },
   "workOrder.addPart": { expected: "NOT_FOUND", payload: () => ({ id: randomUUID(), workOrderId: A.workOrderWithPart, name: "Filter", quantity: 1, unit: "un" }) },
   "workOrder.removePart": { expected: "NOT_FOUND", payload: () => ({ id: A.part }) },
-  // P1 stub, as for fuelLog.create below.
-  "comment.create": { expected: "UNKNOWN_MUTATION", payload: () => ({ id: randomUUID(), entityType: "WORK_ORDER", entityId: A.workOrder, body: "hijack" }) },
+  "comment.create": { expected: "NOT_FOUND", payload: () => ({ id: randomUUID(), entityType: "WORK_ORDER", entityId: A.workOrder, body: "hijack" }) },
   "inspection.submit": { expected: "NOT_FOUND", payload: () => inspection({ rentalId: A.rental }) },
   "rental.checkout": {
     expected: "NOT_FOUND",
@@ -641,8 +728,7 @@ const pushRows: Readonly<Record<string, { payload: () => unknown; expected: "NOT
   "user.setDuty": { expected: "SELF_ONLY", payload: () => ({ status: "OFF_DUTY" }) },
   // Bulk acknowledgement of the caller's own notifications: foreign ids are silently ignored.
   "notification.markRead": { expected: "IGNORED", payload: () => ({ ids: [A.notification] }) },
-  // P1 stub: the handler is not implemented yet, so the server answers UNKNOWN_MUTATION.
-  "fuelLog.create": { expected: "UNKNOWN_MUTATION", payload: () => ({ id: randomUUID(), assetId: A.asset, liters: 10 }) },
+  "fuelLog.create": { expected: "NOT_FOUND", payload: () => ({ id: randomUUID(), assetId: A.asset, liters: 10 }) },
 };
 
 function pushRequest(mutations: ReturnType<typeof envelope>[]) {

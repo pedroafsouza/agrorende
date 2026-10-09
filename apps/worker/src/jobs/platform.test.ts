@@ -189,6 +189,10 @@ describe("job registry", () => {
     expect(handlers["events.dispatch"]).toBe(events.handler);
     expect(handlers["workOrders.slaScan"]).toBe(sla.handler);
     expect(handlers["usage.daily"]).toBe(usage.handler);
+    const dueScan = await import("./maintenance.dueScan.js");
+    const lowScan = await import("./stock.lowScan.js");
+    expect(handlers["maintenance.dueScan"]).toBe(dueScan.handler);
+    expect(handlers["stock.lowScan"]).toBe(lowScan.handler);
   });
 
   it("namespaces Redis keys by MONGODB_DB", () => {

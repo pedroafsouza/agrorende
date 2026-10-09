@@ -112,6 +112,8 @@ function keySet(jwksUri: string): JWTVerifyGetKey {
   return keys;
 }
 
+export const ID_TOKEN_CLOCK_TOLERANCE_S = 60;
+
 /** Verifies an ID token against the issuer's JWKS: signature, issuer, audience and expiry. */
 export async function verifyIdToken(issuer: string, idToken: string, audience: string | readonly string[], now: Date = new Date()): Promise<JWTPayload> {
   const discovery = await discover(issuer);
@@ -120,6 +122,8 @@ export async function verifyIdToken(issuer: string, idToken: string, audience: s
       issuer: discovery.issuer,
       audience: typeof audience === "string" ? audience : [...audience],
       currentDate: now,
+      // Provider clocks can run slightly ahead, and nbf/iat are whole seconds.
+      clockTolerance: ID_TOKEN_CLOCK_TOLERANCE_S,
     });
     return payload;
   } catch {

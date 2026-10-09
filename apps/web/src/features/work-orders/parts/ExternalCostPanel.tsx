@@ -14,7 +14,6 @@ import { api } from "@/lib/api";
 import { formatMoney } from "@/lib/format";
 
 import type { WorkOrderListItem } from "../types";
-import { PartsMessages } from "./PartsMessages";
 
 export interface ExternalCostPanelProps {
   readonly workOrder: Pick<WorkOrderListItem, "id" | "status" | "syncVersion" | "externalCostCents" | "externalCostNote">;
@@ -29,14 +28,6 @@ export function canEditExternalCost(status: string): boolean {
 
 /** External cost (ERP-03 P1): the value, its note and an edit action once the job is completed. */
 export function ExternalCostPanel({ workOrder }: ExternalCostPanelProps) {
-  return (
-    <PartsMessages>
-      <ExternalCostBody workOrder={workOrder} />
-    </PartsMessages>
-  );
-}
-
-function ExternalCostBody({ workOrder }: ExternalCostPanelProps) {
   const t = useTranslations("parts");
   const locale = useLocale();
   const [editing, setEditing] = useState(false);

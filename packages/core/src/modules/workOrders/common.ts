@@ -51,17 +51,19 @@ export interface WorkOrderSettings {
   readonly requireWoSignature: boolean;
   readonly showLaborCostToManager: boolean;
   readonly officePhone: string | null;
+  readonly timeZone: string | undefined;
 }
 
 /** Organisation settings that drive work orders; read outside the transaction (settings are not written here). */
 export async function workOrderSettings(orgId: string): Promise<WorkOrderSettings> {
-  const org = await collections.organizations(await getDb()).findOne({ _id: orgId }, { projection: { settings: 1 } });
+  const org = await collections.organizations(await getDb()).findOne({ _id: orgId }, { projection: { settings: 1, timezone: 1 } });
   const settings = (org?.settings ?? {}) as { requireWoSignature?: unknown; showLaborCostToManager?: unknown; officePhone?: unknown };
   return {
     sla: slaSettingsOf(settings),
     requireWoSignature: settings.requireWoSignature !== false,
     showLaborCostToManager: settings.showLaborCostToManager !== false,
     officePhone: typeof settings.officePhone === "string" ? settings.officePhone : null,
+    timeZone: typeof org?.timezone === "string" ? org.timezone : undefined,
   };
 }
 

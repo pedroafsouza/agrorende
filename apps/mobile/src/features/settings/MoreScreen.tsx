@@ -4,6 +4,7 @@ import { useSyncExternalStore } from "react";
 
 import { authStore } from "../../auth/session";
 import type { MessageKey } from "../../i18n/messages";
+import { useUnreadNotifications } from "../notifications/useUnreadNotifications";
 import { Badge, Card, EnvironmentRibbon, ListItem, Screen, Text, useSyncSnapshot } from "../../ui";
 
 interface MoreEntry {
@@ -29,6 +30,7 @@ export function MoreScreen() {
   const auth = useSyncExternalStore(authStore.subscribe, authStore.getState);
   const snapshot = useSyncSnapshot();
   const pending = snapshot.pendingMutations + snapshot.pendingUploads;
+  const unread = useUnreadNotifications();
   return (
     <Screen testID="more" banner={<EnvironmentRibbon />}>
       {auth.user === undefined ? null : (
@@ -45,7 +47,13 @@ export function MoreScreen() {
             icon={entry.icon}
             titleKey={entry.titleKey}
             subtitleKey={entry.subtitleKey}
-            right={entry.id === "sync" && pending > 0 ? <Badge labelKey="sync.pending.summary" values={{ count: pending }} tone="warning" /> : undefined}
+            right={
+              entry.id === "sync" && pending > 0 ? (
+                <Badge labelKey="sync.pending.summary" values={{ count: pending }} tone="warning" />
+              ) : entry.id === "notifications" && unread > 0 ? (
+                <Badge labelKey="common.notificationCentre.unread" values={{ count: unread }} tone="info" />
+              ) : undefined
+            }
             onPress={() => router.push(entry.href)}
           />
         ))}
