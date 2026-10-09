@@ -1,160 +1,218 @@
 # AgroRende
 
-AgroRende is a pnpm 11 monorepo for the farm operations platform described in the normative documents under `docs/`.
+AgroRende is a field operations platform for agricultural service and equipment-rental companies in
+Brazil. Field staff use an offline-first mobile app (Android and iOS) to report problems on machines,
+work through repair jobs and hand rental equipment over to customers, even with no signal in the
+field. The office uses a web console to dispatch technicians, watch them on a live map, verify work,
+manage rentals and see what every machine costs. Each customer company is a separate organization
+(tenant) with its own data, and AgroRende staff manage organizations from a platform console.
+
+The product is specified in [`docs/PRD.md`](docs/PRD.md) and the technical design in
+[`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+
+## How commands are labelled
+
+Every command in this README carries one of two labels:
+
+- **[automated-local]**: runs unattended on a developer machine. It was executed while writing this
+  file, starting from a clean `pnpm dev:setup`.
+- **[human]**: needs a person: a phone, an interactive sign-in, an account at Apple, Google or Expo,
+  or a decision. Agents never run these steps.
 
 ## Prerequisites
 
-- Node 24, matching `.node-version` and `engines.node`.
-- pnpm 11.0.9 through Corepack or a global install.
-- Docker with Compose v2.
-- Xcode, Android Studio, and JDK 17 when working on the Expo mobile app.
+| Tool | Version | Notes |
+|---|---|---|
+| Node.js | 24 LTS | Pinned in `.node-version`. Use `fnm`, `nvm` or `volta` to switch. |
+| pnpm | 11 | Pinned in the `packageManager` field of `package.json`. Enable it with `corepack enable` (or `npm i -g pnpm@11`). |
+| Docker | Desktop or Engine with Compose v2 | Runs MongoDB 8 (single-node replica set), Redis 7 and a mock OpenID Connect provider for Google and Apple. |
+| Xcode and CocoaPods | Current | macOS only, to build the iOS dev client. Optional if you only work on the web. |
+| Android Studio and JDK 17 | Current | To build the Android dev client. Set `ANDROID_HOME`. Optional if you only work on the web. |
+| Expo account | Free | Optional in development. Needed for EAS builds and EAS Update. |
 
-## Current state
+At least 10 GB of free disk space is required; `pnpm devloop --check` verifies it.
 
-The repository is at the end of wave W1: task T00 (agent toolkit) and task T01 (foundation)
-are committed. Everything compiles, migrates, seeds and boots, but nothing is a feature yet —
-every route, screen and module is a placeholder that a later task fills in.
-
-Read `docs/progress/T01.md` for the full picture: what was built, the assumptions taken, and
-the open gaps. The one item that blocks continuing on another machine is described below.
-
-### Blocked: `pnpm-lock.yaml` is missing and must be generated once
-
-**The lockfile is deliberately not committed.** It has to be generated on a machine with
-direct access to `https://registry.npmjs.org`, and then committed.
-
-On the machine where T01 was built, npmjs was unreachable. Every request failed during the
-TLS handshake:
-
-```text
-curl -sS https://registry.npmjs.org/
-curl: (35) Recv failure: Socket is not connected
-
-pnpm install
-[ERR_PNPM_META_FETCH_FAIL] GET https://registry.npmjs.org/date-fns-tz: fetch failed
-```
-
-The workspace was installed through an internal mirror so that T01 could be verified. That
-produces a lockfile whose entries carry non-npmjs tarball URLs and `sha1-` integrity hashes,
-which would fail `pnpm install --frozen-lockfile` for everyone else and in CI. Committing it
-would have broken the build rather than unblocked it, so it was left out.
-
-To unblock the repository, on a machine with normal npm access:
+## First-time setup
 
 ```bash
-rm -f pnpm-lock.yaml
-pnpm install
-pnpm check
-git add pnpm-lock.yaml && git commit -m "chore: add pnpm lockfile"
+corepack enable          # [human] once per machine; may need sudo depending on how Node was installed
+pnpm install             # [automated-local]
+pnpm devloop --check     # [automated-local] read-only environment check; exits 1 when a required item fails
+pnpm dev:setup           # [automated-local] see below
+pnpm dev                 # [automated-local] web on :3000, realtime on :4001, worker health on :4002
 ```
 
-The package manifests already pin the intended versions, so this only records resolutions —
-it does not change which versions the workspace uses. Until the lockfile is committed, the
-three `pnpm install --frozen-lockfile` steps in `.github/workflows/ci.yml` and
-`.github/workflows/copilot-setup-steps.yml` cannot run, so CI stays red.
+`pnpm devloop --setup` does `pnpm install`, `pnpm devloop --lan` and `pnpm dev:setup` in one step.
 
-### Other things a human still has to do
+`pnpm dev:setup` does the following:
 
-- Trust this folder in Copilot CLI, then run `/mcp` once to authenticate Expo interactively.
-  Agents never log in to Expo or write credentials into the repository.
-- Log in to EAS and build a dev client before any mobile simulator work. `pnpm devloop --check`
-  currently warns `EAS CLI: not logged in or not installed` and `Dev client: no
-  apps/mobile/android or apps/mobile/ios project found`. Both are expected at this stage.
-- Set the repository variable `ENABLE_E2E` to `true` when T11 lands; the `e2e` job in
-  `ci.yml` is gated on it.
+1. Copies `.env.example` to `.env` when `.env` is missing. The defaults work locally as they are.
+2. Starts MongoDB, Redis and the OIDC mock with `docker compose up -d` and waits until they are healthy.
+3. Runs `pnpm db:migrate` (indexes and ordered data migrations).
+4. Runs `pnpm storage:init` (creates the local media folders under `MEDIA_ROOT`).
+5. Runs `pnpm db:seed` (the demo organizations, people, machines and jobs).
+6. Runs `pnpm storage:seed` (placeholder photos for the seeded media).
 
-## First run
+Then open <http://localhost:3000> and sign in with one of the seed logins below.
+
+## The developer loop (`pnpm devloop`)
+
+`pnpm devloop` without flags opens an interactive menu for people. Agents and CI always use the flags.
+
+| Command | Label | What it does |
+|---|---|---|
+| `pnpm devloop` | [human] | Menu with the actions below. |
+| `pnpm devloop --check` | [automated-local] | Read-only check. Required items: Node 24, pnpm 11, Docker running, MongoDB healthy, Redis reachable, ports 3000/4001/4002/4003/27017/6379 free or used by our compose services, 10 GB free disk, and `.env` containing every key of `.env.example`. Warnings only: Java 17 and `ANDROID_HOME`, Xcode and CocoaPods, EAS CLI login, an installed dev client. |
+| `pnpm devloop --setup` | [automated-local] | `pnpm install`, then `--lan`, then `pnpm dev:setup`. |
+| `pnpm devloop --lan` | [automated-local] | Detects the machine's LAN IPv4 address, writes `EXPO_PUBLIC_API_URL` and `EXPO_PUBLIC_WS_URL` to `apps/mobile/.env`, and prints a QR code of the API URL. |
+| `pnpm devloop --target <local\|staging>` | [automated-local] | Points the mobile `.env` at local services or at staging, to test a dev client against staging. |
+| `pnpm devloop --reset` | [automated-local] | `pnpm db:reset` plus `pnpm storage:seed`. Keeps the Docker volumes. Refuses when `APP_ENV=production`. |
+| `pnpm devloop --mobile <android\|ios>` | [human] | Rebuilds the dev client when the native fingerprint changed, otherwise starts Metro. Needs a phone or simulator. |
+| `pnpm devloop --mobile --mcp` | [human] | Starts Metro with the Expo MCP server enabled, so local agents can take screenshots and tap in the simulator. Requires `/mcp` Expo authentication by a person. |
+| `pnpm devloop --doctor` | [automated-local] | `expo-doctor`, `pnpm i18n:check`, an outdated-package summary and `pnpm audit --prod`. Needs network access. |
+| `pnpm devloop --clean` | [automated-local] | Removes `apps/web/.next`, the generated `apps/mobile/android` and `apps/mobile/ios` folders and `node_modules/.cache`. Never touches Docker volumes or `.env`. |
+
+### The daily loop
+
+1. **First time:** `corepack enable`, then `pnpm devloop --check`, then `pnpm devloop --setup`.
+2. **Every day:** `pnpm dev` for web, realtime and worker in watch mode, and `pnpm dev:mobile` for
+   Metro, with the dev client open on your phone.
+3. **JavaScript-only change:** Fast Refresh picks it up. **Native change** (a new Expo plugin,
+   permission or native library): the fingerprint changes, so run
+   `pnpm devloop --mobile android` or `pnpm devloop --mobile ios` to rebuild the dev client
+   (or `eas build --profile development`).
+4. **Data or index change:** `pnpm db:migrate`.
+5. **Before a pull request:** `pnpm check:only "...[origin/main]"` and `pnpm i18n:check`.
+6. **Production-like run:** `docker compose -f docker-compose.yml -f infra/compose/app.yml up --build`
+   runs the three production images against the local infrastructure (see `docs/RELEASING.md`).
+
+## Seed logins
+
+Every seeded account uses the password **`agrorende123`**. The seed is deterministic and its
+timestamps are relative to the moment you seed, so the demo always looks current.
+
+**Organization A, "AgroRende Demo Agro"** (active, Ribeirão Preto region):
+
+| Email | Person | Role | Use it for |
+|---|---|---|---|
+| `admin@agrorende.dev` | Ana Admin | ADMIN | Settings, team, subscription |
+| `gerente@agrorende.dev` | Paulo Gerente | MANAGER | Reports and costs |
+| `despacho@agrorende.dev` | Marina Despacho | MANAGER | Dispatch and the Operations Center |
+| `inspetor@agrorende.dev` | Joana Inspetora | FIELD | Reporting problems in the app |
+| `tecnico1@agrorende.dev` | Carlos Técnico | FIELD | Repair jobs in the app (also bound to the mock Google subject `mock-google-tecnico1`) |
+| `tecnico2@agrorende.dev` | Pedro Técnico | FIELD | Simulated technician |
+| `tecnico3@agrorende.dev` | Lucas Técnico | FIELD | Simulated technician |
+| `locacao@agrorende.dev` | Rafael Locação | FIELD | Rental hand-overs |
+| `convite@agrorende.dev` | Bruno Convidado | FIELD | Has not joined yet. Invite code `K7QM2XPA9F`, valid for 7 days after seeding. |
+
+**Organization B, "Fazenda Boa Vista"** (on a trial that ends 5 days after seeding):
+`admin@boavista.dev` (ADMIN). It exists to prove that tenants never see each other's data.
+
+**Platform console:** <http://localhost:3000/platform/login>. Staff sign in with Google only. Locally
+the page shows a "Google (mock) as…" email field; enter `staff@agrorende.dev`, which is listed in
+`PLATFORM_ADMIN_EMAILS` in `.env.example`.
+
+**Google and Apple sign-in** go to the local mock provider on port 4003. When the mock shows its
+login page, type any user name and, in the claims box, a JSON object such as
+`{"email":"you@example.dev","email_verified":true,"name":"Your Name"}`.
+The mock is for local development only and is never deployed.
+
+## Running the mobile app
+
+Expo Go is **not** supported, because the app uses native modules (SQLite, background location,
+camera, secure storage). You need a **dev client** build of the app.
+
+1. **[human]** Put the phone and the computer on the same Wi-Fi network.
+2. **[automated-local]** `pnpm devloop --lan` writes `EXPO_PUBLIC_API_URL` and `EXPO_PUBLIC_WS_URL`
+   to `apps/mobile/.env`, for example `http://192.168.0.10:3000` and `http://192.168.0.10:4001`.
+   On an emulator or simulator on the same machine, `http://localhost:3000` also works on iOS and
+   `http://10.0.2.2:3000` on Android.
+3. **[human]** Install the dev client once: `npx expo run:android` or `npx expo run:ios` from
+   `apps/mobile`, or `eas build --profile development` and install the build.
+4. **[human]** `pnpm dev:mobile` starts Metro. Open the AgroRende Dev app and scan the QR code.
+
+The development variant is called "AgroRende Dev" (`app.agrorende.field.dev`, URL scheme
+`agrorende-dev`), so it can sit next to the staging and store apps on the same phone.
+
+## Demo traffic
 
 ```bash
-corepack enable
-pnpm install
-pnpm dev:setup
+pnpm simulate            # [automated-local] needs `pnpm dev` running
 ```
 
-`pnpm dev:setup` copies `.env.example` to `.env` when it is missing, starts Docker Compose services, runs migrations, initializes local media storage, seeds the database, and seeds placeholder media.
+`pnpm simulate` signs in the seeded technicians (Carlos, Pedro, Lucas and Rafael), puts them on duty
+and drives them around the Ribeirão Preto region at 40–80 km/h, so the Operations Center map moves.
+When a simulated technician has an assigned job, the simulator accepts it, drives to it, starts work
+with a photo, fills in the checklist and completes it. Press Ctrl-C to stop; every simulated user is
+set off duty before the process exits.
 
-## Local stack
+| Flag | Default | Meaning |
+|---|---|---|
+| `--speed <n>` | `1` | Time multiplier. `--speed 20` makes a 5-minute repair take 15 seconds. |
+| `--users <emails>` | the four technicians | Comma-separated list of seeded emails to simulate. |
+| `--base-url <url>` | `APP_URL` or `http://localhost:3000` | Web/API server. |
+| `--ws-url <url>` | `NEXT_PUBLIC_REALTIME_URL` or `http://localhost:4001` | Realtime server. If it is unreachable, positions go through the REST API instead. |
+| `--password <pw>` | `SEED_PASSWORD` or `agrorende123` | Password of the simulated users. |
+| `--duration <seconds>` | none | Stop by itself after this long. |
+| `--help` | | Print the usage text. |
 
-Start infrastructure only:
+The full demo script is in [`docs/DEMO.md`](docs/DEMO.md).
 
-```bash
-docker compose up -d --wait mongo redis oidc-mock
-```
+## Scripts
 
-Start the application services:
+| Script | Label | What it does |
+|---|---|---|
+| `pnpm dev` | [automated-local] | Web (3000), realtime (4001) and worker (health on 4002) in watch mode. |
+| `pnpm dev:setup` | [automated-local] | First-time local setup (see above). |
+| `pnpm dev:mobile` | [human] | Metro for the Expo dev client. |
+| `pnpm dev:site` | [automated-local] | Public website on 3300. |
+| `pnpm build` / `pnpm build:site` | [automated-local] | Production builds; `build:site` serves the static site on 3301. |
+| `pnpm lint` · `pnpm typecheck` · `pnpm test` | [automated-local] | One step of the quality gate across the workspace. |
+| `pnpm check` | [automated-local] | Lint, typecheck and test everything. |
+| `pnpm check:only <filters>` | [automated-local] | The same gate for selected packages, for example `pnpm check:only worker web`. |
+| `pnpm i18n:check` | [automated-local] | Fails on missing or extra translation keys, invalid ICU messages, placeholder mismatches and empty strings. `--locale <x>` checks one locale. |
+| `pnpm db:migrate` | [automated-local] | Ensure indexes and run data migrations. |
+| `pnpm db:seed` | [automated-local] | Seed the demo data. Refuses a non-empty database unless `--force` (which clears it first) and always refuses when `APP_ENV=production`. |
+| `pnpm db:reset` | [automated-local] | Drop the selected database, migrate, seed and storage-seed. |
+| `pnpm db:shell` | [automated-local] | `mongosh` inside the MongoDB container. |
+| `pnpm storage:init` · `pnpm storage:seed` | [automated-local] | Create the media folders; render placeholder photos for seeded media. |
+| `pnpm simulate` | [automated-local] | Live demo traffic (see above). |
+| `pnpm smoke` | [automated-local] | End-to-end check against running servers: health, login, a report with a photo, a realtime event, `/ops/live` and a CSV export. Accepts `--base-url` and `--ws-url`. |
 
-```bash
-pnpm dev
-```
+## Tests
 
-Default local ports:
+| Command | Label | Notes |
+|---|---|---|
+| `pnpm check` | [automated-local] | Needs MongoDB, Redis and the OIDC mock from `pnpm dev:setup`. |
+| `pnpm check:only <filters>` | [automated-local] | Use `MONGODB_DB=agrorende_<name>` to keep test data apart from your dev database. |
+| `pnpm i18n:check` | [automated-local] | Run whenever you touch a translation file. |
+| `pnpm smoke --base-url http://localhost:3000 --ws-url http://localhost:4001` | [automated-local] | With `pnpm dev` running. |
 
-- Web and API: `http://localhost:3000`
-- Realtime: `http://localhost:4001`
-- Worker health: `http://localhost:4002`
-- Mock OAuth2 server: `http://localhost:4003`
-- MongoDB: `localhost:27017`
-- Redis: `localhost:6379`
+## Ports
 
-Run the mobile dev client:
+| Port | Service |
+|---|---|
+| 3000 | Office web app and REST API (`/api/v1`) |
+| 4001 | Realtime (Socket.IO) |
+| 4002 | Worker health |
+| 4003 | Mock OIDC provider for Google and Apple (end-to-end tests use 4103) |
+| 3300 · 3301 | Public site (dev · static) |
+| 27017 · 6379 | MongoDB · Redis |
 
-```bash
-pnpm devloop --lan
-pnpm dev:mobile
-```
+Every port can be moved with an environment variable: `PORT` for the web app, `REALTIME_PORT`,
+`WORKER_HEALTH_PORT`, and then `APP_URL`, `NEXT_PUBLIC_REALTIME_URL` and `REALTIME_CORS_ORIGINS` to
+match.
 
-Run the local readiness check:
+## Documentation
 
-```bash
-pnpm devloop --check
-```
-
-## Data and seed
-
-Reset and seed local data with:
-
-```bash
-pnpm db:reset
-pnpm storage:seed
-```
-
-Seed and reset commands refuse to run when `APP_ENV=production`. Seed media is generated under `MEDIA_ROOT`, normally `./.data/media`.
-
-## Validation
-
-```bash
-pnpm check
-pnpm i18n:check
-pnpm --filter web build
-pnpm devloop --check
-```
-
-Use `pnpm check:only <filters>` for focused checks before a pull request.
-
-## Repository layout
-
-```text
-apps/web        Next.js web app and API routes
-apps/mobile     Expo mobile app
-apps/realtime   Socket.IO realtime service
-apps/worker     Background worker and scheduled jobs
-packages/config Shared ESLint, Prettier, and TypeScript configuration
-packages/contracts Shared DTOs, schemas, state machines, errors, and seam types
-packages/db     MongoDB driver wrapper, schemas, migrations, indexes, tests, and seed
-packages/core   Domain kernel, module seams, jobs, storage, events, and activity
-packages/i18n   Locale registry, ICU helpers, pseudo-locale, and help URLs
-packages/design-tokens Shared Campo claro design tokens
-packages/api-client Generated or hand-written client package for API consumers
-scripts         Dev loop, checks, setup, i18n validation, and smoke entry points
-```
-
-## Normative documents
-
-- `docs/PRD.md`
-- `docs/ARCHITECTURE.md`
-- `docs/DELIVERY-PLAN.md`
-- `docs/TASKS.md`
-- `docs/ERRORS.md`
-- `docs/LANDSCAPE.md`
-
-These files are read-only for implementation agents unless a task explicitly says otherwise.
+| Document | For |
+|---|---|
+| [`docs/PRD.md`](docs/PRD.md) | What the product does and why. |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | How it is built; every name it defines is normative. |
+| [`docs/ERRORS.md`](docs/ERRORS.md) | Every error case, its code and the user's way out. |
+| [`docs/RUNBOOK.md`](docs/RUNBOOK.md) | Operating staging and production: secrets, providers, backups, restores, devices, logs. |
+| [`docs/RELEASING.md`](docs/RELEASING.md) | Environments, releases and deployment. |
+| [`docs/DEMO.md`](docs/DEMO.md) | The 10-minute product demo. |
+| [`docs/SUPPORT.md`](docs/SUPPORT.md) | What support does for each error case, team and account help. |
+| [`docs/TRANSLATING.md`](docs/TRANSLATING.md) | Adding or changing a language. |
+| [`docs/DELIVERY-PLAN.md`](docs/DELIVERY-PLAN.md) · [`docs/TASKS.md`](docs/TASKS.md) | How the build is organized into tasks and waves. |
