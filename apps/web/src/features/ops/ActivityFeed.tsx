@@ -24,6 +24,23 @@ export function mergeActivity(live: readonly OpsActivityItemDTO[], paged: readon
   return out;
 }
 
+interface ActivityT {
+  (key: string): string;
+  has(key: string): boolean;
+}
+
+/** Translated label for an activity action such as `workOrder.complete`; never shows the raw key. */
+export function activityActionLabel(t: ActivityT, action: string): string {
+  const key = `actions.${action}`;
+  return /^[A-Za-z]+(\.[A-Za-z]+)+$/.test(action) && t.has(key) ? t(key) : t("unknownAction");
+}
+
+/** Translated label for a `fromStatus`/`toStatus` value; never shows the raw enum. */
+export function activityStatusLabel(t: ActivityT, status: string): string {
+  const key = `status.${status}`;
+  return /^[A-Z_]+$/.test(status) && t.has(key) ? t(key) : t("unknownStatus");
+}
+
 export function ActivityFeed({ live }: { readonly live: readonly OpsActivityItemDTO[] }) {
   const t = useTranslations("ops.activity");
   const locale = useLocale();
@@ -48,13 +65,13 @@ export function ActivityFeed({ live }: { readonly live: readonly OpsActivityItem
         {items.map((item) => (
           <li className="py-2 text-sm" key={item.id}>
             <p>
-              <span className="font-semibold">{item.actorName ?? t("system")}</span> {t("action", { action: item.action, entity: item.entityType })}
+              <span className="font-semibold">{item.actorName ?? t("system")}</span> {t("action", { action: activityActionLabel(t, item.action), entity: item.entityType })}
             </p>
             {item.fromStatus !== null || item.toStatus !== null ? (
               <p className="flex items-center gap-1 text-xs text-[var(--ar-text-muted)]">
-                {item.fromStatus ?? "—"}
+                {item.fromStatus === null ? "—" : activityStatusLabel(t, item.fromStatus)}
                 <ArrowRight aria-label={t("to")} className="size-3" />
-                {item.toStatus ?? "—"}
+                {item.toStatus === null ? "—" : activityStatusLabel(t, item.toStatus)}
               </p>
             ) : null}
             <time className="text-xs text-[var(--ar-text-muted)]" dateTime={item.occurredAt}>

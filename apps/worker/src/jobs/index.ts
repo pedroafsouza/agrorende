@@ -1,7 +1,3 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
-
 import { collection as dbCollection, type CollectionName } from "@agrorende/db";
 import { Queue, Worker, type JobsOptions } from "bullmq";
 import type { Redis } from "ioredis";
@@ -127,9 +123,6 @@ export const PEER_JOB_OWNERS = {
 type PeerJobName = keyof typeof PEER_JOB_OWNERS;
 type OwnJobName = Exclude<JobName, PeerJobName>;
 
-const JOBS_DIR = path.dirname(fileURLToPath(import.meta.url));
-const REPO_ROOT = path.resolve(JOBS_DIR, "../../../..");
-
 export function workerKeyPrefix(dbName: string): string {
   return dbName === "agrorende" ? "agrorende" : `agrorende:${dbName}`;
 }
@@ -141,10 +134,6 @@ export function workerQueuePrefix(dbName: string): string {
 
 function isHandler(value: unknown): value is JobHandler {
   return typeof value === "function";
-}
-
-async function importModule(file: string): Promise<Doc> {
-  return (await import(pathToFileURL(file).href)) as Doc;
 }
 
 async function loadOwnHandlers(): Promise<Record<OwnJobName, JobHandler>> {
@@ -201,10 +190,6 @@ export const appleRevokeHandler: JobHandler = async (ctx, job) => {
   return { revoked: true };
 };
 
-function peerJobFile(name: PeerJobName): string | undefined {
-  return [".ts", ".js"].map((extension) => path.join(JOBS_DIR, `${name}${extension}`)).find((file) => existsSync(file));
-}
-
 function noopHandler(name: PeerJobName): JobHandler {
   return async (ctx) => {
     ctx.logger.info("worker.job.noop", { job: name, owner: PEER_JOB_OWNERS[name] });
@@ -212,7 +197,21 @@ function noopHandler(name: PeerJobName): JobHandler {
   };
 }
 
-/** Resolves a handler for every job name; peer files are picked up as soon as their owners add them. */
+/**
+ * Peer job modules, imported with literal specifiers so bundlers resolve them at build time
+ * (change request T18-002). The dynamic form keeps the import cycle with this module lazy: the
+ * job files import helpers from here. Jobs without a module yet run the explicit no-op.
+ */
+const PEER_JOB_MODULES: Partial<Record<PeerJobName, () => Promise<Doc>>> = {
+  "usage.daily": () => import("./usage.daily.js"),
+  "orgs.lifecycle": () => import("./orgs.lifecycle.js"),
+  "orgs.purge": () => import("./orgs.purge.js"),
+  "events.dispatch": () => import("./events.dispatch.js"),
+  "rentals.overdueScan": () => import("./rentals.overdueScan.js"),
+  "workOrders.slaScan": () => import("./workOrders.slaScan.js"),
+};
+
+/** Resolves a handler for every job name; peer jobs without a module run an explicit no-op. */
 export async function loadJobHandlers(): Promise<Record<JobName, JobHandler>> {
   const own = await loadOwnHandlers();
   const entries = await Promise.all(
@@ -221,14 +220,14 @@ export async function loadJobHandlers(): Promise<Record<JobName, JobHandler>> {
         return [name, own[name as OwnJobName]];
       }
       const peer = name as PeerJobName;
-      const file = peerJobFile(peer);
-      if (file === undefined) {
+      const load = PEER_JOB_MODULES[peer];
+      if (load === undefined) {
         return [name, noopHandler(peer)];
       }
-      const loaded = await importModule(file);
+      const loaded = await load();
       const handler = loaded.handler ?? loaded.default;
       if (!isHandler(handler)) {
-        throw new Error(`Worker job file for ${name} must export handler(ctx, job)`);
+        throw new Error(`Worker job module for ${name} must export handler(ctx, job)`);
       }
       return [name, handler];
     }),
@@ -280,7 +279,7 @@ interface ExportsModule {
 }
 
 interface AppleModule {
-  revokeAppleRefreshToken?: (input: AppleRevokeInput) => Promise<void>;
+  revokeAppleRefreshToken: (input: AppleRevokeInput) => Promise<void>;
 }
 
 type DriverDb = Parameters<typeof dbCollection>[0];
@@ -321,18 +320,10 @@ async function loadExports(): Promise<ExportsModule> {
   return (await import("@agrorende/core/modules/exports")) as unknown as ExportsModule;
 }
 
-/** The T02 handler is expected at `packages/core/src/auth/apple.ts` (change request T05-005). */
+/** The T02 Apple revoke handler, imported through the `@agrorende/core/auth/apple` entry point (change request T18-002). */
 async function resolveAppleRevoke(): Promise<(input: AppleRevokeInput) => Promise<void>> {
-  const file = path.join(REPO_ROOT, "packages/core/src/auth/apple.ts");
-  if (existsSync(file)) {
-    const apple = (await importModule(file)) as AppleModule;
-    if (apple.revokeAppleRefreshToken !== undefined) {
-      return apple.revokeAppleRefreshToken;
-    }
-  }
-  return async () => {
-    throw new Error("Apple revoke handler is not available yet");
-  };
+  const apple = (await import("@agrorende/core/auth/apple")) as AppleModule;
+  return apple.revokeAppleRefreshToken;
 }
 
 export interface PlatformOptions {

@@ -45,7 +45,7 @@ jobs:
         run: |
           docker compose up -d --wait mongo redis oidc-mock
           # The OAuth and golden-path tests sign in through the mock OIDC provider on :4003.
-          for attempt in $(seq 1 30); do curl -fsS http://localhost:4003/google/.well-known/openid-configuration > /dev/null && break; sleep 2; done
+          for _ in $(seq 1 30); do curl -fsS http://localhost:4003/google/.well-known/openid-configuration > /dev/null && break; sleep 2; done
 
       - name: Run migrations
         run: pnpm db:migrate

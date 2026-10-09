@@ -8,10 +8,9 @@ import { RealtimeServerEvents, type EntityChangedPayload, type RealtimeServerEve
 import type { EntityType } from "@agrorende/contracts/enums";
 
 import { api } from "@/lib/api";
+import { clientRealtimeUrl } from "@/lib/realtimeUrl";
 
 export type RealtimeState = "connecting" | "connected" | "reconnecting" | "offline";
-
-const REALTIME_URL = process.env.NEXT_PUBLIC_REALTIME_URL ?? "http://localhost:4001";
 
 /** EntityType → REST collection used as the first element of React Query keys. */
 export const ENTITY_QUERY_KEYS: Partial<Record<EntityType, readonly string[]>> = {
@@ -108,7 +107,7 @@ export function useRealtime(enabled: boolean): RealtimeState {
       try {
         const first = await token();
         if (cancelled) return;
-        socket = io(REALTIME_URL, { auth: (cb) => void (cb({ token: first })), transports: ["websocket"] });
+        socket = io(clientRealtimeUrl(), { auth: (cb) => void (cb({ token: first })), transports: ["websocket"] });
         socket.on("connect", () => setState("connected"));
         socket.on("disconnect", () => setState("reconnecting"));
         socket.io.on("reconnect_attempt", () => setState("reconnecting"));

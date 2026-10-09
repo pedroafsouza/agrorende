@@ -4,5 +4,5 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "include": ["src", "seed", "migrations", "scripts", "eslint.config.js", "vitest.config.ts"]
+  "include": ["src", "seed", "test", "migrations", "scripts", "eslint.config.js", "vitest.config.ts"]
 }

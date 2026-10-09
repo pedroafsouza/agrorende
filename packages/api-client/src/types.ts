@@ -6,8 +6,10 @@ import type {
   DamageDTO,
   FieldReportDTO,
   InspectionDTO,
+  LiveOperatorDTO,
   MaintenancePlanDTO,
   MediaDTO,
+  OpsLiveDTO,
   OrganizationDTO,
   PartDTO,
   PlotDTO,
@@ -421,26 +423,11 @@ export interface AttentionListQuery extends ListQuery {
   readonly kind?: AttentionKind;
 }
 
-export interface OpsLiveOperator {
-  readonly userId: string;
-  readonly name: string;
-  readonly online: boolean;
-  readonly dutyStatus: "OFF_DUTY" | "ON_DUTY";
-  readonly state: "OFFLINE" | "IDLE" | "EN_ROUTE" | "ON_SITE" | "WORKING";
-  readonly lat?: number | null;
-  readonly lng?: number | null;
-  readonly accuracyM?: number | null;
-  readonly recordedAt?: string | null;
-  readonly workOrderId?: string | null;
-}
+/** One operator on the live map, exactly as `GET /ops/live` returns it (change request T13-003). */
+export type OpsLiveOperator = LiveOperatorDTO;
 
-export interface OpsLiveResponse {
-  readonly operators: readonly OpsLiveOperator[];
-  readonly workOrders: readonly WorkOrderDTO[];
-  readonly rentals: readonly RentalDTO[];
-  readonly criticalReports: readonly FieldReportDTO[];
-  readonly serverTime: string;
-}
+/** The `GET /ops/live` payload, typed from the shared contracts schema. */
+export type OpsLiveResponse = OpsLiveDTO;
 
 export type OpsRange = "today" | "7d" | "30d" | "90d" | "season";
 

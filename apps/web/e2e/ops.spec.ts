@@ -57,8 +57,10 @@ test.describe("ops center", () => {
       await tech.send("POST", "/locations/batch", {
         fixes: [{ recordedAt: new Date().toISOString(), lat: -21.1775, lng: -47.8103, accuracyM: 12, batteryLevel: 0.8 }],
       });
-      // The seeded fixes are days old ("Out of date"); a fresh fix turns the operator live.
-      await expect(operator).toContainText("Available", { timeout: 30_000 });
+      // The seeded fixes are days old ("Out of date"); a fresh fix turns the operator live. The live
+      // state follows the operator's seeded jobs (Pedro has an active one since change request T13-002).
+      await expect(operator).toContainText(/Available|On the way|On site|Working/u, { timeout: 30_000 });
+      await expect(operator).not.toContainText("Out of date");
     } finally {
       await tech.apply([{ name: "user.setDuty", payload: { status: "OFF_DUTY" } }]);
     }

@@ -52,7 +52,7 @@ jobs:
         run: |
           docker compose up -d --wait mongo redis oidc-mock
           # The OAuth and golden-path tests sign in through the mock OIDC provider on :4003.
-          for attempt in $(seq 1 30); do curl -fsS http://localhost:4003/google/.well-known/openid-configuration > /dev/null && break; sleep 2; done
+          for _ in $(seq 1 30); do curl -fsS http://localhost:4003/google/.well-known/openid-configuration > /dev/null && break; sleep 2; done
 
       - name: Run workspace checks
         run: pnpm check
@@ -82,6 +82,43 @@ jobs:
             coverage/**
             **/coverage/**
           if-no-files-found: ignore
+
+  chaos:
+    name: chaos
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: checks
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11.0.9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Start local services
+        run: docker compose up -d --wait mongo redis
+
+      # ARCHITECTURE §15: the offline chaos suite runs three times in a row (change request T12-001).
+      - name: Run offline chaos suite three times
+        env:
+          MONGODB_DB: agrorende_t12
+          MEDIA_ROOT: ./.data/media-t12
+        run: |
+          for run in 1 2 3; do
+            echo "Chaos run ${run} of 3"
+            pnpm --filter mobile test:chaos
+          done
 
   build:
     name: build

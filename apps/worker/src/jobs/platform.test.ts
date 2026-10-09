@@ -182,6 +182,15 @@ describe("job registry", () => {
     }
   });
 
+  it("loads every implemented peer job module instead of the no-op (change request T18-002)", async () => {
+    const events = await import("./events.dispatch.js");
+    const sla = await import("./workOrders.slaScan.js");
+    const usage = await import("./usage.daily.js");
+    expect(handlers["events.dispatch"]).toBe(events.handler);
+    expect(handlers["workOrders.slaScan"]).toBe(sla.handler);
+    expect(handlers["usage.daily"]).toBe(usage.handler);
+  });
+
   it("namespaces Redis keys by MONGODB_DB", () => {
     expect(platform.keyPrefix).toContain(DB_NAME);
   });

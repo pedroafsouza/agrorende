@@ -4,6 +4,8 @@ import { collections, getDb, platform, scoped } from "@agrorende/db";
 import { AppError } from "@agrorende/contracts/errors";
 import {
   CLOCK_SKEW_TOLERANCE_MS,
+  compareAppVersions,
+  MUTATION_MIN_APP_VERSION,
   MutationEnvelopeSchema,
   MutationNameEnum,
   PushRequestSchema,
@@ -59,6 +61,8 @@ export interface PushOptions {
   readonly logger?: Logger;
   /** Test seam: replaces the registry lookup. */
   readonly handlers?: Partial<Record<string, MutationHandler<unknown>>>;
+  /** Test seam: replaces `MUTATION_MIN_APP_VERSION`. */
+  readonly minAppVersions?: Readonly<Partial<Record<string, string>>>;
 }
 
 interface ProcessedMutationRow {
@@ -273,6 +277,14 @@ function outcomeResult(envelope: LenientEnvelope, outcome: MutationOutcome): Mut
   return { id: envelope.id, status: "APPLIED", ...(outcome.assigned === undefined ? {} : { assigned: outcome.assigned }) };
 }
 
+/** EC-SYN-09: an invalid payload from an app older than the mutation's schema asks for an app update. */
+export function schemaUpdateContext(name: string, appVersion: string, options: Pick<PushOptions, "minAppVersions"> = {}): { context: "schemaUpdate"; minAppVersion: string } | Record<string, never> {
+  const minimums: Readonly<Partial<Record<string, string>>> = options.minAppVersions ?? MUTATION_MIN_APP_VERSION;
+  const minAppVersion = minimums[name];
+  if (minAppVersion === undefined || compareAppVersions(appVersion, minAppVersion) >= 0) return {};
+  return { context: "schemaUpdate", minAppVersion };
+}
+
 async function applyEnvelope(ctx: Ctx, request: LenientPushRequest, envelope: LenientEnvelope, receivedAt: Date, options: PushOptions): Promise<MutationResult> {
   const hash = requestHash(envelope);
   const processed = await readProcessed(ctx, envelope.id);
@@ -298,7 +310,13 @@ async function applyEnvelope(ctx: Ctx, request: LenientPushRequest, envelope: Le
       request,
       envelope,
       hash,
-      rejected(envelope, "VALIDATION_FAILED", "VALIDATION_FAILED", { details: { issues: parsed.error.issues.map((issue) => ({ path: issue.path.join("."), code: issue.code })) }, snapshot: null }),
+      rejected(envelope, "VALIDATION_FAILED", "VALIDATION_FAILED", {
+        details: {
+          issues: parsed.error.issues.map((issue) => ({ path: issue.path.join("."), code: issue.code })),
+          ...schemaUpdateContext(envelope.name, request.deviceStatus.appVersion, options),
+        },
+        snapshot: null,
+      }),
       receivedAt,
     );
   }

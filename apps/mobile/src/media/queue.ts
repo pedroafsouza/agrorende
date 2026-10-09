@@ -328,6 +328,12 @@ export async function allowMobileDataOnce(db: SqlDb, mediaId: string): Promise<v
   await db.run("UPDATE media_files SET wifiOnly = 0, nextAttemptAt = NULL WHERE mediaId = ? AND wifiOnly = 1", [mediaId]);
 }
 
+/** Settings → "Enviar agora": the same one-time override for every waiting file (change request T12-002). */
+export async function allowMobileDataForAll(db: SqlDb): Promise<number> {
+  const result = await db.run("UPDATE media_files SET wifiOnly = 0, nextAttemptAt = NULL WHERE wifiOnly = 1 AND state IN ('QUEUED', 'UPLOADING', 'UPLOADED')");
+  return result.changes;
+}
+
 export async function discardMediaFile(db: SqlDb, files: FileStore, mediaId: string): Promise<void> {
   const row = await db.get<{ localUri: string; thumbUri: string | null }>("SELECT localUri, thumbUri FROM media_files WHERE mediaId = ? AND state = 'FAILED'", [mediaId]);
   if (row === undefined) return;

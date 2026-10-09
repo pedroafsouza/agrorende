@@ -43,3 +43,10 @@ nodeLinker: hoisted
 autoInstallPeers: true
 strictPeerDependencies: false
 resolutionMode: highest
+
+# One Playwright in the tree: `@playwright/cli` (agent toolkit) pins an alpha build, which would
+# otherwise shadow the `playwright` binary that runs the web E2E suite (change request T11-001).
+overrides:
+  "@playwright/cli>@playwright/test": "1.64.0"
+  "@playwright/cli>playwright": "1.64.0"
+  "@playwright/cli>playwright-core": "1.64.0"

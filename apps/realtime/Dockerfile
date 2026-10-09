@@ -22,10 +22,6 @@ WORKDIR /repo
 
 FROM base AS builder
 COPY . .
-# The root .dockerignore only matches top-level folders, so nested node_modules, env files and media
-# folders from a developer checkout are removed before installing (change request T18-001). The
-# builder stage is never shipped; only /out reaches the runner.
-RUN sh infra/docker/clean-context.sh
 RUN pnpm install --frozen-lockfile --filter "realtime..."
 RUN node infra/docker/bundle.mjs realtime /bundle
 RUN pnpm deploy --filter realtime --prod --legacy --ignore-scripts /out \

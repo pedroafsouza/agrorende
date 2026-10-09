@@ -6,6 +6,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 import { resolveWebLocale } from "@/i18n/request";
+import { REALTIME_URL_META, serverRealtimeUrl } from "@/lib/realtimeUrl";
 import { campoClaroThemeStyle } from "@/styles/theme";
 
 export const metadata: Metadata = {
@@ -26,6 +27,9 @@ export default async function RootLayout({ children }: { readonly children: Reac
 
   return (
     <html lang={locale} style={campoClaroThemeStyle}>
+      <head>
+        <meta name={REALTIME_URL_META} content={serverRealtimeUrl()} />
+      </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}

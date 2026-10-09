@@ -16,6 +16,8 @@
     "./notify": "./src/notify/index.ts",
     "./tenancy": "./src/tenancy/index.ts",
     "./auth/api": "./src/auth/api/index.ts",
+    "./auth/apple": "./src/auth/apple.ts",
+    "./startup": "./src/startup/productionEnv.ts",
     "./modules/locations": "./src/modules/locations/index.ts",
     "./modules/exports": "./src/modules/exports/index.ts",
     "./modules/*": "./src/modules/*.ts"

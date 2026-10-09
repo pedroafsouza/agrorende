@@ -79,6 +79,147 @@
     "empty": "Nada aconteceu ainda hoje.",
     "system": "Sistema",
     "action": "{action} · {entity, select, WORK_ORDER {ordem de serviço} FIELD_REPORT {relato} RENTAL {locação} ASSET {máquina} USER {usuário} DEVICE {celular} other {registro}}",
+    "unknownAction": "Alteração registrada",
+    "unknownStatus": "Outra situação",
+    "actions": {
+      "workOrder": {
+        "create": "OS criada",
+        "update": "OS editada",
+        "assign": "Atribuída",
+        "assigned": "Atribuída",
+        "reassign": "Reatribuída",
+        "reassignReason": "Motivo da troca registrado",
+        "reassignedAway": "Retirada do técnico",
+        "accept": "Aceita pelo técnico",
+        "decline": "Recusada pelo técnico",
+        "startRoute": "Técnico a caminho",
+        "arrive": "Técnico chegou",
+        "abortRoute": "Deslocamento interrompido",
+        "startWork": "Trabalho iniciado",
+        "hold": "Colocada em espera",
+        "resume": "Trabalho retomado",
+        "resumed": "Liberada pela central",
+        "saveChecklist": "Checklist atualizado",
+        "addPart": "Peça adicionada",
+        "removePart": "Peça removida",
+        "complete": "Concluída",
+        "lateEvidence": "Evidência tardia recebida",
+        "readingIgnored": "Leitura do horímetro ignorada",
+        "externalCost": "Custo externo registrado",
+        "verify": "Verificada",
+        "reopen": "Reaberta",
+        "reopened": "Reaberta",
+        "cancel": "Cancelada",
+        "cancelled": "Cancelada",
+        "reportAttached": "Relato vinculado",
+        "transition": "Situação alterada"
+      },
+      "fieldReport": {
+        "create": "Relato enviado",
+        "created": "Relato enviado",
+        "createdFromDamage": "Relato criado a partir de um dano",
+        "update": "Relato editado",
+        "updated": "Relato editado",
+        "reviewStarted": "Análise iniciada",
+        "markedForRepair": "Marcado para conserto",
+        "monitoring": "Em acompanhamento",
+        "dismissed": "Descartado",
+        "mergedAsDuplicate": "Unido como duplicado",
+        "duplicateMerged": "Duplicado unido",
+        "withdraw": "Retirado",
+        "withdrawn": "Retirado"
+      },
+      "rental": {
+        "created": "Locação criada",
+        "updated": "Locação editada",
+        "reserved": "Reservada",
+        "extended": "Prorrogada",
+        "checkout": "Máquina entregue",
+        "checkedOut": "Máquina entregue",
+        "checkin": "Máquina devolvida",
+        "checkedIn": "Máquina devolvida",
+        "closed": "Encerrada",
+        "cancelled": "Cancelada",
+        "chargeAdded": "Cobrança adicionada",
+        "chargeRemoved": "Cobrança removida",
+        "chargesRecomputed": "Cobranças recalculadas",
+        "damagesNotAcknowledged": "Danos não reconhecidos pelo cliente",
+        "termsOlderAccepted": "Termos anteriores aceitos"
+      },
+      "asset": {
+        "created": "Máquina cadastrada",
+        "conditionChanged": "Condição alterada",
+        "readingsUpdated": "Leituras atualizadas",
+        "updateReadings": "Leituras atualizadas",
+        "meterReplaced": "Horímetro trocado"
+      },
+      "damage": {
+        "updated": "Dano editado",
+        "repaired": "Dano consertado",
+        "workOrderCreated": "OS aberta para um dano"
+      },
+      "inspection": {
+        "submitted": "Vistoria enviada"
+      },
+      "attention": {
+        "resolved": "Pendência resolvida"
+      },
+      "customer": {
+        "created": "Cliente cadastrado",
+        "deleted": "Cliente removido",
+        "archived": "Cliente arquivado",
+        "restored": "Cliente restaurado"
+      },
+      "site": {
+        "created": "Local cadastrado",
+        "deleted": "Local removido",
+        "archived": "Local arquivado",
+        "restored": "Local restaurado"
+      },
+      "plot": {
+        "created": "Talhão cadastrado",
+        "archived": "Talhão arquivado",
+        "restored": "Talhão restaurado"
+      },
+      "season": {
+        "created": "Safra criada",
+        "updated": "Safra editada",
+        "closed": "Safra encerrada"
+      },
+      "template": {
+        "published": "Checklist publicado",
+        "deleted": "Checklist removido",
+        "archived": "Checklist arquivado",
+        "restored": "Checklist restaurado"
+      }
+    },
+    "status": {
+      "OPEN": "Aberta",
+      "ASSIGNED": "Atribuída",
+      "ACCEPTED": "Aceita",
+      "EN_ROUTE": "A caminho",
+      "ON_SITE": "No local",
+      "IN_PROGRESS": "Em andamento",
+      "ON_HOLD": "Em espera",
+      "COMPLETED": "Concluída",
+      "VERIFIED": "Verificada",
+      "CANCELLED": "Cancelada",
+      "SUBMITTED": "Recebido",
+      "IN_REVIEW": "Em análise",
+      "MARKED_FOR_REPAIR": "Marcado para conserto",
+      "MONITORING": "Em acompanhamento",
+      "DISMISSED": "Descartado",
+      "DRAFT": "Rascunho",
+      "RESERVED": "Reservada",
+      "ACTIVE": "Ativa",
+      "RETURNED": "Devolvida",
+      "CLOSED": "Encerrada",
+      "OPERATIONAL": "Operando",
+      "NEEDS_REPAIR": "Precisa de conserto",
+      "IN_REPAIR": "Em conserto",
+      "OUT_OF_SERVICE": "Fora de serviço",
+      "RETIRED": "Desativada"
+    },
     "to": "mudou para",
     "more": "Carregar eventos anteriores"
   },

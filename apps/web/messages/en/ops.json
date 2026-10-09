@@ -79,6 +79,147 @@
     "empty": "Nothing happened yet today.",
     "system": "System",
     "action": "{action} · {entity, select, WORK_ORDER {work order} FIELD_REPORT {field report} RENTAL {rental} ASSET {machine} USER {user} DEVICE {phone} other {record}}",
+    "unknownAction": "Change recorded",
+    "unknownStatus": "Other status",
+    "actions": {
+      "workOrder": {
+        "create": "Work order created",
+        "update": "Work order edited",
+        "assign": "Assigned",
+        "assigned": "Assigned",
+        "reassign": "Reassigned",
+        "reassignReason": "Reassignment reason recorded",
+        "reassignedAway": "Taken off the technician",
+        "accept": "Accepted by the technician",
+        "decline": "Declined by the technician",
+        "startRoute": "Technician on the way",
+        "arrive": "Technician arrived",
+        "abortRoute": "Trip stopped",
+        "startWork": "Work started",
+        "hold": "Put on hold",
+        "resume": "Work resumed",
+        "resumed": "Released by the office",
+        "saveChecklist": "Checklist updated",
+        "addPart": "Part added",
+        "removePart": "Part removed",
+        "complete": "Completed",
+        "lateEvidence": "Late evidence received",
+        "readingIgnored": "Hour meter reading ignored",
+        "externalCost": "External cost recorded",
+        "verify": "Verified",
+        "reopen": "Reopened",
+        "reopened": "Reopened",
+        "cancel": "Cancelled",
+        "cancelled": "Cancelled",
+        "reportAttached": "Report attached",
+        "transition": "Status changed"
+      },
+      "fieldReport": {
+        "create": "Report sent",
+        "created": "Report sent",
+        "createdFromDamage": "Report created from a damage",
+        "update": "Report edited",
+        "updated": "Report edited",
+        "reviewStarted": "Review started",
+        "markedForRepair": "Marked for repair",
+        "monitoring": "Under monitoring",
+        "dismissed": "Dismissed",
+        "mergedAsDuplicate": "Merged as a duplicate",
+        "duplicateMerged": "Duplicate merged",
+        "withdraw": "Withdrawn",
+        "withdrawn": "Withdrawn"
+      },
+      "rental": {
+        "created": "Rental created",
+        "updated": "Rental edited",
+        "reserved": "Reserved",
+        "extended": "Extended",
+        "checkout": "Machine handed over",
+        "checkedOut": "Machine handed over",
+        "checkin": "Machine returned",
+        "checkedIn": "Machine returned",
+        "closed": "Closed",
+        "cancelled": "Cancelled",
+        "chargeAdded": "Charge added",
+        "chargeRemoved": "Charge removed",
+        "chargesRecomputed": "Charges recalculated",
+        "damagesNotAcknowledged": "Damages not acknowledged by the customer",
+        "termsOlderAccepted": "Older terms accepted"
+      },
+      "asset": {
+        "created": "Machine added",
+        "conditionChanged": "Condition changed",
+        "readingsUpdated": "Readings updated",
+        "updateReadings": "Readings updated",
+        "meterReplaced": "Hour meter replaced"
+      },
+      "damage": {
+        "updated": "Damage edited",
+        "repaired": "Damage repaired",
+        "workOrderCreated": "Work order opened for a damage"
+      },
+      "inspection": {
+        "submitted": "Inspection sent"
+      },
+      "attention": {
+        "resolved": "Attention item resolved"
+      },
+      "customer": {
+        "created": "Customer added",
+        "deleted": "Customer removed",
+        "archived": "Customer archived",
+        "restored": "Customer restored"
+      },
+      "site": {
+        "created": "Site added",
+        "deleted": "Site removed",
+        "archived": "Site archived",
+        "restored": "Site restored"
+      },
+      "plot": {
+        "created": "Plot added",
+        "archived": "Plot archived",
+        "restored": "Plot restored"
+      },
+      "season": {
+        "created": "Season created",
+        "updated": "Season edited",
+        "closed": "Season closed"
+      },
+      "template": {
+        "published": "Checklist published",
+        "deleted": "Checklist removed",
+        "archived": "Checklist archived",
+        "restored": "Checklist restored"
+      }
+    },
+    "status": {
+      "OPEN": "Open",
+      "ASSIGNED": "Assigned",
+      "ACCEPTED": "Accepted",
+      "EN_ROUTE": "En route",
+      "ON_SITE": "On site",
+      "IN_PROGRESS": "In progress",
+      "ON_HOLD": "On hold",
+      "COMPLETED": "Completed",
+      "VERIFIED": "Verified",
+      "CANCELLED": "Cancelled",
+      "SUBMITTED": "Received",
+      "IN_REVIEW": "In review",
+      "MARKED_FOR_REPAIR": "Marked for repair",
+      "MONITORING": "Monitoring",
+      "DISMISSED": "Dismissed",
+      "DRAFT": "Draft",
+      "RESERVED": "Reserved",
+      "ACTIVE": "Active",
+      "RETURNED": "Returned",
+      "CLOSED": "Closed",
+      "OPERATIONAL": "Operational",
+      "NEEDS_REPAIR": "Needs repair",
+      "IN_REPAIR": "In repair",
+      "OUT_OF_SERVICE": "Out of service",
+      "RETIRED": "Retired"
+    },
     "to": "changed to",
     "more": "Load older events"
   },

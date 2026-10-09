@@ -175,18 +175,14 @@ describe("read seams against the demo seed", () => {
 
   it("workOrders.openCountByAssignee counts the seeded active jobs per person", async () => {
     const counts = await run(manager, (tx) => workOrderSeams.openCountByAssignee(tx, ORG_A));
-    // Seed WOs 2..11 are active (OPEN..ON_HOLD) with assignees userIds[(4 + i) % 10]; WO 1 has none.
+    // Seed WOs 2..11 are active (OPEN..ON_HOLD). WO 1 has no assignee, WO 11 (ON_HOLD) is Carlos's only open
+    // job, and the others rotate over Pedro, Lucas, Rafael and Joana (§17, change request T13-002).
     expect(Object.fromEntries(counts)).toEqual({
-      [USERS.admin]: 1,
-      [USERS.manager]: 1,
-      [USERS.dispatcher]: 1,
-      [USERS.joana]: 1,
       [USERS.carlos]: 1,
-      [USERS.pedro]: 1,
-      [USERS.lucas]: 1,
-      [USERS.rafael]: 1,
-      [USERS.invitee]: 1,
-      [USERS.orgBAdmin]: 1,
+      [USERS.pedro]: 2,
+      [USERS.lucas]: 3,
+      [USERS.rafael]: 2,
+      [USERS.joana]: 2,
     });
   });
 

@@ -1,6 +1,6 @@
 import { SUPPORTED_LOCALES } from "@agrorende/i18n";
 import { useRouter } from "expo-router";
-import { CircleHelp, Languages, LogOut, Navigation, Palette, RefreshCw, Trash2, Wifi } from "lucide-react-native";
+import { CircleHelp, Download, Languages, LogOut, Navigation, Palette, RefreshCw, Send, Trash2, Wifi } from "lucide-react-native";
 import { useState } from "react";
 import { Platform, Switch, View } from "react-native";
 
@@ -13,6 +13,7 @@ import { useServices } from "../../lib/services";
 import { bumpLocalData, useLocalQuery } from "../../lib/useLocalQuery";
 import { BottomSheet, Button, Card, ConfirmDialog, ListItem, Screen, Segmented, Skeleton, Text, TextField, setThemePreference, showToast, useThemePreference, type ThemePreference } from "../../ui";
 import { AskOfficeButton } from "../../ui/recovery";
+import { savePendingWorkCopy, sendEverythingNow } from "../sync/pendingWork";
 import { deleteAccount, signOutHere } from "./account";
 import { PushMuteCard } from "./PushMuteCard";
 import { deleteConfirmationMatches, loadUserSettings, pendingItemCount, saveNavApp, saveWifiOnlyVideo } from "./logic";
@@ -33,6 +34,8 @@ export function SettingsScreen() {
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | undefined>(undefined);
+  const [sendingNow, setSendingNow] = useState(false);
+  const [savingCopy, setSavingCopy] = useState(false);
   const platform = Platform.OS === "ios" ? "ios" : "android";
 
   function changeLocale(next: AppLocale): void {
@@ -67,6 +70,31 @@ export function SettingsScreen() {
 
   const pending = query.status === "ready" ? query.data.pending : 0;
   const user = authStore.getState().user;
+
+  async function sendNow(): Promise<void> {
+    setSendingNow(true);
+    showToast({ messageKey: "settings.account.sending" });
+    try {
+      await sendEverythingNow(services);
+    } catch (_error) {
+      // The sync cycle reports its own errors in Sync Center; nothing is lost here.
+    } finally {
+      setSendingNow(false);
+    }
+  }
+
+  async function saveCopy(): Promise<void> {
+    const userId = services.userId ?? user?.id;
+    if (services.db === undefined || userId === undefined) return;
+    setSavingCopy(true);
+    try {
+      await savePendingWorkCopy(services.db, userId);
+    } catch (_error) {
+      showToast({ messageKey: "sync.copy.failed", tone: "danger" });
+    } finally {
+      setSavingCopy(false);
+    }
+  }
 
   return (
     <Screen testID="settings">
@@ -134,6 +162,14 @@ export function SettingsScreen() {
       <Card>
         <Text i18nKey="settings.account.title" variant="heading" />
         {user === undefined ? null : <Text tone="secondary">{user.name}</Text>}
+        <Text testID="settings-pending" i18nKey="settings.account.pending" values={{ count: pending }} tone="secondary" />
+        {pending > 0 ? (
+          <>
+            <Text i18nKey="settings.account.sendNowHint" tone="secondary" variant="caption" />
+            <Button testID="settings-send-now" labelKey="sync.action.sendNow" icon={Send} loading={sendingNow} onPress={() => void sendNow()} />
+            <Button testID="settings-save-copy" labelKey="sync.action.saveCopy" icon={Download} variant="secondary" loading={savingCopy} onPress={() => void saveCopy()} />
+          </>
+        ) : null}
         <Button testID="settings-logout" labelKey="settings.account.logout" icon={LogOut} variant="secondary" loading={busy} onPress={() => (pending > 0 ? setLogoutGuard(true) : void signOut())} />
         <Button testID="settings-delete" labelKey="settings.account.delete" icon={Trash2} variant="ghost" onPress={() => (pending > 0 ? setDeleteGuard(true) : setDeleteOpen(true))} />
       </Card>
@@ -156,7 +192,7 @@ export function SettingsScreen() {
         confirmLabelKey="errors.ACCOUNT_DELETE_PENDING_DATA.action"
         onConfirm={() => {
           setDeleteGuard(false);
-          void services.syncNow?.().catch(() => undefined);
+          void sendEverythingNow(services).catch(() => undefined);
           showToast({ messageKey: "settings.account.sending" });
           router.push("/sync-center");
         }}

@@ -10,7 +10,9 @@
     "logout": "Sair deste aparelho",
     "logoutAnyway": "Sair mesmo assim",
     "sending": "Enviando…",
-    "title": "Conta"
+    "title": "Conta",
+    "pending": "{count, plural, =0 {Nada esperando envio} one {# item esperando envio} other {# itens esperando envio}}",
+    "sendNowHint": "Envia tudo agora, inclusive vídeos por dados móveis desta vez."
   },
   "help": {
     "body": "Diagnóstico, versão do app e contato",

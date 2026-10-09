@@ -1,8 +1,11 @@
+import { assertProductionEnv } from "@agrorende/core/startup";
+
 import { readRealtimeConfig } from "./config.js";
 import { closeLocationsDb } from "./core.js";
 import { createJsonLogger } from "./logger.js";
 import { createRealtimeServer } from "./server.js";
 
+assertProductionEnv("realtime");
 const logger = createJsonLogger("realtime");
 const runtime = createRealtimeServer(readRealtimeConfig(), { logger });
 

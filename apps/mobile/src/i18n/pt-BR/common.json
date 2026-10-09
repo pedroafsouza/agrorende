@@ -314,7 +314,8 @@
       "quickReportBody": "Fotos, áudio e local em poucos toques",
       "rentalsToday": "Locações de hoje",
       "rentalsTodayBody": "Saídas e devoluções",
-      "signInAgain": "Entrar de novo"
+      "signInAgain": "Entrar de novo",
+      "reauthPending": "{count, plural, one {# item espera} other {# itens esperam}} para enviar. Nada será apagado."
     },
     "loading": "Carregando",
     "map": {

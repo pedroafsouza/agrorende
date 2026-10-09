@@ -72,6 +72,18 @@ describe("sync push", () => {
   it("rejects an invalid payload with VALIDATION_FAILED", async () => {
     const result = await push(seedCtx(FIELD_103, "FIELD"), request([{ name: "user.setDuty", payload: { status: "SLEEPING" } }]));
     expect(result.results[0]).toMatchObject({ status: "REJECTED", code: "VALIDATION_FAILED" });
+    expect((result.results[0] as { details?: Record<string, unknown> }).details?.context).toBeUndefined();
+  });
+
+  it("adds the schemaUpdate context when an older app sends a payload the schema no longer accepts (EC-SYN-09)", async () => {
+    const minAppVersions = { "user.setDuty": "1.2.0" };
+    const old = await push(seedCtx(FIELD_103, "FIELD"), request([{ name: "user.setDuty", payload: { status: "SLEEPING" } }]), { minAppVersions });
+    expect(old.results[0]).toMatchObject({ status: "REJECTED", code: "VALIDATION_FAILED", details: { context: "schemaUpdate", minAppVersion: "1.2.0" } });
+
+    const current = { ...request([{ name: "user.setDuty", payload: { status: "SLEEPING" } }]) };
+    const upToDate = await push(seedCtx(FIELD_103, "FIELD"), { ...current, deviceStatus: { ...current.deviceStatus, appVersion: "1.10.0" } }, { minAppVersions });
+    expect(upToDate.results[0]).toMatchObject({ status: "REJECTED", code: "VALIDATION_FAILED" });
+    expect((upToDate.results[0] as { details?: Record<string, unknown> }).details?.context).toBeUndefined();
   });
 
   it("rejects a domain error with a snapshot and stores the rejection", async () => {

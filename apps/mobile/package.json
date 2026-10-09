@@ -9,8 +9,9 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "lint": "eslint . --max-warnings 0",
-    "typecheck": "tsc --noEmit",
-    "test": "jest --runInBand"
+    "typecheck": "tsc --noEmit && tsc --noEmit -p tsconfig.test.json",
+    "test": "jest --runInBand",
+    "test:chaos": "vitest run --config test/sync/chaos/vitest.config.ts"
   },
   "dependencies": {
     "@agrorende/api-client": "workspace:*",
@@ -83,6 +84,7 @@
     "jest-expo": "^57.0.5",
     "msw": "^3.0.2",
     "test-renderer": "^1.3.0",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

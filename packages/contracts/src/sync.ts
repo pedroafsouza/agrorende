@@ -72,6 +72,26 @@ export type MutationEnvelope = z.infer<typeof MutationEnvelopeSchema>;
 
 export const PUSH_BATCH_MIN = 1;
 export const PUSH_BATCH_MAX = 50;
+
+/**
+ * Lowest app version whose payload schema each mutation accepts (EC-SYN-09). Raise an entry
+ * when a mutation's payload changes in a way older apps cannot satisfy; a payload that fails
+ * validation from an app below this version is rejected with `VALIDATION_FAILED` and the
+ * `schemaUpdate` context, so the device asks the user to update instead of "check the data".
+ */
+export const MUTATION_MIN_APP_VERSION: Readonly<Partial<Record<MutationName, string>>> = {};
+
+/** Compares dotted numeric app versions (`1.2.10` > `1.2.9`); non-numeric parts count as 0. */
+export function compareAppVersions(left: string, right: string): number {
+  const parts = (value: string): number[] => value.split(/[.+-]/).slice(0, 3).map((part) => Number.parseInt(part, 10) || 0);
+  const a = parts(left);
+  const b = parts(right);
+  for (let index = 0; index < 3; index += 1) {
+    const diff = (a[index] ?? 0) - (b[index] ?? 0);
+    if (diff !== 0) return Math.sign(diff);
+  }
+  return 0;
+}
 export const TELEMETRY_BATCH_MAX = 50;
 
 export const PushRequestSchema = z.object({

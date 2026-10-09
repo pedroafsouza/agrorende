@@ -2,7 +2,9 @@
   "action": {
     "discard": "Discard",
     "syncNow": "Sync now",
-    "understood": "Got it"
+    "understood": "Got it",
+    "sendNow": "Send now",
+    "saveCopy": "Save a copy"
   },
   "badge": {
     "failed": "Send failed",
@@ -118,5 +120,12 @@
       "WAITING_PARENT": "Waiting for record"
     },
     "waitingWifi": "Waiting for Wi-Fi"
+  },
+  "copy": {
+    "title": "Copy of pending items",
+    "failed": "Could not save the copy. Your data is still on this device."
+  },
+  "attention": {
+    "title": "Needs attention"
   }
 }

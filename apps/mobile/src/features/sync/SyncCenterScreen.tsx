@@ -11,6 +11,7 @@ import { AskOfficeButton } from "../../ui/recovery";
 import { recoveryConfig } from "../../ui/recovery/config";
 import { loadSyncCenter, mutationLabelKey } from "./data";
 import { formatBytes, formatRelative } from "./format";
+import { SyncAttentionBanners } from "./SyncAttention";
 
 /** Sync Center (OFF-05/06): last sync, queued work, uploads, conflicts, Sync now and diagnostics. */
 export function SyncCenterScreen() {
@@ -72,6 +73,7 @@ export function SyncCenterScreen() {
       {offline ? <Banner tone="offline" titleKey="sync.offline.title" bodyKey="sync.offline.body" /> : null}
       {snapshot.clockSkewed ? <Banner tone="warning" titleKey="errors.CLOCK_SKEW.title" bodyKey="errors.CLOCK_SKEW.body" /> : null}
       {snapshot.lastError !== undefined && !offline ? <Banner tone="error" titleKey={`errors.${snapshot.lastError}.title`} bodyKey={`errors.${snapshot.lastError}.body`} /> : null}
+      <SyncAttentionBanners exclude={new Set(snapshot.lastError === undefined || offline ? [] : [snapshot.lastError])} />
 
       {query.status === "loading" ? <Skeleton lines={4} /> : null}
       {query.status === "error" ? <ErrorState onRetry={query.reload} /> : null}

@@ -6,8 +6,7 @@
 #
 # The builder installs the workspace with the frozen lockfile, bundles the TypeScript sources with
 # esbuild (infra/docker/bundle.mjs) and runs `pnpm deploy --filter worker --prod` for the runtime
-# dependencies. The worker resolves peer job modules and the Apple revoke handler by path from
-# apps/worker/src/jobs, so /app mirrors the repository layout (change request T18-002). The runner is node:24-bookworm-slim, runs as the `node` user and reads every setting
+# dependencies. The runner is node:24-bookworm-slim, runs as the `node` user and reads every setting
 # from the environment at start. No .env file is ever copied into the image.
 
 ARG NODE_IMAGE=node:24-bookworm-slim
@@ -23,17 +22,13 @@ WORKDIR /repo
 
 FROM base AS builder
 COPY . .
-# The root .dockerignore only matches top-level folders, so nested node_modules, env files and media
-# folders from a developer checkout are removed before installing (change request T18-001). The
-# builder stage is never shipped; only /out reaches the runner.
-RUN sh infra/docker/clean-context.sh
 RUN pnpm install --frozen-lockfile --filter "worker..."
 RUN node infra/docker/bundle.mjs worker /bundle
 RUN pnpm deploy --filter worker --prod --legacy --ignore-scripts /out \
  && find /out -mindepth 1 -maxdepth 1 ! -name node_modules ! -name package.json -exec rm -rf {} + \
  && cp -R /bundle/. /out/ \
  && node infra/docker/prune-node-modules.mjs /out/externals.json /out \
- && node infra/docker/verify-externals.mjs /out/externals.json /out/apps/worker/src/jobs
+ && node infra/docker/verify-externals.mjs /out/externals.json /out/dist
 
 FROM ${NODE_IMAGE} AS runner
 # npm, npx, corepack and yarn are not needed at runtime.
@@ -52,4 +47,4 @@ USER node
 EXPOSE 4002
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \
   CMD ["node", "-e", "fetch('http://127.0.0.1:' + (process.env.WORKER_HEALTH_PORT || 4002) + '/health').then((r) => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
-CMD ["node", "--enable-source-maps", "apps/worker/src/jobs/main.js"]
+CMD ["node", "--enable-source-maps", "dist/index.mjs"]

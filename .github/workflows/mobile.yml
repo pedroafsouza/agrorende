@@ -84,7 +84,7 @@ jobs:
       PLATFORM: ${{ matrix.platform }}
       APP_VARIANT: ${{ needs.plan.outputs.profile }}
       EAS_UPDATE_URL: ${{ vars.EAS_UPDATE_URL }}
-      # Read by app.config.ts once change request T18-004 is applied.
+      # Read by app.config.ts as extra.eas.projectId (change request T18-004).
       EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
       EXPO_PUBLIC_APP_ENV: ${{ needs.plan.outputs.profile == 'production' && 'production' || 'staging' }}
       EXPO_PUBLIC_API_URL: https://${{ vars.APP_HOST }}
@@ -100,6 +100,10 @@ jobs:
         run: |
           if [[ -z "$EXPO_TOKEN" ]]; then
             echo "::error::Set the EXPO_TOKEN secret (an Expo robot access token) to run EAS builds and updates."
+            exit 1
+          fi
+          if [[ -z "$EAS_PROJECT_ID" ]]; then
+            echo "::error::Set the EAS_PROJECT_ID repository variable to the EAS project UUID (docs/RELEASING.md §2)."
             exit 1
           fi
 
@@ -186,7 +190,7 @@ jobs:
     env:
       APP_VARIANT: preview
       EAS_UPDATE_URL: ${{ vars.EAS_UPDATE_URL }}
-      # Read by app.config.ts once change request T18-004 is applied.
+      # Read by app.config.ts as extra.eas.projectId (change request T18-004).
       EAS_PROJECT_ID: ${{ vars.EAS_PROJECT_ID }}
       EXPO_PUBLIC_APP_ENV: staging
     steps:
@@ -196,6 +200,10 @@ jobs:
         run: |
           if [[ -z "$EXPO_TOKEN" ]]; then
             echo "::error::Set the EXPO_TOKEN secret to publish pull request previews."
+            exit 1
+          fi
+          if [[ -z "$EAS_PROJECT_ID" ]]; then
+            echo "::error::Set the EAS_PROJECT_ID repository variable to the EAS project UUID (docs/RELEASING.md §2)."
             exit 1
           fi
 

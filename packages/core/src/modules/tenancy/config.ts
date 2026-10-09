@@ -46,8 +46,8 @@ function positiveInt(value: string | undefined, fallback: number): number {
 export function tenancyConfig(env: NodeJS.ProcessEnv = process.env): TenancyConfig {
   const emails = (env.PLATFORM_ADMIN_EMAILS ?? "")
     .split(",")
-    .map((email) => email.trim().toLowerCase())
-    .filter((email) => email.length > 0);
+    .map((email: string) => email.trim().toLowerCase())
+    .filter((email: string) => email.length > 0);
   const whatsapp = env.PLATFORM_SUPPORT_WHATSAPP?.trim();
   return {
     trialDays: override?.trialDays ?? positiveInt(env.TRIAL_DAYS, 30),

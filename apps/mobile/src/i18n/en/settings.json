@@ -10,7 +10,9 @@
     "logout": "Sign out on this device",
     "logoutAnyway": "Sign out anyway",
     "sending": "Sending…",
-    "title": "Account"
+    "title": "Account",
+    "pending": "{count, plural, =0 {Nothing waiting to send} one {# item waiting to send} other {# items waiting to send}}",
+    "sendNowHint": "Sends everything now, including videos over mobile data this time."
   },
   "help": {
     "body": "Diagnostics, app version and contact",

@@ -1,3 +1,4 @@
+import { assertProductionEnv } from "@agrorende/core/startup";
 import { Redis } from "ioredis";
 import { pino } from "pino";
 
@@ -16,6 +17,7 @@ import { createExpoPushClient } from "./jobs/notifications.push.js";
 const APPLE_SECRET_ENV = ["APPLE_TEAM_ID", "APPLE_KEY_ID", "APPLE_PRIVATE_KEY"] as const;
 const APPLE_ENV = [...APPLE_SECRET_ENV, "APPLE_CLIENT_ID"] as const;
 
+assertProductionEnv("worker");
 const config = readWorkerConfig();
 const dbName = process.env.MONGODB_DB ?? "agrorende";
 const mediaRoot = process.env.MEDIA_ROOT ?? ".data/media";

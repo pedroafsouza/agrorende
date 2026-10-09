@@ -314,7 +314,8 @@
       "quickReportBody": "Photos, audio and location in a few taps",
       "rentalsToday": "Today's rentals",
       "rentalsTodayBody": "Checkouts and returns",
-      "signInAgain": "Sign in again"
+      "signInAgain": "Sign in again",
+      "reauthPending": "{count, plural, one {# item is} other {# items are}} waiting to send. Nothing will be deleted."
     },
     "loading": "Loading",
     "map": {

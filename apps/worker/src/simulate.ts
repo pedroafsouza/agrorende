@@ -14,14 +14,12 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { parseArgs, parseEnv } from "node:util";
 
+import { AgrorendeApiClient, isApiError } from "@agrorende/api-client";
 import type { ChecklistItem, ChecklistResponse } from "@agrorende/contracts/checklist";
 import { AssetDTOSchema, PlotDTOSchema, SiteDTOSchema, WorkOrderDTOSchema, type WorkOrderDTO } from "@agrorende/contracts/dto";
 import { RealtimeClientEvents, type LocationFix } from "@agrorende/contracts/realtime";
 import type { MutationName, MutationResult } from "@agrorende/contracts/sync";
 import { io, type Socket } from "socket.io-client";
-
-// The worker does not yet declare @agrorende/api-client as a dependency (change request T13-001).
-import { AgrorendeApiClient, isApiError } from "../../../packages/api-client/src/index.js";
 
 // ───────── Configuration ─────────
 

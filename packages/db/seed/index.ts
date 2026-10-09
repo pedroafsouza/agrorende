@@ -97,7 +97,8 @@ function checklistItem(key: string, pt: string, en: string, required = true): Se
   };
 }
 
-function buildSeed(): SeedBag {
+/** Builds the demo seed documents without touching a database (exported for tests). */
+export function buildSeed(): SeedBag {
   version = 0;
   const userIds = Array.from({ length: 10 }, (_, index) => uuid(100 + index));
   const siteIds = Array.from({ length: 9 }, (_, index) => uuid(200 + index));
@@ -414,11 +415,13 @@ function buildSeed(): SeedBag {
     repairedWorkOrderId: null,
   }));
 
+  // AGR-000012 (index 11) is the clean tractor of the offline-report demo (§17): no seeded report or job.
+  const reportOrWorkOrderAsset = (index: number): string => pick(assetIds, index === 11 ? 30 : index);
   const fieldReports = Array.from({ length: 20 }, (_, index) => ({
     ...base(uuid(1000 + index), ORG_A, -10 + index),
     number: `FR-${String(index + 1).padStart(6, "0")}`,
     reporterId: pick(userIds, 3 + index),
-    assetId: index === 2 || index === 13 ? null : pick(assetIds, index),
+    assetId: index === 2 || index === 13 ? null : reportOrWorkOrderAsset(index),
     unregisteredAssetDesc: index === 2 || index === 13 ? `Unregistered implement ${index}` : null,
     siteId: pick(siteIds, index),
     plotId: null,
@@ -444,6 +447,8 @@ function buildSeed(): SeedBag {
     flags: index === 0 ? { critical: true } : {},
   }));
 
+  // Pedro, Lucas, Rafael and Joana: the field technicians who carry the seeded active jobs.
+  const fieldTechnicianIds = [userIds[5], userIds[6], userIds[7], userIds[3]].filter((id): id is string => id !== undefined);
   const woStatuses = ["OPEN", "OPEN", "ASSIGNED", "ASSIGNED", "ACCEPTED", "EN_ROUTE", "EN_ROUTE", "ON_SITE", "IN_PROGRESS", "IN_PROGRESS", "ON_HOLD", "COMPLETED", "COMPLETED", "VERIFIED", "CANCELLED"];
   const workOrders = woStatuses.map((status, index) => ({
     ...base(uuid(1100 + index), ORG_A, -6 + index),
@@ -454,7 +459,7 @@ function buildSeed(): SeedBag {
     title: `Ordem de serviço ${index + 1}`,
     description: `Seeded work order ${index + 1}`,
     scheduledFor: isoDate(index),
-    assetId: pick(assetIds, index),
+    assetId: reportOrWorkOrderAsset(index),
     siteId: pick(siteIds, index),
     plotId: null,
     customerId: pick(customerIds, index),
@@ -463,7 +468,8 @@ function buildSeed(): SeedBag {
     rentalId: null,
     maintenancePlanId: null,
     damageIds: [],
-    assigneeId: index === 0 ? null : pick(userIds, 4 + index),
+    // Active jobs go to Organization A field technicians only; Carlos keeps exactly one open job (ON_HOLD) (§17).
+    assigneeId: index === 0 ? null : index === 10 ? (userIds[4] ?? null) : pick(fieldTechnicianIds, index),
     previousAssigneeIds: index % 4 === 0 ? [userIds[4] ?? uuid(104)] : [],
     createdById: userIds[1],
     dueAt: now(index === 0 ? -1 : 1),
@@ -699,7 +705,7 @@ function buildSeed(): SeedBag {
   ];
   const rentalCharges = [{ ...base(uuid(1800)), rentalId: uuid(1205), type: "BASE", description: "Diária", quantity: 2, unitAmountCents: 85_000, amountCents: 170_000, isAuto: true, damageId: null, accessoryKey: null }];
   const activityEvents = [{ ...base(uuid(1900)), actorId: userIds[4], deviceId: null, entityType: "WORK_ORDER", entityId: uuid(1111), action: "workOrder.complete", fromStatus: "IN_PROGRESS", toStatus: "COMPLETED", meta: {}, lat: null, lng: null, occurredAt: now(-1), receivedAt: now(-1), clockOffsetMs: 0, mutationId: null }];
-  const notifications = [{ ...base(uuid(2000)), userId: userIds[4], type: "WO_ASSIGNED", title: "Nova OS", body: "Você recebeu uma ordem de serviço.", entityType: "WORK_ORDER", entityId: uuid(1102), readAt: null, pushedAt: null }];
+  const notifications = [{ ...base(uuid(2000)), userId: userIds[4], type: "WO_ASSIGNED", title: "Nova OS", body: "Você recebeu uma ordem de serviço.", entityType: "WORK_ORDER", entityId: uuid(1110), readAt: null, pushedAt: null }];
 
   return {
     organizations,

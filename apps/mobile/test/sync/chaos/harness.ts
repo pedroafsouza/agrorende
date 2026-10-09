@@ -177,7 +177,7 @@ export async function startChaosServer(): Promise<ChaosServer> {
       return response;
     }),
   );
-  msw.listen({ onUnhandledRequest: "bypass" });
+  msw.listen({ onUnhandledFrame: "bypass" });
 
   return {
     seeded,

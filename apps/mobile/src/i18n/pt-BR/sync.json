@@ -2,7 +2,9 @@
   "action": {
     "discard": "Descartar",
     "syncNow": "Sincronizar agora",
-    "understood": "Entendi"
+    "understood": "Entendi",
+    "sendNow": "Enviar agora",
+    "saveCopy": "Salvar cópia"
   },
   "badge": {
     "failed": "Falha no envio",
@@ -118,5 +120,12 @@
       "WAITING_PARENT": "Aguardando registro"
     },
     "waitingWifi": "Aguardando Wi-Fi"
+  },
+  "copy": {
+    "title": "Cópia dos itens pendentes",
+    "failed": "Não foi possível salvar a cópia. Seus dados continuam neste aparelho."
+  },
+  "attention": {
+    "title": "Precisa de atenção"
   }
 }

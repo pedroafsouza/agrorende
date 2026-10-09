@@ -40,9 +40,11 @@ pnpm simulate --users tecnico2@agrorende.dev,tecnico3@agrorende.dev,locacao@agro
 Leave Carlos out of the simulator: he is on a real phone in this demo. If you are short of
 time, add `--speed 10` so the simulated jobs finish while you talk.
 
-The simulator also works through the jobs already assigned to its people in the demo data:
-Lucas takes WO-000003 and Rafael WO-000004 from accepted to completed within a few minutes.
-That is expected; it gives the timeline and the job list something to show.
+The simulator also works through the jobs already assigned to its people in the demo data,
+most advanced first: Pedro finishes WO-000009 and then WO-000005, Lucas WO-000010 and then
+WO-000006, and Rafael WO-000007 and then WO-000003. That is expected; it gives the timeline and
+the job list something to show. The seed gives active jobs only to field technicians, so every
+active job on the map has a moving operator.
 
 Human preparation:
 
@@ -113,8 +115,8 @@ Story: "Joana is at Fazenda Santa Clara, out in Talhão 2. There is no signal th
 3. The machine is now **Needs repair** and a new work order (`WO-…`) exists for Fazenda Santa
    Clara in season Safra 2026/27.
 4. Meanwhile, point at the map: Pedro, Lucas and Rafael are moving (that is `pnpm simulate`).
-   Open `WO-000002` (Pátio Sertãozinho) and assign it to **Pedro Técnico**: within seconds his pin
-   turns *On the way* and heads to Sertãozinho.
+   Open `WO-000002` (Pátio Sertãozinho) and assign it to **Pedro Técnico**: it appears in his
+   job list at once, and he heads to Sertãozinho after the job he is working on.
 
 ## 6:30 – 9:00 · Carlos repairs the tractor
 

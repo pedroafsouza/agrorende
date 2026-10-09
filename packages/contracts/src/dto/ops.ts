@@ -109,6 +109,13 @@ export const OpsLiveDTOSchema = z.object({
   assets: z.array(LiveAssetDTOSchema),
 });
 
+export type LiveOperatorDTO = z.infer<typeof LiveOperatorDTOSchema>;
+export type LiveWorkOrderDTO = z.infer<typeof LiveWorkOrderDTOSchema>;
+export type LiveReportDTO = z.infer<typeof LiveReportDTOSchema>;
+export type LiveRentalDTO = z.infer<typeof LiveRentalDTOSchema>;
+export type LiveAssetDTO = z.infer<typeof LiveAssetDTOSchema>;
+export type OpsLiveDTO = z.infer<typeof OpsLiveDTOSchema>;
+
 export const OpsAlertDTOSchema = z.object({
   id: z.string(),
   type: AlertTypeEnum,
