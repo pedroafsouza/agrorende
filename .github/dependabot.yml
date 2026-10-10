@@ -33,7 +33,11 @@ updates:
         patterns:
           - arctic
           - jose
+    # Major versions change APIs (TypeScript 7, vitest 5, @tanstack/react-table 9, ...) and are
+    # migrated by hand in a dedicated task, not by an automatic pull request.
     ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
       - dependency-name: expo
       - dependency-name: expo*
       - dependency-name: '@expo/*'

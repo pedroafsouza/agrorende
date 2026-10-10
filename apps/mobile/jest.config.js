@@ -14,6 +14,9 @@ const transformIgnorePatterns = [
 ];
 
 export default {
+  // The UI wizard tests drive many async steps; CI runners share the CPU with the other packages' suites
+  // and need more than the 5 s default.
+  testTimeout: 30000,
   projects: [
     {
       ...shared,

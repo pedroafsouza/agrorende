@@ -24,7 +24,7 @@ FROM base AS builder
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "realtime..."
 RUN node infra/docker/bundle.mjs realtime /bundle
-RUN pnpm deploy --filter realtime --prod --legacy --ignore-scripts /out \
+RUN pnpm deploy --filter realtime --prod --ignore-scripts --config.inject-workspace-packages=true /out \
  && find /out -mindepth 1 -maxdepth 1 ! -name node_modules ! -name package.json -exec rm -rf {} + \
  && cp -R /bundle/. /out/ \
  && node infra/docker/prune-node-modules.mjs /out/externals.json /out \

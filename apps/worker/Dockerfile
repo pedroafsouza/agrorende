@@ -6,7 +6,9 @@
 #
 # The builder installs the workspace with the frozen lockfile, bundles the TypeScript sources with
 # esbuild (infra/docker/bundle.mjs) and runs `pnpm deploy --filter worker --prod` for the runtime
-# dependencies. The runner is node:24-bookworm-slim, runs as the `node` user and reads every setting
+# dependencies. The deploy is non-legacy so it installs the exact versions in pnpm-lock.yaml; a
+# legacy deploy re-resolves semver ranges and drifts from the versions the bundle was built against.
+# The runner is node:24-bookworm-slim, runs as the `node` user and reads every setting
 # from the environment at start. No .env file is ever copied into the image.
 
 ARG NODE_IMAGE=node:24-bookworm-slim
@@ -24,7 +26,7 @@ FROM base AS builder
 COPY . .
 RUN pnpm install --frozen-lockfile --filter "worker..."
 RUN node infra/docker/bundle.mjs worker /bundle
-RUN pnpm deploy --filter worker --prod --legacy --ignore-scripts /out \
+RUN pnpm deploy --filter worker --prod --ignore-scripts --config.inject-workspace-packages=true /out \
  && find /out -mindepth 1 -maxdepth 1 ! -name node_modules ! -name package.json -exec rm -rf {} + \
  && cp -R /bundle/. /out/ \
  && node infra/docker/prune-node-modules.mjs /out/externals.json /out \

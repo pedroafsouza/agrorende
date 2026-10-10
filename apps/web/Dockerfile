@@ -51,7 +51,7 @@ RUN mkdir -p /out \
 FROM source AS migrate-builder
 RUN pnpm install --frozen-lockfile --filter "@agrorende/db..."
 RUN node infra/docker/bundle.mjs migrate /bundle
-RUN pnpm deploy --filter @agrorende/db --prod --legacy --ignore-scripts /out \
+RUN pnpm deploy --filter @agrorende/db --prod --ignore-scripts --config.inject-workspace-packages=true /out \
  && find /out -mindepth 1 -maxdepth 1 ! -name node_modules ! -name package.json -exec rm -rf {} + \
  && cp -R /bundle/. /out/ \
  && node infra/docker/prune-node-modules.mjs /out/externals.json /out \
