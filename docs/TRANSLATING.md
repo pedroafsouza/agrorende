@@ -130,9 +130,13 @@ Example: Spanish (`es`). Do the steps in this order.
    the app so that switching works offline; its bundler needs the files listed explicitly. This
    is the only registration step in app code.
 6. **Native strings:** add `es: "./locales/es.json"` to the `locales` map in
-   `apps/mobile/app.config.ts`. These are the app name and the camera, microphone, location,
-   notification and photo permission prompts. Changing them changes the native fingerprint, so
-   the next store build (not an over-the-air update) carries them.
+   `apps/mobile/app.config.ts`. The file follows the Expo locale format: an `ios` object with the
+   Info.plist usage descriptions (`NSCameraUsageDescription`, `NSMicrophoneUsageDescription`, the
+   three `NSLocation…UsageDescription` keys and `NSPhotoLibraryUsageDescription`), which prebuild
+   writes to `<locale>.lproj/InfoPlist.strings`. Keep the keys and translate only the values;
+   Android has no app-defined permission texts, and the app name is not localized so the
+   variant names (`AgroRende Dev`, `AgroRende Staging`) stay visible. Changing them changes the native
+   fingerprint, so the next store build (not an over-the-air update) carries them.
 7. **Store listings:** add the language in Google Play Console and App Store Connect: title, short
    and full description, keywords, screenshots taken with the app in the new language, and the
    privacy and support URLs of the site pages for that language.

@@ -1,12 +1,10 @@
 {
-  "expo": {
-    "name": "AgroRende",
-    "cameraPermission": "Allow AgroRende to use the camera to capture equipment photos, videos, and codes.",
-    "microphonePermission": "Allow AgroRende to use the microphone to record voice notes.",
-    "locationAlwaysAndWhenInUsePermission": "Allow AgroRende to track your location while you are on duty, including in the background.",
-    "locationAlwaysPermission": "Allow AgroRende to track your location in the background while you are on duty.",
-    "locationWhenInUsePermission": "Allow AgroRende to use your location to find machines, plots, and routes.",
-    "notificationsPermission": "Allow AgroRende to send job, sending, and rental alerts.",
-    "photosPermission": "Allow AgroRende to pick photos and videos for evidence."
+  "ios": {
+    "NSCameraUsageDescription": "Allow AgroRende to use the camera to capture equipment photos, videos, and codes.",
+    "NSMicrophoneUsageDescription": "Allow AgroRende to use the microphone to record voice notes.",
+    "NSLocationAlwaysAndWhenInUseUsageDescription": "Allow AgroRende to track your location while you are on duty, including in the background.",
+    "NSLocationAlwaysUsageDescription": "Allow AgroRende to track your location in the background while you are on duty.",
+    "NSLocationWhenInUseUsageDescription": "Allow AgroRende to use your location to find machines, plots, and routes.",
+    "NSPhotoLibraryUsageDescription": "Allow AgroRende to pick photos and videos for evidence."
   }
 }

@@ -130,10 +130,7 @@ jobs:
 
       - name: Build the release APK
         working-directory: apps/mobile/android
-        # lintVitalRelease is skipped: apps/mobile/locales/*.json nest their strings under "expo",
-        # which prebuild turns into an Android string resource "expo" with no default value, and
-        # the ExtraTranslation check fails the release build (docs/progress/APK-RELEASE.md).
-        run: ./gradlew assembleRelease -x lintVitalRelease --no-daemon -PreactNativeArchitectures="$ANDROID_ARCHS"
+        run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures="$ANDROID_ARCHS"
 
       - name: Check, rename and hash the APK
         id: apk

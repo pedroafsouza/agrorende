@@ -255,8 +255,7 @@ builds of §6 and needs no Expo account or `EXPO_TOKEN`.
   hosts for `preview`). `PLATFORM_SUPPORT_WHATSAPP`, `EXPO_PUBLIC_SENTRY_DSN`, `EAS_UPDATE_URL`,
   `EAS_PROJECT_ID` and the secret `GOOGLE_MAPS_ANDROID_API_KEY` are optional; without the
   Maps key the map screens show no tiles. `ANDROID_APK_ARCHS` (default
-  `armeabi-v7a,arm64-v8a`) chooses the ABIs. The Sentry source map upload and the
-  `lintVitalRelease` task are skipped.
+  `armeabi-v7a,arm64-v8a`) chooses the ABIs. The Sentry source map upload is skipped.
 - **Version:** the APK carries the `version` of `apps/mobile/app.config.ts` and `versionCode` 1;
   the file name carries the tag.
 
