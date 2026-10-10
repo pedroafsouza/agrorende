@@ -74,7 +74,7 @@ describe("export controls", () => {
   it("shows a preview of a small export with sanitised cells as text", async () => {
     const start = vi.fn((): Promise<ExportStart> => Promise.resolve({ kind: "file", blob: new Blob([`${BOM}Código;Nota\nA-1;'=HYPERLINK("x")\n`], { type: "text/csv" }), fileName: "assets.csv" }));
     renderWithProviders(<ExportButton entity="assets" start={start} />);
-    await userEvent.click(screen.getByRole("button", { name: /Export CSV/u }));
+    await userEvent.click(screen.getByRole("button", { name: /Export spreadsheet/u }));
     const table = await screen.findByTestId("csv-preview");
     expect(table.textContent).toContain("Código");
     expect(table.textContent).toContain(`'=HYPERLINK("x")`);
@@ -95,7 +95,7 @@ describe("export controls", () => {
     await waitFor(() => expect(onReady).toHaveBeenCalledTimes(1));
     view.rerender(<ExportJobCard jobId="job-1" onReady={onReady} />);
     expect(onReady).toHaveBeenCalledTimes(1);
-    expect(screen.getByRole("link", { name: /Download CSV/u }).getAttribute("href")).toBe("/api/v1/exports/job-1/download");
+    expect(screen.getByRole("link", { name: /Download spreadsheet/u }).getAttribute("href")).toBe("/api/v1/exports/job-1/download");
   });
 
   it("explains failed and expired jobs", () => {
@@ -111,7 +111,7 @@ describe("export controls", () => {
     jobState.job = job("READY");
     const start = vi.fn((): Promise<ExportStart> => Promise.resolve({ kind: "job", job: job("QUEUED") }));
     renderWithProviders(<ExportButton entity="work-orders" start={start} />);
-    await userEvent.click(screen.getByRole("button", { name: /Export CSV/u }));
+    await userEvent.click(screen.getByRole("button", { name: /Export spreadsheet/u }));
     await screen.findByTestId("export-job-job-1");
     await waitFor(() => expect(toastMock.success).toHaveBeenCalledTimes(1));
   });

@@ -19,15 +19,15 @@
   "devices": {
     "appVersion": "App version",
     "battery": "Battery",
-    "device": "Device",
+    "device": "Phone",
     "diagnostics": {
       "emptyBody": "Ask the person to tap \"Send diagnostics\" in the app.",
       "emptyTitle": "No diagnostics sent",
       "title": "{count, plural, =0 {Diagnostics} one {Diagnostics (# report)} other {Diagnostics (# reports)}}"
     },
-    "emptyBody": "Devices appear here when the team signs in to the app.",
-    "emptyTitle": "No devices connected",
-    "lastSync": "Last sync",
+    "emptyBody": "Phones appear here when the team signs in to the app.",
+    "emptyTitle": "No phones connected",
+    "lastSync": "Last phone update",
     "noneForUser": "This person has not signed in to the app yet.",
     "pending": "Pending",
     "pendingValue": "{mutations, plural, one {# change} other {# changes}} · {uploads, plural, one {# upload} other {# uploads}}",
@@ -36,14 +36,14 @@
       "IOS": "iPhone",
       "WEB": "Browser"
     },
-    "subtitle": "Sync, battery and notifications for each phone.",
-    "sync": "Sync",
-    "title": "Team devices",
+    "subtitle": "Last update, battery and notifications for each phone.",
+    "sync": "Update",
+    "title": "Team phones",
     "user": "Person",
     "warning": {
-      "battery": "Battery saver may delay sync",
-      "clock": "Device clock is wrong",
-      "pending": "Changes stuck on the device",
+      "battery": "Battery saver may delay sending data",
+      "clock": "Phone clock is wrong",
+      "pending": "Changes stuck on the phone",
       "push": "Notifications off"
     },
     "warnings": "Warnings"
@@ -80,7 +80,7 @@
   },
   "list": {
     "allRoles": "All roles",
-    "emptyBody": "Invite managers and field staff to share the work.",
+    "emptyBody": "Invite the people who work in the field: their reports and photos reach you from their phones.",
     "emptyTitle": "Just you here",
     "includeInactive": "Show deactivated",
     "searchPlaceholder": "Name, email or phone",

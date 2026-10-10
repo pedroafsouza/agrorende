@@ -2,7 +2,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { AlertOctagon, ClipboardList, Images } from "lucide-react";
+import { AlertOctagon, ClipboardList, Images, UserPlus } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo } from "react";
@@ -11,6 +12,7 @@ import { PriorityBadge, StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
+import { buttonVariants } from "@/components/ui/Button";
 import { Input, Select } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
@@ -104,7 +106,22 @@ export function ReportsInboxPage() {
       <DataTable
         caption={t("inbox.title")}
         columns={columns}
-        empty={<EmptyState body={filtered ? common("states.noMatchesBody") : t("inbox.emptyBody")} icon={<ClipboardList className="size-8" />} title={filtered ? common("states.noMatches") : t("inbox.emptyTitle")} />}
+        empty={
+          <EmptyState
+            action={
+              filtered ? undefined : (
+                <Link className={buttonVariants({ variant: "primary" })} href="/team">
+                  <UserPlus aria-hidden="true" className="size-4" />
+                  {t("inbox.emptyAction")}
+                </Link>
+              )
+            }
+            animation={filtered ? undefined : "report-offline"}
+            body={filtered ? common("states.noMatchesBody") : t("inbox.emptyBody")}
+            icon={<ClipboardList className="size-8" />}
+            title={filtered ? common("states.noMatches") : t("inbox.emptyTitle")}
+          />
+        }
         error={query.error}
         hasPrevious={filters.cursor.length > 0}
         isLoading={query.isLoading}

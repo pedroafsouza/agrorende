@@ -95,7 +95,7 @@ export function WorkOrdersListPage() {
     [t, locale],
   );
   const filtered = filters.q.length > 0 || filters.priority.length > 0 || filters.assigneeId.length > 0 || filters.due.length > 0 || filters.status !== "active";
-  const empty = <EmptyState action={filtered ? undefined : <Link className={buttonVariants({ variant: "primary" })} href="/work-orders/new"><Plus aria-hidden="true" className="size-4" />{t("actions.new")}</Link>} body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")} icon={<Wrench className="size-8" />} title={filtered ? common("states.noMatches") : t("list.emptyTitle")} />;
+  const empty = <EmptyState action={filtered ? undefined : <Link className={buttonVariants({ variant: "primary" })} href="/work-orders/new"><Plus aria-hidden="true" className="size-4" />{t("actions.new")}</Link>} body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")} animation={filtered ? undefined : "first-work-order"} icon={<Wrench className="size-8" />} title={filtered ? common("states.noMatches") : t("list.emptyTitle")} />;
   const toolbar = (
     <>
       <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value, cursor: null })} placeholder={t("list.searchPlaceholder")} type="search" />

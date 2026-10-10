@@ -13,7 +13,7 @@ import { PageHeader } from "@/components/shell/PageHeader";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
 import { useMe } from "@/features/shell/useMe";
-import { GettingStartedPanel } from "@/features/onboarding/GettingStartedPanel";
+import { GuideProgressCard } from "@/features/onboarding/GuideProgressCard";
 import { formatDateTime } from "@/lib/format";
 import { useUrlState } from "@/lib/url-state";
 
@@ -149,7 +149,7 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
   return (
     <div className="flex flex-col gap-4">
       <PageHeader actions={<RealtimeStatus state={realtime.state} />} subtitle={t("subtitle")} title={t("title")} />
-      <GettingStartedPanel />
+      <GuideProgressCard />
       {realtime.paused ? (
         <div className="flex items-start gap-3 rounded-cards border-2 border-[var(--ar-warning)] bg-[var(--ar-warning-bg)] p-4 text-[var(--ar-text)]" data-testid="realtime-paused" role="status">
           <PauseCircle aria-hidden="true" className="mt-0.5 size-5 shrink-0" />

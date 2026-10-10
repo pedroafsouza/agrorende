@@ -73,9 +73,9 @@
   "list": {
     "allKinds": "Todos os usos",
     "emptyBody": "Crie um checklist para padronizar entregas, devoluções e ordens de serviço.",
-    "emptyTitle": "Nenhum checklist ainda",
+    "emptyTitle": "Nenhum modelo de checklist ainda",
     "subtitle": "Modelos usados na entrega, devolução e inspeção de máquinas.",
-    "title": "Checklists"
+    "title": "Modelos de checklist"
   },
   "new": {
     "title": "Novo checklist"

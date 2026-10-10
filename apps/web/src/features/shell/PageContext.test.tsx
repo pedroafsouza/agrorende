@@ -40,7 +40,7 @@ describe("PageContext", () => {
     renderWithProviders(<PageContext role="ADMIN" />);
     const trail = crumbs();
     expect(within(trail).getByRole("link", { name: "Team" }).getAttribute("href")).toBe("/team");
-    expect(within(trail).getByText("Devices").getAttribute("aria-current")).toBe("page");
+    expect(within(trail).getByText("Team phones").getAttribute("aria-current")).toBe("page");
   });
 
   it("hides related pages the role cannot open", () => {
@@ -48,7 +48,7 @@ describe("PageContext", () => {
     renderWithProviders(<PageContext role="MANAGER" />);
     const related = screen.getByRole("navigation", { name: "Related pages" });
     expect(within(related).getByRole("link", { name: "Preventive maintenance" })).toBeTruthy();
-    expect(within(related).queryByRole("link", { name: "Imports" })).toBeNull();
+    expect(within(related).queryByRole("link", { name: "Import spreadsheet" })).toBeNull();
   });
 
   it("hides the explanation and remembers the choice", async () => {

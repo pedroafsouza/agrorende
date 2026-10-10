@@ -126,14 +126,15 @@
     "allPriorities": "All severities",
     "allSites": "All sites",
     "allStatuses": "All statuses",
-    "emptyBody": "When someone reports a problem in the field, it shows up here.",
+    "emptyBody": "When someone on the team reports a problem from their phone, even offline, it shows up here.",
     "emptyTitle": "No reports in the queue",
     "from": "From",
     "needsTriage": "To triage",
     "openCount": "{count, plural, =0 {No reports to triage} one {# report to triage} other {# reports to triage}}",
     "searchPlaceholder": "Search by number, title or machine",
     "title": "Field reports",
-    "to": "To"
+    "to": "To",
+    "emptyAction": "Invite the team"
   },
   "notOperable": "Down",
   "operable": {

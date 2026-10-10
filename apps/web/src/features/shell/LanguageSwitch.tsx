@@ -9,7 +9,7 @@ import { LOCALE_META, SUPPORTED_LOCALES, type SupportedLocale } from "@agrorende
 import { api } from "@/lib/api";
 
 /** Sets the NEXT_LOCALE cookie, persists the preference with `PATCH /me` when signed in, and re-renders (PLT-03). */
-export function LanguageSwitch({ persist = true }: { readonly persist?: boolean }) {
+export function LanguageSwitch({ persist = true, showLabel = false }: { readonly persist?: boolean; readonly showLabel?: boolean }) {
   const t = useTranslations("admin");
   const locale = useLocale();
   const router = useRouter();
@@ -27,7 +27,7 @@ export function LanguageSwitch({ persist = true }: { readonly persist?: boolean 
   return (
     <label className="flex min-h-12 items-center gap-2 rounded-controls px-2 text-sm font-semibold hover:bg-[var(--ar-surface-muted)]">
       <Languages aria-hidden="true" className="size-5" />
-      <span className="sr-only">{t("shell.language")}</span>
+      <span className={showLabel ? "flex-1" : "sr-only"}>{t("shell.language")}</span>
       <select className="min-h-12 bg-transparent font-semibold" onChange={(e) => void change(e.target.value as SupportedLocale)} value={locale}>
         {SUPPORTED_LOCALES.map((code) => (
           <option key={code} value={code}>

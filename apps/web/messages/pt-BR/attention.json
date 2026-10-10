@@ -1,12 +1,12 @@
 {
-  "title": "Precisa de atenção",
+  "title": "Pendências",
   "subtitle": "Problemas do campo que precisam de alguém no escritório.",
   "refresh": "Atualizar",
   "resolved": "Marcado como resolvido.",
   "unknownUser": "Usuário desconhecido",
   "ref": "Referência: {ref}",
   "empty": {
-    "title": "Nada precisa de atenção",
+    "title": "Nenhuma pendência",
     "body": "Alterações recusadas, fotos presas, celulares com dados não enviados e diagnósticos aparecem aqui."
   },
   "kinds": {

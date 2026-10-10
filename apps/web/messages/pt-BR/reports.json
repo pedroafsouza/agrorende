@@ -126,14 +126,15 @@
     "allPriorities": "Todas as gravidades",
     "allSites": "Todos os locais",
     "allStatuses": "Todas as situações",
-    "emptyBody": "Quando alguém relatar um problema no campo, ele aparece aqui.",
+    "emptyBody": "Quando alguém da equipe relatar um problema pelo celular, mesmo sem internet, ele aparece aqui.",
     "emptyTitle": "Nenhum relato na fila",
     "from": "De",
     "needsTriage": "A triar",
     "openCount": "{count, plural, =0 {Nenhum relato a triar} one {# relato a triar} other {# relatos a triar}}",
     "searchPlaceholder": "Buscar por número, título ou máquina",
     "title": "Relatos do campo",
-    "to": "Até"
+    "to": "Até",
+    "emptyAction": "Convidar a equipe"
   },
   "notOperable": "Parada",
   "operable": {

@@ -65,12 +65,12 @@
     "action": "Try again"
   },
   "CSV_ENCODING_UNSUPPORTED": {
-    "title": "Could not read this CSV",
+    "title": "Could not read this spreadsheet",
     "body": "No data was imported. Save it again and upload the file once more.",
     "action": "Try again"
   },
   "CSV_FORMAT_UNSUPPORTED": {
-    "title": "Review the CSV format",
+    "title": "Check the spreadsheet format",
     "body": "No rows were imported. Use the expected columns and numbers like 1.234,56 or 1234,56.",
     "action": "Try again"
   },

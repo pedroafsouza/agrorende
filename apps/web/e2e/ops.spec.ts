@@ -25,7 +25,7 @@ test.describe("ops center", () => {
     const asset = await admin.createAsset({ name: unique("Ops tractor") });
 
     await signIn(page, SEED.manager, "/ops");
-    await expect(page.getByRole("heading", { name: "Operations Center" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
     await expect(kpiTile(page, "open_reports").locator("span").last()).toHaveText(/\d/u);
     const before = await kpiValue(page, "open_reports");
     let navigations = 0;

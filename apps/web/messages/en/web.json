@@ -26,16 +26,6 @@
     "notImplemented": "Feature work lands in a later task.",
     "route": "Route"
   },
-  "shell": {
-    "org": "Organization",
-    "search": "Search placeholder",
-    "notifications": "Notifications",
-    "theme": "Theme",
-    "language": "Language",
-    "user": "User menu",
-    "realtime": "Realtime provider placeholder",
-    "toaster": "Toast provider placeholder"
-  },
   "style": {
     "title": "Campo claro style guide",
     "description": "Design-token and component baseline for UI review.",

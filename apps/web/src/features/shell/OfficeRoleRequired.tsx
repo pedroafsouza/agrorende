@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { api } from "@/lib/api";
 
-const APP_STORE_URL = "https://apps.apple.com/br/search?term=AgroRende";
-const PLAY_STORE_URL = "https://play.google.com/store/search?q=AgroRende&c=apps";
+export const APP_STORE_URL = "https://apps.apple.com/br/search?term=AgroRende";
+export const PLAY_STORE_URL = "https://play.google.com/store/search?q=AgroRende&c=apps";
 
 /** FIELD users who open the admin land here: explain, point to the app, offer sign-out (EC-AUTH OFFICE_ROLE_REQUIRED). */
 export function OfficeRoleRequired() {

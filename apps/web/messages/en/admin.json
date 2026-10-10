@@ -3,16 +3,16 @@
     "account": "My account",
     "analytics": "Analytics",
     "assets": "Assets",
-    "attention": "Needs attention",
+    "attention": "To do",
     "billing": "Billing",
     "costs": "Costs",
     "customers": "Customers",
-    "devices": "Devices",
+    "devices": "Team phones",
     "fuel": "Fuel",
-    "imports": "Imports",
+    "imports": "Import spreadsheet",
     "maintenance": "Preventive maintenance",
     "notifications": "Notifications",
-    "ops": "Operations",
+    "ops": "Overview",
     "parts": "Parts",
     "rentals": "Rentals",
     "reports": "Reports",
@@ -22,7 +22,7 @@
     "stock": "Stock",
     "subscription": "Subscription",
     "team": "Team",
-    "templates": "Checklists",
+    "templates": "Checklist templates",
     "workOrders": "Work orders"
   },
   "navGroups": {
@@ -74,7 +74,7 @@
     "MANAGER": "Manager"
   },
   "shell": {
-    "attentionCount": "{count, plural, =0 {Nothing needs attention} one {# item needs attention} other {# items need attention}}",
+    "attentionCount": "{count, plural, =0 {Nothing to do} one {# item to do} other {# items to do}}",
     "brand": "AgroRende",
     "closeMenu": "Close menu",
     "collapseMenu": "Collapse menu",
@@ -91,7 +91,7 @@
     "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
     "openMenu": "Open menu",
     "search": "Search",
-    "searchSoon": "Search or run a command (Ctrl+K)",
+    "searchSoon": "Search (Ctrl+K)",
     "showGroup": "Show {group}",
     "sidebar": "Sidebar",
     "signOut": "Sign out",
@@ -102,7 +102,9 @@
       "outdoor": "Bright sun",
       "system": "Automatic"
     },
-    "themeLabel": "Theme: {theme}"
+    "themeLabel": "Theme: {theme}",
+    "themeTitle": "Theme",
+    "userMenu": "Account and preferences for {name}"
   },
   "styleGuide": {
     "badges": "Status badges",
@@ -139,7 +141,7 @@
   "commandPalette": {
     "label": "Search and commands",
     "inputLabel": "Search machines, work orders, reports, rentals, customers and farms",
-    "placeholder": "Search or type a command…",
+    "placeholder": "Search…",
     "close": "Close search",
     "loading": "Searching…",
     "minLength": "Type at least {count} characters to search records.",
@@ -181,7 +183,7 @@
       },
       "attention": {
         "body": "Everything that needs an office decision, sorted by urgency.",
-        "tasks": "Resolve critical reports, late work orders, rentals about to end and sync failures."
+        "tasks": "Resolve critical reports, late work orders, rentals about to end and phones that stopped sending data."
       },
       "reports": {
         "body": "Reports sent from the field app: checklists, photos, defects and signatures.",
@@ -213,7 +215,7 @@
       },
       "devices": {
         "body": "Phones and tablets that use the field app with your organisation's account.",
-        "tasks": "See when each device last synced and revoke access for a lost device."
+        "tasks": "See when each phone last updated and block access for a lost phone."
       },
       "templates": {
         "body": "Checklist templates that technicians fill in on the field app.",
@@ -229,7 +231,7 @@
       },
       "imports": {
         "body": "Spreadsheet imports to add many records at once.",
-        "tasks": "Upload a CSV of assets, customers or team members, check the preview and confirm."
+        "tasks": "Upload your spreadsheet of machines, customers or team members, check the preview and confirm."
       },
       "settings": {
         "body": "Organisation details, time zone, language and work rules.",

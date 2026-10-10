@@ -132,7 +132,7 @@ describe("CommandPalette", () => {
     fireEvent.keyDown(window, { key: "k", ctrlKey: true });
     const input = await screen.findByRole("combobox");
     await waitFor(() => expect(document.activeElement).toBe(input));
-    expect(screen.getByText("Go to Operations")).toBeTruthy();
+    expect(screen.getByText("Go to Overview")).toBeTruthy();
     expect(screen.queryByText("Go to Seasons")).toBeNull();
 
     await user.type(input, "trator");

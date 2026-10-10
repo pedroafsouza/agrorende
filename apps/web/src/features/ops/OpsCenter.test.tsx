@@ -299,7 +299,7 @@ describe("OpsCenter", () => {
     navigation.search = `operator=${OP_ID}`;
     renderWithProviders(<OpsCenter />);
     expect(await screen.findByText("Location is out of date")).toBeTruthy();
-    const link = screen.getByRole("link", { name: /See phone sync health/u });
+    const link = screen.getByRole("link", { name: /See last phone update/u });
     expect(link.getAttribute("href")).toBe("/team/devices?device=dev-1");
     expect(screen.getByText("No one is live right now")).toBeTruthy();
   });

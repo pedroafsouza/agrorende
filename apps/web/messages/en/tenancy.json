@@ -44,5 +44,85 @@
       "qr": "Print the QR labels",
       "app": "Install the app on your team's phones"
     }
+  },
+  "guide": {
+    "title": "Getting started",
+    "subtitle": "Five quick steps to get your team working.",
+    "progress": "Step {current} of {total}",
+    "stepsLabel": "Getting started steps",
+    "completed": "done",
+    "pending": "to do",
+    "steps": {
+      "welcome": "Welcome",
+      "machine": "First machine",
+      "team": "Invite the team",
+      "workOrder": "First work order",
+      "done": "Ready"
+    },
+    "actions": {
+      "start": "Start",
+      "next": "Continue",
+      "back": "Back",
+      "skip": "Skip this step",
+      "later": "Continue later",
+      "toOverview": "Go to the overview"
+    },
+    "welcome": {
+      "title": "Welcome to AgroRende, {name}",
+      "body": "AgroRende brings your machines, your field team and every repair into one place, and the team's phones keep working without signal."
+    },
+    "machine": {
+      "title": "Add your first machine",
+      "body": "Just the name and type. The rest can wait.",
+      "name": "Machine name",
+      "namePlaceholder": "E.g. John Deere 6110J tractor",
+      "category": "Type",
+      "submit": "Save machine",
+      "more": "More details",
+      "saved": "{name} was added.",
+      "already": "You already have machines. Add one more or continue."
+    },
+    "team": {
+      "title": "Invite a technician",
+      "body": "They get work orders on their phone and send reports with photos straight from the field.",
+      "name": "Technician's name",
+      "phone": "Technician's WhatsApp",
+      "phoneHint": "Optional. With the number, the invite opens straight in their chat.",
+      "submit": "Create invite",
+      "already": "Your team already has invites. Invite someone else or continue.",
+      "sentTitle": "Invite for {name} created",
+      "sentBody": "Send the invite on WhatsApp. They install the app and sign in with the code."
+    },
+    "workOrder": {
+      "title": "Open the first work order",
+      "body": "Say what needs doing and on which machine. The technician sees it all on their phone.",
+      "fieldTitle": "What needs doing",
+      "defaultTitle": "General service",
+      "machine": "Machine",
+      "submit": "Create work order",
+      "already": "You already have work orders. Open one more or continue."
+    },
+    "done": {
+      "title": "All set to start",
+      "body": "Here is what happens next:",
+      "next1": "The technician installs the AgroRende app and signs in with the invite code.",
+      "next2": "Work orders show up on their phone and work even without signal.",
+      "next3": "Reports, photos and hours reach the Overview here as soon as the phone has signal.",
+      "appTitle": "Field team app",
+      "summary": "Your progress"
+    },
+    "tasks": {
+      "machine": "Add a machine",
+      "team": "Invite the team",
+      "workOrder": "Open a work order",
+      "app": "Connect a technician's phone"
+    },
+    "card": {
+      "title": "Getting started",
+      "progress": "{done} of {total}",
+      "body": "Just a few steps left before your team starts using AgroRende.",
+      "continue": "Continue",
+      "hide": "Hide"
+    }
   }
 }

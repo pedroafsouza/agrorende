@@ -19,8 +19,6 @@ vi.mock("./useMe", () => ({ useMe: () => ({ data: { user: { id: "u1", name: "Ana
 vi.mock("./useRealtime", () => ({ useRealtime: () => "connected" }));
 vi.mock("./NotificationsBell", () => ({ NotificationsBell: () => null, useAttentionCount: () => 0 }));
 vi.mock("./UserMenu", () => ({ UserMenu: () => null }));
-vi.mock("./ThemeToggle", () => ({ ThemeToggle: () => null }));
-vi.mock("./LanguageSwitch", () => ({ LanguageSwitch: () => null }));
 vi.mock("@/components/recovery/RealtimeStatus", () => ({ RealtimeStatus: () => null }));
 
 afterEach(() => {
@@ -41,7 +39,7 @@ describe("AdminShell search box", () => {
     expect(trigger.tagName).toBe("BUTTON");
     expect(trigger).not.toHaveProperty("disabled", true);
     expect(trigger.getAttribute("aria-keyshortcuts")).toBe("Control+K Meta+K");
-    expect(trigger.textContent).toBe("Search or run a command (Ctrl+K)");
+    expect(trigger.textContent).toBe("Search (Ctrl+K)");
     await userEvent.click(trigger);
     expect(opened).toHaveBeenCalledTimes(1);
     window.removeEventListener(OPEN_COMMAND_PALETTE_EVENT, opened);
@@ -69,8 +67,8 @@ describe("AdminShell sidebar", () => {
     expect(toggle.getAttribute("aria-label")).toBe("Expand menu");
     expect(container.querySelector("[data-sidebar]")?.getAttribute("data-sidebar")).toBe("collapsed");
     expect(window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY)).toBe("1");
-    const ops = screen.getByRole("link", { name: "Operations" });
-    expect(ops.getAttribute("title")).toBe("Operations");
+    const ops = screen.getByRole("link", { name: "Overview" });
+    expect(ops.getAttribute("title")).toBe("Overview");
   });
 
   it("starts collapsed when the browser remembered it and toggles with Ctrl+B", async () => {

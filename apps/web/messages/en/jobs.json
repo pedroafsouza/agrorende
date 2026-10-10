@@ -43,7 +43,7 @@
   "list": {
     "title": "Work orders",
     "emptyTitle": "No open work orders",
-    "emptyBody": "Create a manual work order or send a field report to repair.",
+    "emptyBody": "Every repair becomes a work order, so who did it, on which machine and what it cost stays on record.",
     "searchPlaceholder": "Search by number or title",
     "activeStatuses": "Open",
     "allStatuses": "All statuses",

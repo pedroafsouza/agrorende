@@ -44,5 +44,85 @@
       "qr": "Imprima as etiquetas QR",
       "app": "Instale o app no celular da equipe"
     }
+  },
+  "guide": {
+    "title": "Primeiros passos",
+    "subtitle": "Cinco passos rápidos para colocar sua equipe para trabalhar.",
+    "progress": "Etapa {current} de {total}",
+    "stepsLabel": "Etapas dos primeiros passos",
+    "completed": "concluída",
+    "pending": "pendente",
+    "steps": {
+      "welcome": "Boas-vindas",
+      "machine": "Primeira máquina",
+      "team": "Convidar a equipe",
+      "workOrder": "Primeira ordem de serviço",
+      "done": "Pronto"
+    },
+    "actions": {
+      "start": "Começar",
+      "next": "Continuar",
+      "back": "Voltar",
+      "skip": "Pular esta etapa",
+      "later": "Continuar depois",
+      "toOverview": "Ir para a visão geral"
+    },
+    "welcome": {
+      "title": "Boas-vindas ao AgroRende, {name}",
+      "body": "O AgroRende junta suas máquinas, sua equipe de campo e cada conserto num só lugar, e o celular da equipe funciona mesmo sem sinal."
+    },
+    "machine": {
+      "title": "Cadastre sua primeira máquina",
+      "body": "Só o nome e o tipo. O resto pode ficar para depois.",
+      "name": "Nome da máquina",
+      "namePlaceholder": "Ex.: Trator John Deere 6110J",
+      "category": "Tipo",
+      "submit": "Salvar máquina",
+      "more": "Mais detalhes",
+      "saved": "{name} foi cadastrada.",
+      "already": "Você já tem máquinas cadastradas. Pode cadastrar mais uma ou continuar."
+    },
+    "team": {
+      "title": "Convide um técnico",
+      "body": "Ele recebe as ordens de serviço no celular e manda relatos com fotos direto do campo.",
+      "name": "Nome do técnico",
+      "phone": "WhatsApp do técnico",
+      "phoneHint": "Opcional. Com o número, o convite já abre na conversa dele.",
+      "submit": "Criar convite",
+      "already": "Sua equipe já tem convites. Pode convidar mais alguém ou continuar.",
+      "sentTitle": "Convite para {name} criado",
+      "sentBody": "Mande o convite pelo WhatsApp. Ele instala o app e entra com o código."
+    },
+    "workOrder": {
+      "title": "Abra a primeira ordem de serviço",
+      "body": "Diga o que precisa ser feito e em qual máquina. O técnico vê tudo no celular.",
+      "fieldTitle": "O que precisa ser feito",
+      "defaultTitle": "Revisão geral",
+      "machine": "Máquina",
+      "submit": "Criar ordem de serviço",
+      "already": "Você já tem ordens de serviço. Pode abrir mais uma ou continuar."
+    },
+    "done": {
+      "title": "Tudo pronto para começar",
+      "body": "Veja o que acontece agora:",
+      "next1": "O técnico instala o app AgroRende e entra com o código do convite.",
+      "next2": "As ordens de serviço aparecem no celular dele e funcionam mesmo sem sinal.",
+      "next3": "Relatos, fotos e horas chegam aqui na Visão geral assim que o celular pega sinal.",
+      "appTitle": "App da equipe de campo",
+      "summary": "Seu progresso"
+    },
+    "tasks": {
+      "machine": "Cadastrar uma máquina",
+      "team": "Convidar a equipe",
+      "workOrder": "Abrir uma ordem de serviço",
+      "app": "Conectar o celular de um técnico"
+    },
+    "card": {
+      "title": "Primeiros passos",
+      "progress": "{done} de {total}",
+      "body": "Faltam poucos passos para sua equipe começar a usar o AgroRende.",
+      "continue": "Continuar",
+      "hide": "Ocultar"
+    }
   }
 }

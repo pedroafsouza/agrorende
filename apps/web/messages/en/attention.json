@@ -1,12 +1,12 @@
 {
-  "title": "Needs attention",
+  "title": "To do",
   "subtitle": "Problems from the field that need someone in the office.",
   "refresh": "Refresh",
   "resolved": "Marked as resolved.",
   "unknownUser": "Unknown user",
   "ref": "Reference: {ref}",
   "empty": {
-    "title": "Nothing needs attention",
+    "title": "Nothing to do",
     "body": "Rejected changes, stuck photos, phones with unsent data and diagnostics show up here."
   },
   "kinds": {

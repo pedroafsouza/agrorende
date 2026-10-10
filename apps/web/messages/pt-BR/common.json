@@ -78,7 +78,7 @@
   },
   "errors": {
     "copyReference": "Copiar código",
-    "reference": "Código do erro: {ref}"
+    "reference": "Código para o suporte: {ref}"
   },
   "filters": {
     "includeArchived": "Mostrar arquivados",
@@ -186,10 +186,10 @@
     }
   },
   "syncHealth": {
-    "NEVER": "Nunca sincronizou",
-    "OK": "Sincronizado",
-    "STALE": "Sem sincronizar há mais de 24 h",
-    "STUCK": "Sincronização travada"
+    "NEVER": "Celular nunca enviou dados",
+    "OK": "Atualizado",
+    "STALE": "Sem atualizar há mais de 24 h",
+    "STUCK": "Envio travado no celular"
   },
   "table": {
     "first": "Primeira página",

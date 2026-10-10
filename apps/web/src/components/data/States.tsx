@@ -4,6 +4,9 @@ import { Inbox, WifiOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { ReactNode } from "react";
 
+import type { AnimationId } from "@agrorende/motion";
+
+import { Lottie } from "@/components/motion/Lottie";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 
 /** The four screen states every list and detail renders (A§19, UX-03): loading, empty, error, offline. */
@@ -19,12 +22,20 @@ export function LoadingState({ rows = 5 }: { readonly rows?: number }) {
   );
 }
 
-export function EmptyState({ title, body, action, icon }: { readonly title: string; readonly body?: string; readonly action?: ReactNode; readonly icon?: ReactNode }) {
+/**
+ * Empty list: what the page is for and the one next step (SIMPLER-TO-SELL §2). Pass `animation`
+ * (`empty` or a page-specific one) to show a Lottie instead of the icon.
+ */
+export function EmptyState({ title, body, action, icon, animation }: { readonly title: string; readonly body?: string; readonly action?: ReactNode; readonly icon?: ReactNode; readonly animation?: AnimationId }) {
   return (
     <div className="flex flex-col items-center gap-3 rounded-cards border border-dashed border-[var(--ar-border-strong)] bg-[var(--ar-surface)] p-8 text-center">
-      <span aria-hidden="true" className="text-[var(--ar-text-muted)]">
-        {icon ?? <Inbox className="size-8" />}
-      </span>
+      {animation === undefined ? (
+        <span aria-hidden="true" className="text-[var(--ar-text-muted)]">
+          {icon ?? <Inbox className="size-8" />}
+        </span>
+      ) : (
+        <Lottie className="max-w-60" id={animation} />
+      )}
       <p className="text-lg font-semibold">{title}</p>
       {body === undefined ? null : <p className="max-w-md text-[var(--ar-text-muted)]">{body}</p>}
       {action}

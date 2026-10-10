@@ -42,8 +42,8 @@
   },
   "list": {
     "title": "Ordens de serviço",
-    "emptyTitle": "Nenhuma OS aberta",
-    "emptyBody": "Crie uma OS manual ou encaminhe um relato de campo para reparo.",
+    "emptyTitle": "Nenhuma ordem de serviço aberta",
+    "emptyBody": "Cada conserto vira uma ordem de serviço: quem faz, em qual máquina e quanto custou fica registrado.",
     "searchPlaceholder": "Buscar por número ou título",
     "activeStatuses": "Em aberto",
     "allStatuses": "Todas as situações",

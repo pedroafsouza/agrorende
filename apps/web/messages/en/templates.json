@@ -73,9 +73,9 @@
   "list": {
     "allKinds": "All uses",
     "emptyBody": "Create a checklist to standardise hand-overs, returns and work orders.",
-    "emptyTitle": "No checklists yet",
+    "emptyTitle": "No checklist templates yet",
     "subtitle": "Templates used for asset hand-over, return and inspection.",
-    "title": "Checklists"
+    "title": "Checklist templates"
   },
   "new": {
     "title": "New checklist"

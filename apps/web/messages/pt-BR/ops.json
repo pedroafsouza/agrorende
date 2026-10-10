@@ -1,5 +1,5 @@
 {
-  "title": "Central de Operações",
+  "title": "Visão geral",
   "subtitle": "Mapa ao vivo, equipe, alertas e os números do dia em um só lugar.",
   "map": {
     "label": "Mapa de operações ao vivo"
@@ -240,7 +240,7 @@
     },
     "lastUpdate": "Última atualização: {at}",
     "lastFix": "Posição de {at}",
-    "deviceHealth": "Ver sincronização do celular",
+    "deviceHealth": "Ver última atualização do celular",
     "close": "Fechar painel do operador",
     "activeWorkOrder": "Abrir OS atual",
     "trail": "Trajeto de hoje",
@@ -289,9 +289,9 @@
     "app": "Instale o app de campo"
   },
   "exports": {
-    "title": "Exportar CSV",
+    "title": "Exportar planilha",
     "hint": "Os arquivos usam ; como separador e abrem no Excel com acentos corretos.",
-    "button": "Exportar CSV",
+    "button": "Exportar planilha",
     "entity": {
       "field-reports": "Relatos de campo",
       "work-orders": "Ordens de serviço",
@@ -309,13 +309,13 @@
     },
     "started": {
       "title": "Estamos preparando o arquivo",
-      "body": "Você pode continuar trabalhando. Avisaremos quando o CSV estiver pronto."
+      "body": "Você pode continuar trabalhando. Avisaremos quando a planilha estiver pronta."
     },
-    "ready": "Seu CSV está pronto para baixar.",
-    "download": "Baixar CSV",
+    "ready": "Sua planilha está pronta para baixar.",
+    "download": "Baixar planilha",
     "preview": "Ver primeiras linhas",
     "previewTitle": "Primeiras linhas do arquivo",
-    "previewCaption": "Prévia do CSV exportado",
+    "previewCaption": "Prévia da planilha exportada",
     "expiresAt": "Disponível até {at}",
     "failed": "Não conseguimos preparar este arquivo. Nada foi alterado. Exporte de novo.",
     "expired": "Este link expirou após 7 dias. Exporte de novo para gerar um arquivo novo."

@@ -9,7 +9,7 @@
     "temporaryPassword": "Definir senha temporária"
   },
   "deactivate": {
-    "body": "A pessoa sai de todos os aparelhos e não recebe novas tarefas. O histórico é mantido e você pode reativar depois.",
+    "body": "A pessoa sai de todos os celulares e não recebe novas tarefas. O histórico é mantido e você pode reativar depois.",
     "title": "Desativar {name}?"
   },
   "detail": {
@@ -19,15 +19,15 @@
   "devices": {
     "appVersion": "Versão do app",
     "battery": "Bateria",
-    "device": "Aparelho",
+    "device": "Celular",
     "diagnostics": {
       "emptyBody": "Peça para a pessoa tocar em \"Enviar diagnóstico\" no aplicativo.",
       "emptyTitle": "Nenhum diagnóstico enviado",
       "title": "{count, plural, =0 {Diagnóstico} one {Diagnóstico (# envio)} other {Diagnóstico (# envios)}}"
     },
-    "emptyBody": "Os aparelhos aparecem aqui quando a equipe entra no aplicativo.",
-    "emptyTitle": "Nenhum aparelho conectado",
-    "lastSync": "Última sincronização",
+    "emptyBody": "Os celulares aparecem aqui quando a equipe entra no aplicativo.",
+    "emptyTitle": "Nenhum celular conectado",
+    "lastSync": "Última atualização do celular",
     "noneForUser": "Esta pessoa ainda não entrou no aplicativo.",
     "pending": "Pendências",
     "pendingValue": "{mutations, plural, one {# alteração} other {# alterações}} · {uploads, plural, one {# envio} other {# envios}}",
@@ -36,14 +36,14 @@
       "IOS": "iPhone",
       "WEB": "Navegador"
     },
-    "subtitle": "Sincronização, bateria e notificações de cada celular.",
-    "sync": "Sincronização",
-    "title": "Aparelhos da equipe",
+    "subtitle": "Última atualização, bateria e notificações de cada celular.",
+    "sync": "Atualização",
+    "title": "Celulares da equipe",
     "user": "Pessoa",
     "warning": {
-      "battery": "Economia de bateria pode atrasar a sincronização",
-      "clock": "Relógio do aparelho errado",
-      "pending": "Alterações presas no aparelho",
+      "battery": "Economia de bateria pode atrasar o envio dos dados",
+      "clock": "Relógio do celular errado",
+      "pending": "Alterações presas no celular",
       "push": "Notificações desligadas"
     },
     "warnings": "Alertas"
@@ -80,7 +80,7 @@
   },
   "list": {
     "allRoles": "Todas as funções",
-    "emptyBody": "Convide gestores e a equipe de campo para dividir o trabalho.",
+    "emptyBody": "Convide quem trabalha no campo: os relatos e as fotos chegam aqui pelo celular deles.",
     "emptyTitle": "Só você por aqui",
     "includeInactive": "Mostrar desativados",
     "searchPlaceholder": "Nome, e-mail ou telefone",

@@ -27,7 +27,7 @@ test.describe("authentication", () => {
 
     await signInWithForm(page, SEED.manager);
     await expect(page).toHaveURL(/\/ops$/u);
-    await expect(page.getByRole("heading", { name: "Operations Center" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 
     await page.getByRole("button", { name: "Paulo Gerente" }).click();
     await page.getByRole("menuitem", { name: "Sign out" }).click();
@@ -66,9 +66,9 @@ test.describe("authentication", () => {
     await signIn(page, SEED.manager, "/ops");
     const language = page.getByRole("combobox", { name: "Language" });
     await pickOption(language, "Português");
-    await expect(page.getByRole("link", { name: "Operação", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Visão geral", exact: true })).toBeVisible();
     await pickOption(page.getByRole("combobox", { name: "Idioma" }), "English");
-    await expect(page.getByRole("link", { name: "Operations", exact: true })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Overview", exact: true })).toBeVisible();
   });
 
   test("Google login links a seeded member through the mock provider", async ({ page }) => {

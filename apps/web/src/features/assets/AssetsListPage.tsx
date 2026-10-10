@@ -100,6 +100,7 @@ export function AssetsListPage() {
               )
             }
             body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")}
+            animation={filtered ? undefined : "first-machine"}
             icon={<Tractor className="size-8" />}
             title={filtered ? common("states.noMatches") : t("list.emptyTitle")}
           />

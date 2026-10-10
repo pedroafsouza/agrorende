@@ -31,7 +31,7 @@ test.describe("power tools", () => {
     const asset = await admin.createAsset({ name });
 
     await signIn(page, SEED.manager, "/ops");
-    await expect(page.getByRole("heading", { name: "Operations Center" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 
     await page.keyboard.press("Control+k");
     const palette = dialog(page, PALETTE);

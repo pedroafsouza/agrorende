@@ -66,6 +66,7 @@ export function TeamListPage() {
           <EmptyState
             action={filtered ? undefined : <Button onClick={() => setInviting(true)} variant="primary">{t("actions.invite")}</Button>}
             body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")}
+            animation={filtered ? undefined : "invite-team"}
             icon={<Users className="size-8" />}
             title={filtered ? common("states.noMatches") : t("list.emptyTitle")}
           />

@@ -14,10 +14,8 @@ import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
 import { isActive, navSections, visibleNav, type NavItem, type NavSection } from "@/components/shell/nav";
 import { cn } from "@/lib/cn";
 
-import { LanguageSwitch } from "./LanguageSwitch";
 import { PageContext } from "./PageContext";
 import { NotificationsBell, useAttentionCount } from "./NotificationsBell";
-import { ThemeToggle } from "./ThemeToggle";
 import { useMe } from "./useMe";
 import { UserMenu } from "./UserMenu";
 import { useRealtime } from "./useRealtime";
@@ -221,10 +219,8 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
               </button>
             </div>
             <div className="ml-auto flex items-center gap-1">
-              <RealtimeStatus state={realtime} />
+              {effectiveRole === "ADMIN" ? <RealtimeStatus state={realtime} /> : null}
               <NotificationsBell />
-              <ThemeToggle />
-              <LanguageSwitch />
               <UserMenu name={me.data?.user.name ?? ""} roleLabel={effectiveRole === null ? "" : t(`roles.${effectiveRole}`)} />
             </div>
           </header>

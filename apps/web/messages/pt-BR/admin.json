@@ -3,16 +3,16 @@
     "account": "Minha conta",
     "analytics": "Indicadores",
     "assets": "Máquinas",
-    "attention": "Precisa de atenção",
+    "attention": "Pendências",
     "billing": "Faturamento",
     "costs": "Custos",
     "customers": "Clientes",
-    "devices": "Aparelhos",
+    "devices": "Celulares da equipe",
     "fuel": "Combustível",
-    "imports": "Importar",
+    "imports": "Importar planilha",
     "maintenance": "Manutenção preventiva",
     "notifications": "Notificações",
-    "ops": "Operação",
+    "ops": "Visão geral",
     "parts": "Peças",
     "rentals": "Locações",
     "reports": "Relatos",
@@ -22,7 +22,7 @@
     "stock": "Estoque",
     "subscription": "Assinatura",
     "team": "Equipe",
-    "templates": "Checklists",
+    "templates": "Modelos de checklist",
     "workOrders": "Ordens de serviço"
   },
   "navGroups": {
@@ -74,7 +74,7 @@
     "MANAGER": "Gestor"
   },
   "shell": {
-    "attentionCount": "{count, plural, =0 {Nada precisa de atenção} one {# item precisa de atenção} other {# itens precisam de atenção}}",
+    "attentionCount": "{count, plural, =0 {Nenhuma pendência} one {# pendência} other {# pendências}}",
     "brand": "AgroRende",
     "closeMenu": "Fechar menu",
     "collapseMenu": "Recolher menu",
@@ -91,7 +91,7 @@
     "notificationsLabel": "{count, plural, =0 {Notificações} one {Notificações, # não lida} other {Notificações, # não lidas}}",
     "openMenu": "Abrir menu",
     "search": "Buscar",
-    "searchSoon": "Buscar ou executar um comando (Ctrl+K)",
+    "searchSoon": "Buscar (Ctrl+K)",
     "showGroup": "Mostrar {group}",
     "sidebar": "Menu lateral",
     "signOut": "Sair",
@@ -102,7 +102,9 @@
       "outdoor": "Sol forte",
       "system": "Automático"
     },
-    "themeLabel": "Tema: {theme}"
+    "themeLabel": "Tema: {theme}",
+    "themeTitle": "Tema",
+    "userMenu": "Conta e preferências de {name}"
   },
   "styleGuide": {
     "badges": "Selos de status",
@@ -139,7 +141,7 @@
   "commandPalette": {
     "label": "Busca e comandos",
     "inputLabel": "Buscar máquinas, ordens de serviço, relatos, locações, clientes e fazendas",
-    "placeholder": "Busque ou digite um comando…",
+    "placeholder": "Buscar…",
     "close": "Fechar busca",
     "loading": "Buscando…",
     "minLength": "Digite pelo menos {count} caracteres para buscar registros.",
@@ -181,7 +183,7 @@
       },
       "attention": {
         "body": "Tudo que precisa de uma decisão do escritório, em ordem de urgência.",
-        "tasks": "Resolva relatos críticos, ordens atrasadas, locações vencendo e falhas de sincronização."
+        "tasks": "Resolva relatos críticos, ordens atrasadas, locações vencendo e celulares que pararam de enviar dados."
       },
       "reports": {
         "body": "Relatos enviados pelo app de campo: checklists, fotos, defeitos e assinaturas.",
@@ -213,7 +215,7 @@
       },
       "devices": {
         "body": "Celulares e tablets que usam o app de campo com a conta da organização.",
-        "tasks": "Veja a última sincronização de cada aparelho e revogue o acesso de um aparelho perdido."
+        "tasks": "Veja a última atualização de cada celular e bloqueie o acesso de um celular perdido."
       },
       "templates": {
         "body": "Modelos de checklist que os técnicos preenchem no app de campo.",
@@ -229,7 +231,7 @@
       },
       "imports": {
         "body": "Importação de planilhas para cadastrar muitos registros de uma vez.",
-        "tasks": "Envie um CSV de máquinas, clientes ou equipe, confira a prévia e confirme."
+        "tasks": "Envie sua planilha de máquinas, clientes ou equipe, confira a prévia e confirme."
       },
       "settings": {
         "body": "Dados da organização, fuso horário, idioma e regras de trabalho.",

@@ -65,12 +65,12 @@
     "action": "Tentar de novo"
   },
   "CSV_ENCODING_UNSUPPORTED": {
-    "title": "Não consegui ler este CSV",
+    "title": "Não consegui ler esta planilha",
     "body": "Nenhum dado foi importado. Salve novamente e envie o arquivo de novo.",
     "action": "Tentar de novo"
   },
   "CSV_FORMAT_UNSUPPORTED": {
-    "title": "Revise o formato do CSV",
+    "title": "Revise o formato da planilha",
     "body": "Nenhuma linha foi importada. Use colunas esperadas e números como 1.234,56 ou 1234,56.",
     "action": "Tentar de novo"
   },
@@ -136,7 +136,7 @@
   },
   "INVALID_CREDENTIALS": {
     "title": "E-mail ou senha não conferem",
-    "body": "Confira os dados e tente de novo. Seus rascunhos deste aparelho continuam salvos.",
+    "body": "Confira os dados e tente de novo. Seus rascunhos deste celular continuam salvos.",
     "action": "Tentar novamente"
   },
   "INVALID_TRANSITION": {
@@ -246,7 +246,7 @@
   },
   "REFRESH_REUSED": {
     "title": "Sessão protegida",
-    "body": "Por segurança, entre de novo neste aparelho. Seus dados locais continuam salvos.",
+    "body": "Por segurança, entre de novo neste celular. Seus dados locais continuam salvos.",
     "action": "Entrar de novo"
   },
   "RENTAL_ASSET_MISMATCH": {
@@ -301,7 +301,7 @@
   },
   "RESET_LINK_EXPIRED": {
     "title": "Link vencido",
-    "body": "Solicite um novo link e tente novamente. Nenhum dado do aparelho foi apagado.",
+    "body": "Solicite um novo link e tente novamente. Nenhum dado do celular foi apagado.",
     "action": "Solicitar novo link"
   },
   "RESET_REQUIRED": {
@@ -316,7 +316,7 @@
   },
   "STORAGE_FULL": {
     "title": "Envio de arquivos pausado",
-    "body": "Seus arquivos estão guardados no aparelho. Vamos tentar de novo quando houver espaço.",
+    "body": "Seus arquivos estão guardados no celular. Vamos tentar de novo quando houver espaço.",
     "action": "Acompanhar envio"
   },
   "TEMPLATE_VERSION_IN_USE": {
@@ -331,7 +331,7 @@
   },
   "UNAUTHENTICATED": {
     "title": "Entre para continuar",
-    "body": "Seus rascunhos deste aparelho continuam salvos. Entre com a mesma conta para enviar.",
+    "body": "Seus rascunhos deste celular continuam salvos. Entre com a mesma conta para enviar.",
     "action": "Entrar"
   },
   "UNKNOWN_MUTATION": {

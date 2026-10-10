@@ -78,7 +78,7 @@
   },
   "errors": {
     "copyReference": "Copy reference",
-    "reference": "Error reference: {ref}"
+    "reference": "Support code: {ref}"
   },
   "filters": {
     "includeArchived": "Show archived",
@@ -186,10 +186,10 @@
     }
   },
   "syncHealth": {
-    "NEVER": "Never synced",
-    "OK": "In sync",
-    "STALE": "Not synced for over 24 h",
-    "STUCK": "Sync stuck"
+    "NEVER": "Phone never sent data",
+    "OK": "Up to date",
+    "STALE": "Not updated for over 24 h",
+    "STUCK": "Sending stuck on the phone"
   },
   "table": {
     "first": "First page",

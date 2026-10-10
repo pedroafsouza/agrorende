@@ -1,5 +1,5 @@
 {
-  "title": "Operations Center",
+  "title": "Overview",
   "subtitle": "Live map, team, alerts and today's numbers in one place.",
   "map": {
     "label": "Live operations map"
@@ -240,7 +240,7 @@
     },
     "lastUpdate": "Last update: {at}",
     "lastFix": "Position from {at}",
-    "deviceHealth": "See phone sync health",
+    "deviceHealth": "See last phone update",
     "close": "Close operator panel",
     "activeWorkOrder": "Open current job",
     "trail": "Today's route",
@@ -289,9 +289,9 @@
     "app": "Install the field app"
   },
   "exports": {
-    "title": "Export to CSV",
+    "title": "Export spreadsheet",
     "hint": "Files use ; as separator and open in Excel with accents intact.",
-    "button": "Export CSV",
+    "button": "Export spreadsheet",
     "entity": {
       "field-reports": "Field reports",
       "work-orders": "Jobs",
@@ -309,13 +309,13 @@
     },
     "started": {
       "title": "We are preparing the file",
-      "body": "You can keep working. We will notify you when the CSV is ready."
+      "body": "You can keep working. We will notify you when the spreadsheet is ready."
     },
-    "ready": "Your CSV is ready to download.",
-    "download": "Download CSV",
+    "ready": "Your spreadsheet is ready to download.",
+    "download": "Download spreadsheet",
     "preview": "Preview first rows",
     "previewTitle": "First rows of the file",
-    "previewCaption": "Preview of the exported CSV",
+    "previewCaption": "Preview of the exported spreadsheet",
     "expiresAt": "Available until {at}",
     "failed": "We could not prepare this file. Nothing was changed. Try the export again.",
     "expired": "This link expired after 7 days. Export again to get a new file."

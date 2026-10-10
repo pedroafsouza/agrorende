@@ -136,6 +136,7 @@ export function RentalsListPage() {
               )
             }
             body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")}
+            animation={filtered ? undefined : "rental-handover"}
             icon={<Truck className="size-8" />}
             title={filtered ? common("states.noMatches") : t("list.emptyTitle")}
           />
