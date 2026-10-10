@@ -1,8 +1,8 @@
 import type { Db } from "mongodb";
 
-import { getClient } from "../client.js";
-import { COLLECTION_NAMES } from "../collections.js";
-import { ensureIndexes } from "../ensureIndexes.js";
+import { getClient } from "../client";
+import { COLLECTION_NAMES } from "../collections";
+import { ensureIndexes } from "../ensureIndexes";
 
 export interface TestDbHandle {
   readonly db: Db;

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { EntityTypeEnum, NotificationTypeEnum } from "../enums.js";
-import { OptionalDateTimeSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { EntityTypeEnum, NotificationTypeEnum } from "../enums";
+import { OptionalDateTimeSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const NotificationDTOSchema = SyncDTOSchema.extend({
   userId: UuidSchema,

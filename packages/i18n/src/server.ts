@@ -2,7 +2,7 @@ import enExports from "../locales/en/exports.json";
 import enNotifications from "../locales/en/notifications.json";
 import ptBRExports from "../locales/pt-BR/exports.json";
 import ptBRNotifications from "../locales/pt-BR/notifications.json";
-import { resolveLocale, type SupportedLocale } from "./locales.js";
+import { resolveLocale, type SupportedLocale } from "./locales";
 
 /**
  * Server-side message catalogues (ARCHITECTURE §20). Core renders notification texts and CSV

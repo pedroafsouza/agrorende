@@ -1,1 +1,1 @@
-export { UserIdentitySchema } from "./index.js";
+export { UserIdentitySchema } from "./index";

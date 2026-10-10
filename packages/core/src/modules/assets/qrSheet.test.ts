@@ -2,8 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { DomainError } from "../../errors.js";
-import { assetQrPayload, qrPath, qrSheetDocument, renderQrSheet, QR_LABELS_PER_PAGE, type QrEncoder, type QrPdfNode } from "./qrSheet.js";
+import { DomainError } from "../../errors";
+import { assetQrPayload, qrPath, qrSheetDocument, renderQrSheet, QR_LABELS_PER_PAGE, type QrEncoder, type QrPdfNode } from "./qrSheet";
 
 const ORG = "0190f5a0-0000-7000-8000-0000000d2001";
 const OTHER = "0190f5a0-0000-7000-8000-0000000d2002";

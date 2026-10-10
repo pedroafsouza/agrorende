@@ -2,9 +2,9 @@ import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { UserSetDutyPayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { setDuty } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { setDuty } from "./service";
 
 const setDutyHandler: MutationHandler<UserSetDutyPayload> = {
   schema: MUTATION_PAYLOADS["user.setDuty"],

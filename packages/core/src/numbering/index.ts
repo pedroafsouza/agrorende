@@ -1,7 +1,7 @@
 import { AppError } from "@agrorende/contracts/errors";
 import { collections, getDb } from "@agrorende/db";
 
-import type { Ctx } from "../context.js";
+import type { Ctx } from "../context";
 
 export type NumberSequencePrefix = "FR" | "WO" | "RN" | "BD" | "AGR";
 

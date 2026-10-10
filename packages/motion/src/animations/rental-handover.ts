@@ -1,6 +1,6 @@
-import { circle, composition, ease, group, k, layer, palette, rect, shape, type Color, type Vec2 } from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBox, keyIcon, person } from "./parts.js";
+import { circle, composition, ease, group, k, layer, palette, rect, shape, type Color, type Vec2 } from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBox, keyIcon, person } from "./parts";
 
 /** Rental handover: a key passes from the owner's card to the renter's card, then a checklist ticks. */
 export function buildRentalHandover() {

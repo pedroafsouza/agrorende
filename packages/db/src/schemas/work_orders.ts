@@ -1,1 +1,1 @@
-export { WorkOrderSchema } from "./index.js";
+export { WorkOrderSchema } from "./index";

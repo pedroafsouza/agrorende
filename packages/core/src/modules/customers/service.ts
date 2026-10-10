@@ -3,9 +3,9 @@ import { AppError } from "@agrorende/contracts/errors";
 import type { Tx } from "@agrorende/contracts/seams";
 import type { Customer } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit";
 import {
   CustomerCreateInputSchema,
   CustomerUpdateInputSchema,
@@ -13,7 +13,7 @@ import {
   type CustomerDTO,
   type CustomerEligibility,
   type CustomerUpdateInput,
-} from "./dto.js";
+} from "./dto";
 
 /** Only office roles see the full CPF/CNPJ; everyone else gets the masked form. */
 export function toCustomerDto(doc: Customer, opts: { revealTaxId: boolean } = { revealTaxId: true }): CustomerDTO {

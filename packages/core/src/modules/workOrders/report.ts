@@ -2,11 +2,11 @@ import { collections, getDb } from "@agrorende/db";
 import type { ChecklistItem, ChecklistResponse } from "@agrorende/contracts";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { mediaStore } from "../../storage/index.js";
-import { dbTx } from "../assets/kit.js";
-import { variantKey } from "../media/upload.js";
-import { detail } from "./queries.js";
+import type { Ctx } from "../../context";
+import { mediaStore } from "../../storage/index";
+import { dbTx } from "../assets/kit";
+import { variantKey } from "../media/upload";
+import { detail } from "./queries";
 
 /** At most this many photos are embedded so the report stays a few hundred kilobytes. */
 export const REPORT_MAX_PHOTOS = 8;
@@ -271,6 +271,6 @@ type RenderReport = (model: WorkOrderReportModel, labels: WorkOrderReportLabels)
  * code path.
  */
 export async function renderReportPdf(model: WorkOrderReportModel, labels: WorkOrderReportLabels): Promise<Uint8Array> {
-  const module = (await import("../../pdf/workOrderReport.js")) as { renderWorkOrderReport: RenderReport };
+  const module = (await import("../../pdf/workOrderReport")) as { renderWorkOrderReport: RenderReport };
   return module.renderWorkOrderReport(model, labels);
 }

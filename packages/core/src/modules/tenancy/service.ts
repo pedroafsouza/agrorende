@@ -7,19 +7,19 @@ import { E164Schema, LocaleSchema } from "@agrorende/contracts/settings";
 import { collection, collections, getClient, getDb, withSyncTx, type Organization, type User, type UserIdentity } from "@agrorende/db";
 import { z } from "zod";
 
-import { enforceRateLimit } from "../../auth/rateLimit.js";
-import { issueSession, type IssuedSession } from "../../auth/tokens.js";
-import type { Ctx } from "../../context.js";
-import { dispatchPending } from "../../events/index.js";
-import { writeOutbox } from "../../notify/index.js";
-import { DAY_MS, SIGNUP_RATE_LIMITS, tenancyConfig } from "./config.js";
-import { defaultChecklistTemplates, defaultOrgSettings, defaultSequences } from "./defaults.js";
-import type { GettingStartedDTO, GettingStartedStepId, SubscriptionDTO } from "./dto.js";
-import { isReactivation, isReadOnlyStatus, nextLifecycleTransition, orgStatusDto, orgStatusEvent, statusPatch, type LifecyclePatch } from "./lifecycle.js";
-import { SYSTEM_ACTOR } from "./purge.js";
-import { issueSignupLoginCode, verifySignupLoginCode, verifySignupTicket } from "./signupTicket.js";
-import { normalizeCnpj } from "./taxId.js";
-import { readUsage, type Db } from "./usage.js";
+import { enforceRateLimit } from "../../auth/rateLimit";
+import { issueSession, type IssuedSession } from "../../auth/tokens";
+import type { Ctx } from "../../context";
+import { dispatchPending } from "../../events/index";
+import { writeOutbox } from "../../notify/index";
+import { DAY_MS, SIGNUP_RATE_LIMITS, tenancyConfig } from "./config";
+import { defaultChecklistTemplates, defaultOrgSettings, defaultSequences } from "./defaults";
+import type { GettingStartedDTO, GettingStartedStepId, SubscriptionDTO } from "./dto";
+import { isReactivation, isReadOnlyStatus, nextLifecycleTransition, orgStatusDto, orgStatusEvent, statusPatch, type LifecyclePatch } from "./lifecycle";
+import { SYSTEM_ACTOR } from "./purge";
+import { issueSignupLoginCode, verifySignupLoginCode, verifySignupTicket } from "./signupTicket";
+import { normalizeCnpj } from "./taxId";
+import { readUsage, type Db } from "./usage";
 
 export const EXPECTED_FIELD_USERS = ["1-5", "6-20", "21-50+"] as const;
 

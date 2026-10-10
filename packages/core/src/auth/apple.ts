@@ -5,7 +5,7 @@ import { collections, getDb } from "@agrorende/db";
 import { importPKCS8, SignJWT } from "jose";
 import { z } from "zod";
 
-import { APPLE_PRODUCTION_ISSUER, discover, oauthConfig, type OAuthConfig } from "./oidc.js";
+import { APPLE_PRODUCTION_ISSUER, discover, oauthConfig, type OAuthConfig } from "./oidc";
 
 /**
  * Sign in with Apple helpers (ARCHITECTURE §8, §11): the ES256 client secret, AES-256-GCM

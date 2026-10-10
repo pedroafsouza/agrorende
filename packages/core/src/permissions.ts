@@ -1,6 +1,6 @@
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "./context.js";
+import type { Ctx } from "./context";
 
 export const ANY_ROLE: readonly Role[] = ["ADMIN", "MANAGER", "FIELD"] as const;
 export const OFFICE_ROLES: readonly Role[] = ["ADMIN", "MANAGER"] as const;

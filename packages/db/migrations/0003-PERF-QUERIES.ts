@@ -1,6 +1,6 @@
 import type { Db } from "mongodb";
 
-import { PERF_QUERY_INDEXES } from "../src/indexes.js";
+import { PERF_QUERY_INDEXES } from "../src/indexes";
 
 export const id = "0003-PERF-QUERIES";
 

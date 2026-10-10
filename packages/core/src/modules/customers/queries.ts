@@ -1,10 +1,10 @@
 import type { Customer } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "../assets/kit.js";
-import { CustomerListFilterSchema, type CustomerDTO, type CustomerListFilter } from "./dto.js";
-import { toCustomerDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "../assets/kit";
+import { CustomerListFilterSchema, type CustomerDTO, type CustomerListFilter } from "./dto";
+import { toCustomerDto } from "./service";
 
 function reveal(ctx: Pick<Ctx, "role">): boolean {
   return ctx.role === "ADMIN" || ctx.role === "MANAGER";

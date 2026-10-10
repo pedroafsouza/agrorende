@@ -1,1 +1,1 @@
-export { ProcessedMutationSchema } from "./index.js";
+export { ProcessedMutationSchema } from "./index";

@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { createHarness, type Harness } from "../assets/testing/harness.js";
-import { getPlot } from "./queries.js";
-import { createPlot, createSite, updatePlot } from "./service.js";
+import { createHarness, type Harness } from "../assets/testing/harness";
+import { getPlot } from "./queries";
+import { createPlot, createSite, updatePlot } from "./service";
 
 /*
  * T16.5: a boundary drawn on the site page is saved through `PATCH /plots/:id` and read back.

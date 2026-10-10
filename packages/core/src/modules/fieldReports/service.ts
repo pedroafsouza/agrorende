@@ -7,17 +7,17 @@ import type { MediaMeta } from "@agrorende/contracts/sync";
 import type { Tx } from "@agrorende/contracts/seams";
 import type { FieldReport, WorkOrder } from "@agrorende/db";
 
-import { recordActivity } from "../../activity/index.js";
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import { createNotification, officeRecipients } from "../../notify/index.js";
-import { next as nextNumber } from "../../numbering/index.js";
-import { rentalSeams, seasonSeams, workOrderSeams } from "../../seams.js";
-import type { SyncTx } from "../../sync/types.js";
-import { dbTx, newId, parseInput, stampCreate, stampUpdate, toDto } from "../assets/kit.js";
-import { OPEN_STATUSES, recomputeCondition, REPAIR_STATUSES } from "../assets/service.js";
-import { registerMedia } from "../media/service.js";
+import { recordActivity } from "../../activity/index";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import { createNotification, officeRecipients } from "../../notify/index";
+import { next as nextNumber } from "../../numbering/index";
+import { rentalSeams, seasonSeams, workOrderSeams } from "../../seams";
+import type { SyncTx } from "../../sync/types";
+import { dbTx, newId, parseInput, stampCreate, stampUpdate, toDto } from "../assets/kit";
+import { OPEN_STATUSES, recomputeCondition, REPAIR_STATUSES } from "../assets/service";
+import { registerMedia } from "../media/service";
 import {
   DismissInputSchema,
   LinkAssetInputSchema,
@@ -30,7 +30,7 @@ import {
   type MarkForRepairResult,
   type MonitorInput,
   type OpenWorkOrderSummary,
-} from "./dto.js";
+} from "./dto";
 
 export const OFFICE: readonly Role[] = ["ADMIN", "MANAGER"];
 /** Work-order statuses that count as "a repair job is already open" for an asset (EC-FR-15, BR-F1-3). */

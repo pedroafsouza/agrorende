@@ -1,6 +1,6 @@
-import { composition, ease, group, k, layer, palette, rect, shape } from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBox } from "./parts.js";
+import { composition, ease, group, k, layer, palette, rect, shape } from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBox } from "./parts";
 
 /** First work order: a clipboard slides in and three check boxes tick one by one. */
 export function buildFirstWorkOrder() {

@@ -2,10 +2,10 @@ import type { AssetCategory, ChecklistKind } from "@agrorende/contracts/enums";
 import type { Tx } from "@agrorende/contracts/seams";
 import type { ChecklistTemplate } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { OPEN_STATUSES, REPAIR_STATUSES } from "../assets/service.js";
-import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { OPEN_STATUSES, REPAIR_STATUSES } from "../assets/service";
+import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit";
 import {
   TemplateCreateInputSchema,
   TemplatePublishInputSchema,
@@ -15,7 +15,7 @@ import {
   type TemplateCreateInput,
   type TemplatePublishInput,
   type TemplateUpdateInput,
-} from "./dto.js";
+} from "./dto";
 
 export function toTemplateDto(doc: ChecklistTemplate): ChecklistTemplateDTO {
   return toDto<ChecklistTemplateDTO>(doc);

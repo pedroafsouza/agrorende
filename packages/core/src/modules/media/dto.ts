@@ -1,6 +1,6 @@
 import type { MediaDTO } from "@agrorende/contracts/dto";
 
-import { toWire } from "../../sync/pull.js";
+import { toWire } from "../../sync/pull";
 
 export type { MediaDTO } from "@agrorende/contracts/dto";
 

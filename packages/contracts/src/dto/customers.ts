@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OptionalDateTimeSchema, OptionalStringSchema, SyncDTOSchema } from "./shared.js";
+import { OptionalDateTimeSchema, OptionalStringSchema, SyncDTOSchema } from "./shared";
 
 export const TaxIdTypeSchema = z.enum(["CPF", "CNPJ"]);
 export type TaxIdType = z.infer<typeof TaxIdTypeSchema>;

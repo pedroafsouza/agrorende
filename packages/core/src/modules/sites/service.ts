@@ -1,9 +1,9 @@
 import type { SiteSummary, Tx } from "@agrorende/contracts/seams";
 import type { Plot, Site } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "../assets/kit";
 import {
   PlotInputSchema,
   PlotUpdateInputSchema,
@@ -15,8 +15,8 @@ import {
   type SiteCreateInput,
   type SiteDTO,
   type SiteUpdateInput,
-} from "./dto.js";
-import { validatePlotGeometry } from "./geometry.js";
+} from "./dto";
+import { validatePlotGeometry } from "./geometry";
 
 export function toSiteDto(doc: Site): SiteDTO {
   return toDto<SiteDTO>(doc);

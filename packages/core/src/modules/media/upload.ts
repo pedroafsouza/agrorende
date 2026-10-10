@@ -5,15 +5,15 @@ import { collections, getDb, type Media } from "@agrorende/db";
 import { z } from "zod";
 import type { MediaMeta } from "@agrorende/contracts/sync";
 
-import { authConfig } from "../../auth/config.js";
-import { signMediaUrlToken, verifyMediaUrlToken, type MediaUrlTokenClaims } from "../../auth/jwt.js";
-import type { Ctx } from "../../context.js";
-import { mediaStore, type BlobRange, type MediaVariant } from "../../storage/index.js";
-import { loadScopedRow } from "../../sync/pull.js";
-import { txDb } from "../../sync/touch.js";
-import { withSyncTx } from "../../sync/withSyncTx.js";
-import { toMediaDto, type MediaDTO } from "./dto.js";
-import { MULTIPART_PART_BYTES, posterKeyFor, registerMedia, SINGLE_UPLOAD_MAX_BYTES, thumbnailKeyFor, updateMedia } from "./service.js";
+import { authConfig } from "../../auth/config";
+import { signMediaUrlToken, verifyMediaUrlToken, type MediaUrlTokenClaims } from "../../auth/jwt";
+import type { Ctx } from "../../context";
+import { mediaStore, type BlobRange, type MediaVariant } from "../../storage/index";
+import { loadScopedRow } from "../../sync/pull";
+import { txDb } from "../../sync/touch";
+import { withSyncTx } from "../../sync/withSyncTx";
+import { toMediaDto, type MediaDTO } from "./dto";
+import { MULTIPART_PART_BYTES, posterKeyFor, registerMedia, SINGLE_UPLOAD_MAX_BYTES, thumbnailKeyFor, updateMedia } from "./service";
 
 export const UPLOAD_URL_TTL_S = 60 * 60;
 export const READ_URL_TTL_S = 5 * 60;

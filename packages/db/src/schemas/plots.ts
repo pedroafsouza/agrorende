@@ -1,1 +1,1 @@
-export { PlotSchema } from "./index.js";
+export { PlotSchema } from "./index";

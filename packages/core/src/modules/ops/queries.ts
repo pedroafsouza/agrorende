@@ -3,11 +3,11 @@ import type { Priority } from "@agrorende/contracts/enums";
 import type { LiveOperator } from "@agrorende/contracts/seams";
 import type { Redis } from "ioredis";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { listLocations } from "../locations/queries.js";
-import { liveSnapshot } from "../locations/service.js";
-import type { Db } from "../locations/types.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { listLocations } from "../locations/queries";
+import { liveSnapshot } from "../locations/service";
+import type { Db } from "../locations/types";
 import {
   KPI_RANGES,
   type AlertType,
@@ -23,7 +23,7 @@ import {
   type OpsAlertsDTO,
   type OpsKpisDTO,
   type OpsLiveDTO,
-} from "./dto.js";
+} from "./dto";
 import {
   OPEN_WO_STATUSES,
   TERMINAL_WO_STATUSES,
@@ -36,7 +36,7 @@ import {
   slaStateOf,
   startOfZonedDay,
   type OpsSettings,
-} from "./rules.js";
+} from "./rules";
 
 export type OpsCtx = Pick<Ctx, "orgId">;
 

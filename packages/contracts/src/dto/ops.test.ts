@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AttentionResolveInputSchema, CostRollupDTOSchema, OpsKpisDTOSchema, OpsLiveDTOSchema } from "./index.js";
+import { AttentionResolveInputSchema, CostRollupDTOSchema, OpsKpisDTOSchema, OpsLiveDTOSchema } from "./index";
 
 const at = "2025-01-01T12:00:00.000Z";
 

@@ -3,9 +3,9 @@ import { randomUUID } from "node:crypto";
 import type { PullResponse, TableName } from "@agrorende/contracts/sync";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import type { Ctx } from "../context.js";
-import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded.js";
-import { decodeCursor, pull } from "./pull.js";
+import type { Ctx } from "../context";
+import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded";
+import { decodeCursor, pull } from "./pull";
 
 const DEVICE = "018fd000-0000-7000-8000-00000000d002";
 const FIELD_104 = seedUuid(104);

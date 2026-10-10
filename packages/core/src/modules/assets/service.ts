@@ -4,9 +4,9 @@ import type { EntityRef } from "@agrorende/contracts/dto";
 import type { AssetSummary, Ctx as SeamCtx, Tx } from "@agrorende/contracts/seams";
 import type { Asset } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { next as nextNumber } from "../../numbering/index.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { next as nextNumber } from "../../numbering/index";
 import {
   AssetCreateInputSchema,
   AssetRetireInputSchema,
@@ -15,8 +15,8 @@ import {
   type AssetDTO,
   type AssetRetireInput,
   type AssetUpdateInput,
-} from "./dto.js";
-import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "./kit.js";
+} from "./dto";
+import { assertVersion, dbTx, newId, stampCreate, stampUpdate, toDto, writeActivity, parseInput } from "./kit";
 
 export const REPAIR_STATUSES: readonly WorkOrderStatus[] = ["IN_PROGRESS", "ON_HOLD"];
 export const OPEN_STATUSES: readonly WorkOrderStatus[] = ["OPEN", "ASSIGNED", "ACCEPTED", "EN_ROUTE", "ON_SITE"];

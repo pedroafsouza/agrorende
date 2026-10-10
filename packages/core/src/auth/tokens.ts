@@ -4,9 +4,9 @@ import { AppError } from "@agrorende/contracts/errors";
 import { collections, getDb } from "@agrorende/db";
 import type { User } from "@agrorende/db";
 
-import { signAccessToken } from "./jwt.js";
-import { ACCESS_TOKEN_TTL_S, authConfig, DRAIN_SCOPE, DRAIN_TOKEN_TTL_MS, REFRESH_REUSE_GRACE_MS, REFRESH_TOKEN_TTL_MS } from "./config.js";
-import { randomToken, sha256Hex } from "./password.js";
+import { signAccessToken } from "./jwt";
+import { ACCESS_TOKEN_TTL_S, authConfig, DRAIN_SCOPE, DRAIN_TOKEN_TTL_MS, REFRESH_REUSE_GRACE_MS, REFRESH_TOKEN_TTL_MS } from "./config";
+import { randomToken, sha256Hex } from "./password";
 
 export interface IssuedSession {
   readonly accessToken: string;

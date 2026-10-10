@@ -4,8 +4,8 @@ import {
   IssueCategoryEnum,
   PriorityEnum,
   SuggestedActionEnum,
-} from "../enums.js";
-import { MediaMetaSchema, UuidSchema } from "../sync.js";
+} from "../enums";
+import { MediaMetaSchema, UuidSchema } from "../sync";
 
 /** Payload schemas for the `fieldReport.*` mutations (ARCHITECTURE section 7.3). */
 

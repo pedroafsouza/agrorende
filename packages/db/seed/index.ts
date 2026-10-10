@@ -2,11 +2,11 @@ import { createHash } from "node:crypto";
 
 import type { Db } from "mongodb";
 
-import { closeClient, getDb } from "../src/client.js";
-import { COLLECTION_NAMES, collection } from "../src/collections.js";
-import { ensureIndexes } from "../src/ensureIndexes.js";
-import { documentSchemas } from "../src/schemas/index.js";
-import type { CollectionName, Uuid } from "../src/types.js";
+import { closeClient, getDb } from "../src/client";
+import { COLLECTION_NAMES, collection } from "../src/collections";
+import { ensureIndexes } from "../src/ensureIndexes";
+import { documentSchemas } from "../src/schemas/index";
+import type { CollectionName, Uuid } from "../src/types";
 
 const DAY_MS = 86_400_000;
 const BASE_TIME = Date.UTC(2026, 9, 8, 12, 0, 0, 0);

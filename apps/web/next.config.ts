@@ -25,11 +25,6 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@agrorende/contracts", "@agrorende/core", "@agrorende/db", "@agrorende/design-tokens", "@agrorende/i18n", "@agrorende/api-client", "@agrorende/motion"],
   // Native and Node-only server dependencies are loaded from node_modules at runtime instead of bundled.
   serverExternalPackages: ["@node-rs/argon2", "mongodb", "bullmq", "ioredis", "sharp", "qrcode"],
-  // The workspace packages use ESM `.js` specifiers for `.ts` sources (change request T04-005).
-  webpack: (config: { resolve: { extensionAlias?: Record<string, string[]> } }) => {
-    config.resolve.extensionAlias = { ".js": [".ts", ".tsx", ".js"], ".mjs": [".mts", ".mjs"] };
-    return config;
-  },
 };
 
 // Server components call `useTranslations`, which needs the request config registered by the plugin.

@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AssetCategoryEnum, MaintenanceTriggerEnum } from "../enums.js";
-import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared.js";
+import { AssetCategoryEnum, MaintenanceTriggerEnum } from "../enums";
+import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared";
 
 export const MaintenancePlanDTOSchema = SyncDTOSchema.extend({
   name: z.string(),

@@ -1,9 +1,9 @@
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
-import { closeClient, getDb, getDatabaseName } from "../src/client.js";
-import { runMigrations } from "../migrations/runner.js";
-import { seedDatabase } from "../seed/index.js";
+import { closeClient, getDb, getDatabaseName } from "../src/client";
+import { runMigrations } from "../migrations/runner";
+import { seedDatabase } from "../seed/index";
 
 async function runStorageSeed(): Promise<void> {
   const repoRoot = fileURLToPath(new URL("../../..", import.meta.url));

@@ -1,6 +1,6 @@
 import type { UserDTO } from "@agrorende/contracts/dto";
 
-import { toTableDto, type WireViewer } from "../../sync/pull.js";
+import { toTableDto, type WireViewer } from "../../sync/pull";
 
 export type { UserDTO } from "@agrorende/contracts/dto";
 

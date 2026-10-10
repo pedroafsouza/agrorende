@@ -2,17 +2,17 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import type { CheckInInspection } from "@agrorende/contracts/mutations";
 
-import { createNamedSeededDb, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded.js";
-import type { Ctx } from "../context.js";
-import { newId } from "../modules/assets/kit.js";
-import { markForRepair } from "../modules/fieldReports/service.js";
-import { checkInInspection, mediaMeta } from "../modules/rentals/testing/harness.js";
-import { createDamageWorkOrder } from "../modules/rentals/service.js";
-import { assign, cancel } from "../modules/workOrders/service.js";
-import { assetSeams, checklistSeams, fieldReportSeams, siteSeams, workOrderSeams } from "../seams.js";
-import { push } from "../sync/push.js";
-import { withSyncTx } from "../sync/withSyncTx.js";
-import type { SyncTx } from "../sync/types.js";
+import { createNamedSeededDb, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded";
+import type { Ctx } from "../context";
+import { newId } from "../modules/assets/kit";
+import { markForRepair } from "../modules/fieldReports/service";
+import { checkInInspection, mediaMeta } from "../modules/rentals/testing/harness";
+import { createDamageWorkOrder } from "../modules/rentals/service";
+import { assign, cancel } from "../modules/workOrders/service";
+import { assetSeams, checklistSeams, fieldReportSeams, siteSeams, workOrderSeams } from "../seams";
+import { push } from "../sync/push";
+import { withSyncTx } from "../sync/withSyncTx";
+import type { SyncTx } from "../sync/types";
 
 /**
  * T10.2 — real seam wiring on the seeded replica set (no `vi.mock`). Mutations go through

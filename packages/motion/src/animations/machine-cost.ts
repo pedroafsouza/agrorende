@@ -12,9 +12,9 @@ import {
   rect,
   shape,
   type Key,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { exhaustPuffs, tractor } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { exhaustPuffs, tractor } from "./parts";
 
 /** Cost per machine hour: the hour-meter needle sweeps while a coin stack grows beside the tractor. */
 export function buildMachineCost() {

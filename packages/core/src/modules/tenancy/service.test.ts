@@ -4,19 +4,19 @@ import path from "node:path";
 import { AppError } from "@agrorende/contracts/errors";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { setAuthConfigForTests } from "../../auth/config.js";
-import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit.js";
-import { signAccess } from "../../auth/tokens.js";
-import { findRepoRoot } from "../../storage/init.js";
-import { tenancyApi, type TenancyRouteKey } from "./api.js";
-import { DAY_MS, setTenancyConfigForTests } from "./config.js";
-import { statusPatch } from "./lifecycle.js";
-import { purgeOrganization, runOrgPurge } from "./purge.js";
-import { acceptTerms, applyStatusChange, assertOrgWritable, cancelOrganization, gettingStarted, getSubscription, redeemSignupLoginCode, runLifecycle } from "./service.js";
-import { issueSignupTicket, pkceChallenge, type SignupIdentity } from "./signupTicket.js";
-import { normalizeCnpj } from "./taxId.js";
-import { createTenancyDb, SEED, seedCtx, type TenancyTestDb } from "./testing.js";
-import { readUsage, runUsageDaily, usageMonth } from "./usage.js";
+import { setAuthConfigForTests } from "../../auth/config";
+import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit";
+import { signAccess } from "../../auth/tokens";
+import { findRepoRoot } from "../../storage/init";
+import { tenancyApi, type TenancyRouteKey } from "./api";
+import { DAY_MS, setTenancyConfigForTests } from "./config";
+import { statusPatch } from "./lifecycle";
+import { purgeOrganization, runOrgPurge } from "./purge";
+import { acceptTerms, applyStatusChange, assertOrgWritable, cancelOrganization, gettingStarted, getSubscription, redeemSignupLoginCode, runLifecycle } from "./service";
+import { issueSignupTicket, pkceChallenge, type SignupIdentity } from "./signupTicket";
+import { normalizeCnpj } from "./taxId";
+import { createTenancyDb, SEED, seedCtx, type TenancyTestDb } from "./testing";
+import { readUsage, runUsageDaily, usageMonth } from "./usage";
 
 const BASE = "http://localhost:3000";
 const MEDIA_ROOT = path.join(findRepoRoot(), ".data", "media-t20", "service-test");
@@ -204,7 +204,7 @@ describe("lifecycle", () => {
   });
 
   it("makes SUSPENDED organisations read-only (EC-OPS-29) and reactivation writes sync:poke", async () => {
-    const { assertOrganizationWritable } = await import("../../tenancy/index.js");
+    const { assertOrganizationWritable } = await import("../../tenancy/index");
     const { orgId, adminId } = await newTrialOrg("Reativar");
     const ctx = seedCtx(adminId, "ADMIN", orgId);
     await expect(assertOrganizationWritable(ctx)).resolves.toBeUndefined();
@@ -225,7 +225,7 @@ describe("lifecycle", () => {
   });
 
   it("feeds the field push gate: grace after suspension, then RETRY hourly (T02 orgPushBackoff)", async () => {
-    const { orgPushBackoff, ORG_SUSPENDED_RETRY_AFTER_MS } = await import("../../sync/push.js");
+    const { orgPushBackoff, ORG_SUSPENDED_RETRY_AFTER_MS } = await import("../../sync/push");
     const { orgId, adminId } = await newTrialOrg("Gate de Push");
     const now = new Date();
     await applyStatusChange(orgId, statusPatch("SUSPENDED", now), { now, dispatch: noDispatch });

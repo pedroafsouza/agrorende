@@ -1,1 +1,1 @@
-export { NumberSequenceSchema } from "./index.js";
+export { NumberSequenceSchema } from "./index";

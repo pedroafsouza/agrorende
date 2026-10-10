@@ -1,4 +1,4 @@
-import { seedStorage } from "../src/storage/seed.js";
+import { seedStorage } from "../src/storage/seed";
 import { closeClient } from "@agrorende/db";
 
 async function main(): Promise<void> {

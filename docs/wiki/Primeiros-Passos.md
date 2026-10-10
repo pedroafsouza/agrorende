@@ -133,7 +133,7 @@ Todos os comandos do `pnpm devloop` e do `package.json` estão em [Comandos e sc
 | `port is already allocated` em 27017, 6379 ou 4003 | Outro projeto Compose (outro clone ou worktree) usa as portas | `docker ps` e pare os containers do outro projeto. No Colima, encaminhamentos SSH antigos podem segurar a porta; `colima restart` resolve. |
 | `MongoServerError: node is not in primary or recovering state` | O replica set ainda não elegeu o PRIMARY | Espere alguns segundos e rode `pnpm dev:setup` de novo. Se persistir: `docker compose exec mongo mongosh --eval 'rs.status()'`. |
 | `Missing required environment variable REDIS_URL` (realtime ou worker) | Não existe `.env` na raiz do clone que você está usando | `cp .env.example .env` ou `pnpm dev:setup`. |
-| Primeira página do painel demora muito | O `next dev --webpack` compila cada rota sob demanda na primeira visita | Normal; as próximas visitas são rápidas. |
+| Primeira página do painel demora muito | O `next dev` (Turbopack) compila cada rota sob demanda na primeira visita | Normal; as próximas visitas são rápidas. |
 | App mobile não conecta à API no emulador Android | `localhost` no emulador é o próprio emulador | Use `10.0.2.2` em `apps/mobile/.env`. |
 | App instalado não abre o projeto ("no development build") | Você tentou com o Expo Go | Instale o dev client (`npx expo run:android`). |
 

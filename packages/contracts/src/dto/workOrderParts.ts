@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const WorkOrderPartDTOSchema = SyncDTOSchema.extend({
   workOrderId: UuidSchema,

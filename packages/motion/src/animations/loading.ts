@@ -1,5 +1,5 @@
-import { composition, ease, k, layer, palette, polyline, shape } from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
+import { composition, ease, k, layer, palette, polyline, shape } from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
 
 /** Loading: three field rows fill green one after another, then drain out to the right. */
 export function buildLoading() {

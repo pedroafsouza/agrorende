@@ -1,10 +1,10 @@
 import type { Plot, Site } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "../assets/kit.js";
-import { SiteListFilterSchema, type PlotDTO, type SiteDTO, type SiteListFilter } from "./dto.js";
-import { toPlotDto, toSiteDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "../assets/kit";
+import { SiteListFilterSchema, type PlotDTO, type SiteDTO, type SiteListFilter } from "./dto";
+import { toPlotDto, toSiteDto } from "./service";
 
 export async function listSites(ctx: Pick<Ctx, "orgId">, raw: Partial<SiteListFilter> = {}): Promise<Page<SiteDTO>> {
   const f = parseInput(SiteListFilterSchema, raw);

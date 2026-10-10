@@ -1,9 +1,9 @@
 import { MUTATION_PAYLOADS, type FuelLogCreatePayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { createFuelLog } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { createFuelLog } from "./service";
 
 /** Any role logs fuel (OFF-01). A lower hour meter is accepted on the log and ignored for the asset. */
 const create: MutationHandler<FuelLogCreatePayload> = {

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { ERROR_META } from "@agrorende/contracts/errors";
 import type { PullResponse, PushRequest, PushResponse } from "@agrorende/contracts/sync";
 
-import { AgrorendeApiClient, ApiError, isApiError, parseRetryAfter, type FetchLike } from "./index.js";
+import { AgrorendeApiClient, ApiError, isApiError, parseRetryAfter, type FetchLike } from "./index";
 
 interface Call {
   readonly url: string;

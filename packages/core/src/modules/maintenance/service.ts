@@ -2,14 +2,14 @@ import { z } from "zod";
 import { AssetCategoryEnum, MaintenanceTriggerEnum, type AssetCategory, type MaintenanceTrigger } from "@agrorende/contracts/enums";
 import type { AssetSummary, Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { createNotification, officeRecipients } from "../../notify/index.js";
-import { assetSeams, workOrderSeams } from "../../seams.js";
-import type { SyncTx } from "../../sync/types.js";
-import { assertVersion, dbTx, newId, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity } from "../assets/kit.js";
-import { dueAtFor, slaSettingsOf } from "../workOrders/sla.js";
-import type { MaintenanceDueRow, MaintenancePlanDTO, MaintenancePlanRow } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { createNotification, officeRecipients } from "../../notify/index";
+import { assetSeams, workOrderSeams } from "../../seams";
+import type { SyncTx } from "../../sync/types";
+import { assertVersion, dbTx, newId, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity } from "../assets/kit";
+import { dueAtFor, slaSettingsOf } from "../workOrders/sla";
+import type { MaintenanceDueRow, MaintenancePlanDTO, MaintenancePlanRow } from "./dto";
 
 /**
  * Preventive maintenance plans (ERP-06, ARCHITECTURE §8 "Maintenance" and §10 `maintenance.dueScan`).

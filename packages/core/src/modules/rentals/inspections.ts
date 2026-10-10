@@ -6,12 +6,12 @@ import type { AssetSummary } from "@agrorende/contracts/seams";
 import type { MediaMeta } from "@agrorende/contracts/sync";
 import type { Damage, Inspection } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import type { MutationMeta, SyncTx } from "../../sync/types.js";
-import { dbTx } from "../assets/kit.js";
-import { registerMedia } from "../media/service.js";
-import { fieldError } from "./internal.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import type { MutationMeta, SyncTx } from "../../sync/types";
+import { dbTx } from "../assets/kit";
+import { registerMedia } from "../media/service";
+import { fieldError } from "./internal";
 
 /** The inspection payload fields shared by check-out, check-in and `inspection.submit`. */
 export type InspectionPayload = Omit<CheckOutInspection, "safetyBriefingGiven" | "termsAccepted"> & {

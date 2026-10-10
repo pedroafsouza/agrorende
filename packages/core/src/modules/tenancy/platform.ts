@@ -6,13 +6,13 @@ import { collections, getDb, type Organization, type PlatformAuditEvent } from "
 import { createRemoteJWKSet, jwtVerify, SignJWT, type JWTVerifyGetKey } from "jose";
 import { z } from "zod";
 
-import { authConfig } from "../../auth/config.js";
-import { createAuthLink, type ShareLink } from "../../auth/service.js";
-import { PLATFORM_AUDIENCE, PLATFORM_SESSION_TTL_S, tenancyConfig } from "./config.js";
-import type { PlatformAuditDTO, PlatformOrgDetailDTO, PlatformOrgRowDTO } from "./dto.js";
-import { orgStatusDto, statusPatch, type LifecyclePatch } from "./lifecycle.js";
-import { applyStatusChange, type StatusChangeOptions } from "./service.js";
-import { readUsage, usageDto, type Db } from "./usage.js";
+import { authConfig } from "../../auth/config";
+import { createAuthLink, type ShareLink } from "../../auth/service";
+import { PLATFORM_AUDIENCE, PLATFORM_SESSION_TTL_S, tenancyConfig } from "./config";
+import type { PlatformAuditDTO, PlatformOrgDetailDTO, PlatformOrgRowDTO } from "./dto";
+import { orgStatusDto, statusPatch, type LifecyclePatch } from "./lifecycle";
+import { applyStatusChange, type StatusChangeOptions } from "./service";
+import { readUsage, usageDto, type Db } from "./usage";
 
 const OAUTH_STATE_TTL_S = 10 * 60;
 const OAUTH_STATE_AUDIENCE = "platform-oauth";

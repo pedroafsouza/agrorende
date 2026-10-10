@@ -1,1 +1,1 @@
-export { InspectionSchema } from "./index.js";
+export { InspectionSchema } from "./index";

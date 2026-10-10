@@ -1,4 +1,4 @@
-import { reject } from "./errors.js";
+import { reject } from "./errors";
 
 export function assertSameOrganization(left: string, right: string): void {
   if (left !== right) {

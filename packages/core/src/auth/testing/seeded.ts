@@ -2,7 +2,7 @@ import { closeClient, collection, COLLECTION_NAMES, type CollectionName } from "
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../../context.js";
+import type { Ctx } from "../../context";
 
 /** Seed identifiers (packages/db/seed). */
 export const SEED = {

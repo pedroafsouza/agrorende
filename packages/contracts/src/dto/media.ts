@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { EntityTypeEnum, MediaKindEnum, MediaStatusEnum, MediaTagEnum } from "../enums.js";
-import { MediaParentSchema, MediaVariantsSchema } from "../checklist.js";
-import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { EntityTypeEnum, MediaKindEnum, MediaStatusEnum, MediaTagEnum } from "../enums";
+import { MediaParentSchema, MediaVariantsSchema } from "../checklist";
+import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const MediaDTOSchema = SyncDTOSchema.extend({
   kind: MediaKindEnum,

@@ -4,13 +4,13 @@ import path from "node:path";
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { findRepoRoot } from "../../storage/init.js";
-import { localMediaStore, setMediaStore } from "../../storage/index.js";
-import { setAuthConfigForTests } from "../config.js";
-import { signAccessToken } from "../jwt.js";
-import { memoryRateLimiter, setRateLimiter } from "../rateLimit.js";
-import { createSeededDb, SEED, seedUuid, type SeededDb } from "../testing/seeded.js";
-import { platformApi, setHealthProbes, type PlatformRouteKey } from "./index.js";
+import { findRepoRoot } from "../../storage/init";
+import { localMediaStore, setMediaStore } from "../../storage/index";
+import { setAuthConfigForTests } from "../config";
+import { signAccessToken } from "../jwt";
+import { memoryRateLimiter, setRateLimiter } from "../rateLimit";
+import { createSeededDb, SEED, seedUuid, type SeededDb } from "../testing/seeded";
+import { platformApi, setHealthProbes, type PlatformRouteKey } from "./index";
 
 const BASE = "http://localhost:3000";
 const MEDIA_ROOT = path.join(findRepoRoot(), ".data", "media-t02", "api-test");

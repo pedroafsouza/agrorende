@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatServerMessage, renderIcu, resolveServerLocale, serverMessage } from "../src/server.js";
+import { formatServerMessage, renderIcu, resolveServerLocale, serverMessage } from "../src/server";
 
 describe("renderIcu", () => {
   it("substitutes arguments and drops missing ones", () => {

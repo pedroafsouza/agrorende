@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { notificationPrefsOf, NotificationPrefsSchema, UpdateMeInputSchema } from "./index.js";
+import { notificationPrefsOf, NotificationPrefsSchema, UpdateMeInputSchema } from "./index";
 
 describe("notification prefs (T05-008)", () => {
   it("defaults missing prefs and drops unknown types", () => {

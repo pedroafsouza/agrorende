@@ -2,8 +2,8 @@ import { afterAll, describe, expect, it } from "vitest";
 import { closeClient } from "@agrorende/db";
 import { setupTestDb } from "@agrorende/db/testing";
 
-import { makeTestCtx } from "../testing/ctx.js";
-import { next } from "./index.js";
+import { makeTestCtx } from "../testing/ctx";
+import { next } from "./index";
 
 describe("numbering.next", () => {
   afterAll(async () => {

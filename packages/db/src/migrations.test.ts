@@ -1,9 +1,9 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { runMigrations } from "../migrations/runner.js";
-import { closeClient } from "./client.js";
-import { UserSchema } from "./schemas/index.js";
-import { setupTestDb, type TestDbHandle } from "./testing/setupTestDb.js";
+import { runMigrations } from "../migrations/runner";
+import { closeClient } from "./client";
+import { UserSchema } from "./schemas/index";
+import { setupTestDb, type TestDbHandle } from "./testing/setupTestDb";
 
 process.env.MONGODB_URI ??= "mongodb://localhost:27017/?replicaSet=rs0";
 

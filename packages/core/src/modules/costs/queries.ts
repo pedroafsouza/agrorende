@@ -1,11 +1,11 @@
 import { collections, getDb } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import type { Db } from "../locations/types.js";
-import { loadOpsSettings } from "../ops/queries.js";
-import { startOfZonedDay } from "../ops/rules.js";
-import { COST_GROUP_BYS, COST_NONE_KEY, type CostGroupBy, type CostRollupDTO, type CostRollupFilters, type CostRollupRow } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import type { Db } from "../locations/types";
+import { loadOpsSettings } from "../ops/queries";
+import { startOfZonedDay } from "../ops/rules";
+import { COST_GROUP_BYS, COST_NONE_KEY, type CostGroupBy, type CostRollupDTO, type CostRollupFilters, type CostRollupRow } from "./dto";
 
 export interface CostsDeps {
   readonly db?: Db;

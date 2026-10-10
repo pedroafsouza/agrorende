@@ -16,7 +16,7 @@ import {
   type ShapeItem,
   type TransformOpts,
   type Vec2,
-} from "../lottie/builder.js";
+} from "../lottie/builder";
 
 /** Reusable illustrated parts shared by several animations. All parts are drawn around their own origin. */
 

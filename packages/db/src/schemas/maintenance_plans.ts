@@ -1,1 +1,1 @@
-export { MaintenancePlanSchema } from "./index.js";
+export { MaintenancePlanSchema } from "./index";

@@ -1,1 +1,1 @@
-export { PartSchema } from "./index.js";
+export { PartSchema } from "./index";

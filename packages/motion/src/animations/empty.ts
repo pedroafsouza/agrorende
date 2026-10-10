@@ -1,6 +1,6 @@
-import { composition, ease, ellipse, group, k, layer, palette, polyline, rect, shape, type Key } from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { leaf } from "./parts.js";
+import { composition, ease, ellipse, group, k, layer, palette, polyline, rect, shape, type Key } from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { leaf } from "./parts";
 
 /** Empty state: a calm, open crate with a small leaf swaying inside it. */
 export function buildEmpty() {

@@ -1,12 +1,12 @@
 import { collections } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { costRollup } from "../costs/service.js";
-import type { CostRollupDTO } from "../costs/dto.js";
-import type { Db } from "../locations/types.js";
-import { loadOpsSettings, opsDb, type OpsDeps } from "./queries.js";
-import { median, startOfZonedDay } from "./rules.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { costRollup } from "../costs/service";
+import type { CostRollupDTO } from "../costs/dto";
+import type { Db } from "../locations/types";
+import { loadOpsSettings, opsDb, type OpsDeps } from "./queries";
+import { median, startOfZonedDay } from "./rules";
 
 /**
  * Analytics metrics (ARCHITECTURE §6.4, `GET /ops/analytics`). Every metric takes a `from`/`to`

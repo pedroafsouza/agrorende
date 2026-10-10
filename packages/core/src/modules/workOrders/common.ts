@@ -3,13 +3,13 @@ import type { WorkOrderDTO } from "@agrorende/contracts/dto";
 import type { Role, WorkOrderStatus } from "@agrorende/contracts/enums";
 import { RealtimeServerEvents, opsRoom, orgRoom } from "@agrorende/contracts/realtime";
 
-import { recordActivity } from "../../activity/index.js";
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { writeOutbox } from "../../notify/index.js";
-import type { SyncTx } from "../../sync/types.js";
-import { dbTx, toDto, writeActivity } from "../assets/kit.js";
-import { slaSettingsOf, type SlaSettings } from "./sla.js";
+import { recordActivity } from "../../activity/index";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { writeOutbox } from "../../notify/index";
+import type { SyncTx } from "../../sync/types";
+import { dbTx, toDto, writeActivity } from "../assets/kit";
+import { slaSettingsOf, type SlaSettings } from "./sla";
 
 export type WorkOrderDoc = WorkOrder;
 

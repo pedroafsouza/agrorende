@@ -4,17 +4,17 @@ import { RealtimeServerEvents, opsRoom } from "@agrorende/contracts/realtime";
 import type { Tx } from "@agrorende/contracts/seams";
 import type { FuelLog } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import type { SyncTx } from "../../sync/types.js";
-import { clampLimit, dbTx, newId, pageOf, parseCursor, parseInput, readDb, stampCreate, toDto, writeActivity, type Page } from "../assets/kit.js";
-import { applyReadings, getSummary } from "../assets/service.js";
-import { registerMedia } from "../media/service.js";
-import { currentSeasonId } from "../seasons/service.js";
-import { FuelLogCreateInputSchema, type FuelConsumptionDTO, type FuelConsumptionPoint, type FuelLogCreateInput, type FuelLogListFilters, type FuelLogListItem } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import type { SyncTx } from "../../sync/types";
+import { clampLimit, dbTx, newId, pageOf, parseCursor, parseInput, readDb, stampCreate, toDto, writeActivity, type Page } from "../assets/kit";
+import { applyReadings, getSummary } from "../assets/service";
+import { registerMedia } from "../media/service";
+import { currentSeasonId } from "../seasons/service";
+import { FuelLogCreateInputSchema, type FuelConsumptionDTO, type FuelConsumptionPoint, type FuelLogCreateInput, type FuelLogListFilters, type FuelLogListItem } from "./dto";
 
-export type { FuelConsumptionDTO, FuelLogCreateInput, FuelLogListFilters, FuelLogListItem } from "./dto.js";
+export type { FuelConsumptionDTO, FuelLogCreateInput, FuelLogListFilters, FuelLogListItem } from "./dto";
 
 const OFFICE_ROLES = new Set(["ADMIN", "MANAGER"]);
 

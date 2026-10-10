@@ -9,7 +9,7 @@ import {
   listDiagnostics,
   registerDevice,
   uploadDiagnostics,
-} from "../../modules/devices/service.js";
+} from "../../modules/devices/service";
 import {
   completeUpload,
   createWebMedia,
@@ -19,9 +19,9 @@ import {
   putPart,
   readBlob,
   readUrl,
-} from "../../modules/media/upload.js";
-import { listNotifications, unreadNotificationCount } from "../../modules/notifications/queries.js";
-import { markAllRead, markRead } from "../../modules/notifications/service.js";
+} from "../../modules/media/upload";
+import { listNotifications, unreadNotificationCount } from "../../modules/notifications/queries";
+import { markAllRead, markRead } from "../../modules/notifications/service";
 import {
   createUser,
   deactivateUser,
@@ -33,14 +33,14 @@ import {
   setTemporaryPassword,
   setUserRole,
   updateUser,
-} from "../../modules/users/admin.js";
-import { pull } from "../../sync/pull.js";
-import { push } from "../../sync/push.js";
-import { dbTx } from "../../sync/touch.js";
-import { withSyncTx } from "../../sync/withSyncTx.js";
-import { json, noContent, pageParams, pageResult, readBody, readJson, route, searchParams, type RouteHandler } from "../http.js";
-import { enforceRateLimit, RATE_LIMITS } from "../rateLimit.js";
-import { authenticate } from "../session.js";
+} from "../../modules/users/admin";
+import { pull } from "../../sync/pull";
+import { push } from "../../sync/push";
+import { dbTx } from "../../sync/touch";
+import { withSyncTx } from "../../sync/withSyncTx";
+import { json, noContent, pageParams, pageResult, readBody, readJson, route, searchParams, type RouteHandler } from "../http";
+import { enforceRateLimit, RATE_LIMITS } from "../rateLimit";
+import { authenticate } from "../session";
 
 const OFFICE = ["ADMIN", "MANAGER"] as const;
 const ADMIN = ["ADMIN"] as const;

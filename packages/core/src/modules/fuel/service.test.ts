@@ -3,12 +3,12 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { type AppError } from "@agrorende/contracts/errors";
 import type { FuelLogCreatePayload } from "@agrorende/contracts/mutations";
 
-import { makeTestCtx } from "../../testing/ctx.js";
-import { createAsset } from "../assets/service.js";
-import { newId } from "../assets/kit.js";
-import { ADMIN_ID, AGENT_ID, createHarness, OTHER_ORG_ID, type Harness } from "../rentals/testing/harness.js";
-import { mutations } from "./mutations.js";
-import { computeConsumption, createFuelLog, createFuelLogOffice, fuelConsumption, listFuelLogs } from "./service.js";
+import { makeTestCtx } from "../../testing/ctx";
+import { createAsset } from "../assets/service";
+import { newId } from "../assets/kit";
+import { ADMIN_ID, AGENT_ID, createHarness, OTHER_ORG_ID, type Harness } from "../rentals/testing/harness";
+import { mutations } from "./mutations";
+import { computeConsumption, createFuelLog, createFuelLogOffice, fuelConsumption, listFuelLogs } from "./service";
 
 let h: Harness;
 const admin = makeTestCtx({ userId: ADMIN_ID, role: "ADMIN" });

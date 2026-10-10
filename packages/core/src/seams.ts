@@ -25,21 +25,21 @@ import type { CriticalWindow } from "@agrorende/contracts/checklist";
 import type { ChecklistSnapshot, CreateWorkOrderInput, EntityRef, WorkOrderBillingPart } from "@agrorende/contracts/dto";
 import type { Ctx } from "@agrorende/contracts/seams";
 
-import { normalizeCtx } from "./context.js";
-import * as assetsService from "./modules/assets/service.js";
-import * as checklistsService from "./modules/checklists/service.js";
-import * as customersService from "./modules/customers/service.js";
-import * as fieldReportsService from "./modules/fieldReports/service.js";
-import { locationSeamsImpl } from "./modules/locations/service.js";
-import * as mediaService from "./modules/media/service.js";
-import * as rentalsService from "./modules/rentals/service.js";
-import * as seasonsService from "./modules/seasons/service.js";
-import * as sitesService from "./modules/sites/service.js";
-import * as usersService from "./modules/users/service.js";
-import * as workOrdersService from "./modules/workOrders/service.js";
-import * as notify from "./notify/index.js";
-import { touchDependents } from "./sync/touch.js";
-import type { SyncTx } from "./sync/types.js";
+import { normalizeCtx } from "./context";
+import * as assetsService from "./modules/assets/service";
+import * as checklistsService from "./modules/checklists/service";
+import * as customersService from "./modules/customers/service";
+import * as fieldReportsService from "./modules/fieldReports/service";
+import { locationSeamsImpl } from "./modules/locations/service";
+import * as mediaService from "./modules/media/service";
+import * as rentalsService from "./modules/rentals/service";
+import * as seasonsService from "./modules/seasons/service";
+import * as sitesService from "./modules/sites/service";
+import * as usersService from "./modules/users/service";
+import * as workOrdersService from "./modules/workOrders/service";
+import * as notify from "./notify/index";
+import { touchDependents } from "./sync/touch";
+import type { SyncTx } from "./sync/types";
 
 export async function getAssetSummary(tx: Tx, assetId: string): Promise<AssetSummary> {
   return assetsService.getSummary(tx, assetId);

@@ -2,11 +2,11 @@ import type { Role } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 import { collections, getDb } from "@agrorende/db";
 
-import type { Ctx } from "../context.js";
-import { ACCESS_COOKIE, authConfig, DRAIN_SCOPE, DRAIN_TOKEN_TTL_MS } from "./config.js";
-import { assertSameOrigin, parseCookies } from "./http.js";
-import { verifyAccessToken, type AccessTokenClaims } from "./jwt.js";
-import { isDisabled, signDrainToken } from "./tokens.js";
+import type { Ctx } from "../context";
+import { ACCESS_COOKIE, authConfig, DRAIN_SCOPE, DRAIN_TOKEN_TTL_MS } from "./config";
+import { assertSameOrigin, parseCookies } from "./http";
+import { verifyAccessToken, type AccessTokenClaims } from "./jwt";
+import { isDisabled, signDrainToken } from "./tokens";
 
 export interface SessionPrincipal {
   readonly userId: string;

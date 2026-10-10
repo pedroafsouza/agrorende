@@ -2,9 +2,9 @@ import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { CommentCreatePayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { createComment } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { createComment } from "./service";
 
 /** The push pipeline does not enforce `access`, so `createComment` checks the parent record. */
 const create: MutationHandler<CommentCreatePayload> = {

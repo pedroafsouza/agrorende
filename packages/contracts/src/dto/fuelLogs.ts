@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const FuelLogDTOSchema = SyncDTOSchema.extend({
   assetId: UuidSchema,

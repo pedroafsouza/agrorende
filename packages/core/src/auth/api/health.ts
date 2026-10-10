@@ -5,9 +5,9 @@ import path from "node:path";
 import { getDb } from "@agrorende/db";
 import { Redis } from "ioredis";
 
-import { authConfig } from "../config.js";
-import { json, route, type RouteHandler } from "../http.js";
-import { mediaStore } from "../../storage/index.js";
+import { authConfig } from "../config";
+import { json, route, type RouteHandler } from "../http";
+import { mediaStore } from "../../storage/index";
 
 const PROBE_TIMEOUT_MS = 1500;
 

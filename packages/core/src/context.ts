@@ -2,7 +2,7 @@ import type { Ctx as ContractCtx } from "@agrorende/contracts/seams";
 import type { Role } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 
-import { reject } from "./errors.js";
+import { reject } from "./errors";
 
 export interface Ctx extends ContractCtx {
   readonly organizationId: string;

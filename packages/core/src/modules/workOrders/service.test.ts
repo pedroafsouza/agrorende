@@ -3,12 +3,12 @@ import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { WorkOrderCompletePayload } from "@agrorende/contracts/mutations";
 import type { WorkOrderSeams } from "@agrorende/contracts/seams";
 
-import type * as Seams from "../../seams.js";
+import type * as Seams from "../../seams";
 
-import { complete, releaseSafetyHold, saveChecklist, transition } from "./field.js";
-import { mutations } from "./mutations.js";
-import { addPart, partsCostCents, removePart } from "./parts.js";
-import { detail, list } from "./queries.js";
+import { complete, releaseSafetyHold, saveChecklist, transition } from "./field";
+import { mutations } from "./mutations";
+import { addPart, partsCostCents, removePart } from "./parts";
+import { detail, list } from "./queries";
 import {
   assign,
   billingSnapshot,
@@ -22,12 +22,12 @@ import {
   reopen,
   setExternalCost,
   verify,
-} from "./service.js";
-import { suggestTechnicians } from "./suggest.js";
-import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded.js";
+} from "./service";
+import { suggestTechnicians } from "./suggest";
+import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded";
 
 const markDamagesRepaired = vi.fn(async () => undefined);
-vi.mock("../../seams.js", async (importOriginal) => {
+vi.mock("../../seams", async (importOriginal) => {
   const original = await importOriginal<typeof Seams>();
   return { ...original, rentalSeams: { ...original.rentalSeams, markDamagesRepaired: (...args: unknown[]) => markDamagesRepaired(...(args as [])) } };
 });

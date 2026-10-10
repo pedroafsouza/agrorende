@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { EntityTypeEnum } from "../enums.js";
-import { JsonSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { EntityTypeEnum } from "../enums";
+import { JsonSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const ActivityEventDTOSchema = SyncDTOSchema.extend({
   actorId: OptionalUuidSchema,

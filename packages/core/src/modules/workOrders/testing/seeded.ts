@@ -2,8 +2,8 @@ import { closeClient, withSyncTx, type SyncTx } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../../../context.js";
-import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
+import type { Ctx } from "../../../context";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded";
 
 export const ORG_A = "018fd000-0000-7000-8000-000000000001";
 export const ORG_B = "018fd000-0000-7000-8000-000000000002";

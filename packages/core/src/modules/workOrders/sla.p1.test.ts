@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createFromSource, patch } from "./service.js";
-import { dueAtFor, slaSettingsOf } from "./sla.js";
-import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded.js";
+import { createFromSource, patch } from "./service";
+import { dueAtFor, slaSettingsOf } from "./sla";
+import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded";
 
 let db: SeededDb;
 const HOUR_MS = 3_600_000;

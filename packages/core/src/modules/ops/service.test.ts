@@ -3,7 +3,7 @@ import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { LiveOperator } from "@agrorende/contracts/seams";
 
-import { DomainError } from "../../errors.js";
+import { DomainError } from "../../errors";
 import {
   getAlerts,
   getKpis,
@@ -17,8 +17,8 @@ import {
   resolveAttention,
   slaStateOf,
   startOfZonedDay,
-} from "./service.js";
-import { DEFAULT_OPS_SETTINGS } from "./rules.js";
+} from "./service";
+import { DEFAULT_OPS_SETTINGS } from "./rules";
 
 const ORG = "0190f5a0-0000-7000-8000-0000000c9001";
 const OTHER = "0190f5a0-0000-7000-8000-0000000c9002";

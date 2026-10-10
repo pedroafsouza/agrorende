@@ -1,6 +1,6 @@
 import { SERVER_MESSAGES } from "@agrorende/i18n/server";
 
-import { EXPORT_LOCALES, type ExportLocale } from "./dto.js";
+import { EXPORT_LOCALES, type ExportLocale } from "./dto";
 
 type Label = Readonly<Record<ExportLocale, string>>;
 

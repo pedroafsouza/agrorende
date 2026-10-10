@@ -1,7 +1,7 @@
 import { collections } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { opsDb, type OpsDeps } from "./queries.js";
+import type { Ctx } from "../../context";
+import { opsDb, type OpsDeps } from "./queries";
 
 /** Plot boundaries for the Ops map layer (T16.4), as a GeoJSON FeatureCollection. */
 export interface PlotBoundaryFeature {

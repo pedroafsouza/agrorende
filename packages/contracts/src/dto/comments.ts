@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { EntityTypeEnum } from "../enums.js";
-import { SyncDTOSchema, UuidSchema } from "./shared.js";
+import { EntityTypeEnum } from "../enums";
+import { SyncDTOSchema, UuidSchema } from "./shared";
 
 export const CommentDTOSchema = SyncDTOSchema.extend({
   entityType: EntityTypeEnum,

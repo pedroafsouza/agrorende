@@ -20,7 +20,7 @@ alternativas descartadas estão em [`docs/ARCHITECTURE.md`](https://github.com/p
 
 | Tecnologia | Versão | Por quê |
 |---|---|---|
-| Next.js (App Router) | 16.3.8 (`next dev --webpack`) | Um só app hospeda o painel e a API REST `/api/v1` (route handlers). |
+| Next.js (App Router) | 16.3.8 (Turbopack) | Um só app hospeda o painel e a API REST `/api/v1` (route handlers). |
 | React | 19.x | — |
 | Tailwind CSS | ^4.1.18 | Estilos a partir dos tokens "Campo claro". |
 | next-intl | ^4.6 | Mensagens ICU em pt-BR e en. |

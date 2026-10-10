@@ -1,1 +1,1 @@
-export { LocationPingSchema } from "./index.js";
+export { LocationPingSchema } from "./index";

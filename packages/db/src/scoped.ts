@@ -16,8 +16,8 @@ import type {
 } from "mongodb";
 import type { Db } from "mongodb";
 
-import { collection } from "./collections.js";
-import type { CollectionDocumentMap, CollectionName, Uuid } from "./types.js";
+import { collection } from "./collections";
+import type { CollectionDocumentMap, CollectionName, Uuid } from "./types";
 
 export interface TenantCtx {
   readonly orgId: Uuid;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { SyncDTOSchema, UuidSchema } from "./shared.js";
+import { SyncDTOSchema, UuidSchema } from "./shared";
 
 export const StockLevelDTOSchema = SyncDTOSchema.extend({
   partId: UuidSchema,

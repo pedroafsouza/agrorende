@@ -4,9 +4,9 @@ import { AppError } from "@agrorende/contracts/errors";
 import { jwtVerify, SignJWT } from "jose";
 import { z } from "zod";
 
-import { authConfig } from "../../auth/config.js";
-import { oauthConfig } from "../../auth/oidc.js";
-import { SIGNUP_LOGIN_CODE_TTL_S, SIGNUP_TICKET_TTL_S } from "./config.js";
+import { authConfig } from "../../auth/config";
+import { oauthConfig } from "../../auth/oidc";
+import { SIGNUP_LOGIN_CODE_TTL_S, SIGNUP_TICKET_TTL_S } from "./config";
 
 const SIGNUP_AUDIENCE = "signup";
 /** Shape of a custom-scheme app deep link; the scheme itself must also be in `OAUTH_MOBILE_SCHEMES`. */

@@ -1,11 +1,11 @@
 import type { ChecklistTemplate } from "@agrorende/db";
 import type { ChecklistKind } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { readDb, type Page } from "../assets/kit.js";
-import type { ChecklistTemplateDTO } from "./dto.js";
-import { toTemplateDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { readDb, type Page } from "../assets/kit";
+import type { ChecklistTemplateDTO } from "./dto";
+import { toTemplateDto } from "./service";
 
 export async function listTemplates(
   ctx: Pick<Ctx, "orgId">,

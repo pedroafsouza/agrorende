@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildSeed } from "../seed/index.js";
+import { buildSeed } from "../seed/index";
 
 const ACTIVE = new Set(["OPEN", "ASSIGNED", "ACCEPTED", "EN_ROUTE", "ON_SITE", "IN_PROGRESS", "ON_HOLD"]);
 

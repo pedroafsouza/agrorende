@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { SiteTypeEnum } from "../enums.js";
-import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared.js";
+import { SiteTypeEnum } from "../enums";
+import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared";
 
 export const SiteDTOSchema = SyncDTOSchema.extend({
   name: z.string(),

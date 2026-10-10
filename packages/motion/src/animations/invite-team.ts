@@ -12,9 +12,9 @@ import {
   rect,
   shape,
   type Vec2,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBadge, keyIcon, person, phone } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBadge, keyIcon, person, phone } from "./parts";
 
 /** Inviting the team: the phone receives a chat bubble with an access key, then a person appears with a check. */
 export function buildInviteTeam() {

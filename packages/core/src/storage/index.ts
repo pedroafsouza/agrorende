@@ -1,5 +1,5 @@
-import { mediaRootFromEnv } from "./init.js";
-import { localMediaStore } from "./local.js";
+import { mediaRootFromEnv } from "./init";
+import { localMediaStore } from "./local";
 
 export type MediaVariant = "original" | "thumb" | "poster";
 
@@ -86,4 +86,4 @@ export function mediaStore(env: NodeJS.ProcessEnv = process.env): MediaStore {
   return cached.store;
 }
 
-export { localMediaStore } from "./local.js";
+export { localMediaStore } from "./local";

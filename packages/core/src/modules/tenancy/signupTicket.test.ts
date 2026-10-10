@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { setAuthConfigForTests } from "../../auth/config.js";
-import { setOAuthConfigForTests } from "../../auth/oidc.js";
-import { isAllowedAppRedirect, issueSignupTicket, pkceChallenge, verifySignupTicket, type SignupIdentity } from "./signupTicket.js";
+import { setAuthConfigForTests } from "../../auth/config";
+import { setOAuthConfigForTests } from "../../auth/oidc";
+import { isAllowedAppRedirect, issueSignupTicket, pkceChallenge, verifySignupTicket, type SignupIdentity } from "./signupTicket";
 
 const identity: SignupIdentity = {
   provider: "GOOGLE",

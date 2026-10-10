@@ -1,1 +1,1 @@
-export { RentalChargeSchema } from "./index.js";
+export { RentalChargeSchema } from "./index";

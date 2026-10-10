@@ -1,9 +1,9 @@
 import { closeClient } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { rawCollection, SEED, type RawCollection } from "../../auth/testing/seeded.js";
+import { rawCollection, SEED, type RawCollection } from "../../auth/testing/seeded";
 
-export { SEED, seedCtx } from "../../auth/testing/seeded.js";
+export { SEED, seedCtx } from "../../auth/testing/seeded";
 
 export type Row = { _id: string } & Record<string, unknown>;
 

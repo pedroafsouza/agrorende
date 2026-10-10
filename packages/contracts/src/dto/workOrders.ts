@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { HoldReasonEnum, PriorityEnum, SignatureStatusEnum, WorkOrderStatusEnum, WorkOrderTypeEnum } from "../enums.js";
-import { ChecklistItemSchema, ChecklistResponseSchema } from "../checklist.js";
-import { IntegerCentsSchema, IsoDateSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, TableNameSchema, TABLE_ORDER, UuidSchema, type TableName } from "./shared.js";
+import { HoldReasonEnum, PriorityEnum, SignatureStatusEnum, WorkOrderStatusEnum, WorkOrderTypeEnum } from "../enums";
+import { ChecklistItemSchema, ChecklistResponseSchema } from "../checklist";
+import { IntegerCentsSchema, IsoDateSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, TableNameSchema, TABLE_ORDER, UuidSchema, type TableName } from "./shared";
 
 export { TableNameSchema, TABLE_ORDER, type TableName };
 

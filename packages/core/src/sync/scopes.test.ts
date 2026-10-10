@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { RoleEnum } from "@agrorende/contracts/enums";
 import { TABLE_ORDER } from "@agrorende/contracts/sync";
 
-import { buildScopeFilter } from "./scopes.js";
+import { buildScopeFilter } from "./scopes";
 
 describe("scope builders", () => {
   it("always include organizationId", () => {

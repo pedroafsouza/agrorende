@@ -7,16 +7,16 @@ import { collections, getDb } from "@agrorende/db";
 import type { AuthLink, Organization, User } from "@agrorende/db";
 import { SignJWT } from "jose";
 
-import type { Ctx } from "../context.js";
-import { writeOutbox } from "../notify/index.js";
-import { toTableDto } from "../sync/pull.js";
-import { txDb } from "../sync/touch.js";
-import type { SyncTx } from "../sync/types.js";
-import { withSyncTx } from "../sync/withSyncTx.js";
-import { authConfig, INVITE_TTL_MS, RESET_LINK_TTL_MS, SOCKET_TOKEN_TTL_S } from "./config.js";
-import { assertPasswordPolicy, hashPassword, needsRehash, randomCode, sha256Hex, verifyPassword } from "./password.js";
-import { enforceRateLimit, RATE_LIMITS } from "./rateLimit.js";
-import { isDisabled, issueSession, revokeUserSessions, rotateRefreshToken, type IssuedSession, type SessionMeta } from "./tokens.js";
+import type { Ctx } from "../context";
+import { writeOutbox } from "../notify/index";
+import { toTableDto } from "../sync/pull";
+import { txDb } from "../sync/touch";
+import type { SyncTx } from "../sync/types";
+import { withSyncTx } from "../sync/withSyncTx";
+import { authConfig, INVITE_TTL_MS, RESET_LINK_TTL_MS, SOCKET_TOKEN_TTL_S } from "./config";
+import { assertPasswordPolicy, hashPassword, needsRehash, randomCode, sha256Hex, verifyPassword } from "./password";
+import { enforceRateLimit, RATE_LIMITS } from "./rateLimit";
+import { isDisabled, issueSession, revokeUserSessions, rotateRefreshToken, type IssuedSession, type SessionMeta } from "./tokens";
 
 type Row = Record<string, unknown>;
 

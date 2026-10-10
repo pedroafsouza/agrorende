@@ -3,9 +3,9 @@ import { PlatformEnum } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 import { z } from "zod";
 
-import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../config.js";
-import { clientIp, errorResponse, json, noContent, parseCookies, readBody, readJson, route, serializeCookie, type RouteHandler } from "../http.js";
-import { authenticate, getSessionContext, readAccessToken } from "../session.js";
+import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../config";
+import { clientIp, errorResponse, json, noContent, parseCookies, readBody, readJson, route, serializeCookie, type RouteHandler } from "../http";
+import { authenticate, getSessionContext, readAccessToken } from "../session";
 import {
   changePassword,
   deleteMe,
@@ -21,9 +21,9 @@ import {
   socketToken,
   updateMe,
   type AuthResult,
-} from "../service.js";
-import { updateNotificationPrefs, withNotificationPrefs } from "../../modules/users/notificationPrefs.js";
-import { currentDeviceFamily, findRefreshRow, revokeDeviceSessions, revokeRefreshFamily } from "../tokens.js";
+} from "../service";
+import { updateNotificationPrefs, withNotificationPrefs } from "../../modules/users/notificationPrefs";
+import { currentDeviceFamily, findRefreshRow, revokeDeviceSessions, revokeRefreshFamily } from "../tokens";
 
 const LoginSchema = z.object({
   email: z.string().trim().min(3).max(254),

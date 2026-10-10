@@ -1,1 +1,1 @@
-export { NotificationSchema } from "./index.js";
+export { NotificationSchema } from "./index";

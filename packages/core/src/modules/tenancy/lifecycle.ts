@@ -1,8 +1,8 @@
 import type { OrgStatus } from "@agrorende/contracts/enums";
 import type { Organization } from "@agrorende/db";
 
-import { DAY_MS, PAST_DUE_GRACE_DAYS, PURGE_AFTER_DAYS } from "./config.js";
-import type { OrgStatusDTO, OrgStatusEventData } from "./dto.js";
+import { DAY_MS, PAST_DUE_GRACE_DAYS, PURGE_AFTER_DAYS } from "./config";
+import type { OrgStatusDTO, OrgStatusEventData } from "./dto";
 
 export type LifecycleFields = Pick<Organization, "status" | "trialEndsAt" | "pastDueAt" | "suspendedAt" | "cancelledAt" | "purgeAfter">;
 export type LifecyclePatch = Partial<Omit<LifecycleFields, "status">> & { readonly status: OrgStatus };

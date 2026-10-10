@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { DutyStatusEnum, IssueCategoryEnum, NotificationTypeEnum, RoleEnum, type NotificationType } from "../enums.js";
-import { LocaleSchema } from "../settings.js";
-import { OptionalDateTimeSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared.js";
+import { DutyStatusEnum, IssueCategoryEnum, NotificationTypeEnum, RoleEnum, type NotificationType } from "../enums";
+import { LocaleSchema } from "../settings";
+import { OptionalDateTimeSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared";
 
 export const UserDTOSchema = SyncDTOSchema.extend({
   name: z.string(),

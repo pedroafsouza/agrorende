@@ -1,6 +1,6 @@
 import { renderToBuffer } from "@react-pdf/renderer";
 
-import { rentalCheckoutDocument, type PdfNode, type RentalPdfData } from "../modules/rentals/pdf.js";
+import { rentalCheckoutDocument, type PdfNode, type RentalPdfData } from "../modules/rentals/pdf";
 
 /** Renders a react-pdf element tree built by `modules/rentals/pdf.ts` to PDF bytes. */
 export async function renderPdfNode(node: PdfNode): Promise<Uint8Array> {

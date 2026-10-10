@@ -1,1 +1,1 @@
-export { MediaSchema } from "./index.js";
+export { MediaSchema } from "./index";

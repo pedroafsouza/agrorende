@@ -1,10 +1,10 @@
 import { notificationPrefsOf, type NotificationPrefs, type UpdateMeInput } from "@agrorende/contracts/dto";
 import { AppError } from "@agrorende/contracts/errors";
 
-import type { Ctx } from "../../context.js";
-import { selfUserDto } from "../../auth/service.js";
-import { txDb } from "../../sync/touch.js";
-import { withSyncTx } from "../../sync/withSyncTx.js";
+import type { Ctx } from "../../context";
+import { selfUserDto } from "../../auth/service";
+import { txDb } from "../../sync/touch";
+import { withSyncTx } from "../../sync/withSyncTx";
 
 type Row = Record<string, unknown>;
 

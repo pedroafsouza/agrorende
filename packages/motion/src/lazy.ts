@@ -3,11 +3,11 @@
  * statically, so web bundles that only need `loadAnimation` and the metadata do not ship all the
  * animations in their shared chunk; each file becomes its own chunk loaded on demand.
  */
-import type { LottieJson } from "./lottie/types.js";
-import type { AnimationId } from "./meta.js";
+import type { LottieJson } from "./lottie/types";
+import type { AnimationId } from "./meta";
 
-export { ANIMATION_IDS, motionMeta, type AnimationId, type MotionMeta } from "./meta.js";
-export type { LottieJson } from "./lottie/types.js";
+export { ANIMATION_IDS, motionMeta, type AnimationId, type MotionMeta } from "./meta";
+export type { LottieJson } from "./lottie/types";
 
 /** Loads one animation lazily. The static switch lets Next.js (Turbopack/webpack) and Metro split each file. */
 export async function loadAnimation(id: AnimationId): Promise<LottieJson> {

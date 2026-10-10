@@ -3,8 +3,8 @@ import { randomUUID } from "node:crypto";
 import { AppError, type ErrorCode } from "@agrorende/contracts/errors";
 import { ZodError, type ZodType } from "zod";
 
-import { noopLogger, type Logger } from "../logging.js";
-import { authConfig } from "./config.js";
+import { noopLogger, type Logger } from "../logging";
+import { authConfig } from "./config";
 
 export type RouteParams = Readonly<Record<string, string>>;
 /** Framework-free route handler: web standard `Request` in, `Response` out (ARCHITECTURE §8). */

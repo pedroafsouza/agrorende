@@ -1,1 +1,1 @@
-export { ExportJobSchema } from "./index.js";
+export { ExportJobSchema } from "./index";

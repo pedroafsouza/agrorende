@@ -1,4 +1,4 @@
-import { DEFAULT_LOCALE, resolveLocale } from "./locales.js";
+import { DEFAULT_LOCALE, resolveLocale } from "./locales";
 
 function kebabCode(code: string): string {
   return code.trim().toLowerCase().replace(/_/g, "-");

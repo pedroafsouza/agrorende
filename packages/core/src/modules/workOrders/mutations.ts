@@ -8,10 +8,10 @@ import type {
 } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { complete, saveChecklist, transition } from "./field.js";
-import { addPart, removePart } from "./parts.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { complete, saveChecklist, transition } from "./field";
+import { addPart, removePart } from "./parts";
 
 const transitionHandler: MutationHandler<WorkOrderTransitionPayload> = {
   schema: MUTATION_PAYLOADS["workOrder.transition"],

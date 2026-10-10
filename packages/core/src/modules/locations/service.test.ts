@@ -5,9 +5,9 @@ import { RedisRealtimeMessageSchema, realtimeRedisChannel } from "@agrorende/con
 import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { liveKey, presenceKey } from "./keys.js";
-import { createPingWriter, ingest, lastFixes, liveSnapshot, pruneLocationPings, recordPresence } from "./service.js";
-import { deriveOperatorState } from "./state.js";
+import { liveKey, presenceKey } from "./keys";
+import { createPingWriter, ingest, lastFixes, liveSnapshot, pruneLocationPings, recordPresence } from "./service";
+import { deriveOperatorState } from "./state";
 
 const ORG = "0190f5a0-0000-7000-8000-00000000a001";
 const OTHER_ORG = "0190f5a0-0000-7000-8000-00000000a002";

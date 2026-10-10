@@ -2,9 +2,9 @@ import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { AssetUpdateReadingsPayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { applyReadings } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { applyReadings } from "./service";
 
 /**
  * `asset.updateReadings` is never rejected when the payload is valid (DELIVERY-PLAN §4):

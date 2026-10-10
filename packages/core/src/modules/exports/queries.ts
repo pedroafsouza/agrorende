@@ -1,1 +1,1 @@
-export { downloadExportJob, getExportJob } from "./service.js";
+export { downloadExportJob, getExportJob } from "./service";

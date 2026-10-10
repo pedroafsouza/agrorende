@@ -2,8 +2,8 @@ import { randomUUID } from "node:crypto";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { suggestTechnicians } from "./suggest.js";
-import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded.js";
+import { suggestTechnicians } from "./suggest";
+import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded";
 
 let db: SeededDb;
 let savedRedisUrl: string | undefined;

@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { AppError } from "@agrorende/contracts/errors";
 import { Redis } from "ioredis";
 
-import { authConfig } from "./config.js";
+import { authConfig } from "./config";
 
 export interface RateLimitRule {
   readonly name: string;

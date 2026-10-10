@@ -1,4 +1,4 @@
-import type { JsonObject, JsonValue, LottieJson } from "./types.js";
+import type { JsonObject, JsonValue, LottieJson } from "./types";
 
 /**
  * A tiny typed DSL that emits Lottie (bodymovin 5.7+) JSON.

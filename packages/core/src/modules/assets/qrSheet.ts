@@ -1,10 +1,10 @@
 import { collections, getDb } from "@agrorende/db";
 import { z } from "zod";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { parseInput } from "./kit.js";
-import type { Db } from "../locations/types.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { parseInput } from "./kit";
+import type { Db } from "../locations/types";
 
 /**
  * Printable QR label sheet (PLT-06, `POST /assets/qr-sheet`): an A4 PDF with 3 × 10 labels per
@@ -137,6 +137,6 @@ export async function renderQrSheet(ctx: Pick<Ctx, "orgId">, raw: unknown, encod
     const payload = assetQrPayload(asset.code);
     return [{ code: asset.code, name: asset.name, payload, matrix: encode(payload) }];
   });
-  const render = deps.render ?? (async (node: QrPdfNode) => (await import("../../pdf/index.js")).renderPdfNode(node as never));
+  const render = deps.render ?? (async (node: QrPdfNode) => (await import("../../pdf/index")).renderPdfNode(node as never));
   return { bytes: await render(qrSheetDocument(labels)), labels };
 }

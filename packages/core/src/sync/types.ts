@@ -3,8 +3,8 @@ import type { ErrorCode } from "@agrorende/contracts/errors";
 import type { MutationName } from "@agrorende/contracts/sync";
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../context.js";
-import type { DomainEvent } from "../events/index.js";
+import type { Ctx } from "../context";
+import type { DomainEvent } from "../events/index";
 
 export interface SyncTx {
   readonly session: unknown;

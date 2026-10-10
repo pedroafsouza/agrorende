@@ -4,13 +4,13 @@ import type { NotificationType, Role } from "@agrorende/contracts/enums";
 import type { EntityRef } from "@agrorende/contracts/dto";
 import { RealtimeServerEvents, userRoom } from "@agrorende/contracts/realtime";
 
-import { emit } from "../events/index.js";
-import { toWire } from "../sync/pull.js";
-import { txDb } from "../sync/touch.js";
-import type { SyncTx } from "../sync/types.js";
-import { renderNotification } from "./templates.js";
+import { emit } from "../events/index";
+import { toWire } from "../sync/pull";
+import { txDb } from "../sync/touch";
+import type { SyncTx } from "../sync/types";
+import { renderNotification } from "./templates";
 
-export { renderIcu, renderNotification, resolveNotificationLocale, NOTIFICATION_TEMPLATES } from "./templates.js";
+export { renderIcu, renderNotification, resolveNotificationLocale, NOTIFICATION_TEMPLATES } from "./templates";
 
 export interface NotificationInput {
   readonly type: NotificationType;

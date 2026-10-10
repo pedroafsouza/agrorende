@@ -5,7 +5,7 @@ import { collections, getDb } from "@agrorende/db";
 import type { MediaTag } from "@agrorende/contracts/enums";
 import sharp from "sharp";
 
-import { initStorage, mediaRootFromEnv } from "./init.js";
+import { initStorage, mediaRootFromEnv } from "./init";
 
 export interface StorageSeedResult {
   readonly seeded: number;

@@ -5,10 +5,10 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { notificationSeams } from "../../seams.js";
-import { sanitizeCell } from "./csv.js";
-import { exportStorageKey } from "./dto.js";
-import { EXPORT_HEADERS } from "./headers.js";
+import { notificationSeams } from "../../seams";
+import { sanitizeCell } from "./csv";
+import { exportStorageKey } from "./dto";
+import { EXPORT_HEADERS } from "./headers";
 import {
   buildExportJob,
   createExportJob,
@@ -19,8 +19,8 @@ import {
   runQueuedExportJobs,
   type ExportCtx,
   type ExportNotifier,
-} from "./service.js";
-import { fsExportStore, type ExportStore } from "./storage.js";
+} from "./service";
+import { fsExportStore, type ExportStore } from "./storage";
 
 const ORG = "0190f5a0-0000-7000-8000-0000000fa001";
 const OTHER_ORG = "0190f5a0-0000-7000-8000-0000000fa002";

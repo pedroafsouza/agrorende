@@ -1,6 +1,6 @@
 import type { Db } from "mongodb";
 
-import { ensureIndexes } from "../src/ensureIndexes.js";
+import { ensureIndexes } from "../src/ensureIndexes";
 
 export const id = "0001_initial";
 

@@ -4,12 +4,12 @@ import type { EntityRef } from "@agrorende/contracts/dto";
 import { opsRoom, realtimeRedisChannel, type RedisRealtimeMessage } from "@agrorende/contracts/realtime";
 import { collection, getDatabaseName, getDb } from "@agrorende/db";
 
-import { enqueueJob, type EnqueueOptions, type JobName } from "../jobs/index.js";
+import { enqueueJob, type EnqueueOptions, type JobName } from "../jobs/index";
 import type { Redis } from "ioredis";
 
-import { locationsRedis } from "../modules/locations/redis.js";
-import { txDb } from "../sync/touch.js";
-import type { SyncTx } from "../sync/types.js";
+import { locationsRedis } from "../modules/locations/redis";
+import { txDb } from "../sync/touch";
+import type { SyncTx } from "../sync/types";
 
 /**
  * A domain event written to `event_outbox` in the same transaction as the change that caused it

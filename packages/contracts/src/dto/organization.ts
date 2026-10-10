@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { OrgStatusEnum } from "../enums.js";
-import { OrgSettingsSchema } from "../settings.js";
-import { IsoDateTimeSchema, OptionalDateTimeSchema, OptionalStringSchema, OptionalUuidSchema, SyncVersionSchema, UuidSchema } from "./shared.js";
+import { OrgStatusEnum } from "../enums";
+import { OrgSettingsSchema } from "../settings";
+import { IsoDateTimeSchema, OptionalDateTimeSchema, OptionalStringSchema, OptionalUuidSchema, SyncVersionSchema, UuidSchema } from "./shared";
 
 export const OrganizationDTOSchema = z.object({
   id: UuidSchema,

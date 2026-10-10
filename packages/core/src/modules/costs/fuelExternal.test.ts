@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { costRollup, COST_NONE_KEY } from "./service.js";
+import { costRollup, COST_NONE_KEY } from "./service";
 
 const ORG = "0190f5a0-0000-7000-8000-0000000f5001";
 const ASSET_A = "0190f5a0-0000-7000-8000-0000000f5101";

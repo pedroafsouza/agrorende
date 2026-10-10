@@ -2,12 +2,12 @@ import type { IssueCategory } from "@agrorende/contracts/enums";
 import type { LiveFix, Tx } from "@agrorende/contracts/seams";
 import type { User } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { dbTx } from "../assets/kit.js";
-import { lastFixes } from "../locations/service.js";
-import { loadWorkOrder, requireOffice, sameTenant } from "./common.js";
-import { openCountByAssignee } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { dbTx } from "../assets/kit";
+import { lastFixes } from "../locations/service";
+import { loadWorkOrder, requireOffice, sameTenant } from "./common";
+import { openCountByAssignee } from "./service";
 
 /** Suggestion reasons are i18n keys under `jobs.suggest.reason.*` (web) and are never free text. */
 export type SuggestionReason = "onDuty" | "offDuty" | "skillMatch" | "nearby" | "lightLoad" | "noLocation";

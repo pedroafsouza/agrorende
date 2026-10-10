@@ -2,8 +2,8 @@ import { PlatformEnum } from "@agrorende/contracts/enums";
 import { AppError } from "@agrorende/contracts/errors";
 import { z } from "zod";
 
-import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../config.js";
-import { clientIp, errorResponse, json, parseCookies, readBody, route, searchParams, serializeCookie, type RouteHandler } from "../http.js";
+import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../config";
+import { clientIp, errorResponse, json, parseCookies, readBody, route, searchParams, serializeCookie, type RouteHandler } from "../http";
 import {
   completeOAuth,
   errorRedirect,
@@ -23,9 +23,9 @@ import {
   type OAuthProviderId,
   type OAuthRedirectCode,
   type OAuthState,
-} from "../oauth.js";
-import { enforceRateLimit } from "../rateLimit.js";
-import { organizationDto, selfUserDto, type AuthResult } from "../service.js";
+} from "../oauth";
+import { enforceRateLimit } from "../rateLimit";
+import { organizationDto, selfUserDto, type AuthResult } from "../service";
 
 /** Route handlers for Google and Apple sign-in (ARCHITECTURE §8 Auth rows). */
 

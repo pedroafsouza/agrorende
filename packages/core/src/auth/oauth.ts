@@ -8,18 +8,18 @@ import { CodeChallengeMethod, generateCodeVerifier, OAuth2Client } from "arctic"
 import { decodeJwt, EncryptJWT, jwtDecrypt, jwtVerify, SignJWT, type JWTPayload } from "jose";
 import { z } from "zod";
 
-import { redeemSignupLoginCode } from "../modules/tenancy/service.js";
-import { issueSignupTicket } from "../modules/tenancy/signupTicket.js";
-import { createNotification, officeRecipients } from "../notify/index.js";
-import { txDb } from "../sync/touch.js";
-import { withSyncTx } from "../sync/withSyncTx.js";
-import { encryptAppleRefreshToken, encryptionConfigured, exchangeAppleCode, isAppleProduction } from "./apple.js";
-import { authConfig } from "./config.js";
-import { claimBoolean, claimString, discover, oauthConfig, verifyIdToken } from "./oidc.js";
-import { sha256Hex } from "./password.js";
-import { enforceRateLimit, type RateLimitRule } from "./rateLimit.js";
-import { userCtx, type AuthResult } from "./service.js";
-import { isDisabled, issueSession, type SessionMeta } from "./tokens.js";
+import { redeemSignupLoginCode } from "../modules/tenancy/service";
+import { issueSignupTicket } from "../modules/tenancy/signupTicket";
+import { createNotification, officeRecipients } from "../notify/index";
+import { txDb } from "../sync/touch";
+import { withSyncTx } from "../sync/withSyncTx";
+import { encryptAppleRefreshToken, encryptionConfigured, exchangeAppleCode, isAppleProduction } from "./apple";
+import { authConfig } from "./config";
+import { claimBoolean, claimString, discover, oauthConfig, verifyIdToken } from "./oidc";
+import { sha256Hex } from "./password";
+import { enforceRateLimit, type RateLimitRule } from "./rateLimit";
+import { userCtx, type AuthResult } from "./service";
+import { isDisabled, issueSession, type SessionMeta } from "./tokens";
 
 /**
  * Google and Apple sign-in (ARCHITECTURE §2 ADR-21, §8, §11; PRD PLT-01, PLT-19, PLT-20, TEN-01).

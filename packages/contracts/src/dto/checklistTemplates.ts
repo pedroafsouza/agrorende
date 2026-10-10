@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { AssetCategoryEnum, ChecklistKindEnum } from "../enums.js";
-import { AccessoryDefSchema, ChecklistItemSchema } from "../checklist.js";
-import { OptionalDateTimeSchema, SyncDTOSchema } from "./shared.js";
+import { AssetCategoryEnum, ChecklistKindEnum } from "../enums";
+import { AccessoryDefSchema, ChecklistItemSchema } from "../checklist";
+import { OptionalDateTimeSchema, SyncDTOSchema } from "./shared";
 
 export const ChecklistTemplateDTOSchema = SyncDTOSchema.extend({
   name: z.string(),

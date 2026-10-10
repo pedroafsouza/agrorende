@@ -1,8 +1,8 @@
 import { AppError } from "@agrorende/contracts/errors";
 import type { ClientSession, Db, Filter } from "mongodb";
 
-import { collection } from "./collections.js";
-import type { CollectionDocumentMap, CollectionName, Uuid } from "./types.js";
+import { collection } from "./collections";
+import type { CollectionDocumentMap, CollectionName, Uuid } from "./types";
 
 export type ReferenceMap = Readonly<Record<string, CollectionName>>;
 export type ReferenceValues<TRefs extends ReferenceMap> = {

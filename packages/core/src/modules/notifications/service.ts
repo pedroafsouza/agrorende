@@ -1,6 +1,6 @@
-import type { Ctx } from "../../context.js";
-import { txDb } from "../../sync/touch.js";
-import type { SyncTx } from "../../sync/types.js";
+import type { Ctx } from "../../context";
+import { txDb } from "../../sync/touch";
+import type { SyncTx } from "../../sync/types";
 
 /** `notification.markRead`: marks the caller's own unread notifications; foreign ids are ignored. */
 export async function markRead(tx: SyncTx, ctx: Ctx, ids: readonly string[]): Promise<number> {

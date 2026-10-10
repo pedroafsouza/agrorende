@@ -2,9 +2,9 @@ import { randomUUID } from "node:crypto";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createNamedSeededDb, SEED, seedCtx, type SeededDb } from "../../auth/testing/seeded.js";
-import { push } from "../../sync/push.js";
-import { commentParticipants, listComments } from "./service.js";
+import { createNamedSeededDb, SEED, seedCtx, type SeededDb } from "../../auth/testing/seeded";
+import { push } from "../../sync/push";
+import { commentParticipants, listComments } from "./service";
 
 const DEVICE = "018fd000-0000-7000-8000-00000000d171";
 

@@ -1,6 +1,6 @@
 import { Document, Image, Page, StyleSheet, Text, View, renderToBuffer } from "@react-pdf/renderer";
 
-import type { ReportImage, WorkOrderReportLabels, WorkOrderReportModel } from "../modules/workOrders/report.js";
+import type { ReportImage, WorkOrderReportLabels, WorkOrderReportModel } from "../modules/workOrders/report";
 
 const colors = { ink: "#1F2A1F", muted: "#5B665B", line: "#D5DBD0", band: "#EEF2EA", accent: "#2F6B3A", danger: "#A3361F" };
 

@@ -1,42 +1,42 @@
 import type { z } from "zod";
 
-import type { MutationName } from "../sync.js";
+import type { MutationName } from "../sync";
 
 import {
   FieldReportCreatePayloadSchema,
   FieldReportUpdatePayloadSchema,
   FieldReportWithdrawPayloadSchema,
-} from "./fieldReports.js";
+} from "./fieldReports";
 import {
   MediaDeletePayloadSchema,
   MediaRegisterPayloadSchema,
   MediaUpdatePayloadSchema,
-} from "./media.js";
+} from "./media";
 import {
   AssetUpdateReadingsPayloadSchema,
   CommentCreatePayloadSchema,
   FuelLogCreatePayloadSchema,
   NotificationMarkReadPayloadSchema,
   UserSetDutyPayloadSchema,
-} from "./misc.js";
+} from "./misc";
 import {
   InspectionSubmitPayloadSchema,
   RentalCheckinPayloadSchema,
   RentalCheckoutPayloadSchema,
-} from "./rentals.js";
+} from "./rentals";
 import {
   WorkOrderAddPartPayloadSchema,
   WorkOrderCompletePayloadSchema,
   WorkOrderRemovePartPayloadSchema,
   WorkOrderSaveChecklistPayloadSchema,
   WorkOrderTransitionPayloadSchema,
-} from "./workOrders.js";
+} from "./workOrders";
 
-export * from "./fieldReports.js";
-export * from "./media.js";
-export * from "./misc.js";
-export * from "./rentals.js";
-export * from "./workOrders.js";
+export * from "./fieldReports";
+export * from "./media";
+export * from "./misc";
+export * from "./rentals";
+export * from "./workOrders";
 
 /**
  * Payload schema for every mutation name. The server validates an envelope with

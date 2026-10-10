@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { DamageDisputeStatusEnum, DamageMatchStatusEnum, DamageSeverityEnum, DamageZoneEnum } from "../enums.js";
-import { OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { DamageDisputeStatusEnum, DamageMatchStatusEnum, DamageSeverityEnum, DamageZoneEnum } from "../enums";
+import { OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const DamageDTOSchema = SyncDTOSchema.extend({
   assetId: UuidSchema,

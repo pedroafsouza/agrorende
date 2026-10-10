@@ -1,1 +1,1 @@
-export { PlatformAuditEventSchema } from "./index.js";
+export { PlatformAuditEventSchema } from "./index";

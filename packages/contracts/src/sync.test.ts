@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { compareAppVersions } from "./sync.js";
+import { compareAppVersions } from "./sync";
 
 describe("compareAppVersions", () => {
   it("orders dotted numeric versions numerically", () => {

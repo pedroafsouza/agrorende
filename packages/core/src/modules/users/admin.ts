@@ -6,16 +6,16 @@ import { LocaleSchema } from "@agrorende/contracts/settings";
 import { collections, getDb, type User } from "@agrorende/db";
 import { z } from "zod";
 
-import { assertPasswordPolicy, hashPassword } from "../../auth/password.js";
-import { activeAdminCount, createAuthLink, type ShareLink } from "../../auth/service.js";
-import { revokeUserSessions } from "../../auth/tokens.js";
-import type { Ctx } from "../../context.js";
-import { toWire } from "../../sync/pull.js";
-import { txDb } from "../../sync/touch.js";
-import type { SyncTx } from "../../sync/types.js";
-import { withSyncTx } from "../../sync/withSyncTx.js";
-import type { PageParams } from "../../auth/http.js";
-import type { UserDTO } from "./dto.js";
+import { assertPasswordPolicy, hashPassword } from "../../auth/password";
+import { activeAdminCount, createAuthLink, type ShareLink } from "../../auth/service";
+import { revokeUserSessions } from "../../auth/tokens";
+import type { Ctx } from "../../context";
+import { toWire } from "../../sync/pull";
+import { txDb } from "../../sync/touch";
+import type { SyncTx } from "../../sync/types";
+import { withSyncTx } from "../../sync/withSyncTx";
+import type { PageParams } from "../../auth/http";
+import type { UserDTO } from "./dto";
 
 type Row = Record<string, unknown>;
 

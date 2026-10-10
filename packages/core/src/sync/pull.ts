@@ -11,7 +11,7 @@ import {
   type TableName,
 } from "@agrorende/contracts/sync";
 
-import type { Ctx } from "../context.js";
+import type { Ctx } from "../context";
 import {
   buildScopeFilter,
   commentScope,
@@ -24,7 +24,7 @@ import {
   type ScopeContext,
   type ScopeFilter,
   type ScopeIds,
-} from "./scopes.js";
+} from "./scopes";
 
 type Row = Record<string, unknown>;
 type IdRow = { _id: string } & Row;

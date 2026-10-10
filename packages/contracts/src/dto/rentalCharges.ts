@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ChargeTypeEnum } from "../enums.js";
-import { OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { ChargeTypeEnum } from "../enums";
+import { OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const RentalChargeDTOSchema = SyncDTOSchema.extend({
   rentalId: UuidSchema,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { assertProductionEnv, productionEnvProblems } from "./productionEnv.js";
+import { assertProductionEnv, productionEnvProblems } from "./productionEnv";
 
 const VALID = {
   APP_ENV: "production",

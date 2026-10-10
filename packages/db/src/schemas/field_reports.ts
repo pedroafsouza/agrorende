@@ -1,1 +1,1 @@
-export { FieldReportSchema } from "./index.js";
+export { FieldReportSchema } from "./index";

@@ -1,1 +1,1 @@
-export { DamageSchema } from "./index.js";
+export { DamageSchema } from "./index";

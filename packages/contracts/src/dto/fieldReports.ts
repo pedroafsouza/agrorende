@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { FieldReportStatusEnum, IssueCategoryEnum, PriorityEnum, SuggestedActionEnum } from "../enums.js";
-import { JsonSchema, OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { FieldReportStatusEnum, IssueCategoryEnum, PriorityEnum, SuggestedActionEnum } from "../enums";
+import { JsonSchema, OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const FieldReportDTOSchema = SyncDTOSchema.extend({
   number: OptionalStringSchema,

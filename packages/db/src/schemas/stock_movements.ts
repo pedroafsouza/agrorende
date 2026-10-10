@@ -1,1 +1,1 @@
-export { StockMovementSchema } from "./index.js";
+export { StockMovementSchema } from "./index";

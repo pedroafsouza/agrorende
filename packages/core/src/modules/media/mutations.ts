@@ -2,9 +2,9 @@ import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { MediaDeletePayload, MediaRegisterPayload, MediaUpdatePayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { deleteMedia, registerMedia, updateMedia } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { deleteMedia, registerMedia, updateMedia } from "./service";
 
 const register: MutationHandler<MediaRegisterPayload> = {
   schema: MUTATION_PAYLOADS["media.register"],

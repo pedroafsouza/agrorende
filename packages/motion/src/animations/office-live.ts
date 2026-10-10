@@ -15,9 +15,9 @@ import {
   type Key,
   type ShapeItem,
   type Vec2,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBadge } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBadge } from "./parts";
 
 function pin(color: Color, at: Vec2, start: number, end: number): ShapeItem {
   return group(

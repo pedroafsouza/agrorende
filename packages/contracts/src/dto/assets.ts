@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AssetCategoryEnum, AssetConditionEnum, AssetOwnerTypeEnum, RateUnitEnum } from "../enums.js";
-import { JsonSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared.js";
+import { AssetCategoryEnum, AssetConditionEnum, AssetOwnerTypeEnum, RateUnitEnum } from "../enums";
+import { JsonSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema } from "./shared";
 
 export const AssetDTOSchema = SyncDTOSchema.extend({
   code: z.string(),

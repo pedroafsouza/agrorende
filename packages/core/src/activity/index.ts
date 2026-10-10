@@ -4,10 +4,10 @@ import type { EntityRef } from "@agrorende/contracts/dto";
 import type { EntityType } from "@agrorende/contracts/enums";
 import { RealtimeServerEvents, opsRoom } from "@agrorende/contracts/realtime";
 
-import { emit } from "../events/index.js";
-import { toWire } from "../sync/pull.js";
-import { txDb } from "../sync/touch.js";
-import type { SyncTx } from "../sync/types.js";
+import { emit } from "../events/index";
+import { toWire } from "../sync/pull";
+import { txDb } from "../sync/touch";
+import type { SyncTx } from "../sync/types";
 
 /**
  * One ActivityEvent row (ARCHITECTURE §6, PLT-13). Either `entity` or the pair

@@ -74,7 +74,7 @@ export default defineConfig({
     },
     {
       name: "web",
-      command: `pnpm exec next dev --webpack --port ${WEB_PORT}`,
+      command: `pnpm exec next dev --port ${WEB_PORT}`,
       env: serverEnv,
       url: `${WEB_URL}/api/v1/health`,
       // Local iteration only: `E2E_REUSE_WEB=1` reuses an already compiled dev server on port 3100.

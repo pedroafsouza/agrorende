@@ -4,15 +4,15 @@ import {
   AccessoryLineSchema,
   ChecklistItemSchema,
   ChecklistResponseSchema,
-} from "../checklist.js";
+} from "../checklist";
 import {
   DamageMatchStatusEnum,
   DamageSeverityEnum,
   DamageZoneEnum,
   SignatureStatusEnum,
   SignerRoleEnum,
-} from "../enums.js";
-import { DocumentLocaleSchema, MediaMetaSchema, UuidSchema } from "../sync.js";
+} from "../enums";
+import { DocumentLocaleSchema, MediaMetaSchema, UuidSchema } from "../sync";
 
 /**
  * Payload schemas for `rental.checkout`, `rental.checkin` and `inspection.submit`

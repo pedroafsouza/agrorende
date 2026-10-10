@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { DutyStatusEnum, EntityTypeEnum } from "../enums.js";
-import { MediaMetaSchema, UuidSchema } from "../sync.js";
+import { DutyStatusEnum, EntityTypeEnum } from "../enums";
+import { MediaMetaSchema, UuidSchema } from "../sync";
 
 /**
  * Payload schemas for the remaining mutations of the catalog in

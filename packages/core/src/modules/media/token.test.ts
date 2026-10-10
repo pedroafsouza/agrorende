@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { setAuthConfigForTests } from "../../auth/config.js";
-import { signMediaUrlToken } from "../../auth/jwt.js";
-import { resolveReadVariant, verifyBlobToken } from "./upload.js";
+import { setAuthConfigForTests } from "../../auth/config";
+import { signMediaUrlToken } from "../../auth/jwt";
+import { resolveReadVariant, verifyBlobToken } from "./upload";
 
 const SECRET = "media-token-test-secret-0123456789abcdef";
 const MEDIA = "0b9a2f3e-6a51-4f6e-8d0c-2f6f5f2c9a11";

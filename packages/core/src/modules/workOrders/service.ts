@@ -7,16 +7,16 @@ import type { Ctx as SeamCtx, Tx } from "@agrorende/contracts/seams";
 import { RealtimeServerEvents, userRoom } from "@agrorende/contracts/realtime";
 import type { Asset, User } from "@agrorende/db";
 
-import { normalizeCtx, type Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import { createNotification } from "../../notify/index.js";
-import { next as nextNumber } from "../../numbering/index.js";
-import { touchDependents } from "../../sync/touch.js";
-import { assertVersion, dbTx, newId, parseInput, stampCreate, stampUpdate } from "../assets/kit.js";
-import { recomputeCondition } from "../assets/service.js";
-import { defaultTemplateId, snapshotPublished } from "../checklists/service.js";
-import { currentSeasonId } from "../seasons/service.js";
+import { normalizeCtx, type Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import { createNotification } from "../../notify/index";
+import { next as nextNumber } from "../../numbering/index";
+import { touchDependents } from "../../sync/touch";
+import { assertVersion, dbTx, newId, parseInput, stampCreate, stampUpdate } from "../assets/kit";
+import { recomputeCondition } from "../assets/service";
+import { defaultTemplateId, snapshotPublished } from "../checklists/service";
+import { currentSeasonId } from "../seasons/service";
 import {
   ACTIVE_STATUSES,
   asSyncTx,
@@ -32,11 +32,11 @@ import {
   toWorkOrderDto,
   workOrderSettings,
   type WorkOrderDoc,
-} from "./common.js";
-import { dueAtFor } from "./sla.js";
+} from "./common";
+import { dueAtFor } from "./sla";
 
 export { toWorkOrderDto };
-export { ExternalCostInputSchema, setExternalCost, type ExternalCostInput } from "./external.js";
+export { ExternalCostInputSchema, setExternalCost, type ExternalCostInput } from "./external";
 
 // ───────── Inputs of the office REST actions ─────────
 

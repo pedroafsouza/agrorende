@@ -12,8 +12,8 @@ import {
   rect,
   shape,
   type Color,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
 
 /** Success: a ring draws itself, a check draws inside it and confetti dots burst out. */
 export function buildSuccess() {

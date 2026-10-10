@@ -2,11 +2,11 @@ import { createHash, randomUUID } from "node:crypto";
 import { collections, withSyncTx } from "@agrorende/db";
 import type { EntityType } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import type { Db } from "../locations/types.js";
-import { ATTENTION_KINDS, type AttentionItemDTO, type AttentionKind, type AttentionListDTO, type AttentionResolutionDTO } from "./dto.js";
-import { loadOpsSettings, opsDb, staleDeviceFilter, type OpsDeps } from "./queries.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import type { Db } from "../locations/types";
+import { ATTENTION_KINDS, type AttentionItemDTO, type AttentionKind, type AttentionListDTO, type AttentionResolutionDTO } from "./dto";
+import { loadOpsSettings, opsDb, staleDeviceFilter, type OpsDeps } from "./queries";
 
 /**
  * Needs attention queue (ARCHITECTURE §21.2, REC-09). Rejected mutations keep their resolution in

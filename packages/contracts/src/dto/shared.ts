@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { IsoDateTimeSchema, TableNameSchema, TABLE_ORDER, UuidSchema, type TableName } from "../sync.js";
+import { IsoDateTimeSchema, TableNameSchema, TABLE_ORDER, UuidSchema, type TableName } from "../sync";
 
 export { IsoDateTimeSchema, TableNameSchema, TABLE_ORDER, UuidSchema, type TableName };
 export const IsoDateSchema = z.string().date();

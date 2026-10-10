@@ -7,10 +7,10 @@ import { collections, getDb } from "@agrorende/db";
 import type { Device } from "@agrorende/db";
 import { z } from "zod";
 
-import type { Ctx } from "../../context.js";
-import { pageResult, validationError, type PageParams } from "../../auth/http.js";
-import { noopLogger, type Logger } from "../../logging.js";
-import { toDeviceDto, toDiagnosticDto, type DeviceDiagnosticDTO, type DeviceDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import { pageResult, validationError, type PageParams } from "../../auth/http";
+import { noopLogger, type Logger } from "../../logging";
+import { toDeviceDto, toDiagnosticDto, type DeviceDiagnosticDTO, type DeviceDTO } from "./dto";
 
 export const DIAGNOSTICS_MAX_BYTES = 256 * 1024;
 export const DEVICE_STALE_MS = 24 * 60 * 60 * 1000;

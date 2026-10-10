@@ -2,7 +2,7 @@ import { formatDistance as dateFnsFormatDistance, intervalToDuration, type Durat
 import { enUS, ptBR } from "date-fns/locale";
 import { formatInTimeZone } from "date-fns-tz";
 
-import { DEFAULT_LOCALE, LOCALE_META, type SupportedLocale, resolveLocale } from "./locales.js";
+import { DEFAULT_LOCALE, LOCALE_META, type SupportedLocale, resolveLocale } from "./locales";
 
 type DateInput = Date | number | string;
 type FormatOptions = {

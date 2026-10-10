@@ -1,1 +1,1 @@
-export { SeasonSchema } from "./index.js";
+export { SeasonSchema } from "./index";

@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "next dev --webpack --port 3300",
-    "build": "next build --webpack && tsx scripts/postbuild.ts",
+    "dev": "next dev --port 3300",
+    "build": "next build && tsx scripts/postbuild.ts",
     "images": "tsx scripts/images.ts",
     "brand": "tsx scripts/brand.ts",
     "screenshots": "tsx scripts/screenshots.ts",

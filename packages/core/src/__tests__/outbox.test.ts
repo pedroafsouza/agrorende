@@ -6,11 +6,11 @@ import { realtimeRedisChannel, type RedisRealtimeMessage } from "@agrorende/cont
 import { closeClient, collection, getDb } from "@agrorende/db";
 import { setupTestDb } from "@agrorende/db/testing";
 
-import { dispatchClaimKey, dispatchPending, emit, type DomainEvent } from "../events/index.js";
-import { closeJobQueues, jobQueuePrefix } from "../jobs/index.js";
-import { closeLocationsRedis } from "../modules/locations/redis.js";
-import { withSyncTx } from "../sync/withSyncTx.js";
-import { makeTestCtx } from "../testing/ctx.js";
+import { dispatchClaimKey, dispatchPending, emit, type DomainEvent } from "../events/index";
+import { closeJobQueues, jobQueuePrefix } from "../jobs/index";
+import { closeLocationsRedis } from "../modules/locations/redis";
+import { withSyncTx } from "../sync/withSyncTx";
+import { makeTestCtx } from "../testing/ctx";
 
 /**
  * T10.15 part 2 — `event_outbox` dispatch is idempotent: repeated and concurrent dispatches of the

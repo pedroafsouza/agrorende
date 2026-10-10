@@ -1,6 +1,6 @@
 import type { Collection, Db } from "mongodb";
 
-import type { CollectionDocumentMap, CollectionName } from "./types.js";
+import type { CollectionDocumentMap, CollectionName } from "./types";
 
 export const COLLECTION_NAMES = [
   "organizations",

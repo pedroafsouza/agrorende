@@ -1,7 +1,7 @@
 import { collection, getDb, scoped } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { toNotificationDto, type NotificationDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import { toNotificationDto, type NotificationDTO } from "./dto";
 
 export interface ListNotificationsQuery {
   readonly unreadOnly?: boolean;

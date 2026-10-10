@@ -18,14 +18,14 @@ import {
 } from "@agrorende/contracts/sync";
 import { z } from "zod";
 
-import type { Ctx } from "../context.js";
-import type { Logger } from "../logging.js";
-import { hasRole } from "../permissions.js";
-import { loadScopedRow } from "./pull.js";
-import { mutationRegistry } from "./registry.js";
-import { txDb } from "./touch.js";
-import { withSyncTx } from "./withSyncTx.js";
-import type { MutationHandler, MutationMeta, MutationOutcome, SyncTx } from "./types.js";
+import type { Ctx } from "../context";
+import type { Logger } from "../logging";
+import { hasRole } from "../permissions";
+import { loadScopedRow } from "./pull";
+import { mutationRegistry } from "./registry";
+import { txDb } from "./touch";
+import { withSyncTx } from "./withSyncTx";
+import type { MutationHandler, MutationMeta, MutationOutcome, SyncTx } from "./types";
 
 /** Envelope names are read leniently so an unknown name becomes a per-envelope UNKNOWN_MUTATION. */
 const LenientEnvelopeSchema = MutationEnvelopeSchema.extend({ name: z.string().min(1) });

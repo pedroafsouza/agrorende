@@ -5,14 +5,14 @@ import type { InspectionSubmitPayload, RentalCheckinPayload, RentalCheckoutPaylo
 import type { MutationName } from "@agrorende/contracts/sync";
 import type { Rental } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { ANY_ROLE } from "../../permissions.js";
-import { createFieldReportFromDamage } from "../../seams.js";
-import { touchDependents } from "../../sync/touch.js";
-import type { MutationHandler, MutationMeta, SyncTx } from "../../sync/types.js";
-import { dbTx, stampUpdate, writeActivity } from "../assets/kit.js";
-import { applyReadings, getSummary, recomputeCondition, setCustody } from "../assets/service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { ANY_ROLE } from "../../permissions";
+import { createFieldReportFromDamage } from "../../seams";
+import { touchDependents } from "../../sync/touch";
+import type { MutationHandler, MutationMeta, SyncTx } from "../../sync/types";
+import { dbTx, stampUpdate, writeActivity } from "../assets/kit";
+import { applyReadings, getSummary, recomputeCondition, setCustody } from "../assets/service";
 import {
   assertReadings,
   assertSignatures,
@@ -22,8 +22,8 @@ import {
   performedAt,
   recordInspection,
   validationInspection,
-} from "./inspections.js";
-import { DISPUTE_WINDOW_HOURS, HOUR_MS, chargeSources, emitAsset, emitRental, hasBlockingReport, loadRental, loadSettings, persistCharges } from "./internal.js";
+} from "./inspections";
+import { DISPUTE_WINDOW_HOURS, HOUR_MS, chargeSources, emitAsset, emitRental, hasBlockingReport, loadRental, loadSettings, persistCharges } from "./internal";
 
 function readingsOf(p: { hourMeter?: number | undefined; odometerKm?: number | undefined; meterReplaced?: boolean | undefined }): { hourMeter?: number; odometerKm?: number; meterReplaced: boolean } {
   return {

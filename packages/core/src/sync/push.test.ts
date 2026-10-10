@@ -2,10 +2,10 @@ import { randomUUID } from "node:crypto";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { DomainError } from "../errors.js";
-import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded.js";
-import { mutationRegistry } from "./registry.js";
-import { push } from "./push.js";
+import { DomainError } from "../errors";
+import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../auth/testing/seeded";
+import { mutationRegistry } from "./registry";
+import { push } from "./push";
 
 const DEVICE = "018fd000-0000-7000-8000-00000000d001";
 const FIELD_103 = seedUuid(103);
@@ -119,7 +119,7 @@ describe("sync push", () => {
     const partial = {
       ...mutationRegistry["user.setDuty"],
       apply: async (tx: Parameters<(typeof mutationRegistry)["user.setDuty"]["apply"]>[0]) => {
-        const { txDb } = await import("./touch.js");
+        const { txDb } = await import("./touch");
         await txDb(tx).users.updateOne({ _id: FIELD_103 }, { $set: { phone: "rolled-back" } });
         throw new DomainError("FORBIDDEN");
       },

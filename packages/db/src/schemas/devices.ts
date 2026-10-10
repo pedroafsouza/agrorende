@@ -1,1 +1,1 @@
-export { DeviceSchema } from "./index.js";
+export { DeviceSchema } from "./index";

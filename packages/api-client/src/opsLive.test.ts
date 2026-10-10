@@ -1,7 +1,7 @@
 import { OpsLiveDTOSchema } from "@agrorende/contracts/dto";
 import { describe, expect, it } from "vitest";
 
-import { AgrorendeApiClient, type FetchLike, type OpsLiveOperator } from "./index.js";
+import { AgrorendeApiClient, type FetchLike, type OpsLiveOperator } from "./index";
 
 const serverPayload = {
   generatedAt: "2026-10-09T12:00:00.000Z",

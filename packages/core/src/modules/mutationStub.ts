@@ -1,6 +1,6 @@
-import { reject } from "../errors.js";
-import type { MutationHandler, MutationMeta, MutationOutcome, SyncTx } from "../sync/types.js";
-import type { Ctx } from "../context.js";
+import { reject } from "../errors";
+import type { MutationHandler, MutationMeta, MutationOutcome, SyncTx } from "../sync/types";
+import type { Ctx } from "../context";
 
 /**
  * Apply function for a mutation whose module ships in wave 6. The push stores a per-envelope

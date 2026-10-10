@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AssetCategoryEnum, MediaVariantStatusEnum } from "./enums.js";
-import { LocalizedTextSchema, type LocalizedText } from "./settings.js";
+import { AssetCategoryEnum, MediaVariantStatusEnum } from "./enums";
+import { LocalizedTextSchema, type LocalizedText } from "./settings";
 
 const ChecklistOptionSchema: z.ZodType<{ value: string; label: LocalizedText }> = z.object({
   value: z.string(),

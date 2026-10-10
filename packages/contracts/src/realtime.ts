@@ -1,9 +1,9 @@
 import { z } from "zod";
-import { DutyStatusEnum, OrgStatusEnum } from "./enums.js";
-import { ActivityEventDTOSchema } from "./dto/activityEvents.js";
-import { NotificationDTOSchema } from "./dto/notifications.js";
-import { EntityTypeEnum } from "./enums.js";
-import { ERROR_CODES } from "./errors.js";
+import { DutyStatusEnum, OrgStatusEnum } from "./enums";
+import { ActivityEventDTOSchema } from "./dto/activityEvents";
+import { NotificationDTOSchema } from "./dto/notifications";
+import { EntityTypeEnum } from "./enums";
+import { ERROR_CODES } from "./errors";
 
 export const RealtimeClientEvents = {
   locationBatch: "location:batch",

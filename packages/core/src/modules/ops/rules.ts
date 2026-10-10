@@ -1,6 +1,6 @@
 import type { Priority, WorkOrderStatus } from "@agrorende/contracts/enums";
 
-import type { SlaState } from "./dto.js";
+import type { SlaState } from "./dto";
 
 /** Settings the ops and costs read models need, with the `OrgSettingsSchema` defaults. */
 export interface OpsSettings {

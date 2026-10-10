@@ -3,12 +3,12 @@ import { MediaParentSchema, type MediaParent } from "@agrorende/contracts/checkl
 import { MediaKindEnum, MediaTagEnum, type EntityType, type MediaKind, type MediaTag } from "@agrorende/contracts/enums";
 import type { MediaMeta } from "@agrorende/contracts/sync";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { createNotification, officeRecipients } from "../../notify/index.js";
-import { txDb } from "../../sync/touch.js";
-import type { SyncTx } from "../../sync/types.js";
-import { toMediaDto, type MediaDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { createNotification, officeRecipients } from "../../notify/index";
+import { txDb } from "../../sync/touch";
+import type { SyncTx } from "../../sync/types";
+import { toMediaDto, type MediaDTO } from "./dto";
 
 export const SINGLE_UPLOAD_MAX_BYTES = 15 * 1024 * 1024;
 export const MULTIPART_PART_BYTES = 8 * 1024 * 1024;

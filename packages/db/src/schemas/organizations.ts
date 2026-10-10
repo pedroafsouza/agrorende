@@ -1,1 +1,1 @@
-export { OrganizationSchema } from "./index.js";
+export { OrganizationSchema } from "./index";

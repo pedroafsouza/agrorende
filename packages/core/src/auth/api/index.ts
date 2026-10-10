@@ -1,10 +1,10 @@
-import type { RouteHandler } from "../http.js";
-import * as auth from "./auth.js";
-import { healthHandler } from "./health.js";
-import * as oauth from "./oauth.js";
-import * as platform from "./platform.js";
+import type { RouteHandler } from "../http";
+import * as auth from "./auth";
+import { healthHandler } from "./health";
+import * as oauth from "./oauth";
+import * as platform from "./platform";
 
-export { setHealthProbes, type HealthProbes } from "./health.js";
+export { setHealthProbes, type HealthProbes } from "./health";
 
 /**
  * Framework-free handlers for every T02 REST route, keyed by `"<METHOD> <path pattern>"` as in

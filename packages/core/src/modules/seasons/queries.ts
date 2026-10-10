@@ -1,10 +1,10 @@
 import type { Season } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { readDb, type Page } from "../assets/kit.js";
-import type { SeasonDTO } from "./dto.js";
-import { toSeasonDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { readDb, type Page } from "../assets/kit";
+import type { SeasonDTO } from "./dto";
+import { toSeasonDto } from "./service";
 
 export async function listSeasons(ctx: Pick<Ctx, "orgId">): Promise<Page<SeasonDTO>> {
   const db = await readDb(ctx);

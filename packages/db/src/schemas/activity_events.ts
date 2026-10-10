@@ -1,1 +1,1 @@
-export { ActivityEventSchema } from "./index.js";
+export { ActivityEventSchema } from "./index";

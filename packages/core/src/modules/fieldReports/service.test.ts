@@ -3,22 +3,22 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import { AppError } from "@agrorende/contracts/errors";
 import type { FieldReportCreatePayload } from "@agrorende/contracts/mutations";
 import type { MediaMeta } from "@agrorende/contracts/sync";
-import type * as Seams from "../../seams.js";
-import type { MutationMeta } from "../../sync/types.js";
-import { makeTestCtx } from "../../testing/ctx.js";
-import { createAsset } from "../assets/service.js";
-import { newId } from "../assets/kit.js";
-import { mutations } from "./mutations.js";
-import { countOpenReports, getFieldReportDetail, listFieldReports } from "./queries.js";
-import { createFromDamage, createReport, dismiss, linkAsset, markForRepair, monitor, startReview, updateReport, withdraw } from "./service.js";
-import { ADMIN_ID, createHarness, MANAGER_ID, OPERATOR_ID, OTHER_OPERATOR_ID, type Harness, userRow } from "./testing/harness.js";
+import type * as Seams from "../../seams";
+import type { MutationMeta } from "../../sync/types";
+import { makeTestCtx } from "../../testing/ctx";
+import { createAsset } from "../assets/service";
+import { newId } from "../assets/kit";
+import { mutations } from "./mutations";
+import { countOpenReports, getFieldReportDetail, listFieldReports } from "./queries";
+import { createFromDamage, createReport, dismiss, linkAsset, markForRepair, monitor, startReview, updateReport, withdraw } from "./service";
+import { ADMIN_ID, createHarness, MANAGER_ID, OPERATOR_ID, OTHER_OPERATOR_ID, type Harness, userRow } from "./testing/harness";
 
 const seamMocks = vi.hoisted(() => ({
   createFromSource: vi.fn(),
   activeRentalForAsset: vi.fn(),
 }));
 
-vi.mock("../../seams.js", async (importOriginal) => {
+vi.mock("../../seams", async (importOriginal) => {
   const original = await importOriginal<typeof Seams>();
   return {
     ...original,

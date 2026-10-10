@@ -1,1 +1,1 @@
-export { SyncCounterSchema } from "./index.js";
+export { SyncCounterSchema } from "./index";

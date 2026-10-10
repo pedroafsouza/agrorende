@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { campoClaroPalette, semanticStatus } from "../src/index.js";
+import { campoClaroPalette, semanticStatus } from "../src/index";
 
 describe("Campo claro palette", () => {
   it("exports the normative palette values", () => {

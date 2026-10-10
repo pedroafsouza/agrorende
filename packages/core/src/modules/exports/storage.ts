@@ -1,7 +1,7 @@
 import { mkdir, readFile, rename, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { mediaStore } from "../../storage/index.js";
+import { mediaStore } from "../../storage/index";
 
 /** The subset of `MediaStore` that exports need. */
 export interface ExportStore {

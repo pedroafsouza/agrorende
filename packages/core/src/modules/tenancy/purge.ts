@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { collection, collections, COLLECTION_NAMES, getDb, type CollectionName } from "@agrorende/db";
 
-import type { Db } from "./usage.js";
+import type { Db } from "./usage";
 
 /** Staff identity recorded on audit rows written by the worker. */
 export const SYSTEM_ACTOR = "system@agrorende.app";

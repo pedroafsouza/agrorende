@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { mutations } from "./mutations.js";
-import { assetHistory, listAssets } from "./queries.js";
-import { applyReadings, createAsset, deriveCondition, getSummary, listSummaries, recomputeCondition, retireAsset, setCustody, updateAsset } from "./service.js";
-import { newId } from "./kit.js";
-import { createHarness, OTHER_ORG_ID, type Harness } from "./testing/harness.js";
+import { mutations } from "./mutations";
+import { assetHistory, listAssets } from "./queries";
+import { applyReadings, createAsset, deriveCondition, getSummary, listSummaries, recomputeCondition, retireAsset, setCustody, updateAsset } from "./service";
+import { newId } from "./kit";
+import { createHarness, OTHER_ORG_ID, type Harness } from "./testing/harness";
 
 let h: Harness;
 

@@ -2,11 +2,11 @@ import type { WorkOrderDTO, WorkOrderPartDTO } from "@agrorende/contracts/dto";
 import type { Priority, WorkOrderStatus } from "@agrorende/contracts/enums";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { clampLimit, dbTx, pageOf, parseCursor, toDto } from "../assets/kit.js";
-import { canSeeLaborCost, loadWorkOrder, redactForRole, requireOffice, sameTenant, toWorkOrderDto, workOrderSettings, ACTIVE_STATUSES, type WorkOrderDoc } from "./common.js";
-import { slaState, type SlaState } from "./sla.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { clampLimit, dbTx, pageOf, parseCursor, toDto } from "../assets/kit";
+import { canSeeLaborCost, loadWorkOrder, redactForRole, requireOffice, sameTenant, toWorkOrderDto, workOrderSettings, ACTIVE_STATUSES, type WorkOrderDoc } from "./common";
+import { slaState, type SlaState } from "./sla";
 
 export type DueFilter = "overdue" | "atRisk" | "today" | "week";
 

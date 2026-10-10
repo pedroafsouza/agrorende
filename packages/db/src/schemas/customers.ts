@@ -1,1 +1,1 @@
-export { CustomerSchema } from "./index.js";
+export { CustomerSchema } from "./index";

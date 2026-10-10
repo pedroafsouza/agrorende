@@ -2,7 +2,7 @@ import { createHash, randomBytes, scryptSync } from "node:crypto";
 
 import { describe, expect, it } from "vitest";
 
-import { hashPassword, needsRehash, verifyPassword } from "./password.js";
+import { hashPassword, needsRehash, verifyPassword } from "./password";
 
 describe("password hashing", () => {
   it("hashes with Argon2id and verifies", async () => {

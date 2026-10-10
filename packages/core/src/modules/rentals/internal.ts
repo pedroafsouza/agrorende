@@ -7,13 +7,13 @@ import { rentalMachine } from "@agrorende/contracts/machines";
 import type { AssetSummary, Tx } from "@agrorende/contracts/seams";
 import { collections, getDb, type Customer, type Damage, type Inspection, type Rental, type RentalCharge, type SyncTx as DbSyncTx } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import type { SyncTx } from "../../sync/types.js";
-import { dbTx, newId, readDb, stampCreate, stampUpdate, toDto } from "../assets/kit.js";
-import { getSummary } from "../assets/service.js";
-import type { EligibilityResult, RentalWarningCode } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import type { SyncTx } from "../../sync/types";
+import { dbTx, newId, readDb, stampCreate, stampUpdate, toDto } from "../assets/kit";
+import { getSummary } from "../assets/service";
+import type { EligibilityResult, RentalWarningCode } from "./dto";
 
 export const HOUR_MS = 3_600_000;
 export const DISPUTE_WINDOW_HOURS = 48;

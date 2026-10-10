@@ -1,10 +1,10 @@
 import type { ActivityEvent, Asset } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { AssetListFilterSchema, type AssetDTO, type AssetHistoryEntry, type AssetListFilter } from "./dto.js";
-import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "./kit.js";
-import { toAssetDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { AssetListFilterSchema, type AssetDTO, type AssetHistoryEntry, type AssetListFilter } from "./dto";
+import { clampLimit, escapeRegex, pageOf, parseCursor, readDb, type Page, parseInput } from "./kit";
+import { toAssetDto } from "./service";
 
 export async function listAssets(ctx: Pick<Ctx, "orgId">, raw: Partial<AssetListFilter> = {}): Promise<Page<AssetDTO>> {
   const f = parseInput(AssetListFilterSchema, raw);

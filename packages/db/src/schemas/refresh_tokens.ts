@@ -1,1 +1,1 @@
-export { RefreshTokenSchema } from "./index.js";
+export { RefreshTokenSchema } from "./index";

@@ -1,12 +1,12 @@
 import type { ActivityEventDTO, MediaDTO } from "@agrorende/contracts/dto";
 import type { ActivityEvent, FieldReport, Media } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { clampLimit, escapeRegex, pageOf, parseCursor, parseInput, readDb, toDto, type Page } from "../assets/kit.js";
-import { toMediaDto } from "../media/dto.js";
-import { FieldReportListFilterSchema, type FieldReportDetail, type FieldReportListFilter, type FieldReportListItem, type OpenWorkOrderSummary } from "./dto.js";
-import { ACTIVE_WORK_ORDER_STATUSES, toFieldReportDto } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { clampLimit, escapeRegex, pageOf, parseCursor, parseInput, readDb, toDto, type Page } from "../assets/kit";
+import { toMediaDto } from "../media/dto";
+import { FieldReportListFilterSchema, type FieldReportDetail, type FieldReportListFilter, type FieldReportListItem, type OpenWorkOrderSummary } from "./dto";
+import { ACTIVE_WORK_ORDER_STATUSES, toFieldReportDto } from "./service";
 
 type ScopedDb = Awaited<ReturnType<typeof readDb>>;
 

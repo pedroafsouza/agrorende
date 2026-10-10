@@ -1,1 +1,1 @@
-export { FuelLogSchema } from "./index.js";
+export { FuelLogSchema } from "./index";

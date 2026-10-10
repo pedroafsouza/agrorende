@@ -1,10 +1,10 @@
 import type { PullResponse, TableName } from "@agrorende/contracts/sync";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import type { Ctx } from "../../context.js";
-import { pull } from "../../sync/pull.js";
-import { createSeededDb, ctxOf, PEOPLE, type SeededDb } from "../workOrders/testing/seeded.js";
-import { createLocation, createMovement, createPart } from "./service.js";
+import type { Ctx } from "../../context";
+import { pull } from "../../sync/pull";
+import { createSeededDb, ctxOf, PEOPLE, type SeededDb } from "../workOrders/testing/seeded";
+import { createLocation, createMovement, createPart } from "./service";
 
 let db: SeededDb;
 const admin = ctxOf(PEOPLE.admin, "ADMIN");

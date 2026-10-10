@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { CriticalWindowSchema } from "../checklist.js";
-import { IsoDateSchema, OptionalStringSchema, SyncDTOSchema } from "./shared.js";
+import { CriticalWindowSchema } from "../checklist";
+import { IsoDateSchema, OptionalStringSchema, SyncDTOSchema } from "./shared";
 
 export const SeasonDTOSchema = SyncDTOSchema.extend({
   name: z.string(),

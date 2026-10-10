@@ -3,10 +3,10 @@ import type { WorkOrderDTO } from "@agrorende/contracts/dto";
 import type { WorkOrderStatus } from "@agrorende/contracts/enums";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { assertVersion, dbTx, parseInput, stampUpdate } from "../assets/kit.js";
-import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity, redactForRole, requireOffice, sameTenant, toWorkOrderDto, workOrderSettings } from "./common.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { assertVersion, dbTx, parseInput, stampUpdate } from "../assets/kit";
+import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity, redactForRole, requireOffice, sameTenant, toWorkOrderDto, workOrderSettings } from "./common";
 
 /**
  * External (third-party) costs of a work order, P1 ERP-03 (`PATCH /work-orders/:id/external-cost`, A§8).

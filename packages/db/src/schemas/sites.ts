@@ -1,1 +1,1 @@
-export { SiteSchema } from "./index.js";
+export { SiteSchema } from "./index";

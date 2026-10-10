@@ -1,5 +1,5 @@
-import type { Ctx } from "../context.js";
-import { assertOrgWritable } from "../modules/tenancy/service.js";
+import type { Ctx } from "../context";
+import { assertOrgWritable } from "../modules/tenancy/service";
 
 /**
  * Office writes are refused with `ORG_SUSPENDED` while the organisation is SUSPENDED or CANCELLED

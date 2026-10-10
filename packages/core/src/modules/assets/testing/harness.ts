@@ -1,8 +1,8 @@
 import { closeClient, collections, withSyncTx, type SyncTx } from "@agrorende/db";
 import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 
-import { makeTestCtx, type TestCtx } from "../../../testing/ctx.js";
-import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
+import { makeTestCtx, type TestCtx } from "../../../testing/ctx";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded";
 
 export type Row = { _id: string } & Record<string, unknown>;
 

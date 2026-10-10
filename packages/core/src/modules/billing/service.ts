@@ -3,14 +3,14 @@ import { RealtimeServerEvents, opsRoom } from "@agrorende/contracts/realtime";
 import type { Tx } from "@agrorende/contracts/seams";
 import { collections, getDb, type BillingDocument, type ScopedDb } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import { next as nextNumber } from "../../numbering/index.js";
-import type { BillingPdfData } from "../../pdf/billingDocument.js";
-import type { SyncTx } from "../../sync/types.js";
-import { assertVersion, clampLimit, dbTx, newId, pageOf, parseCursor, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity, type Page } from "../assets/kit.js";
-import { billingSnapshot } from "../workOrders/service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import { next as nextNumber } from "../../numbering/index";
+import type { BillingPdfData } from "../../pdf/billingDocument";
+import type { SyncTx } from "../../sync/types";
+import { assertVersion, clampLimit, dbTx, newId, pageOf, parseCursor, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity, type Page } from "../assets/kit";
+import { billingSnapshot } from "../workOrders/service";
 import {
   BILLING_TRANSITIONS,
   BillingCancelInputSchema,
@@ -27,10 +27,10 @@ import {
   type BillingListFilters,
   type BillingPayInput,
   type BillingUpdateInput,
-} from "./dto.js";
+} from "./dto";
 
-export type { BillingDocumentDTO, BillingLineDTO, BillingListFilters } from "./dto.js";
-export { BILLING_TRANSITIONS } from "./dto.js";
+export type { BillingDocumentDTO, BillingLineDTO, BillingListFilters } from "./dto";
+export { BILLING_TRANSITIONS } from "./dto";
 
 const OFFICE_ROLES = new Set(["ADMIN", "MANAGER"]);
 
@@ -463,7 +463,7 @@ export async function renderBillingPdf(ctx: Pick<Ctx, "orgId" | "role">, id: str
   ]);
   const sourceLocale = workOrder?.documentLocale ?? rental?.documentLocale ?? org?.locale ?? "pt-BR";
   const locale: Locale = sourceLocale === "en" ? "en" : "pt-BR";
-  const module = (await import("../../pdf/billingDocument.js")) as { renderBillingDocument: RenderBilling };
+  const module = (await import("../../pdf/billingDocument")) as { renderBillingDocument: RenderBilling };
   const bytes = await module.renderBillingDocument({
     locale,
     timeZone: org?.timezone ?? "America/Sao_Paulo",

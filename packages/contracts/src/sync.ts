@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { PushStatusEnum } from "./enums.js";
-import { LocaleSchema } from "./settings.js";
+import { PushStatusEnum } from "./enums";
+import { LocaleSchema } from "./settings";
 
 /**
  * Wire contracts for the offline sync protocol (ARCHITECTURE sections 7.3 and 7.5).

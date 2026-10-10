@@ -3,14 +3,14 @@ import type { RentalDirection } from "@agrorende/contracts/enums";
 import { collections, getDb, type ActivityEvent, type Damage, type Inspection, type Rental } from "@agrorende/db";
 import { z } from "zod";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { renderRentalCheckin } from "../../pdf/rentalCheckin.js";
-import { renderRentalCheckout } from "../../pdf/rentalCheckout.js";
-import type { PdfLocale, RentalPdfData } from "./pdf.js";
-import { getSummary } from "../assets/service.js";
-import { clampLimit, escapeRegex, pageOf, parseCursor, parseInput, readDb, toDto, type Page } from "../assets/kit.js";
-import { toMediaDto } from "../media/dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { renderRentalCheckin } from "../../pdf/rentalCheckin";
+import { renderRentalCheckout } from "../../pdf/rentalCheckout";
+import type { PdfLocale, RentalPdfData } from "./pdf";
+import { getSummary } from "../assets/service";
+import { clampLimit, escapeRegex, pageOf, parseCursor, parseInput, readDb, toDto, type Page } from "../assets/kit";
+import { toMediaDto } from "../media/dto";
 import {
   DamageListFilterSchema,
   EligibilityQuerySchema,
@@ -24,9 +24,9 @@ import {
   type RentalDetail,
   type RentalListFilter,
   type RentalListItem,
-} from "./dto.js";
-import { evaluateEligibility, isHeld, isOffice, loadSettings, readTx, toChargeDto, toDamageDto, toInspectionDto, toRentalDto } from "./internal.js";
-import { isOverdue, overdueFilter } from "./overdue.js";
+} from "./dto";
+import { evaluateEligibility, isHeld, isOffice, loadSettings, readTx, toChargeDto, toDamageDto, toInspectionDto, toRentalDto } from "./internal";
+import { isOverdue, overdueFilter } from "./overdue";
 
 type ReadCtx = Pick<Ctx, "orgId" | "role">;
 type Db = Awaited<ReturnType<typeof readDb>>;

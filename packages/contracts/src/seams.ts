@@ -1,9 +1,9 @@
-import type { AssetCategory, AssetCondition, AssetOwnerType, ChecklistKind, NotificationType, RateUnit, Role, WorkOrderStatus } from "./enums.js";
-import type { CreateWorkOrderInput, WorkOrderBillingPart } from "./dto/workOrders.js";
-import type { CriticalWindow } from "./checklist.js";
-import type { ChecklistSnapshot, EntityRef, SiteDTO } from "./dto/index.js";
-import type { MediaDTO } from "./dto/media.js";
-import type { OperatorState } from "./realtime.js";
+import type { AssetCategory, AssetCondition, AssetOwnerType, ChecklistKind, NotificationType, RateUnit, Role, WorkOrderStatus } from "./enums";
+import type { CreateWorkOrderInput, WorkOrderBillingPart } from "./dto/workOrders";
+import type { CriticalWindow } from "./checklist";
+import type { ChecklistSnapshot, EntityRef, SiteDTO } from "./dto/index";
+import type { MediaDTO } from "./dto/media";
+import type { OperatorState } from "./realtime";
 
 export type Tx = unknown;
 

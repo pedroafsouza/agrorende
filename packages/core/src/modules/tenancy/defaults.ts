@@ -4,7 +4,7 @@ import type { ChecklistItem } from "@agrorende/contracts/checklist";
 import type { OrgSettings } from "@agrorende/contracts/settings";
 import type { ChecklistTemplate, NumberSequence } from "@agrorende/db";
 
-import { SEQUENCE_KEYS } from "./config.js";
+import { SEQUENCE_KEYS } from "./config";
 
 type Localized = { "pt-BR": string; en: string };
 

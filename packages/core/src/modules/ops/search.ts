@@ -1,8 +1,8 @@
 import { collections } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { escapeRegex } from "../assets/kit.js";
-import { opsDb, type OpsDeps } from "./queries.js";
+import type { Ctx } from "../../context";
+import { escapeRegex } from "../assets/kit";
+import { opsDb, type OpsDeps } from "./queries";
 
 /**
  * Global search behind the ⌘K command palette (ARCHITECTURE §8 `GET /search?q=`): the top five

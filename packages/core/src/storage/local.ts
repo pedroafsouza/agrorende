@@ -5,7 +5,7 @@ import path from "node:path";
 
 import { AppError } from "@agrorende/contracts/errors";
 
-import type { BlobRange, MediaStore, PartInfo, StoredObject, UploadSession, WriteResult } from "./index.js";
+import type { BlobRange, MediaStore, PartInfo, StoredObject, UploadSession, WriteResult } from "./index";
 
 export const FILE_MODE = 0o640;
 export const DIR_MODE = 0o750;

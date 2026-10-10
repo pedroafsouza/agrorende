@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../../auth/testing/seeded.js";
-import { listActiveTechnicians, listMediaForParent, markLateEvidence, createSeamNotification, notificationOfficeRecipients, touchSyncDependents } from "../../seams.js";
-import { withSyncTx } from "../../sync/withSyncTx.js";
+import { createSeededDb, SEED, seedCtx, seedUuid, type SeededDb } from "../../auth/testing/seeded";
+import { listActiveTechnicians, listMediaForParent, markLateEvidence, createSeamNotification, notificationOfficeRecipients, touchSyncDependents } from "../../seams";
+import { withSyncTx } from "../../sync/withSyncTx";
 
 /** The six T02 seams of DELIVERY-PLAN §4, exercised through `seams.ts` against the seed. */
 

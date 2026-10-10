@@ -2,8 +2,8 @@ import { afterAll, describe, expect, it } from "vitest";
 import { closeClient, collections } from "@agrorende/db";
 import { setupTestDb } from "@agrorende/db/testing";
 
-import { makeTestCtx } from "../testing/ctx.js";
-import { withSyncTx } from "./withSyncTx.js";
+import { makeTestCtx } from "../testing/ctx";
+import { withSyncTx } from "./withSyncTx";
 
 describe("withSyncTx", () => {
   afterAll(async () => {

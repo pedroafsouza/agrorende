@@ -14,9 +14,9 @@ import {
   type Color,
   type Key,
   type Vec2,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBadge, cloud, phone, tractor } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBadge, cloud, phone, tractor } from "./parts";
 
 /**
  * Works without signal: the phone has no signal, the camera flashes and a tractor photo is

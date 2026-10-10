@@ -97,7 +97,7 @@ export async function dueAtFor(
   timeZone?: string,
 ): Promise<Date> {
   if (assetCategory === null) return computeDueAt(createdAt, priority, settings);
-  const { criticalWindowFor } = await import("../seasons/service.js");
+  const { criticalWindowFor } = await import("../seasons/service");
   const window = await criticalWindowFor(tx, orgId, assetCategory, createdAt, timeZone);
   return computeDueAt(createdAt, priority, settings, window);
 }

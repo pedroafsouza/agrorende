@@ -5,10 +5,10 @@ import type { DutyStatus, WorkOrderStatus } from "@agrorende/contracts/enums";
 import { RealtimeServerEvents, opsRoom, type LocationFix, type OperatorState } from "@agrorende/contracts/realtime";
 import type { LiveFix, LiveOperator, LocationSeams } from "@agrorende/contracts/seams";
 import type { Redis } from "ioredis";
-import type { Db } from "./types.js";
+import type { Db } from "./types";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
 import {
   LiveRecordSchema,
   MAX_ACCURACY_M,
@@ -19,11 +19,11 @@ import {
   locationBatchSchema,
   type IngestResult,
   type LiveRecord,
-} from "./dto.js";
-import { liveKey, locationThrottleKey, presenceKey } from "./keys.js";
-import { publishRealtime } from "./publish.js";
-import { locationsRedis } from "./redis.js";
-import { ACTIVE_WORK_ORDER_STATUSES, OFFLINE_AFTER_MS, deriveOperatorState } from "./state.js";
+} from "./dto";
+import { liveKey, locationThrottleKey, presenceKey } from "./keys";
+import { publishRealtime } from "./publish";
+import { locationsRedis } from "./redis";
+import { ACTIVE_WORK_ORDER_STATUSES, OFFLINE_AFTER_MS, deriveOperatorState } from "./state";
 
 type LocationPingDoc = CollectionDocumentMap["location_pings"];
 

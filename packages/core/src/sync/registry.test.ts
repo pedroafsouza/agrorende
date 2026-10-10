@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { MutationNameEnum } from "@agrorende/contracts/sync";
 
-import { mutationRegistry } from "./registry.js";
+import { mutationRegistry } from "./registry";
 
 describe("mutationRegistry", () => {
   it("covers every contract mutation name", () => {

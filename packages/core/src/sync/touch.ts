@@ -1,7 +1,7 @@
 import type { EntityRef } from "@agrorende/contracts/dto";
 import type { ScopedDb, SyncTx as DbSyncTx } from "@agrorende/db";
 
-import type { SyncTx } from "./types.js";
+import type { SyncTx } from "./types";
 
 /** The kernel `SyncTx` keeps `db` and `session` opaque; every T02 module reads them through this view. */
 export function dbTx(tx: SyncTx): DbSyncTx {

@@ -1,12 +1,12 @@
 import type { WorkOrderAddPartPayload } from "@agrorende/contracts/mutations";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { dbTx, stampCreate, stampUpdate } from "../assets/kit.js";
-import { assertWorkOrderOut, recordWorkOrderOut, reverseWorkOrderOut } from "../parts/service.js";
-import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity } from "./common.js";
-import { evidenceMode, flagLateEvidence } from "./evidence.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { dbTx, stampCreate, stampUpdate } from "../assets/kit";
+import { assertWorkOrderOut, recordWorkOrderOut, reverseWorkOrderOut } from "../parts/service";
+import { emitWorkOrderChanged, loadWorkOrder, recordWoActivity } from "./common";
+import { evidenceMode, flagLateEvidence } from "./evidence";
 
 export interface PartCostLine {
   readonly quantity: number;

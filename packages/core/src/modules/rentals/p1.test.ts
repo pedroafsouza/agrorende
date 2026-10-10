@@ -3,19 +3,19 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vites
 import { AppError } from "@agrorende/contracts/errors";
 import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { CheckInInspection, RentalCheckinPayload, RentalCheckoutPayload } from "@agrorende/contracts/mutations";
-import type * as Seams from "../../seams.js";
-import { makeTestCtx } from "../../testing/ctx.js";
-import { costRollup } from "../costs/service.js";
-import { setRentalBillingFaultForTests } from "../billing/service.js";
-import { createAsset } from "../assets/service.js";
-import { newId } from "../assets/kit.js";
-import { checkin, checkout } from "./mutations.js";
-import { closeRental, createRental, extendRental, reserveRental, updateDamage } from "./service.js";
-import { ADMIN_ID, AGENT_ID, checkInInspection, checkOutInspection, createHarness, customerRow, mediaMeta, meta, rentalRow, userRow, type Harness } from "./testing/harness.js";
+import type * as Seams from "../../seams";
+import { makeTestCtx } from "../../testing/ctx";
+import { costRollup } from "../costs/service";
+import { setRentalBillingFaultForTests } from "../billing/service";
+import { createAsset } from "../assets/service";
+import { newId } from "../assets/kit";
+import { checkin, checkout } from "./mutations";
+import { closeRental, createRental, extendRental, reserveRental, updateDamage } from "./service";
+import { ADMIN_ID, AGENT_ID, checkInInspection, checkOutInspection, createHarness, customerRow, mediaMeta, meta, rentalRow, userRow, type Harness } from "./testing/harness";
 
 const seamMocks = vi.hoisted(() => ({ createFieldReportFromDamage: vi.fn() }));
 
-vi.mock("../../seams.js", async (importOriginal) => {
+vi.mock("../../seams", async (importOriginal) => {
   const original = await importOriginal<typeof Seams>();
   return { ...original, createFieldReportFromDamage: seamMocks.createFieldReportFromDamage };
 });

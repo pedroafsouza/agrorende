@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { formatMoney, parseLocaleNumber, resolveLocale } from "../src/index.js";
+import { formatMoney, parseLocaleNumber, resolveLocale } from "../src/index";
 
 describe("resolveLocale", () => {
   it("uses exact match before language match", () => {

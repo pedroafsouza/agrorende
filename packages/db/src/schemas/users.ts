@@ -1,1 +1,1 @@
-export { UserSchema } from "./index.js";
+export { UserSchema } from "./index";

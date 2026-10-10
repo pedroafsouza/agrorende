@@ -2,14 +2,14 @@ import type { CommentCreatePayload } from "@agrorende/contracts/mutations";
 import { opsRoom, RealtimeServerEvents, userRoom } from "@agrorende/contracts/realtime";
 import type { Comment, ScopedDb } from "@agrorende/db";
 
-import { recordActivity } from "../../activity/index.js";
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { emit } from "../../events/index.js";
-import { createNotification } from "../../notify/index.js";
-import { txDb } from "../../sync/touch.js";
-import type { SyncTx } from "../../sync/types.js";
-import { newId, parseInput, readDb } from "../assets/kit.js";
+import { recordActivity } from "../../activity/index";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { emit } from "../../events/index";
+import { createNotification } from "../../notify/index";
+import { txDb } from "../../sync/touch";
+import type { SyncTx } from "../../sync/types";
+import { newId, parseInput, readDb } from "../assets/kit";
 import {
   CommentCreateInputSchema,
   CommentListQuerySchema,
@@ -18,7 +18,7 @@ import {
   type CommentDTO,
   type CommentParentType,
   type CommentThreadItem,
-} from "./dto.js";
+} from "./dto";
 
 export { toCommentDto };
 

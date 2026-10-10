@@ -1,11 +1,11 @@
 import { AppError } from "@agrorende/contracts/errors";
 import type { ZodType } from "zod";
 
-import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, authConfig, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../../auth/config.js";
-import { assertSameOrigin, clientIp, json, parseCookies, readJson, route, searchParams, serializeCookie, type RouteHandler } from "../../auth/http.js";
-import { organizationDto, selfUserDto } from "../../auth/service.js";
-import { authenticate } from "../../auth/session.js";
-import { PLATFORM_COOKIE, PLATFORM_OAUTH_COOKIE, PLATFORM_SESSION_TTL_S } from "./config.js";
+import { ACCESS_COOKIE, ACCESS_TOKEN_TTL_S, authConfig, REFRESH_COOKIE, REFRESH_COOKIE_PATH, REFRESH_TOKEN_TTL_MS } from "../../auth/config";
+import { assertSameOrigin, clientIp, json, parseCookies, readJson, route, searchParams, serializeCookie, type RouteHandler } from "../../auth/http";
+import { organizationDto, selfUserDto } from "../../auth/service";
+import { authenticate } from "../../auth/session";
+import { PLATFORM_COOKIE, PLATFORM_OAUTH_COOKIE, PLATFORM_SESSION_TTL_S } from "./config";
 import {
   AdminResetLinkSchema,
   finishStaffGoogle,
@@ -18,7 +18,7 @@ import {
   startStaffGoogle,
   verifyStaffSession,
   type OidcDeps,
-} from "./platform.js";
+} from "./platform";
 import {
   AcceptTermsSchema,
   acceptTerms,
@@ -27,7 +27,7 @@ import {
   getSubscription,
   signupOrganization,
   SignupOrganizationSchema,
-} from "./service.js";
+} from "./service";
 
 /** Parses a body and keeps custom refinement messages (`cnpj_invalid`, `timezone_invalid`) as field error codes. */
 async function parseBody<T>(request: Request, schema: ZodType<T>): Promise<T> {

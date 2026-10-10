@@ -2,11 +2,11 @@ import type { TechnicianSummary } from "@agrorende/contracts/seams";
 import type { UserSetDutyPayload } from "@agrorende/contracts/mutations";
 import { RealtimeServerEvents, opsRoom } from "@agrorende/contracts/realtime";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { writeOutbox } from "../../notify/index.js";
-import { txDb } from "../../sync/touch.js";
-import type { SyncTx } from "../../sync/types.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { writeOutbox } from "../../notify/index";
+import { txDb } from "../../sync/touch";
+import type { SyncTx } from "../../sync/types";
 
 /** Active (not disabled, archived or deleted) FIELD users of the organisation (seam `UserSeams.listActiveTechnicians`). */
 export async function listActiveTechnicians(tx: SyncTx, _orgId: string): Promise<TechnicianSummary[]> {

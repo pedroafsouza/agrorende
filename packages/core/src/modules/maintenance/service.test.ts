@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { createSeededDb, ctxOf, PEOPLE, seedUuid, type SeededDb } from "../workOrders/testing/seeded.js";
-import { computeDuePoint, createPlan, due, listPlans, runDueScan, updatePlan, type PlanDoc } from "./service.js";
+import { createSeededDb, ctxOf, PEOPLE, seedUuid, type SeededDb } from "../workOrders/testing/seeded";
+import { computeDuePoint, createPlan, due, listPlans, runDueScan, updatePlan, type PlanDoc } from "./service";
 
 let db: SeededDb;
 const admin = ctxOf(PEOPLE.admin, "ADMIN");

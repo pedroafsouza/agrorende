@@ -1,8 +1,8 @@
 import { serverMessage } from "@agrorende/i18n/server";
 import { describe, expect, it } from "vitest";
 
-import { EXPORT_LOCALES } from "./dto.js";
-import { BOOLEAN_LABELS, EXPORT_HEADERS } from "./headers.js";
+import { EXPORT_LOCALES } from "./dto";
+import { BOOLEAN_LABELS, EXPORT_HEADERS } from "./headers";
 
 describe("export headers catalogue", () => {
   it("labels every column from exports.headers in pt-BR and en", () => {

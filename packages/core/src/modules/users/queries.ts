@@ -1,7 +1,7 @@
 import { getDb, scoped } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { toUserDto, type UserDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import { toUserDto, type UserDTO } from "./dto";
 
 export interface ListUsersQuery {
   readonly role?: string;

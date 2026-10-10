@@ -3,10 +3,10 @@ import { setupTestDb, type TestDbHandle } from "@agrorende/db/testing";
 import type { CheckOutInspection, CheckInInspection } from "@agrorende/contracts/mutations";
 import type { MediaMeta } from "@agrorende/contracts/sync";
 
-import type { MutationMeta } from "../../../sync/types.js";
-import { makeTestCtx, type TestCtx } from "../../../testing/ctx.js";
-import { newId } from "../../assets/kit.js";
-import { rawCollection, type RawCollection } from "../../../auth/testing/seeded.js";
+import type { MutationMeta } from "../../../sync/types";
+import { makeTestCtx, type TestCtx } from "../../../testing/ctx";
+import { newId } from "../../assets/kit";
+import { rawCollection, type RawCollection } from "../../../auth/testing/seeded";
 
 export type Row = { _id: string } & Record<string, unknown>;
 

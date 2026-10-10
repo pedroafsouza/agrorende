@@ -1,7 +1,7 @@
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { Ctx } from "../context.js";
-import { normalizeCtx } from "../context.js";
+import type { Ctx } from "../context";
+import { normalizeCtx } from "../context";
 
 export interface TestCtxInput {
   readonly organizationId?: string;

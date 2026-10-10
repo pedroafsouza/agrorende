@@ -1,8 +1,8 @@
 import { collections, getDb } from "@agrorende/db";
-import type { Db } from "./types.js";
+import type { Db } from "./types";
 
-import type { Ctx } from "../../context.js";
-import type { LocationsDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import type { LocationsDTO } from "./dto";
 
 export interface TrackFilter {
   readonly userId: string;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { GeoJsonPolygonSchema, OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { GeoJsonPolygonSchema, OptionalDateTimeSchema, OptionalNumberSchema, OptionalStringSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const PlotDTOSchema = SyncDTOSchema.extend({
   siteId: UuidSchema,

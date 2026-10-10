@@ -2,11 +2,11 @@ import type * as DTO from "@agrorende/contracts/dto";
 import type { OrgSettings } from "@agrorende/contracts/settings";
 import { HealthResponseSchema, type PullRequest, type PullResponse, type PushRequest, type PushResponse } from "@agrorende/contracts/sync";
 
-import { decodeApiError, isApiError, networkError, type ApiError } from "./errors.js";
-import type * as T from "./types.js";
+import { decodeApiError, isApiError, networkError, type ApiError } from "./errors";
+import type * as T from "./types";
 
-export * from "./errors.js";
-export type * from "./types.js";
+export * from "./errors";
+export type * from "./types";
 
 export type TokenProvider = () => Promise<string | null> | string | null;
 export type FetchLike = (input: RequestInfo | URL, init?: RequestInit) => Promise<Response>;

@@ -1,1 +1,1 @@
-export { EventOutboxSchema } from "./index.js";
+export { EventOutboxSchema } from "./index";

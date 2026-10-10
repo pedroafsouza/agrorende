@@ -2,7 +2,7 @@ import { NotificationTypeEnum } from "@agrorende/contracts/enums";
 import { serverMessage } from "@agrorende/i18n/server";
 import { describe, expect, it } from "vitest";
 
-import { NOTIFICATION_TEMPLATES, renderIcu, renderNotification, resolveNotificationLocale } from "./templates.js";
+import { NOTIFICATION_TEMPLATES, renderIcu, renderNotification, resolveNotificationLocale } from "./templates";
 
 describe("notification templates", () => {
   it("has a title and body in the notifications catalogue for every notification type in every locale", () => {

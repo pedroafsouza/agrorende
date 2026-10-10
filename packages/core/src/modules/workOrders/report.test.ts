@@ -1,8 +1,8 @@
 import sharp from "sharp";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { buildReportModel, renderReportPdf as renderWorkOrderReport, type WorkOrderReportLabels } from "./report.js";
-import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded.js";
+import { buildReportModel, renderReportPdf as renderWorkOrderReport, type WorkOrderReportLabels } from "./report";
+import { createSeededDb, ctxOf, ORG_A, PEOPLE, seedUuid, type SeededDb } from "./testing/seeded";
 
 let db: SeededDb;
 const WO = seedUuid(1111);

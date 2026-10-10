@@ -1,10 +1,10 @@
 import { AppError } from "@agrorende/contracts/errors";
 import { collections, getDb } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import type { TenancyDTO } from "./dto.js";
-import { orgStatusDto } from "./lifecycle.js";
-import { readUsage } from "./usage.js";
+import type { Ctx } from "../../context";
+import type { TenancyDTO } from "./dto";
+import { orgStatusDto } from "./lifecycle";
+import { readUsage } from "./usage";
 
 /** Tenant view of the tenancy list: only the caller's own organisation, never other tenants. */
 export async function listTenancy(ctx: Ctx): Promise<TenancyDTO[]> {

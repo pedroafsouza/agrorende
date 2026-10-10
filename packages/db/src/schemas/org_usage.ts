@@ -1,1 +1,1 @@
-export { OrgUsageSchema } from "./index.js";
+export { OrgUsageSchema } from "./index";

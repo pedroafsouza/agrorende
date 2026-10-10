@@ -1,6 +1,6 @@
 import { collections, getDb, type OrgUsage } from "@agrorende/db";
 
-import type { OrgUsageDTO } from "./dto.js";
+import type { OrgUsageDTO } from "./dto";
 
 export type Db = Awaited<ReturnType<typeof getDb>>;
 

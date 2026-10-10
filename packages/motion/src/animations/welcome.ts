@@ -13,9 +13,9 @@ import {
   ellipse,
   shape,
   type ShapeItem,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { exhaustPuffs, tractor } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { exhaustPuffs, tractor } from "./parts";
 
 /** First-run welcome: the sun rises over green field rows while a small tractor drives in. */
 export function buildWelcome() {

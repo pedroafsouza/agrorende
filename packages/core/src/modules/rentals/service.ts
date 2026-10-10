@@ -2,16 +2,16 @@ import type { DamageDTO, RentalChargeDTO, RentalDTO } from "@agrorende/contracts
 import type { Tx } from "@agrorende/contracts/seams";
 import type { Damage, Rental, RentalCharge } from "@agrorende/db";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { next as nextNumber } from "../../numbering/index.js";
-import { createWorkOrderFromSource } from "../../seams.js";
-import { touchDependents } from "../../sync/touch.js";
-import { assertVersion, dbTx, newId, parseInput, stampCreate, stampUpdate, writeActivity } from "../assets/kit.js";
-import { getSummary, recomputeCondition } from "../assets/service.js";
-import { createAndIssueForRental } from "../billing/service.js";
-import { currentSeasonId } from "../seasons/service.js";
-import { assertInboundComplete } from "./inbound.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { next as nextNumber } from "../../numbering/index";
+import { createWorkOrderFromSource } from "../../seams";
+import { touchDependents } from "../../sync/touch";
+import { assertVersion, dbTx, newId, parseInput, stampCreate, stampUpdate, writeActivity } from "../assets/kit";
+import { getSummary, recomputeCondition } from "../assets/service";
+import { createAndIssueForRental } from "../billing/service";
+import { currentSeasonId } from "../seasons/service";
+import { assertInboundComplete } from "./inbound";
 import {
   DamagePatchInputSchema,
   DamageWorkOrderInputSchema,
@@ -29,7 +29,7 @@ import {
   type RentalCreateInput,
   type RentalExtendInput,
   type RentalUpdateInput,
-} from "./dto.js";
+} from "./dto";
 import {
   asSyncTx,
   assertDates,
@@ -50,9 +50,9 @@ import {
   toChargeDto,
   toDamageDto,
   touchAsset,
-} from "./internal.js";
+} from "./internal";
 
-export { toRentalDto } from "./internal.js";
+export { toRentalDto } from "./internal";
 
 const date = (value: string | Date): Date => (value instanceof Date ? value : new Date(value));
 

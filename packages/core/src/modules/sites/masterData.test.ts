@@ -1,15 +1,15 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { newId } from "../assets/kit.js";
-import { createAsset } from "../assets/service.js";
-import { createHarness, type Harness } from "../assets/testing/harness.js";
-import { getTemplate } from "../checklists/queries.js";
-import { createTemplate, defaultTemplateId, deleteTemplate, publishTemplate, snapshotPublished, updateTemplate } from "../checklists/service.js";
-import { getCustomer, listCustomers } from "../customers/queries.js";
-import { createCustomer, deleteCustomer, getForEligibility, updateCustomer } from "../customers/service.js";
-import { closeSeason, createSeason, criticalWindowFor, currentSeasonId, findCriticalWindow, updateSeason } from "../seasons/service.js";
-import { ringMetrics, validatePlotGeometry } from "./geometry.js";
-import { createPlot, createSite, deleteSite, getSummary, updateSite } from "./service.js";
+import { newId } from "../assets/kit";
+import { createAsset } from "../assets/service";
+import { createHarness, type Harness } from "../assets/testing/harness";
+import { getTemplate } from "../checklists/queries";
+import { createTemplate, defaultTemplateId, deleteTemplate, publishTemplate, snapshotPublished, updateTemplate } from "../checklists/service";
+import { getCustomer, listCustomers } from "../customers/queries";
+import { createCustomer, deleteCustomer, getForEligibility, updateCustomer } from "../customers/service";
+import { closeSeason, createSeason, criticalWindowFor, currentSeasonId, findCriticalWindow, updateSeason } from "../seasons/service";
+import { ringMetrics, validatePlotGeometry } from "./geometry";
+import { createPlot, createSite, deleteSite, getSummary, updateSite } from "./service";
 
 let h: Harness;
 

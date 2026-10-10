@@ -5,10 +5,10 @@ import type { EntityType } from "@agrorende/contracts/enums";
 import type { z } from "zod";
 import { AppError } from "@agrorende/contracts/errors";
 
-import { recordActivity } from "../../activity/index.js";
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import type { SyncTx } from "../../sync/types.js";
+import { recordActivity } from "../../activity/index";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import type { SyncTx } from "../../sync/types";
 
 /**
  * Shared helpers for the master-data modules owned by T04 (assets, sites, seasons,

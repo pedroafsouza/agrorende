@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { isValidCnpj, isValidCpf, isValidTaxId, maskTaxId, normalizeTaxId, taxIdKind } from "./validators.js";
+import { isValidCnpj, isValidCpf, isValidTaxId, maskTaxId, normalizeTaxId, taxIdKind } from "./validators";
 
 describe("CPF validation", () => {
   it("accepts a valid CPF", () => {

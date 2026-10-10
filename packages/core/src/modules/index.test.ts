@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import * as modules from "./index.js";
+import * as modules from "./index";
 
 describe("module barrel", () => {
   it("exports every foundation module service namespace", () => {

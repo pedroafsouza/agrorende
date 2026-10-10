@@ -40,7 +40,7 @@ import type {
   UserSchema,
   WorkOrderPartSchema,
   WorkOrderSchema,
-} from "./schemas/index.js";
+} from "./schemas/index";
 
 export type Uuid = string;
 export type Json = Record<string, unknown>;

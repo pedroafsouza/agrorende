@@ -1,10 +1,10 @@
 import type { Db } from "mongodb";
 
-import { closeClient, getDb } from "../src/client.js";
-import * as initial from "./0001_initial.js";
-import * as notificationPrefs from "./0002-T05-008.js";
-import * as perfQueryIndexes from "./0003-PERF-QUERIES.js";
-import * as dropRedundantIndexes from "./0004-DROP-REDUNDANT-INDEXES.js";
+import { closeClient, getDb } from "../src/client";
+import * as initial from "./0001_initial";
+import * as notificationPrefs from "./0002-T05-008";
+import * as perfQueryIndexes from "./0003-PERF-QUERIES";
+import * as dropRedundantIndexes from "./0004-DROP-REDUNDANT-INDEXES";
 
 interface MigrationRecord {
   readonly _id: string;

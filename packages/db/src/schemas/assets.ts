@@ -1,1 +1,1 @@
-export { AssetSchema } from "./index.js";
+export { AssetSchema } from "./index";

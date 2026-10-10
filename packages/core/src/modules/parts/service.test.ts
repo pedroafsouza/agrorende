@@ -3,9 +3,9 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
 import { ERROR_META } from "@agrorende/contracts/errors";
 
-import { addPart, removePart } from "../workOrders/parts.js";
-import { createManual } from "../workOrders/service.js";
-import { createSeededDb, ctxOf, PEOPLE, seedUuid, type SeededDb } from "../workOrders/testing/seeded.js";
+import { addPart, removePart } from "../workOrders/parts";
+import { createManual } from "../workOrders/service";
+import { createSeededDb, ctxOf, PEOPLE, seedUuid, type SeededDb } from "../workOrders/testing/seeded";
 import {
   createLocation,
   createMovement,
@@ -19,7 +19,7 @@ import {
   lowStockEntries,
   updatePart,
   type MovementLike,
-} from "./service.js";
+} from "./service";
 
 let db: SeededDb;
 const admin = ctxOf(PEOPLE.admin, "ADMIN");

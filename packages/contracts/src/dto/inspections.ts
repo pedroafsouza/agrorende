@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { InspectionTypeEnum, SignatureStatusEnum, SignerRoleEnum } from "../enums.js";
-import { AccessoryLineSchema, ChecklistItemSchema, ChecklistResponseSchema } from "../checklist.js";
-import { OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { InspectionTypeEnum, SignatureStatusEnum, SignerRoleEnum } from "../enums";
+import { AccessoryLineSchema, ChecklistItemSchema, ChecklistResponseSchema } from "../checklist";
+import { OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const InspectionDTOSchema = SyncDTOSchema.extend({
   type: InspectionTypeEnum,

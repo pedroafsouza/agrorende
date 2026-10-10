@@ -1,1 +1,1 @@
-export { CommentSchema } from "./index.js";
+export { CommentSchema } from "./index";

@@ -1,9 +1,9 @@
 import { AppError } from "@agrorende/contracts/errors";
 import type { ClientSession, Db } from "mongodb";
 
-import { getClient, getDb } from "./client.js";
-import { scoped, type ScopedDb, type TenantCtx } from "./scoped.js";
-import type { SyncCounter, Uuid } from "./types.js";
+import { getClient, getDb } from "./client";
+import { scoped, type ScopedDb, type TenantCtx } from "./scoped";
+import type { SyncCounter, Uuid } from "./types";
 
 export interface SyncTx {
   readonly session: ClientSession;

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { IntegerCentsSchema, IsoDateTimeSchema } from "./shared.js";
+import { IntegerCentsSchema, IsoDateTimeSchema } from "./shared";
 
 /** Cost roll-up wire shapes (ARCHITECTURE §8 Costs; change request T09-001). */
 

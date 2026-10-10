@@ -1,6 +1,6 @@
-import { circle, composition, ease, group, k, layer, palette, pivot, polyline, popInOut, rect, shape } from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBadge, phone } from "./parts.js";
+import { circle, composition, ease, group, k, layer, palette, pivot, polyline, popInOut, rect, shape } from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBadge, phone } from "./parts";
 
 /** Saved on the phone: a small clock ticks on the phone screen, then turns into a check. */
 export function buildSavedOnPhone() {

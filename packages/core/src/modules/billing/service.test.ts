@@ -3,9 +3,9 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { AppError } from "@agrorende/contracts/errors";
 import type { BillingStatus } from "@agrorende/contracts/enums";
 
-import { makeTestCtx } from "../../testing/ctx.js";
-import { newId } from "../assets/kit.js";
-import { ADMIN_ID, AGENT_ID, createHarness, customerRow, OTHER_ORG_ID, type Harness } from "../rentals/testing/harness.js";
+import { makeTestCtx } from "../../testing/ctx";
+import { newId } from "../assets/kit";
+import { ADMIN_ID, AGENT_ID, createHarness, customerRow, OTHER_ORG_ID, type Harness } from "../rentals/testing/harness";
 import {
   BILLING_TRANSITIONS,
   cancelBillingDocument,
@@ -17,7 +17,7 @@ import {
   previewBillingLines,
   renderBillingPdf,
   updateBillingDocument,
-} from "./service.js";
+} from "./service";
 
 let h: Harness;
 const admin = makeTestCtx({ userId: ADMIN_ID, role: "ADMIN" });

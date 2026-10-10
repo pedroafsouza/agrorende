@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { AssetConditionEnum, DutyStatusEnum, EntityTypeEnum, FieldReportStatusEnum, PriorityEnum, RentalDirectionEnum, WorkOrderStatusEnum } from "../enums.js";
-import { OperatorStateEnum } from "../realtime.js";
-import { IsoDateTimeSchema } from "./shared.js";
+import { AssetConditionEnum, DutyStatusEnum, EntityTypeEnum, FieldReportStatusEnum, PriorityEnum, RentalDirectionEnum, WorkOrderStatusEnum } from "../enums";
+import { OperatorStateEnum } from "../realtime";
+import { IsoDateTimeSchema } from "./shared";
 
 /** Ops Center read models (ARCHITECTURE §8 Ops, §14.3; change request T09-001). */
 

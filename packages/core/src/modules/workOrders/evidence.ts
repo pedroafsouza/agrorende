@@ -1,11 +1,11 @@
 import type { ChecklistItem, ChecklistResponse } from "@agrorende/contracts/checklist";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { createNotification, officeRecipients } from "../../notify/index.js";
-import { dbTx } from "../assets/kit.js";
-import { asSyncTx, isOffice, recordWoActivity, TERMINAL_STATUSES, type WorkOrderDoc } from "./common.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { createNotification, officeRecipients } from "../../notify/index";
+import { dbTx } from "../assets/kit";
+import { asSyncTx, isOffice, recordWoActivity, TERMINAL_STATUSES, type WorkOrderDoc } from "./common";
 
 export type EvidenceMode = "live" | "late";
 

@@ -1,13 +1,13 @@
 import { createLocalJWKSet, exportJWK, generateKeyPair, SignJWT, type JWK } from "jose";
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { setAuthConfigForTests } from "../../auth/config.js";
-import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit.js";
-import { signAccess } from "../../auth/tokens.js";
-import { setPlatformOidcDepsForTests, tenancyApi, type TenancyRouteKey } from "./api.js";
-import { setTenancyConfigForTests } from "./config.js";
-import { issueStaffSession } from "./platform.js";
-import { createTenancyDb, SEED, type TenancyTestDb } from "./testing.js";
+import { setAuthConfigForTests } from "../../auth/config";
+import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit";
+import { signAccess } from "../../auth/tokens";
+import { setPlatformOidcDepsForTests, tenancyApi, type TenancyRouteKey } from "./api";
+import { setTenancyConfigForTests } from "./config";
+import { issueStaffSession } from "./platform";
+import { createTenancyDb, SEED, type TenancyTestDb } from "./testing";
 
 const BASE = "http://localhost:3000";
 const ISSUER = "http://localhost:4003/google";

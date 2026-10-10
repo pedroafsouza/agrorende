@@ -1,1 +1,1 @@
-export { AuthLinkSchema } from "./index.js";
+export { AuthLinkSchema } from "./index";

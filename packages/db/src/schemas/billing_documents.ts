@@ -1,1 +1,1 @@
-export { BillingDocumentSchema } from "./index.js";
+export { BillingDocumentSchema } from "./index";

@@ -2,16 +2,16 @@ import { createHash, randomBytes } from "node:crypto";
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
 
-import { decryptAppleRefreshToken, revokeAppleRefreshToken } from "./apple.js";
-import { platformApi } from "./api/index.js";
-import { setAuthConfigForTests } from "./config.js";
-import { errorRedirect, readOAuthState } from "./oauth.js";
-import { setOAuthConfigForTests } from "./oidc.js";
-import { memoryRateLimiter, setRateLimiter } from "./rateLimit.js";
-import { mockIdToken, mockProviderLogin, type MockCallback } from "./testing/mockOidc.js";
-import { createNamedSeededDb, SEED, type SeededDb } from "./testing/seeded.js";
-import { signupOrganization } from "../modules/tenancy/service.js";
-import { setTenancyConfigForTests } from "../modules/tenancy/config.js";
+import { decryptAppleRefreshToken, revokeAppleRefreshToken } from "./apple";
+import { platformApi } from "./api/index";
+import { setAuthConfigForTests } from "./config";
+import { errorRedirect, readOAuthState } from "./oauth";
+import { setOAuthConfigForTests } from "./oidc";
+import { memoryRateLimiter, setRateLimiter } from "./rateLimit";
+import { mockIdToken, mockProviderLogin, type MockCallback } from "./testing/mockOidc";
+import { createNamedSeededDb, SEED, type SeededDb } from "./testing/seeded";
+import { signupOrganization } from "../modules/tenancy/service";
+import { setTenancyConfigForTests } from "../modules/tenancy/config";
 
 const BASE = "http://localhost:3000";
 const GOOGLE_ISSUER = "http://localhost:4003/google";

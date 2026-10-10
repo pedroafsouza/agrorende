@@ -13,9 +13,9 @@ import {
   type Key,
   type ShapeItem,
   type Vec2,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { keyIcon } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { keyIcon } from "./parts";
 
 const CENTER: Vec2 = [256, 262];
 const RADIUS = 150;

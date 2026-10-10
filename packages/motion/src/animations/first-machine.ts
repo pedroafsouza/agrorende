@@ -12,9 +12,9 @@ import {
   rect,
   shape,
   type Vec2,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { tractor } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { tractor } from "./parts";
 
 /** First machine: a tractor fades in and a label tag swings from its cab roof. */
 export function buildFirstMachine() {

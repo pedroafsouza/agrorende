@@ -3,10 +3,10 @@ import { AssetCategoryEnum, StockLocationTypeEnum, type StockLocationType, type 
 import { AppError } from "@agrorende/contracts/errors";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { assertVersion, dbTx, escapeRegex, newId, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity } from "../assets/kit.js";
-import type { PartDTO, StockLevelDTO, StockLevelRow, StockLocationDTO, StockLocationRow, StockMovementDTO } from "./dto.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { assertVersion, dbTx, escapeRegex, newId, parseInput, readDb, stampCreate, stampUpdate, toDto, writeActivity } from "../assets/kit";
+import type { PartDTO, StockLevelDTO, StockLevelRow, StockLocationDTO, StockLocationRow, StockMovementDTO } from "./dto";
 
 /**
  * Parts catalog, stock locations, stock levels and stock movements (ERP-05, ARCHITECTURE §8
@@ -545,4 +545,4 @@ export async function reverseWorkOrderOut(tx: Tx, ctx: Pick<Ctx, "userId">, work
   return outstanding;
 }
 
-export { lowStockEntries, type LowStockEntry } from "./low.js";
+export { lowStockEntries, type LowStockEntry } from "./low";

@@ -6,16 +6,16 @@ import { workOrderMachine } from "@agrorende/contracts/machines";
 import type { WorkOrderCompletePayload, WorkOrderSaveChecklistPayload, WorkOrderTransitionPayload } from "@agrorende/contracts/mutations";
 import type { Tx } from "@agrorende/contracts/seams";
 
-import type { Ctx } from "../../context.js";
-import { reject } from "../../errors.js";
-import { createNotification, officeRecipients } from "../../notify/index.js";
-import { rentalSeams } from "../../seams.js";
-import { dbTx, stampUpdate } from "../assets/kit.js";
-import { applyReadings, recomputeCondition } from "../assets/service.js";
-import { asSyncTx, emitWorkOrderChanged, loadWorkOrder, recordWoActivity, requireOffice, statusStamp, workOrderSettings, type WorkOrderDoc } from "./common.js";
-import { evidenceMode, failedSafetyItems, flagLateEvidence, mergeResponses } from "./evidence.js";
-import { partsCostCents } from "./parts.js";
-import { getForRole, notifyTitle, pokeUser } from "./service.js";
+import type { Ctx } from "../../context";
+import { reject } from "../../errors";
+import { createNotification, officeRecipients } from "../../notify/index";
+import { rentalSeams } from "../../seams";
+import { dbTx, stampUpdate } from "../assets/kit";
+import { applyReadings, recomputeCondition } from "../assets/service";
+import { asSyncTx, emitWorkOrderChanged, loadWorkOrder, recordWoActivity, requireOffice, statusStamp, workOrderSettings, type WorkOrderDoc } from "./common";
+import { evidenceMode, failedSafetyItems, flagLateEvidence, mergeResponses } from "./evidence";
+import { partsCostCents } from "./parts";
+import { getForRole, notifyTitle, pokeUser } from "./service";
 
 export interface FieldMeta {
   readonly occurredAt: Date;

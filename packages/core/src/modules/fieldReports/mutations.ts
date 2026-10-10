@@ -2,9 +2,9 @@ import { MUTATION_PAYLOADS } from "@agrorende/contracts/mutations";
 import type { FieldReportCreatePayload, FieldReportUpdatePayload, FieldReportWithdrawPayload } from "@agrorende/contracts/mutations";
 import type { MutationName } from "@agrorende/contracts/sync";
 
-import { ANY_ROLE } from "../../permissions.js";
-import type { MutationHandler } from "../../sync/types.js";
-import { createReport, updateReport, withdraw } from "./service.js";
+import { ANY_ROLE } from "../../permissions";
+import type { MutationHandler } from "../../sync/types";
+import { createReport, updateReport, withdraw } from "./service";
 
 const create: MutationHandler<FieldReportCreatePayload> = {
   schema: MUTATION_PAYLOADS["fieldReport.create"] as MutationHandler<FieldReportCreatePayload>["schema"],

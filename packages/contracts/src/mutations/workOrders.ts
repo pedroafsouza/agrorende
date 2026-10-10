@@ -1,8 +1,8 @@
 import { z } from "zod";
 
-import { ChecklistResponseSchema } from "../checklist.js";
-import { HoldReasonEnum, SignatureStatusEnum } from "../enums.js";
-import { DocumentLocaleSchema, UuidSchema } from "../sync.js";
+import { ChecklistResponseSchema } from "../checklist";
+import { HoldReasonEnum, SignatureStatusEnum } from "../enums";
+import { DocumentLocaleSchema, UuidSchema } from "../sync";
 
 /** Payload schemas for the `workOrder.*` mutations (ARCHITECTURE section 7.3). */
 

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { MediaTagEnum } from "../enums.js";
-import { MediaMetaSchema, UuidSchema } from "../sync.js";
+import { MediaTagEnum } from "../enums";
+import { MediaMetaSchema, UuidSchema } from "../sync";
 
 /** Payload schemas for the `media.*` mutations (ARCHITECTURE section 7.3). */
 

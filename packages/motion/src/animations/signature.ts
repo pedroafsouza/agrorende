@@ -14,9 +14,9 @@ import {
   type Key,
   type Vec2,
   type Vertex,
-} from "../lottie/builder.js";
-import { motionFrames, motionMeta } from "../meta.js";
-import { checkBadge } from "./parts.js";
+} from "../lottie/builder";
+import { motionFrames, motionMeta } from "../meta";
+import { checkBadge } from "./parts";
 
 function cubic(p0: Vec2, c1: Vec2, c2: Vec2, p1: Vec2, t: number): Vec2 {
   const u = 1 - t;

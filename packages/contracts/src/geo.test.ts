@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDestination } from "./geo.js";
+import { resolveDestination } from "./geo";
 
 describe("resolveDestination", () => {
   it("prefers the asset point", () => {

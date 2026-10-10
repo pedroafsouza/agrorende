@@ -3,10 +3,10 @@ import { closeClient, collection, getDb, withSyncTx } from "@agrorende/db";
 import { setupTestDb } from "@agrorende/db/testing";
 import { realtimeRedisChannel } from "@agrorende/contracts/realtime";
 
-import { recordActivity } from "../activity/index.js";
-import type { SyncTx } from "../sync/types.js";
-import { makeTestCtx } from "../testing/ctx.js";
-import { dispatchPending, emit, pendingEventIds } from "./index.js";
+import { recordActivity } from "../activity/index";
+import type { SyncTx } from "../sync/types";
+import { makeTestCtx } from "../testing/ctx";
+import { dispatchPending, emit, pendingEventIds } from "./index";
 
 const DB = "agrorende_w2gate_events";
 

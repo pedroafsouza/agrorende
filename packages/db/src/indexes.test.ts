@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { COLLECTION_NAMES } from "./collections.js";
-import { INDEXES, PERF_QUERY_INDEXES } from "./indexes.js";
-import { documentSchemas } from "./schemas/index.js";
+import { COLLECTION_NAMES } from "./collections";
+import { INDEXES, PERF_QUERY_INDEXES } from "./indexes";
+import { documentSchemas } from "./schemas/index";
 
 describe("db foundation metadata", () => {
   it("has one document schema per collection", () => {

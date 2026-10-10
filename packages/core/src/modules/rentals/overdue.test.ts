@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { dueSoonFilter, isDueSoon, isOverdue, overdueFilter } from "./overdue.js";
+import { dueSoonFilter, isDueSoon, isOverdue, overdueFilter } from "./overdue";
 
 const NOW = new Date("2026-11-11T12:00:00.000Z");
 const active = (plannedEnd: string) => ({ status: "ACTIVE" as const, plannedEnd: new Date(plannedEnd) });

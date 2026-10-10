@@ -1,6 +1,6 @@
 import type { CreateIndexesOptions, IndexSpecification } from "mongodb";
 
-import type { CollectionName } from "./types.js";
+import type { CollectionName } from "./types";
 
 export interface IndexDefinition {
   readonly collection: CollectionName;

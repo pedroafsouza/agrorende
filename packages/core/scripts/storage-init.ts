@@ -1,4 +1,4 @@
-import { initStorage } from "../src/storage/init.js";
+import { initStorage } from "../src/storage/init";
 
 async function main(): Promise<void> {
   const result = await initStorage();

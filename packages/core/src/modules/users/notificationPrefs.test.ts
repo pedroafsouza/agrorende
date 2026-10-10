@@ -1,11 +1,11 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import { loginHandler, meHandler, updateMeHandler } from "../../auth/api/auth.js";
-import { setAuthConfigForTests } from "../../auth/config.js";
-import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit.js";
-import { createNamedSeededDb, SEED, seedCtx, type SeededDb } from "../../auth/testing/seeded.js";
-import { toUserDto } from "./dto.js";
-import { mergeNotificationPrefs, updateNotificationPrefs, withNotificationPrefs } from "./notificationPrefs.js";
+import { loginHandler, meHandler, updateMeHandler } from "../../auth/api/auth";
+import { setAuthConfigForTests } from "../../auth/config";
+import { memoryRateLimiter, setRateLimiter } from "../../auth/rateLimit";
+import { createNamedSeededDb, SEED, seedCtx, type SeededDb } from "../../auth/testing/seeded";
+import { toUserDto } from "./dto";
+import { mergeNotificationPrefs, updateNotificationPrefs, withNotificationPrefs } from "./notificationPrefs";
 
 /** Push mute settings on the caller's own user (change request T05-008). */
 

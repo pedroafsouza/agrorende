@@ -1,9 +1,9 @@
 import type { Tx } from "@agrorende/contracts/seams";
 import type { Rental } from "@agrorende/db";
 
-import { reject } from "../../errors.js";
-import { dbTx } from "../assets/kit.js";
-import { getSummary } from "../assets/service.js";
+import { reject } from "../../errors";
+import { dbTx } from "../assets/kit";
+import { getSummary } from "../assets/service";
 
 export type InboundGap = "supplier" | "partnerAsset" | "site" | "season";
 

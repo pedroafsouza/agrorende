@@ -1,1 +1,1 @@
-export { ChecklistTemplateSchema } from "./index.js";
+export { ChecklistTemplateSchema } from "./index";

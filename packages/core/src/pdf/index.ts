@@ -1,4 +1,4 @@
-import type { Ctx } from "../context.js";
+import type { Ctx } from "../context";
 
 /** Renders the check-out or check-in PDF of a rental (RN-05). Delegates to the rentals module, which loads the data. */
 export async function renderRentalDocument(
@@ -6,11 +6,11 @@ export async function renderRentalDocument(
   rentalId: string,
   kind: "checkout" | "checkin" = "checkout",
 ): Promise<Uint8Array> {
-  const { renderRentalPdf } = await import("../modules/rentals/queries.js");
+  const { renderRentalPdf } = await import("../modules/rentals/queries");
   const { bytes } = await renderRentalPdf(ctx, rentalId, kind);
   return bytes;
 }
 
-export { renderRentalCheckin } from "./rentalCheckin.js";
-export { renderPdfNode, renderRentalCheckout } from "./rentalCheckout.js";
-export { renderWorkOrderReport } from "./workOrderReport.js";
+export { renderRentalCheckin } from "./rentalCheckin";
+export { renderPdfNode, renderRentalCheckout } from "./rentalCheckout";
+export { renderWorkOrderReport } from "./workOrderReport";

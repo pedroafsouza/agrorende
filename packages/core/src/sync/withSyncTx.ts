@@ -1,7 +1,7 @@
 import { withSyncTx as dbWithSyncTx } from "@agrorende/db";
 
-import type { Ctx } from "../context.js";
-import type { SyncTx } from "./types.js";
+import type { Ctx } from "../context";
+import type { SyncTx } from "./types";
 
 export async function withSyncTx<T>(
   ctx: Ctx,

@@ -1,7 +1,7 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildAll, serialize } from "./animations/registry.js";
+import { buildAll, serialize } from "./animations/registry";
 
 const outDir = join(dirname(fileURLToPath(import.meta.url)), "..", "lottie");
 mkdirSync(outDir, { recursive: true });

@@ -1,7 +1,7 @@
 import type { Role } from "@agrorende/contracts/enums";
 
-import type { ExportEntity, ExportFilters } from "./dto.js";
-import type { ExportHeaderKey } from "./headers.js";
+import type { ExportEntity, ExportFilters } from "./dto";
+import type { ExportHeaderKey } from "./headers";
 
 export type ColumnKind = "text" | "date" | "cents" | "number" | "bool";
 export type ExportRow = Readonly<Record<string, unknown>>;

@@ -1,7 +1,7 @@
 import type { Db } from "mongodb";
 
-import { collection, COLLECTION_NAMES } from "./collections.js";
-import { INDEXES } from "./indexes.js";
+import { collection, COLLECTION_NAMES } from "./collections";
+import { INDEXES } from "./indexes";
 
 export async function ensureIndexes(db: Db): Promise<number> {
   for (const name of COLLECTION_NAMES) {

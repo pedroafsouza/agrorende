@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 
-import * as perfMigration from "../migrations/0003-PERF-QUERIES.js";
-import * as dropRedundant from "../migrations/0004-DROP-REDUNDANT-INDEXES.js";
-import { closeClient } from "./client.js";
-import { INDEXES, PERF_QUERY_INDEXES, REDUNDANT_INDEXES } from "./indexes.js";
-import { setupTestDb, type TestDbHandle } from "./testing/setupTestDb.js";
+import * as perfMigration from "../migrations/0003-PERF-QUERIES";
+import * as dropRedundant from "../migrations/0004-DROP-REDUNDANT-INDEXES";
+import { closeClient } from "./client";
+import { INDEXES, PERF_QUERY_INDEXES, REDUNDANT_INDEXES } from "./indexes";
+import { setupTestDb, type TestDbHandle } from "./testing/setupTestDb";
 
 process.env.MONGODB_URI ??= "mongodb://localhost:27017/?replicaSet=rs0";
 

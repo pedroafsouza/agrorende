@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { DeliveryModeEnum, FuelPolicyEnum, RateUnitEnum, RentalDirectionEnum, RentalStatusEnum } from "../enums.js";
-import { TaxIdTypeSchema } from "./customers.js";
-import { IsoDateTimeSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared.js";
+import { DeliveryModeEnum, FuelPolicyEnum, RateUnitEnum, RentalDirectionEnum, RentalStatusEnum } from "../enums";
+import { TaxIdTypeSchema } from "./customers";
+import { IsoDateTimeSchema, OptionalDateTimeSchema, OptionalIntegerCentsSchema, OptionalNumberSchema, OptionalStringSchema, OptionalUuidSchema, SyncDTOSchema, UuidSchema } from "./shared";
 
 export const RentalCustomerSnapshotSchema = z.object({
   id: UuidSchema,

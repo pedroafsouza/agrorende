@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { AssetCategoryEnum } from "../enums.js";
-import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalIntegerCentsSchema, SyncDTOSchema } from "./shared.js";
+import { AssetCategoryEnum } from "../enums";
+import { OptionalDateTimeSchema, OptionalNumberSchema, OptionalIntegerCentsSchema, SyncDTOSchema } from "./shared";
 
 export const PartDTOSchema = SyncDTOSchema.extend({
   sku: z.string(),

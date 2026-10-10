@@ -1,1 +1,1 @@
-export { StockLevelSchema } from "./index.js";
+export { StockLevelSchema } from "./index";

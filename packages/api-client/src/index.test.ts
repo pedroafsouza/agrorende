@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { AgrorendeApiClient, type FetchLike } from "./index.js";
+import { AgrorendeApiClient, type FetchLike } from "./index";
 
 describe("AgrorendeApiClient", () => {
   it("builds API URLs and injects bearer tokens", async () => {

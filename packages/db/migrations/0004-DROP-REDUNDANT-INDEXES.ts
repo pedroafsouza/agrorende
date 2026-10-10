@@ -1,6 +1,6 @@
 import type { Db } from "mongodb";
 
-import { REDUNDANT_INDEXES } from "../src/indexes.js";
+import { REDUNDANT_INDEXES } from "../src/indexes";
 
 export const id = "0004-DROP-REDUNDANT-INDEXES";
 
