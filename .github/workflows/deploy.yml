@@ -211,7 +211,7 @@ jobs:
         run: bash infra/scripts/validate-env.sh "$TARGET" "$ENV_FILE"
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11.0.9
 
