@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   // Dev only: keep compiled pages in memory for an hour so long sessions (and the E2E suite) do not
   // recompile and reload a page that was disposed after the default 60 seconds of inactivity.
   onDemandEntries: { maxInactiveAge: 60 * 60 * 1000, pagesBufferLength: 100 },
-  transpilePackages: ["@agrorende/contracts", "@agrorende/core", "@agrorende/db", "@agrorende/design-tokens", "@agrorende/i18n", "@agrorende/api-client"],
+  transpilePackages: ["@agrorende/contracts", "@agrorende/core", "@agrorende/db", "@agrorende/design-tokens", "@agrorende/i18n", "@agrorende/api-client", "@agrorende/motion"],
   // Native and Node-only server dependencies are loaded from node_modules at runtime instead of bundled.
   serverExternalPackages: ["@node-rs/argon2", "mongodb", "bullmq", "ioredis", "sharp", "qrcode"],
   // The workspace packages use ESM `.js` specifiers for `.ts` sources (change request T04-005).

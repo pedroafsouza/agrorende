@@ -22,7 +22,7 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   // Inlining the ~35 KB stylesheet removes a render-blocking round trip on slow mobile networks.
   experimental: { inlineCss: true },
-  transpilePackages: ["@agrorende/contracts", "@agrorende/design-tokens", "@agrorende/i18n"],
+  transpilePackages: ["@agrorende/contracts", "@agrorende/design-tokens", "@agrorende/i18n", "@agrorende/motion"],
   // The workspace packages use ESM `.js` specifiers for `.ts` sources (change request T04-005).
   webpack: (config: { resolve: { extensionAlias?: Record<string, string[]> } }) => {
     config.resolve.extensionAlias = { ".js": [".ts", ".tsx", ".js"], ".mjs": [".mts", ".mjs"] };
