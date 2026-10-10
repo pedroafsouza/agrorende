@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import type * as Motion from "@agrorende/motion";
+import type * as Motion from "@agrorende/motion/lazy";
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -13,12 +13,12 @@ const player = {
 const loadPlayer = vi.fn((_params: { loop: boolean; renderer: string; autoplay: boolean }) => player);
 
 vi.mock("lottie-web/build/player/lottie_light", () => ({ default: { loadAnimation: loadPlayer } }));
-vi.mock("@agrorende/motion", async (importOriginal) => {
+vi.mock("@agrorende/motion/lazy", async (importOriginal) => {
   const actual = await importOriginal<MotionModule>();
   return { ...actual, loadAnimation: vi.fn(() => Promise.resolve({ v: "5.12.0", layers: [] })) };
 });
 
-import { motionMeta } from "@agrorende/motion";
+import { motionMeta } from "@agrorende/motion/lazy";
 
 import { Lottie, needsPauseControl } from "./Lottie";
 

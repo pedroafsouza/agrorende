@@ -1,7 +1,7 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 
-import { type AnimationId } from "@agrorende/motion";
+import type { AnimationId } from "@agrorende/motion/lazy";
 import { Check } from "lucide-react";
 
 import { Animation } from "@/components/Animation";

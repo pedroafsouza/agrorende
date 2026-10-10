@@ -1,4 +1,4 @@
-import { type AnimationId } from "@agrorende/motion";
+import type { AnimationId } from "@agrorende/motion/lazy";
 
 import { type SiteLocale } from "@/lib/locales";
 import { getTranslator } from "@/i18n/messages";

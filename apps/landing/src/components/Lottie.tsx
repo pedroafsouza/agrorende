@@ -1,6 +1,6 @@
 "use client";
 
-import { type AnimationId, loadAnimation, motionMeta } from "@agrorende/motion";
+import { type AnimationId, loadAnimation, motionMeta } from "@agrorende/motion/lazy";
 import { useEffect, useRef, useState } from "react";
 
 /** Looping animations that run longer than this get a pause button (WCAG 2.2.2). */

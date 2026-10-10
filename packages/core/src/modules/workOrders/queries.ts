@@ -98,7 +98,7 @@ async function pageDatedThenUndated(scoped: ReturnType<typeof dbTx>, filter: Rec
   const dated = (await wo.find(datedFilter, { sort: LIST_SORT, skip: offset, limit: take }).toArray()) as WorkOrderDoc[];
   // A due-date range already excludes undated jobs.
   if (dated.length === take || filter.dueAt !== undefined) return dated;
-  const datedTotal = dated.length > 0 || offset === 0 ? offset + dated.length : (await wo.find(datedFilter, { projection: { _id: 1 } }).toArray()).length;
+  const datedTotal = dated.length > 0 || offset === 0 ? offset + dated.length : await wo.countDocuments(datedFilter);
   const undated = (await wo
     .find({ ...filter, dueAt: null }, { sort: LIST_SORT, skip: Math.max(0, offset - datedTotal), limit: take - dated.length })
     .toArray()) as WorkOrderDoc[];

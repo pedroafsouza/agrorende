@@ -3,6 +3,7 @@
  * captions and the scene lengths come from measured durations.
  */
 import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
 import { existsSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -29,6 +30,11 @@ export interface SceneAudio {
   readonly duration: number;
 }
 
+/** Short content hash of the voice, the rate and the sentence, so a changed sentence or voice is never served from cache. */
+export function ttsCacheKey(voice: string, rate: number, text: string): string {
+  return createHash("sha256").update(`${voice}\u0000${rate}\u0000${text}`).digest("hex").slice(0, 12);
+}
+
 export function probeDuration(file: string): number {
   const out = execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", file]).toString().trim();
   return Number(out);
@@ -38,7 +44,7 @@ export function synthesise(force = false): SceneAudio[] {
   const result: SceneAudio[] = [];
   for (const scene of allScenes()) {
     const sentences: SentenceAudio[] = scene.sentences.map((text, index) => {
-      const base = join(paths.tts, `${scene.id}-${String(index + 1).padStart(2, "0")}`);
+      const base = join(paths.tts, `${scene.id}-${String(index + 1).padStart(2, "0")}-${ttsCacheKey(VOICE, RATE, text)}`);
       const wav = `${base}.wav`;
       if (force || !existsSync(wav)) {
         execFileSync("say", ["-v", VOICE, "-r", String(RATE), "-o", `${base}.aiff`, text]);

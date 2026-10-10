@@ -10,7 +10,7 @@ describe("db foundation metadata", () => {
   });
 
   it("includes every architecture index definition", () => {
-    expect(INDEXES).toHaveLength(61 + PERF_QUERY_INDEXES.length);
+    expect(INDEXES).toHaveLength(59 + PERF_QUERY_INDEXES.length);
     expect(PERF_QUERY_INDEXES).toHaveLength(11);
     expect(INDEXES.filter((index) => index.options?.expireAfterSeconds !== undefined)).toHaveLength(3);
   });

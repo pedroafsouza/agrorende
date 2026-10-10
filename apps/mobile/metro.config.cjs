@@ -4,6 +4,7 @@
 // `.ts` files on its own, so relative `.js` requests are retried without the extension first.
 const { getDefaultConfig } = require("expo/metro-config");
 const http = require("node:http");
+const https = require("node:https");
 const path = require("node:path");
 
 const config = getDefaultConfig(__dirname);
@@ -42,25 +43,41 @@ config.resolver.resolveRequest = (context, moduleName, platform) => {
  * Native bundles are unaffected: the headers are harmless and the proxy only matches `/api/`.
  */
 const apiProxy = process.env.AGRORENDE_WEB_API_PROXY;
+
+/** Joins the request path onto the proxy URL, keeping any path prefix the proxy URL has (`http://host/prefix`). */
+function proxyTarget(base, requestUrl) {
+  const target = new URL(base);
+  if (target.protocol !== "http:" && target.protocol !== "https:") throw new Error(`unsupported proxy protocol ${target.protocol}`);
+  const incoming = new URL(requestUrl, "http://metro.invalid");
+  target.pathname = `${target.pathname.replace(/\/+$/u, "")}${incoming.pathname}`;
+  target.search = incoming.search;
+  return target;
+}
 config.server = {
   ...config.server,
   enhanceMiddleware: (middleware) => (req, res, next) => {
     res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
     res.setHeader("Cross-Origin-Embedder-Policy", "credentialless");
     if (apiProxy !== undefined && apiProxy !== "" && typeof req.url === "string" && req.url.startsWith("/api/")) {
-      const target = new URL(req.url, apiProxy);
-      const headers = { ...req.headers, host: target.host };
-      delete headers.origin;
-      const upstream = http.request(target, { method: req.method, headers }, (upstreamRes) => {
-        res.writeHead(upstreamRes.statusCode ?? 502, upstreamRes.headers);
-        upstreamRes.pipe(res);
-      });
-      upstream.on("error", (error) => {
-        process.stderr.write(`[web api proxy] ${req.method} ${target.pathname} failed: ${error.message}\n`);
+      const fail = (message) => {
+        process.stderr.write(`[web api proxy] ${req.method} ${req.url.split("?")[0]} failed: ${message}\n`);
         if (!res.headersSent) res.writeHead(502);
         res.end();
-      });
-      req.pipe(upstream);
+      };
+      try {
+        const target = proxyTarget(apiProxy, req.url);
+        const transport = target.protocol === "https:" ? https : http;
+        const headers = { ...req.headers, host: target.host };
+        delete headers.origin;
+        const upstream = transport.request(target, { method: req.method, headers }, (upstreamRes) => {
+          res.writeHead(upstreamRes.statusCode ?? 502, upstreamRes.headers);
+          upstreamRes.pipe(res);
+        });
+        upstream.on("error", (error) => fail(error.message));
+        req.pipe(upstream);
+      } catch (error) {
+        fail(typeof error?.message === "string" ? error.message : String(error));
+      }
       return;
     }
     return middleware(req, res, next);

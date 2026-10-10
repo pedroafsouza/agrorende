@@ -1,6 +1,7 @@
 import type {
   ClientSession,
   Collection,
+  CountDocumentsOptions,
   DeleteResult,
   Document,
   FindCursor,
@@ -47,6 +48,10 @@ export class ScopedCollection<T extends { organizationId: Uuid }> {
 
   async findOne(filter: ScopedFilter<T>, options: FindOptions = {}): Promise<WithId<T> | null> {
     return this.#collection.findOne(this.#withOrg(filter), this.#withSession(options));
+  }
+
+  async countDocuments(filter?: ScopedFilter<T>, options: CountDocumentsOptions = {}): Promise<number> {
+    return this.#collection.countDocuments(this.#withOrg(filter ?? ({} as ScopedFilter<T>)), this.#withSession(options));
   }
 
   async insertOne(document: OptionalUnlessRequiredId<T>): Promise<InsertOneResult<T>> {

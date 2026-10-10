@@ -7,7 +7,7 @@
  * narration is loudness-normalised, and WebVTT captions are written from the measured sentence times.
  */
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { PHONE_BEZEL, PHONE_FRAME } from "./assets.ts";
@@ -235,5 +235,6 @@ export function cut(): void {
   const size = statSync(mp4).size / (1024 * 1024);
   console.log(`  ${mp4} ${clock.toFixed(1)}s ${size.toFixed(1)} MB`);
   if (size > 12) throw new Error(`The highlights cut is ${size.toFixed(1)} MB, above the 12 MB budget.`);
-  if (!existsSync(paths.finalVtt)) copyFileSync(join(paths.landingDir, "agrorende-demo-pt-BR.vtt"), paths.finalVtt);
+  // The full film writes its own captions; the highlights captions use a different timeline, so never substitute them.
+  if (!existsSync(paths.finalVtt)) throw new Error(`Missing ${paths.finalVtt}: compose the full film before the highlights cut.`);
 }

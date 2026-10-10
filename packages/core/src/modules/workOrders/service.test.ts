@@ -381,6 +381,66 @@ describe("queries and suggestions", () => {
     expect(jumped.items.map((item) => item.id)).toEqual(expected.slice(datedCount + 1, datedCount + 3));
   });
 
+  async function pageAll(filters: Parameters<typeof list>[2], limit: number): Promise<{ ids: string[]; pages: Array<Awaited<ReturnType<typeof list>>> }> {
+    const pages: Array<Awaited<ReturnType<typeof list>>> = [];
+    let cursor: string | null = null;
+    do {
+      const page: Awaited<ReturnType<typeof list>> = await db.run((tx) => list(tx, admin, { ...filters, limit, cursor }));
+      pages.push(page);
+      cursor = page.nextCursor;
+    } while (cursor !== null && pages.length < 200);
+    return { ids: pages.flatMap((page) => page.items.map((item) => item.id)), pages };
+  }
+
+  it("pages due=week through dated active jobs only and ends with a null cursor", async () => {
+    const undated = await freshJob(436);
+    await db.raw("work_orders").updateOne({ _id: undated }, { $set: { dueAt: null } });
+    const horizon = Date.now() + 7 * 24 * 3_600_000;
+    const { ids, pages } = await pageAll({ due: "week" }, 2);
+    const rows = (await db.raw("work_orders").find({ _id: { $in: ids } }).toArray()) as Array<{ _id: string; dueAt?: Date | null; status: string }>;
+    expect(ids.length).toBeGreaterThan(0);
+    expect(rows).toHaveLength(ids.length);
+    expect(new Set(ids).size).toBe(ids.length);
+    expect(ids).not.toContain(undated);
+    expect(rows.every((row) => row.dueAt instanceof Date && row.dueAt.getTime() < horizon)).toBe(true);
+    expect(rows.every((row) => !["COMPLETED", "VERIFIED", "CANCELLED"].includes(row.status))).toBe(true);
+    expect(pages.at(-1)?.nextCursor).toBeNull();
+    const dueTimes = ids.map((id) => rows.find((row) => row._id === id)?.dueAt?.getTime() ?? Number.NaN);
+    expect(dueTimes).toEqual([...dueTimes].sort((a, b) => a - b));
+  });
+
+  it("returns an empty page and a null cursor when the cursor is past the total", async () => {
+    for (const filters of [{}, { due: "week" }, { due: "atRisk" }, { assigneeId: "none" }]) {
+      const page = await db.run((tx) => list(tx, admin, { ...filters, limit: 5, cursor: "100000" }));
+      expect(page.items).toEqual([]);
+      expect(page.nextCursor).toBeNull();
+    }
+  });
+
+  it("keeps undated jobs last when searching unassigned jobs", async () => {
+    const created: string[] = [];
+    for (const [assetIndex, title] of [[433, "Zebra pump A"], [434, "Zebra pump B"], [435, "Zebra pump C"]] as const) {
+      created.push((await db.run((tx) => createManual(tx, admin, { type: "CORRECTIVE", priority: "LOW", title, assetId: seedUuid(assetIndex) }))).id);
+    }
+    const [undated, later, sooner] = created as [string, string, string];
+    await db.raw("work_orders").updateOne({ _id: undated }, { $set: { dueAt: null, assigneeId: null } });
+    await db.raw("work_orders").updateOne({ _id: later }, { $set: { dueAt: new Date(Date.now() + 5 * 86_400_000), assigneeId: null } });
+    await db.raw("work_orders").updateOne({ _id: sooner }, { $set: { dueAt: new Date(Date.now() + 2 * 86_400_000), assigneeId: null } });
+    const { ids, pages } = await pageAll({ q: "zebra pump", assigneeId: "none" }, 1);
+    expect(ids).toEqual([sooner, later, undated]);
+    expect(pages.at(-1)?.nextCursor).toBeNull();
+  });
+
+  it("pages due=atRisk over the in-memory SLA-filtered list", async () => {
+    const all = await db.run((tx) => list(tx, admin, { due: "atRisk", limit: 100 }));
+    expect(all.items.length).toBeGreaterThan(1);
+    expect(all.items.every((item) => item.sla === "AT_RISK" || item.sla === "BREACHED")).toBe(true);
+    const { ids, pages } = await pageAll({ due: "atRisk" }, 1);
+    expect(ids).toEqual(all.items.map((item) => item.id));
+    expect(pages.slice(0, -1).every((page) => page.nextCursor !== null && page.items.length === 1)).toBe(true);
+    expect(pages.at(-1)?.nextCursor).toBeNull();
+  });
+
   it("ranks Carlos first for an engine report (A§6.4)", async () => {
     const result = await db.run((tx) =>
       suggestTechnicians(tx, admin, { fieldReportId: seedUuid(1015) }, { lastFixes: async () => new Map([[PEOPLE.carlos, { userId: PEOPLE.carlos, lat: -21.1, lng: -47.8, recordedAt: new Date() }]]) }),

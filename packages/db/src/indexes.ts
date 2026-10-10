@@ -40,7 +40,6 @@ const ARCHITECTURE_INDEXES: readonly IndexDefinition[] = [
   index("assets", { organizationId: 1, code: 1 }, { unique: true }),
   index("field_reports", { organizationId: 1, syncVersion: 1 }),
   index("work_orders", { organizationId: 1, syncVersion: 1 }),
-  index("work_orders", { organizationId: 1, status: 1 }),
   index("work_orders", { organizationId: 1, assigneeId: 1 }),
   index("work_order_parts", { organizationId: 1, syncVersion: 1 }),
   index("comments", { organizationId: 1, syncVersion: 1 }),
@@ -60,7 +59,6 @@ const ARCHITECTURE_INDEXES: readonly IndexDefinition[] = [
   index("location_pings", { userId: 1, recordedAt: 1 }, { unique: true }),
   index("location_pings", { recordedAt: 1 }, { expireAfterSeconds: 2_592_000 }),
   index("activity_events", { organizationId: 1, syncVersion: 1 }),
-  index("activity_events", { organizationId: 1, occurredAt: 1 }),
   index("activity_events", { entityType: 1, entityId: 1 }),
   index("notifications", { organizationId: 1, syncVersion: 1 }),
   index("notifications", { userId: 1, readAt: 1 }),
@@ -98,6 +96,15 @@ export const PERF_QUERY_INDEXES: readonly IndexDefinition[] = [
   index("rental_charges", { rentalId: 1, isAuto: -1, createdAt: 1, _id: 1 }),
   index("rentals", { organizationId: 1, plannedStart: -1, _id: 1 }),
   index("media", { organizationId: 1, status: 1, createdAt: 1 }),
+];
+
+/**
+ * Indexes superseded by a PERF_QUERY_INDEXES entry that shares their key prefix. Migration
+ * 0004-DROP-REDUNDANT-INDEXES drops them from databases created before they were removed.
+ */
+export const REDUNDANT_INDEXES: readonly IndexDefinition[] = [
+  index("work_orders", { organizationId: 1, status: 1 }),
+  index("activity_events", { organizationId: 1, occurredAt: 1 }),
 ];
 
 export const INDEXES: readonly IndexDefinition[] = [...ARCHITECTURE_INDEXES, ...PERF_QUERY_INDEXES];
