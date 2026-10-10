@@ -22,7 +22,7 @@
     "@agrorende/i18n": "workspace:*",
     "@agrorende/motion": "workspace:*",
     "lottie-web": "^5.13.0",
-    "lucide-react": "^0.561.0",
+    "lucide-react": "^0.577.0",
     "next": "16.3.8",
     "next-intl": "^4.6.0",
     "react": "catalog:",
