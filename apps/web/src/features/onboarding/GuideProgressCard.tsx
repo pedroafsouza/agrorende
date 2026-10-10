@@ -2,15 +2,14 @@
 
 import { ArrowRight, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 
 import { Lottie } from "@/components/motion/Lottie";
 import { showUndoToast } from "@/components/recovery/UndoToast";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { useMe } from "@/features/shell/useMe";
 
+import { useGuideModal } from "./GuideModal";
 import { useGuideState } from "./guideStorage";
 import { useGuideProgress } from "./useGuideProgress";
 
@@ -20,24 +19,16 @@ export const GUIDE_HREF = "/getting-started";
  * Compact "Primeiros passos: 2 de 4 tarefas" card for the overview (SIMPLER-TO-SELL §4). ADMIN
  * only; it disappears when every task is done, when the admin hides it or finishes the guide.
  * Hiding offers an undo toast, and the guide stays reachable from the user menu and the command
- * palette. A brand-new organisation (no machines yet) is taken to the guide once, automatically.
+ * palette. "Continuar" opens the guide modal; `GuideModalProvider` offers it once to a brand-new
+ * organisation.
  */
 export function GuideProgressCard() {
   const t = useTranslations("tenancy.guide");
-  const router = useRouter();
+  const guide = useGuideModal();
   const me = useMe();
   const isAdmin = me.data?.user.role === "ADMIN";
   const progress = useGuideProgress(isAdmin);
   const { state, ready, update } = useGuideState(me.data?.org?.id ?? me.data?.user.id);
-  const brandNew = progress.isReady && !progress.tasks.machine;
-  const shouldOffer = isAdmin && ready && brandNew && state.offered !== true && state.dismissed !== true && state.finished !== true;
-
-  useEffect(() => {
-    if (!shouldOffer) return;
-    update({ offered: true });
-    router.replace(GUIDE_HREF);
-  }, [router, shouldOffer, update]);
-
   if (!isAdmin || !ready || !progress.isReady || progress.complete || state.dismissed === true || state.finished === true) return null;
   const percent = Math.round((progress.done / progress.total) * 100);
   const hide = () => {
@@ -67,10 +58,17 @@ export function GuideProgressCard() {
         </div>
       </div>
       <div className="flex shrink-0 flex-wrap items-center gap-2">
-        <Link className={buttonVariants({ variant: "primary" })} href={GUIDE_HREF}>
-          {t("card.continue")}
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </Link>
+        {guide === null ? (
+          <Link className={buttonVariants({ variant: "primary" })} href={GUIDE_HREF}>
+            {t("card.continue")}
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Link>
+        ) : (
+          <Button aria-haspopup="dialog" data-testid="guide-card-open" onClick={guide.open} variant="primary">
+            {t("card.continue")}
+            <ArrowRight aria-hidden="true" className="size-4" />
+          </Button>
+        )}
         <Button icon={<X aria-hidden="true" className="size-4" />} onClick={hide} variant="ghost">
           {t("card.hide")}
         </Button>

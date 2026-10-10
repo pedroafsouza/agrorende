@@ -6,6 +6,7 @@ import { RouteMotionProvider } from "@/components/feedback/RouteMotion";
 import { Providers } from "@/components/shell/Providers";
 import { ShellIntlProvider } from "@/components/shell/IntlProvider";
 import { CommandPalette } from "@/features/command-palette";
+import { GuideModalProvider } from "@/features/onboarding/GuideModal";
 import { AdminShell } from "@/features/shell/AdminShell";
 import { EnvRibbon } from "@/features/shell/EnvRibbon";
 import { OfficeRoleRequired } from "@/features/shell/OfficeRoleRequired";
@@ -24,10 +25,12 @@ export default async function AdminLayout({ children }: { readonly children: Rea
         {session?.role === "FIELD" ? (
           <OfficeRoleRequired />
         ) : (
-          <AdminShell banner={<OrgBanner supportWhatsApp={supportWhatsApp()} />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
-            <RouteMotionProvider>{children}</RouteMotionProvider>
-            <CommandPalette />
-          </AdminShell>
+          <GuideModalProvider>
+            <AdminShell banner={<OrgBanner supportWhatsApp={supportWhatsApp()} />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
+              <RouteMotionProvider>{children}</RouteMotionProvider>
+              <CommandPalette />
+            </AdminShell>
+          </GuideModalProvider>
         )}
       </Providers>
     </ShellIntlProvider>

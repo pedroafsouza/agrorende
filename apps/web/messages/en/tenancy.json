@@ -65,7 +65,8 @@
       "back": "Back",
       "skip": "Skip this step",
       "later": "Continue later",
-      "toOverview": "Go to the overview"
+      "toOverview": "Go to the overview",
+      "close": "Close"
     },
     "welcome": {
       "title": "Welcome to AgroRende, {name}",

@@ -1,7 +1,7 @@
-# ADMIN-POLISH · SELL review fixes, notifications flyout, centred search, brand block and demo indicator
+# ADMIN-POLISH · SELL review fixes, notifications flyout, centred search, brand block, demo indicator and guide modal
 
 Status: DONE_WITH_GAPS
-Wave: polish · Agent finished: 2026-10-10 13:45
+Wave: polish · Agent finished: 2026-10-10 13:45 · Job G (guide modal) finished: 2026-10-10 14:45
 
 Scope after the fleet re-scope: jobs A (SELL review fixes), B (bell flyout), E (centred search and palette placement) and F (brand block and demo indicator). Job C (spacing pass for /ops, the /notifications page list and the page context panel) moved to the `ops-clean` agent. Job D (route progress, page transitions, loading skeletons, Button `pending`) moved to the `page-motion` agent. Neither was done here.
 
@@ -36,6 +36,30 @@ Scope after the fleet re-scope: jobs A (SELL review fixes), B (bell flyout), E (
   - A thin demo banner, "Você está no ambiente de demonstração. Os dados são fictícios.", sits under the top bar. It can be closed for the browser session (`sessionStorage`).
   - Messages are in pt-BR and en under `admin.shell.demo.*`.
 
+- G · "Primeiros passos" as a floating modal (`apps/web/src/features/onboarding/GuideModal.tsx`, `GettingStartedRoute.tsx`, `GuidePage.tsx`, `guideStorage.ts`).
+  - `GuideModalProvider` wraps the admin shell in `app/(admin)/layout.tsx` and exposes `useGuideModal()` (`open`, `close`, `isOpen`). It returns `null` outside the provider, so callers fall back to a link to `/getting-started`.
+  - Opening:
+    - It opens by itself once for a brand-new organisation. This uses the same `agrorende.guide.v1.<orgId>` state and the same `offered` flag; the overview card no longer redirects.
+    - On demand it opens from the user menu (now a button), the command palette action, and the overview card's "Continuar".
+    - `/getting-started` (`GettingStartedRoute`): an ADMIN gets the modal opened over `/ops` (`router.replace("/ops")`). Other roles, and any render without the provider, get the page (`GuidePage`), as before.
+  - Desktop: a centred dialog up to 720 px wide (`45rem`) with a dimmed, blurred backdrop.
+    - Enter: fade, scale 0.96→1 and an 8 px rise over 220 ms on a spring-like curve.
+    - Exit: 150 ms ease-in.
+  - At 390 px it is a bottom sheet: full width, a drag-handle visual, max 90dvh with scrolling inside, sliding up over 280 ms.
+  - Steps:
+    - The modal shows the compact stepper (dot over label) and a thin progress bar.
+    - Moving between steps slides the step panel 32 px in the direction of travel. The step's Lottie remounts and plays once.
+    - Each step keeps one primary action, a quiet "Pular esta etapa" and "Voltar", plus "Fechar" (X) and "Continuar depois" in the footer.
+  - Navigating actions ("Mais detalhes" for a machine, "Ir para a visão geral") close the modal first, then navigate.
+  - The guide state is shared live between the modal, the overview card and the page. `writeGuide` dispatches `agrorende:guide-change`, every `useGuideState` listens to it and to `storage` events, and patches merge over the stored copy. Progress is still read from real data through React Query, so the checklist updates as tasks complete.
+  - Accessibility:
+    - Native modal `<dialog>` with `showModal()`: the background is inert and Tab stays inside.
+    - `aria-modal="true"`, labelled by the "Primeiros passos" heading.
+    - Escape (the `cancel` event), the X, "Continuar depois" and a backdrop click close it. Focus returns to the trigger; for the user menu that is the menu button.
+    - The page does not scroll behind the modal while it is open.
+  - Reduced motion: opacity-only fades for the dialog, the backdrop and the step changes.
+  - New messages: `tenancy.guide.actions.close` in pt-BR and en.
+
 ## Tests
 
 - `pnpm i18n:check` → passed.
@@ -52,6 +76,15 @@ Scope after the fleet re-scope: jobs A (SELL review fixes), B (bell flyout), E (
   - `src/features/shell/demo.test.tsx`: demo detection and session dismissal.
   - `src/features/shell/AdminShell.test.tsx`: phone search icon, tenant slot, demo pill and banner.
   - `src/features/onboarding/guide.test.tsx`: the count now reads "2 of 4 tasks".
+- Job G: `pnpm check:only web` → passed (lint, typecheck, 56 test files / 322 tests, i18n). `pnpm i18n:check` → passed.
+  - `src/features/onboarding/GuideModal.test.tsx` (8 tests):
+    - opens by itself once for a brand-new organisation, and not when machines exist;
+    - re-opens from the user menu, closes on Escape and returns focus to the menu button;
+    - closes from the X and from "Continuar depois";
+    - slides forward and back in the direction of travel, and a navigating link closes it and the card re-opens it at the same step;
+    - reduced motion uses fades only;
+    - the deep link becomes the modal over `/ops`, and non-admins keep the page.
+  - In `guide.test.tsx`, the card's first-run redirect test was replaced: the card never redirects now.
 - `pnpm check:only mobile` → failed, only in `apps/mobile/src/ui/Lottie.web.tsx` (lint: `'StyleProp'`/`'ViewStyle'` unused; tsc TS6133 and TS2322). That file belongs to the demo-video agent and was not touched.
   - `npx eslint src/features/sync/SyncCenterScreen.tsx` → clean.
   - `npx jest test/ui/syncAttention.test.tsx` → 3 passed.
@@ -72,7 +105,7 @@ Scope after the fleet re-scope: jobs A (SELL review fixes), B (bell flyout), E (
 
 - SELL minors still open: the reports empty-state fold, the team empty-state duplicate action, the dark Lottie stage, the guide offline and load-error copy, and the mobile JobComplete, Lottie pause, IntroScreen and JobsScreen items. They are outside this pass or belong to other owners.
 - No dedicated jest test for the SyncCenter header branches. The mobile test files are outside the single mobile file this pass owns; the existing `syncAttention.test.tsx` still passes.
-- The web gate stays red until `ops-clean` finishes `OpsCenter.tsx` and its tests.
+- The earlier web gate failure in `OpsCenter.tsx` is resolved: `pnpm check:only web` passed on the job G run.
 
 ## Error cases added
 
@@ -87,4 +120,10 @@ Scope after the fleet re-scope: jobs A (SELL review fixes), B (bell flyout), E (
 - Screenshots are in `.data/reviews/polish/`:
   - Before: `before-<route>-{1280,390}.png`.
   - After: `after-shell-{expanded,collapsed}-{light,dark}-{1280,390}.png`, `after-flyout-{1280,390}.png`, `after-palette-{1280,390}.png`, `after-topbar-390.png`, `after-usermenu-1280.png` and `after-getting-started-{1280,390}.png`.
+- Guide modal screenshots are in `.data/reviews/guide/` (reviewed):
+  - `modal-{welcome,machine}-{light,dark}-{1280,390}.png`
+  - mid-transition: `enter-mid-{1280,390}.png` (dialog scaling in, sheet sliding up) and `slide-mid-{1280,390}.png` (step slide)
+  - `deeplink-1280.png` (`/getting-started` → modal over `/ops`)
+  - The script is `guide.js`.
+- Known visual nit: the `first-machine` Lottie has a light stage baked in, which shows as a light card in dark mode. This was already listed as a SELL minor (dark Lottie stage).
 - `page-motion` mounts its provider with one line in a layout and adds `pending` to `Button`. The Button edits in this pass are limited to the disabled-primary tokens.

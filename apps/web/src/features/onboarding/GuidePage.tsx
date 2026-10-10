@@ -5,12 +5,13 @@ import { Apple, ArrowLeft, ArrowRight, Check, Play, SkipForward, Tractor, UserPl
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState, type FormEvent, type ReactNode } from "react";
+import { createContext, useContext, useLayoutEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
 
 import type { AnimationId } from "@agrorende/motion";
 
 import { LoadingState } from "@/components/data/States";
 import { EntityPicker } from "@/components/forms/EntityPicker";
+import { prefersReducedMotion } from "@/components/feedback/RouteMotion";
 import { Lottie } from "@/components/motion/Lottie";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
@@ -42,24 +43,64 @@ const ANIMATION: Record<GuideStep, AnimationId> = {
 const STEP_TASK: Partial<Record<GuideStep, GuideTask>> = { machine: "machine", team: "team", workOrder: "workOrder" };
 
 type Update = (patch: Partial<GuideState>) => void;
+export type GuideVariant = "page" | "modal";
+
+/**
+ * Called before anything inside the guide navigates away (a link, "Ir para a visão geral").
+ * The modal closes itself here; the page has nothing to do.
+ */
+const GuideLeaveContext = createContext<() => void>(() => undefined);
+
+const SLIDE_PX = 32;
+const SLIDE_MS = 220;
+const SPRING = "cubic-bezier(0.22, 1.2, 0.36, 1)";
+
+/** Direction-aware slide between steps; reduced motion keeps only a short fade. */
+function animateStep(element: HTMLElement | null, direction: number): void {
+  if (element === null || typeof element.animate !== "function") return;
+  const keyframes: Keyframe[] = prefersReducedMotion()
+    ? [{ opacity: 0 }, { opacity: 1 }]
+    : [
+        { opacity: 0, transform: `translateX(${direction * SLIDE_PX}px)` },
+        { opacity: 1, transform: "translateX(0)" },
+      ];
+  element.animate(keyframes, { duration: SLIDE_MS, easing: SPRING });
+}
 
 /**
  * Guided first run for a new organisation's ADMIN (SIMPLER-TO-SELL §4 "Primeiros passos").
  * Five steps, each skippable; the place is remembered per organisation so the admin can leave
- * and resume, and completion is read from real data rather than from clicks.
+ * and resume, and completion is read from real data rather than from clicks. Normally shown in
+ * `GuideModal`; the `/getting-started` page is the fallback without the modal.
  */
 export function GuidePage() {
+  return <GuideFlow variant="page" />;
+}
+
+export function GuideFlow({ variant, onLeave }: { readonly variant: GuideVariant; readonly onLeave?: () => void }) {
   const t = useTranslations("tenancy.guide");
   const me = useMe();
   const role = me.data?.user.role;
   const isAdmin = role === "ADMIN";
   const progress = useGuideProgress(isAdmin);
   const { state, ready, update } = useGuideState(me.data?.org?.id ?? me.data?.user.id);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const index = GUIDE_STEPS.indexOf(state.step);
+  const previousIndex = useRef(index);
+  const leave = onLeave ?? (() => undefined);
+  const modal = variant === "modal";
+  const header = modal ? null : <PageHeader subtitle={t("subtitle")} title={t("title")} />;
+
+  useLayoutEffect(() => {
+    if (previousIndex.current === index) return;
+    animateStep(panelRef.current, index > previousIndex.current ? 1 : -1);
+    previousIndex.current = index;
+  }, [index]);
 
   if (me.isLoading || (isAdmin && (progress.isLoading || !ready))) {
     return (
       <div className="flex flex-col gap-4">
-        <PageHeader title={t("title")} />
+        {header}
         <LoadingState rows={4} />
       </div>
     );
@@ -67,7 +108,7 @@ export function GuidePage() {
   if (me.error !== null && me.data === undefined) {
     return (
       <div className="flex flex-col gap-4">
-        <PageHeader title={t("title")} />
+        {header}
         <ErrorAlert error={me.error} onRetry={() => void me.refetch()} />
       </div>
     );
@@ -75,10 +116,10 @@ export function GuidePage() {
   if (!isAdmin) {
     return (
       <div className="flex flex-col gap-4">
-        <PageHeader title={t("title")} />
+        {header}
         <ErrorAlert
           action={
-            <Link className={buttonVariants({ variant: "secondary" })} href="/ops">
+            <Link className={buttonVariants({ variant: "secondary" })} href="/ops" onClick={leave}>
               {t("actions.toOverview")}
             </Link>
           }
@@ -90,51 +131,67 @@ export function GuidePage() {
   if (!progress.isReady) {
     return (
       <div className="flex flex-col gap-4">
-        <PageHeader title={t("title")} />
+        {header}
         <ErrorAlert error={progress.error} onRetry={progress.refetch} />
       </div>
     );
   }
 
-  const index = GUIDE_STEPS.indexOf(state.step);
   const go = (step: GuideStep) => {
     update({ step });
-    window.scrollTo({ top: 0 });
+    if (modal) panelRef.current?.closest("[data-guide-scroll]")?.scrollTo?.({ top: 0 });
+    else window.scrollTo({ top: 0 });
   };
   const next = () => go(GUIDE_STEPS[Math.min(index + 1, GUIDE_STEPS.length - 1)] ?? "done");
   const back = () => go(GUIDE_STEPS[Math.max(index - 1, 0)] ?? "welcome");
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHeader subtitle={t("subtitle")} title={t("title")} />
-      <Stepper current={state.step} onSelect={go} tasks={progress.tasks} />
-      <section aria-labelledby="guide-step-title" className="grid gap-2 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4 sm:gap-6 sm:p-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:items-center md:gap-8">
-        <Lottie className="mx-auto w-full max-w-40 sm:max-w-56 md:max-w-none" id={ANIMATION[state.step]} key={state.step} playOnce />
-        <div className="flex flex-col gap-4">
-          <p className="text-sm font-semibold text-[var(--ar-primary-text)]">{t("progress", { current: index + 1, total: GUIDE_STEPS.length })}</p>
-          {state.step === "welcome" ? <WelcomeStep onNext={next} /> : null}
-          {state.step === "machine" ? <MachineStep done={progress.tasks.machine} onBack={back} onNext={next} state={state} update={update} /> : null}
-          {state.step === "team" ? <TeamStep done={progress.tasks.team} onBack={back} onNext={next} /> : null}
-          {state.step === "workOrder" ? <WorkOrderStep done={progress.tasks.workOrder} onBack={back} onNext={next} state={state} update={update} /> : null}
-          {state.step === "done" ? <DoneStep onBack={back} tasks={progress.tasks} update={update} /> : null}
+    <GuideLeaveContext.Provider value={leave}>
+      <div className={modal ? "flex flex-col gap-4 sm:gap-6" : "flex flex-col gap-6"}>
+        {header}
+        <Stepper compact={modal} current={state.step} onSelect={go} tasks={progress.tasks} />
+        <div className="overflow-x-clip">
+          <section
+            aria-labelledby="guide-step-title"
+            className={
+              modal
+                ? "grid gap-2 sm:gap-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:items-start md:gap-8"
+                : "grid gap-2 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4 sm:gap-6 sm:p-6 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:items-center md:gap-8"
+            }
+            data-step={state.step}
+            data-testid="guide-step-panel"
+            ref={panelRef}
+          >
+            <Lottie className={modal ? "mx-auto w-full max-w-32 sm:max-w-48 md:max-w-none" : "mx-auto w-full max-w-40 sm:max-w-56 md:max-w-none"} id={ANIMATION[state.step]} key={state.step} playOnce />
+            <div className="flex flex-col gap-4">
+              <p className="text-sm font-semibold text-[var(--ar-primary-text)]">{t("progress", { current: index + 1, total: GUIDE_STEPS.length })}</p>
+              {state.step === "welcome" ? <WelcomeStep onNext={next} /> : null}
+              {state.step === "machine" ? <MachineStep done={progress.tasks.machine} onBack={back} onNext={next} state={state} update={update} /> : null}
+              {state.step === "team" ? <TeamStep done={progress.tasks.team} onBack={back} onNext={next} /> : null}
+              {state.step === "workOrder" ? <WorkOrderStep done={progress.tasks.workOrder} onBack={back} onNext={next} state={state} update={update} /> : null}
+              {state.step === "done" ? <DoneStep onBack={back} tasks={progress.tasks} update={update} /> : null}
+            </div>
+          </section>
         </div>
-      </section>
-      {state.step === "done" ? null : (
-        <p className="text-center text-sm text-[var(--ar-text-muted)]">
-          <Link className="inline-flex min-h-12 items-center gap-2 rounded-controls px-3 font-semibold text-[var(--ar-link)] underline underline-offset-4" href="/ops">
-            {t("actions.later")}
-          </Link>
-        </p>
-      )}
-    </div>
+        {state.step === "done" || modal ? null : (
+          <p className="text-center text-sm text-[var(--ar-text-muted)]">
+            <Link className="inline-flex min-h-12 items-center gap-2 rounded-controls px-3 font-semibold text-[var(--ar-link)] underline underline-offset-4" href="/ops">
+              {t("actions.later")}
+            </Link>
+          </p>
+        )}
+      </div>
+    </GuideLeaveContext.Provider>
   );
 }
 
-function Stepper({ current, onSelect, tasks }: { readonly current: GuideStep; readonly onSelect: (step: GuideStep) => void; readonly tasks: Record<GuideTask, boolean> }) {
+/** `compact` (the modal) stacks each label under its dot and adds a thin progress bar. */
+function Stepper({ current, onSelect, tasks, compact = false }: { readonly current: GuideStep; readonly onSelect: (step: GuideStep) => void; readonly tasks: Record<GuideTask, boolean>; readonly compact?: boolean }) {
   const t = useTranslations("tenancy.guide");
   const currentIndex = GUIDE_STEPS.indexOf(current);
+  const percent = Math.round((currentIndex / (GUIDE_STEPS.length - 1)) * 100);
   return (
-    <nav aria-label={t("stepsLabel")}>
+    <nav aria-label={t("stepsLabel")} className={compact ? "flex flex-col gap-2" : undefined}>
       <ol className="grid grid-cols-5 gap-1 sm:gap-2">
         {GUIDE_STEPS.map((step, index) => {
           const task = STEP_TASK[step];
@@ -144,7 +201,7 @@ function Stepper({ current, onSelect, tasks }: { readonly current: GuideStep; re
             <li key={step}>
               <button
                 aria-current={active ? "step" : undefined}
-                className={`flex min-h-12 w-full flex-col items-center gap-1 rounded-controls px-1 py-2 text-center text-xs font-semibold sm:flex-row sm:gap-2 sm:px-2 sm:text-left sm:text-sm ${active ? "bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)] ring-2 ring-[var(--ar-primary)] ring-inset" : "text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)]"}`}
+                className={`flex min-h-12 w-full flex-col items-center gap-1 rounded-controls px-1 py-2 text-center text-xs font-semibold ${compact ? "sm:text-sm" : "sm:flex-row sm:gap-2 sm:px-2 sm:text-left sm:text-sm"} ${active ? "bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)] ring-2 ring-[var(--ar-primary)] ring-inset" : "text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)]"}`}
                 onClick={() => onSelect(step)}
                 type="button"
               >
@@ -154,7 +211,7 @@ function Stepper({ current, onSelect, tasks }: { readonly current: GuideStep; re
                 >
                   {completed ? <Check className="size-4" /> : index + 1}
                 </span>
-                <span className="hidden sm:inline">{t(`steps.${step}`)}</span>
+                <span className="hidden leading-tight sm:inline">{t(`steps.${step}`)}</span>
                 <span className="sr-only sm:hidden">{t(`steps.${step}`)}</span>
                 {completed ? <span className="sr-only">{t("completed")}</span> : null}
               </button>
@@ -162,6 +219,11 @@ function Stepper({ current, onSelect, tasks }: { readonly current: GuideStep; re
           );
         })}
       </ol>
+      {compact ? (
+        <div aria-hidden="true" className="mx-[10%] h-1 overflow-hidden rounded-full bg-[var(--ar-surface-muted)]" data-testid="guide-progress-bar">
+          <div className="h-full rounded-full bg-[var(--ar-primary)] transition-[width] duration-300 ease-out motion-reduce:transition-none" style={{ width: `${percent}%` }} />
+        </div>
+      ) : null}
     </nav>
   );
 }
@@ -246,6 +308,7 @@ function MachineStep({ done, state, update, onNext, onBack }: { readonly done: b
     void client.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEY });
     update({ assetId: asset.id, assetName: asset.name, step: "team" });
   });
+  const leave = useContext(GuideLeaveContext);
   const fe = useFieldErrors()(saving.error);
   const submit = (event: FormEvent) => {
     event.preventDefault();
@@ -271,7 +334,7 @@ function MachineStep({ done, state, update, onNext, onBack }: { readonly done: b
           )}
         </Field>
         <FormError error={saving.error} fieldErrors={fe} />
-        <Link className="inline-flex min-h-12 items-center gap-2 self-start font-semibold text-[var(--ar-link)] underline underline-offset-4" href={name.trim().length > 0 ? `/assets/new?name=${encodeURIComponent(name.trim())}` : "/assets/new"}>
+        <Link className="inline-flex min-h-12 items-center gap-2 self-start font-semibold text-[var(--ar-link)] underline underline-offset-4" href={name.trim().length > 0 ? `/assets/new?name=${encodeURIComponent(name.trim())}` : "/assets/new"} onClick={leave}>
           <ArrowRight aria-hidden="true" className="size-4" />
           {t("machine.more")}
         </Link>
@@ -373,8 +436,10 @@ function DoneStep({ tasks, update, onBack }: { readonly tasks: Record<GuideTask,
   const t = useTranslations("tenancy.guide");
   const admin = useTranslations("admin");
   const router = useRouter();
+  const leave = useContext(GuideLeaveContext);
   const finish = () => {
     update({ finished: true });
+    leave();
     router.push("/ops");
   };
   return (

@@ -37,6 +37,9 @@ function optionalString(value: unknown): string | undefined {
   return typeof value === "string" && value.length > 0 ? value : undefined;
 }
 
+/** Last state written in this tab, read back when localStorage throws (private mode, quota). */
+const memory = new Map<string, GuideState>();
+
 export function readGuide(orgId: string): GuideState {
   try {
     const raw = window.localStorage.getItem(guideStorageKey(orgId));
@@ -53,16 +56,21 @@ export function readGuide(orgId: string): GuideState {
     };
     return state;
   } catch {
-    return INITIAL;
+    return memory.get(orgId) ?? INITIAL;
   }
 }
 
+/** Fired on `window` after every write so the modal, the overview card and the page stay in step. */
+export const GUIDE_CHANGE_EVENT = "agrorende:guide-change";
+
 export function writeGuide(orgId: string, state: GuideState): void {
+  memory.set(orgId, state);
   try {
     window.localStorage.setItem(guideStorageKey(orgId), JSON.stringify(state));
   } catch {
     // Private mode or a full quota: the guide still works, it just will not resume.
   }
+  window.dispatchEvent(new CustomEvent<{ orgId: string; state: GuideState }>(GUIDE_CHANGE_EVENT, { detail: { orgId, state } }));
 }
 
 /**
@@ -73,17 +81,31 @@ export function useGuideState(orgId: string | undefined) {
   const [state, setState] = useState<GuideState>(INITIAL);
   const [ready, setReady] = useState(false);
   useEffect(() => {
-    if (orgId === undefined) return;
+    if (orgId === undefined) return undefined;
     setState(readGuide(orgId));
     setReady(true);
+    const onChange = (event: Event) => {
+      const detail = (event as CustomEvent<{ orgId: string; state: GuideState } | undefined>).detail;
+      if (detail?.orgId === orgId) setState(detail.state);
+    };
+    const onStorage = (event: StorageEvent) => {
+      if (event.key === guideStorageKey(orgId)) setState(readGuide(orgId));
+    };
+    window.addEventListener(GUIDE_CHANGE_EVENT, onChange);
+    window.addEventListener("storage", onStorage);
+    return () => {
+      window.removeEventListener(GUIDE_CHANGE_EVENT, onChange);
+      window.removeEventListener("storage", onStorage);
+    };
   }, [orgId]);
   const update = useCallback(
     (patch: Partial<GuideState>) => {
-      setState((current) => {
-        const next = { ...current, ...patch };
-        if (orgId !== undefined) writeGuide(orgId, next);
-        return next;
-      });
+      if (orgId === undefined) {
+        setState((current) => ({ ...current, ...patch }));
+        return;
+      }
+      // Read the stored copy so a patch from one instance never overwrites another's newer write.
+      writeGuide(orgId, { ...readGuide(orgId), ...patch });
     },
     [orgId],
   );

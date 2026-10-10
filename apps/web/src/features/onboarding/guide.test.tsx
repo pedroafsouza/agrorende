@@ -156,12 +156,7 @@ describe("GuideProgressCard", () => {
     expect(stored()).toMatchObject({ dismissed: true });
   });
 
-  it("opens the guide once for a brand-new organisation", async () => {
-    renderWithProviders(<GuideProgressCard />);
-    await waitFor(() => expect(nav.replace).toHaveBeenCalledWith("/getting-started"));
-    expect(stored()).toMatchObject({ offered: true });
-    cleanup();
-    nav.replace.mockClear();
+  it("never redirects by itself; the guide modal provider owns the first-run offer", async () => {
     renderWithProviders(<GuideProgressCard />);
     await screen.findByTestId("guide-progress-card");
     expect(nav.replace).not.toHaveBeenCalled();

@@ -65,7 +65,8 @@
       "back": "Voltar",
       "skip": "Pular esta etapa",
       "later": "Continuar depois",
-      "toOverview": "Ir para a visão geral"
+      "toOverview": "Ir para a visão geral",
+      "close": "Fechar"
     },
     "welcome": {
       "title": "Boas-vindas ao AgroRende, {name}",

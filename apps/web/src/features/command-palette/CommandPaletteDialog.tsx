@@ -28,6 +28,7 @@ import type {
 
 import { Dialog } from "@/components/ui/Dialog";
 import { visibleNav, type NavItem } from "@/components/shell/nav";
+import { useGuideModal } from "@/features/onboarding/GuideModal";
 import { useMe } from "@/features/shell/useMe";
 import { api } from "@/lib/api";
 
@@ -80,6 +81,7 @@ const headingClass =
 export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void }) {
   const t = useTranslations("admin");
   const router = useRouter();
+  const guideModal = useGuideModal();
   const me = useMe();
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -121,6 +123,14 @@ export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void
   const go = (href: string) => {
     onClose();
     router.push(href);
+  };
+  const runAction = (key: string, href: string) => {
+    if (key === "gettingStarted" && guideModal !== null) {
+      onClose();
+      guideModal.open();
+      return;
+    }
+    go(href);
   };
 
   return (
@@ -215,7 +225,7 @@ export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void
                 <Command.Item
                   className={itemClass}
                   key={a.key}
-                  onSelect={() => go(a.href)}
+                  onSelect={() => runAction(a.key, a.href)}
                   value={`action:${a.key}`}
                 >
                   {a.adminOnly === true ? <span aria-hidden="true" className="size-5 shrink-0" /> : <Plus aria-hidden="true" className="size-5 shrink-0 text-[var(--ar-primary)]" />}

@@ -1,5 +1,5 @@
-import { GuidePage } from "@/features/onboarding/GuidePage";
+import { GettingStartedRoute } from "@/features/onboarding/GettingStartedRoute";
 
 export default function GettingStartedPage() {
-  return <GuidePage />;
+  return <GettingStartedRoute />;
 }

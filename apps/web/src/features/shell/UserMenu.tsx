@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useId, useRef, useState } from "react";
 
+import { useGuideModal } from "@/features/onboarding/GuideModal";
 import { api } from "@/lib/api";
 
 import { LanguageSwitch } from "./LanguageSwitch";
@@ -21,6 +22,7 @@ const ITEM = "flex min-h-12 w-full items-center gap-2 rounded-controls px-3 text
 export function UserMenu({ name, roleLabel, showGuide = false }: { readonly name: string; readonly roleLabel: string; readonly showGuide?: boolean }) {
   const t = useTranslations("admin");
   const guide = useTranslations("tenancy.guide");
+  const guideModal = useGuideModal();
   const [open, setOpen] = useState(false);
   const panelId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -61,7 +63,23 @@ export function UserMenu({ name, roleLabel, showGuide = false }: { readonly name
             <UserCircle aria-hidden="true" className="size-5" />
             {t("nav.account")}
           </Link>
-          {showGuide ? (
+          {showGuide && guideModal !== null ? (
+            <button
+              aria-haspopup="dialog"
+              className={ITEM}
+              data-testid="user-menu-guide"
+              onClick={() => {
+                setOpen(false);
+                // Focus goes back to the menu button so it is the guide's return target.
+                buttonRef.current?.focus();
+                guideModal.open();
+              }}
+              type="button"
+            >
+              <Flag aria-hidden="true" className="size-5" />
+              {guide("title")}
+            </button>
+          ) : showGuide ? (
             <Link className={ITEM} data-testid="user-menu-guide" href="/getting-started" onClick={() => setOpen(false)}>
               <Flag aria-hidden="true" className="size-5" />
               {guide("title")}
