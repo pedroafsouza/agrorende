@@ -169,7 +169,7 @@ jobs:
         run: tar -czf site.tar.gz -C apps/landing/out .
 
       - name: Upload the site artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: site
           path: site.tar.gz
