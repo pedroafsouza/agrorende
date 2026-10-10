@@ -15,7 +15,7 @@ export default function withNavigationQueries(config) {
     manifest.queries = manifest.queries ?? [{}];
     const [queries] = manifest.queries;
     queries.intent = [...(queries.intent ?? []), ...navigationSchemes.map(buildQueryIntent)];
-    AndroidConfig.Manifest.ensureToolsAvailable(manifest);
+    AndroidConfig.Manifest.ensureToolsAvailable(mod.modResults);
     return mod;
   });
 }
