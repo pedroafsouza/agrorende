@@ -179,7 +179,8 @@ jobs:
   staging:
     name: deploy staging
     needs: [meta, images, site]
-    if: ${{ needs.meta.outputs.push == 'true' }}
+    # Runs only once the staging VM and its environment secrets exist (docs/RELEASING.md).
+    if: ${{ needs.meta.outputs.push == 'true' && vars.STAGING_DEPLOY == 'true' }}
     permissions:
       contents: read
       deployments: read

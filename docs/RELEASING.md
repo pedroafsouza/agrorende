@@ -152,7 +152,10 @@ These come from ARCHITECTURE §18.4 and are done once by a person:
 
 1. `release.yml` builds and pushes the five `sha-<12>` images with provenance and an SBOM, and
    attests them. The digests appear in the job summary.
-2. It calls `deploy.yml` with `environment: staging` and `image_tag: sha-<12>`.
+2. It calls `deploy.yml` with `environment: staging` and `image_tag: sha-<12>`, but only when the
+   repository variable `STAGING_DEPLOY` is `true`. Set it (Settings → Secrets and variables →
+   Actions → Variables) once the staging VM and the staging environment secrets exist; until then
+   the images are still built and pushed, and the deploy job is skipped instead of failing.
 3. `deploy.yml` deploys (§5) and runs `pnpm smoke` against staging.
 
 ### 4.3 Cut a production release
