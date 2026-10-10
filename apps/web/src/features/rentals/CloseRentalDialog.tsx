@@ -61,7 +61,7 @@ export function CloseRentalDialog({ rentalId, open, totals, onClose, onDone }: {
       footer={
         <>
           <Button onClick={close}>{billingFailed ? t("close.billingLeave") : common("actions.cancel")}</Button>
-          <Button busy={busy} onClick={() => void submit()} variant="primary">
+          <Button pending={busy} onClick={() => void submit()} variant="primary">
             {billingFailed ? t("close.billingRetry") : updated === null ? t("close.confirm") : t("close.confirmUpdated")}
           </Button>
         </>

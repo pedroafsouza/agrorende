@@ -1,0 +1,81 @@
+/*
+ * Navigation feedback (PAGE-MOTION): skeleton shimmer and the page enter transition.
+ * Everything here is decorative; with reduced motion the skeleton is a flat block and the page
+ * swaps without movement.
+ */
+
+@keyframes ar-skeleton-shimmer {
+  from {
+    background-position: 150% 0;
+  }
+  to {
+    background-position: -50% 0;
+  }
+}
+
+.ar-skeleton {
+  display: block;
+  background-color: color-mix(in srgb, var(--ar-text) 9%, transparent);
+  background-image: linear-gradient(100deg, transparent 30%, color-mix(in srgb, var(--ar-surface) 55%, transparent) 50%, transparent 70%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: ar-skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes ar-page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ar-page-leave {
+  to {
+    opacity: 0;
+  }
+}
+
+/* CSS fallback when the Web Animations API is unavailable. */
+[data-route-page][data-entering="true"] {
+  animation: ar-page-enter 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* View Transitions: only the page content moves; the sidebar and the top bar stay still. */
+[data-route-page] {
+  view-transition-name: ar-page;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+}
+
+::view-transition-old(ar-page) {
+  animation: ar-page-leave 90ms ease-out both;
+}
+
+::view-transition-new(ar-page) {
+  animation: ar-page-enter 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+::view-transition-group(ar-page) {
+  animation-duration: 180ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ar-skeleton {
+    animation: none;
+    background-image: none;
+  }
+
+  [data-route-page][data-entering="true"],
+  ::view-transition-old(ar-page),
+  ::view-transition-new(ar-page),
+  ::view-transition-group(ar-page) {
+    animation: none;
+  }
+}

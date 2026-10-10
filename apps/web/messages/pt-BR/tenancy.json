@@ -75,7 +75,7 @@
       "title": "Cadastre sua primeira máquina",
       "body": "Só o nome e o tipo. O resto pode ficar para depois.",
       "name": "Nome da máquina",
-      "namePlaceholder": "Ex.: Trator John Deere 6110J",
+      "namePlaceholder": "Exemplo: Trator John Deere 6110J",
       "category": "Tipo",
       "submit": "Salvar máquina",
       "more": "Mais detalhes",
@@ -119,10 +119,12 @@
     },
     "card": {
       "title": "Primeiros passos",
-      "progress": "{done} de {total}",
+      "progress": "{done} de {total} tarefas",
       "body": "Faltam poucos passos para sua equipe começar a usar o AgroRende.",
       "continue": "Continuar",
-      "hide": "Ocultar"
+      "hide": "Ocultar",
+      "hidden": "Primeiros passos ocultado. Ele continua no menu da sua conta.",
+      "undo": "Desfazer"
     }
   }
 }

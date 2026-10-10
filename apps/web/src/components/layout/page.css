@@ -1,0 +1,64 @@
+/*
+ * Shared spacing for admin content pages (ADMIN-CLEAN).
+ *
+ * One spacing scale for every page body: the page padding, the gap between page sections,
+ * and the inner padding of cards. Pages keep their own Tailwind gap utilities; the rules
+ * below normalise the page root so every page breathes the same way. Top bar, sidebar and
+ * brand block styles live in theme.css and are not touched here.
+ */
+
+:root {
+  --ar-space-1: 0.25rem; /* 4px */
+  --ar-space-2: 0.5rem; /* 8px */
+  --ar-space-3: 0.75rem; /* 12px */
+  --ar-space-4: 1rem; /* 16px */
+  --ar-space-5: 1.5rem; /* 24px */
+  --ar-space-6: 2rem; /* 32px */
+
+  --ar-page-pad-x: var(--ar-space-4);
+  --ar-page-pad-top: var(--ar-space-2);
+  --ar-page-pad-bottom: var(--ar-space-6);
+  --ar-section-gap: var(--ar-space-4);
+  --ar-stack-gap: var(--ar-space-3);
+  --ar-card-pad: var(--ar-space-4);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --ar-page-pad-x: var(--ar-space-6);
+    --ar-page-pad-top: var(--ar-space-3);
+    --ar-section-gap: var(--ar-space-5);
+    --ar-card-pad: 1.25rem;
+  }
+}
+
+/* Page padding: the content column of the admin shell. */
+#main {
+  padding: var(--ar-page-pad-top) var(--ar-page-pad-x) var(--ar-page-pad-bottom);
+}
+
+/* Every page root sits right under the page context; its top-level sections share one gap. */
+#main > [data-testid="page-context"] + .flex-col,
+#main > .flex-col:first-child {
+  row-gap: var(--ar-section-gap);
+}
+
+/* Cards share one inner padding and one gap between their heading and body. */
+.ar-card {
+  padding: var(--ar-card-pad);
+}
+
+.ar-card-head {
+  margin-bottom: var(--ar-stack-gap);
+}
+
+/* Codes and numbers in tables never break in the middle (AGR-000001 used to wrap at the hyphen). */
+.ar-table td .font-mono,
+.ar-table td .tabular-nums {
+  white-space: nowrap;
+}
+
+/* The page context panel: quiet, tight, and always one section gap above the page title. */
+.ar-page-context {
+  margin-bottom: var(--ar-section-gap);
+}

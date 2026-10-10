@@ -34,6 +34,10 @@
     "admin": "Administration"
   },
   "notifications": {
+    "display": {
+      "staleSyncTitle": "Phone with unsent data",
+      "staleSyncBody": "{name}'s phone has data that has not been sent yet."
+    },
     "emptyBody": "Updates about work orders, rentals and reports appear here.",
     "emptyTitle": "No notifications",
     "markAllRead": "Mark all as read",
@@ -78,6 +82,12 @@
     "brand": "AgroRende",
     "closeMenu": "Close menu",
     "collapseMenu": "Collapse menu",
+    "demo": {
+      "badge": "Demo",
+      "badgeLabel": "Demo environment",
+      "banner": "You are in the demo environment. The data is made up.",
+      "dismiss": "Close demo notice"
+    },
     "env": {
       "ci": "Test environment (CI)",
       "local": "Local environment",
@@ -89,8 +99,16 @@
     "language": "Language",
     "mainNav": "Main navigation",
     "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
+    "notificationsPanel": {
+      "unreadCount": "{count, plural, =0 {Nothing unread} one {# unread} other {# unread}}",
+      "loading": "Loading notifications…",
+      "error": "Notifications could not be loaded. Check the connection.",
+      "retry": "Try again",
+      "seeAll": "See all notifications"
+    },
     "openMenu": "Open menu",
     "search": "Search",
+    "searchShort": "Search",
     "searchSoon": "Search (Ctrl+K)",
     "showGroup": "Show {group}",
     "sidebar": "Sidebar",
@@ -163,7 +181,8 @@
     "actions": {
       "newWorkOrder": "New work order",
       "newRental": "New rental",
-      "newAsset": "New machine"
+      "newAsset": "New machine",
+      "gettingStarted": "Open Getting started"
     }
   },
   "context": {

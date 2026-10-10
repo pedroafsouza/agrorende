@@ -6,18 +6,21 @@ import type { ReactNode } from "react";
 
 import type { AnimationId } from "@agrorende/motion";
 
+import { Skeleton, SlowLoadingNotice, useSlowLoading } from "@/components/feedback/PageSkeleton";
 import { Lottie } from "@/components/motion/Lottie";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 
 /** The four screen states every list and detail renders (A§19, UX-03): loading, empty, error, offline. */
 export function LoadingState({ rows = 5 }: { readonly rows?: number }) {
   const t = useTranslations("common");
+  const slow = useSlowLoading();
   return (
-    <div aria-busy="true" aria-live="polite" className="flex flex-col gap-2" role="status">
+    <div aria-busy="true" aria-live="polite" className="relative flex flex-col gap-2" role="status">
       <span className="sr-only">{t("states.loading")}</span>
       {Array.from({ length: rows }, (_, i) => (
-        <div className="h-12 animate-pulse rounded-controls bg-[var(--ar-surface-muted)]" key={i} />
+        <Skeleton className="h-12" key={i} />
       ))}
+      {slow ? <SlowLoadingNotice className="top-1/2 -translate-y-1/2" /> : null}
     </div>
   );
 }

@@ -127,7 +127,7 @@
     "allSites": "Todos os locais",
     "allStatuses": "Todas as situações",
     "emptyBody": "Quando alguém da equipe relatar um problema pelo celular, mesmo sem internet, ele aparece aqui.",
-    "emptyTitle": "Nenhum relato na fila",
+    "emptyTitle": "Nenhum relato novo",
     "from": "De",
     "needsTriage": "A triar",
     "openCount": "{count, plural, =0 {Nenhum relato a triar} one {# relato a triar} other {# relatos a triar}}",

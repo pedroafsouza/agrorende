@@ -171,7 +171,7 @@ export function TemplateEditorPage({ id }: { readonly id: string }) {
         <MetaFields error={metaState.error ?? createState.error} meta={meta} onChange={setMeta} />
         {isNew ? null : (
           <div className="mt-4 flex justify-end">
-            <Button busy={metaState.busy} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void saveMeta({ ...meta }, version)}>
+            <Button pending={metaState.busy} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void saveMeta({ ...meta }, version)}>
               {t("actions.saveDetails")}
             </Button>
           </div>
@@ -187,11 +187,11 @@ export function TemplateEditorPage({ id }: { readonly id: string }) {
       <div className="sticky bottom-0 flex justify-end gap-2 border-t border-[var(--ar-border)] bg-[var(--ar-bg)] py-3">
         <Button onClick={() => router.push("/templates")}>{common("actions.cancel")}</Button>
         {isNew ? (
-          <Button busy={createState.busy} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void create({ ...meta, items, accessories })} size="primary" variant="primary">
+          <Button pending={createState.busy} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void create({ ...meta, items, accessories })} size="primary" variant="primary">
             {t("actions.create")}
           </Button>
         ) : (
-          <Button busy={publishState.busy} disabled={archived} icon={<Send aria-hidden="true" className="size-4" />} onClick={() => void publish(false, version)} size="primary" variant="primary">
+          <Button pending={publishState.busy} disabled={archived} icon={<Send aria-hidden="true" className="size-4" />} onClick={() => void publish(false, version)} size="primary" variant="primary">
             {t("actions.publish")}
           </Button>
         )}
@@ -202,7 +202,7 @@ export function TemplateEditorPage({ id }: { readonly id: string }) {
         footer={
           <>
             <Button onClick={() => { setInUseConfirm(null); publishState.reset(); }}>{common("actions.cancel")}</Button>
-            <Button busy={publishState.busy} onClick={() => void publish(true, version)} variant="primary">
+            <Button pending={publishState.busy} onClick={() => void publish(true, version)} variant="primary">
               {t("inUseDialog.confirm")}
             </Button>
           </>

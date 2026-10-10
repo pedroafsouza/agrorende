@@ -55,7 +55,7 @@ export function ConfirmDialog({ open, title, body, confirmLabel, tone = "danger"
           <Button disabled={busy} onClick={close}>
             {t("actions.cancel")}
           </Button>
-          <Button busy={busy} disabled={needsReason && reason.trim().length === 0} onClick={() => void confirm()} variant={tone}>
+          <Button pending={busy} disabled={needsReason && reason.trim().length === 0} onClick={() => void confirm()} variant={tone}>
             {confirmLabel}
           </Button>
         </>

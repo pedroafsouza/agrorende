@@ -16,10 +16,12 @@ export interface DialogProps {
   readonly size?: "md" | "lg";
   /** Blocks Escape and backdrop close, e.g. while a write is in flight or for the re-auth prompt. */
   readonly dismissible?: boolean;
+  /** Extra classes for the `<dialog>` box, e.g. to place the command palette near the top. */
+  readonly className?: string;
 }
 
 /** Native `<dialog>` modal: focus trap, Escape and inert background come from the platform. */
-export function Dialog({ open, onClose, title, description, closeLabel, children, footer, size = "md", dismissible = true }: DialogProps) {
+export function Dialog({ open, onClose, title, description, closeLabel, children, footer, size = "md", dismissible = true, className }: DialogProps) {
   const ref = useRef<HTMLDialogElement>(null);
   // Unique ids keep the accessible name right when several dialogs are mounted on one page.
   const titleId = `${useId()}-title`;
@@ -39,6 +41,7 @@ export function Dialog({ open, onClose, title, description, closeLabel, children
       className={cn(
         "m-auto w-[calc(100%-2rem)] rounded-sheets border border-[var(--ar-border)] bg-[var(--ar-surface)] p-0 text-[var(--ar-text)] shadow-xl backdrop:bg-black/50",
         size === "lg" ? "max-w-3xl" : "max-w-lg",
+        className,
       )}
       onCancel={(event) => {
         event.preventDefault();

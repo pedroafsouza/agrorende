@@ -34,6 +34,10 @@
     "admin": "Administração"
   },
   "notifications": {
+    "display": {
+      "staleSyncTitle": "Celular com dados não enviados",
+      "staleSyncBody": "O celular de {name} tem dados que ainda não foram enviados."
+    },
     "emptyBody": "Avisos sobre ordens de serviço, locações e relatos aparecem aqui.",
     "emptyTitle": "Nenhuma notificação",
     "markAllRead": "Marcar todas como lidas",
@@ -78,6 +82,12 @@
     "brand": "AgroRende",
     "closeMenu": "Fechar menu",
     "collapseMenu": "Recolher menu",
+    "demo": {
+      "badge": "Demonstração",
+      "badgeLabel": "Ambiente de demonstração",
+      "banner": "Você está no ambiente de demonstração. Os dados são fictícios.",
+      "dismiss": "Fechar aviso de demonstração"
+    },
     "env": {
       "ci": "Ambiente de testes (CI)",
       "local": "Ambiente local",
@@ -89,8 +99,16 @@
     "language": "Idioma",
     "mainNav": "Navegação principal",
     "notificationsLabel": "{count, plural, =0 {Notificações} one {Notificações, # não lida} other {Notificações, # não lidas}}",
+    "notificationsPanel": {
+      "unreadCount": "{count, plural, =0 {Nenhuma não lida} one {# não lida} other {# não lidas}}",
+      "loading": "Carregando notificações…",
+      "error": "Não foi possível carregar as notificações. Verifique a conexão.",
+      "retry": "Tentar de novo",
+      "seeAll": "Ver todas as notificações"
+    },
     "openMenu": "Abrir menu",
     "search": "Buscar",
+    "searchShort": "Buscar",
     "searchSoon": "Buscar (Ctrl+K)",
     "showGroup": "Mostrar {group}",
     "sidebar": "Menu lateral",
@@ -163,7 +181,8 @@
     "actions": {
       "newWorkOrder": "Nova ordem de serviço",
       "newRental": "Nova locação",
-      "newAsset": "Nova máquina"
+      "newAsset": "Nova máquina",
+      "gettingStarted": "Abrir Primeiros passos"
     }
   },
   "context": {

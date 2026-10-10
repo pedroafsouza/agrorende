@@ -108,6 +108,10 @@
     "pending": "Uploading…",
     "photo": "Photo"
   },
+  "motion": {
+    "pause": "Pause animation",
+    "play": "Play animation"
+  },
   "no": "No",
   "notFound": {
     "back": "Back to start",

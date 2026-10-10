@@ -78,7 +78,7 @@ function SettingsForm({ initial }: { readonly initial: Settings }) {
             <Link className={buttonVariants({ variant: "secondary" })} href="/settings/subscription">
               {t("org.subscription")}
             </Link>
-            <Button busy={state.busy} disabled={!dirty} icon={<Save aria-hidden="true" className="size-4" />} type="submit" variant="primary">
+            <Button pending={state.busy} disabled={!dirty} icon={<Save aria-hidden="true" className="size-4" />} type="submit" variant="primary">
               {common("actions.save")}
             </Button>
           </>

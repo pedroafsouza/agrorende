@@ -36,7 +36,7 @@ export function FormDialog({ open, title, formId, busy, dirty, error, submitLabe
           <Button disabled={busy} onClick={onClose}>
             {t("actions.cancel")}
           </Button>
-          <Button busy={busy} form={formId} icon={<Save aria-hidden="true" className="size-4" />} type="submit" variant="primary">
+          <Button pending={busy} form={formId} icon={<Save aria-hidden="true" className="size-4" />} type="submit" variant="primary">
             {submitLabel ?? t("actions.save")}
           </Button>
         </>

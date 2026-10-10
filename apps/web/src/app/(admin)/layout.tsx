@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 
 import "@/components/shell/theme.css";
 
+import { RouteMotionProvider } from "@/components/feedback/RouteMotion";
 import { Providers } from "@/components/shell/Providers";
 import { ShellIntlProvider } from "@/components/shell/IntlProvider";
 import { CommandPalette } from "@/features/command-palette";
@@ -24,7 +25,7 @@ export default async function AdminLayout({ children }: { readonly children: Rea
           <OfficeRoleRequired />
         ) : (
           <AdminShell banner={<OrgBanner supportWhatsApp={supportWhatsApp()} />} ribbon={<EnvRibbon appEnv={serverConfig.appEnv} />} role={session?.role ?? null}>
-            {children}
+            <RouteMotionProvider>{children}</RouteMotionProvider>
             <CommandPalette />
           </AdminShell>
         )}

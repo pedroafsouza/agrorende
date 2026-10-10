@@ -65,7 +65,7 @@ export function ExtendRentalDialog({
       footer={
         <>
           <Button onClick={onClose}>{common("actions.cancel")}</Button>
-          <Button busy={busy} icon={<CalendarDays aria-hidden="true" className="size-4" />} onClick={() => void submit()} variant="primary">
+          <Button pending={busy} icon={<CalendarDays aria-hidden="true" className="size-4" />} onClick={() => void submit()} variant="primary">
             {t("extend.confirm")}
           </Button>
         </>

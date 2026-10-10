@@ -253,10 +253,10 @@ export function NewRentalPage() {
         </Field>
         <div className="flex flex-wrap justify-end gap-2">
           <Button onClick={() => router.push("/rentals")}>{common("actions.cancel")}</Button>
-          <Button busy={busy === "draft"} disabled={!ready || busy !== null} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void submit(false)}>
+          <Button pending={busy === "draft"} disabled={!ready || busy !== null} icon={<Save aria-hidden="true" className="size-4" />} onClick={() => void submit(false)}>
             {t("actions.saveDraft")}
           </Button>
-          <Button busy={busy === "reserve"} disabled={!ready || busy !== null} icon={<CalendarCheck aria-hidden="true" className="size-4" />} size="primary" type="submit" variant="primary">
+          <Button pending={busy === "reserve"} disabled={!ready || busy !== null} icon={<CalendarCheck aria-hidden="true" className="size-4" />} size="primary" type="submit" variant="primary">
             {t("actions.createAndReserve")}
           </Button>
         </div>

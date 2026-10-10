@@ -176,9 +176,10 @@ export function AssetFields({ values, onChange, error, mode }: { readonly values
   );
 }
 
-export function useAssetFormState(asset?: AssetDTO) {
+/** `prefillName` carries a name typed elsewhere (the getting-started guide) into a new machine. */
+export function useAssetFormState(asset?: AssetDTO, prefillName?: string) {
   const [initial] = useState(() => assetFormValues(asset));
-  const [values, setValues] = useState(initial);
+  const [values, setValues] = useState(() => (prefillName === undefined || prefillName.length === 0 ? initial : { ...initial, name: prefillName }));
   const dirty = JSON.stringify(values) !== JSON.stringify(initial);
   return { values, setValues, dirty, reset: () => setValues(assetFormValues(asset)) };
 }

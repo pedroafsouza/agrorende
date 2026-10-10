@@ -14,6 +14,7 @@ import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
 import { isActive, navSections, visibleNav, type NavItem, type NavSection } from "@/components/shell/nav";
 import { cn } from "@/lib/cn";
 
+import { DemoBanner, DemoPill, isDemoOrg } from "./demo";
 import { PageContext } from "./PageContext";
 import { NotificationsBell, useAttentionCount } from "./NotificationsBell";
 import { useMe } from "./useMe";
@@ -130,6 +131,9 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
   const sections = navSections(visibleNav(effectiveRole));
   const [closedGroups, toggleGroup] = useClosedNavGroups();
   const close = () => setOpen(false);
+  const brand = t("shell.brand");
+  const orgName = me.data?.org?.name ?? null;
+  const demo = me.data?.org !== undefined && me.data.org !== null && isDemoOrg(me.data.org.id);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -159,12 +163,29 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
           )}
           id="admin-sidebar"
         >
-          <div className={cn("mb-3 flex items-center gap-2 px-2", collapsed && "lg:justify-center lg:px-0")}>
-            <Link className="flex min-h-12 min-w-0 flex-1 items-center gap-2.5 text-lg font-bold lg:flex-none" href="/ops" onClick={close} title={collapsed ? (me.data?.org?.name ?? t("shell.brand")) : undefined}>
-              <BrandMark className="size-9" />
-              <span className={cn("truncate", collapsed && "lg:sr-only")}>{me.data?.org?.name ?? t("shell.brand")}</span>
+          <div className={cn("mb-4 flex items-center gap-2 border-b border-[var(--ar-border)] pb-3", collapsed && "lg:justify-center")}>
+            <Link
+              className={cn("flex min-h-14 min-w-0 flex-1 items-center gap-3 rounded-controls px-2 py-1 hover:bg-[var(--ar-surface-muted)]", collapsed && "lg:flex-none lg:justify-center lg:px-0")}
+              data-testid="shell-brand"
+              href="/ops"
+              onClick={close}
+              title={orgName ?? brand}
+            >
+              <BrandMark className="size-9 shrink-0" />
+              <span className={cn("flex min-w-0 flex-1 flex-col gap-0.5", collapsed && "lg:sr-only")}>
+                <span className="truncate text-lg font-bold leading-tight">{brand}</span>
+                {demo ? (
+                  <span className="flex">
+                    <DemoPill />
+                  </span>
+                ) : orgName === null ? null : (
+                  <span className="truncate text-sm leading-tight text-[var(--ar-text-muted)]" data-testid="shell-org-name">
+                    {orgName}
+                  </span>
+                )}
+              </span>
             </Link>
-            <button aria-label={t("shell.closeMenu")} className="flex size-12 items-center justify-center lg:hidden" onClick={close} type="button">
+            <button aria-label={t("shell.closeMenu")} className="flex size-12 shrink-0 items-center justify-center lg:hidden" onClick={close} type="button">
               <X aria-hidden="true" className="size-5" />
             </button>
           </div>
@@ -188,29 +209,31 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
         </aside>
         {open ? <button aria-label={t("shell.closeMenu")} className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={close} type="button" /> : null}
         <div className="flex min-w-0 flex-col">
-          <header className="sticky top-0 z-20 flex items-center gap-2 border-b border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 py-1">
-            <button aria-label={t("shell.openMenu")} className="flex size-12 items-center justify-center lg:hidden" onClick={() => setOpen(true)} type="button">
-              <Menu aria-hidden="true" className="size-5" />
-            </button>
-            <button
-              aria-controls="admin-sidebar"
-              aria-expanded={!collapsed}
-              aria-keyshortcuts="Control+B Meta+B"
-              aria-label={collapsed ? t("shell.expandMenu") : t("shell.collapseMenu")}
-              className="hidden size-12 shrink-0 items-center justify-center rounded-controls text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)] hover:text-[var(--ar-text)] lg:flex"
-              data-testid="sidebar-toggle"
-              onClick={toggleCollapsed}
-              title={`${collapsed ? t("shell.expandMenu") : t("shell.collapseMenu")} (Ctrl+B)`}
-              type="button"
-            >
-              {collapsed ? <PanelLeftOpen aria-hidden="true" className="size-5" /> : <PanelLeftClose aria-hidden="true" className="size-5" />}
-            </button>
-            <div className="relative max-w-md flex-1">
+          <header className="sticky top-0 z-20 flex min-h-14 items-center gap-2 border-b border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 py-1 sm:grid sm:grid-cols-[1fr_minmax(0,35rem)_1fr]">
+            <div className="flex items-center gap-1">
+              <button aria-label={t("shell.openMenu")} className="flex size-12 items-center justify-center lg:hidden" onClick={() => setOpen(true)} type="button">
+                <Menu aria-hidden="true" className="size-5" />
+              </button>
+              <button
+                aria-controls="admin-sidebar"
+                aria-expanded={!collapsed}
+                aria-keyshortcuts="Control+B Meta+B"
+                aria-label={collapsed ? t("shell.expandMenu") : t("shell.collapseMenu")}
+                className="hidden size-12 shrink-0 items-center justify-center rounded-controls text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)] hover:text-[var(--ar-text)] lg:flex"
+                data-testid="sidebar-toggle"
+                onClick={toggleCollapsed}
+                title={`${collapsed ? t("shell.expandMenu") : t("shell.collapseMenu")} (Ctrl+B)`}
+                type="button"
+              >
+                {collapsed ? <PanelLeftOpen aria-hidden="true" className="size-5" /> : <PanelLeftClose aria-hidden="true" className="size-5" />}
+              </button>
+            </div>
+            <div className="relative hidden w-full sm:block">
               <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[var(--ar-text-muted)]" />
               <button
                 aria-keyshortcuts="Control+K Meta+K"
                 aria-label={t("shell.search")}
-                className="min-h-12 w-full rounded-controls border border-[var(--ar-border)] bg-[var(--ar-bg)] pl-9 pr-3 text-left text-sm text-[var(--ar-text-muted)]"
+                className="min-h-12 w-full rounded-controls border border-[var(--ar-border)] bg-[var(--ar-bg)] pl-9 pr-3 text-left text-sm text-[var(--ar-text-muted)] hover:border-[var(--ar-border-strong)]"
                 data-testid="shell-search"
                 onClick={openCommandPalette}
                 type="button"
@@ -218,12 +241,23 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
                 {t("shell.searchSoon")}
               </button>
             </div>
-            <div className="ml-auto flex items-center gap-1">
+            <div className="ml-auto flex items-center justify-end gap-1">
+              <button
+                aria-keyshortcuts="Control+K Meta+K"
+                aria-label={t("shell.search")}
+                className="flex size-12 items-center justify-center rounded-controls hover:bg-[var(--ar-surface-muted)] sm:hidden"
+                data-testid="shell-search-icon"
+                onClick={openCommandPalette}
+                type="button"
+              >
+                <Search aria-hidden="true" className="size-5" />
+              </button>
               {effectiveRole === "ADMIN" ? <RealtimeStatus state={realtime} /> : null}
               <NotificationsBell />
-              <UserMenu name={me.data?.user.name ?? ""} roleLabel={effectiveRole === null ? "" : t(`roles.${effectiveRole}`)} />
+              <UserMenu name={me.data?.user.name ?? ""} roleLabel={effectiveRole === null ? "" : t(`roles.${effectiveRole}`)} showGuide={effectiveRole === "ADMIN"} />
             </div>
           </header>
+          {demo ? <DemoBanner /> : null}
           {banner}
           <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:p-6" id="main" tabIndex={-1}>
             <PageContext role={effectiveRole} />

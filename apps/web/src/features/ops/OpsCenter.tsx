@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Layers, Map as MapIcon, PauseCircle, Satellite, Shapes } from "lucide-react";
+import { PauseCircle } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useCallback, useEffect, useMemo, useState, useSyncExternalStore } from "react";
 
@@ -23,6 +23,8 @@ import { opsApi } from "./api";
 import { ExportsPanel } from "./exports/ExportsPanel";
 import { applyKpiFilter, filterAlerts, MAP_LAYERS, satelliteTilesUrl, type BaseMap, type MapLayerKey } from "./filters";
 import { KpiStrip } from "./KpiStrip";
+import { LayerMenu } from "./LayerMenu";
+import { dataBounds, fallbackCenter } from "./mapBounds";
 import { OperatorList, OperatorPanel } from "./OperatorPanel";
 import { OperatorStore } from "./operatorStore";
 import { OpsMap } from "./OpsMap";
@@ -33,8 +35,6 @@ const URL_KEYS = ["kpi", "range", "operator"] as const;
 const URL_DEFAULTS = { range: "today" };
 const LIVE_ACTIVITY_MAX = 50;
 const STALE_CHECK_MS = 30_000;
-const LAYER_TOGGLE =
-  "inline-flex min-h-12 cursor-pointer items-center gap-2 rounded-controls border border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 text-sm font-medium has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--ar-focus)] aria-pressed:border-[var(--ar-primary)] aria-pressed:bg-[var(--ar-surface-muted)]";
 
 function toActivityItem(payload: unknown): OpsActivityItemDTO | null {
   const parsed = ActivityEventDTOSchema.safeParse(payload);
@@ -137,6 +137,11 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
   const noLiveOperators = live.data !== undefined && operators.every((o) => o.stale || o.state === "OFFLINE" || o.dutyStatus !== "ON_DUTY");
 
   const role = me.data?.user.role ?? "MANAGER";
+  const timezone = me.data?.org?.timezone;
+  const fallback = useMemo(() => fallbackCenter(timezone), [timezone]);
+  const shownBoundaries = showBoundaries ? (boundaries.data ?? null) : null;
+  const fitTo = useMemo(() => dataBounds(view, shownBoundaries), [view, shownBoundaries]);
+  const dataReady = live.data !== undefined && !(showBoundaries && boundaries.isLoading) && !me.isLoading;
 
   const toggleLayer = (layer: MapLayerKey) =>
     setLayers((current) => {
@@ -162,30 +167,17 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
       ) : null}
       <KpiStrip active={kpi} kpis={kpis.data} onRange={(r) => setUrl({ range: r === "today" ? null : r })} onSelect={(k) => setUrl({ kpi: k })} range={range} />
       {kpis.error === null ? null : <ErrorAlert compact error={kpis.error} onRetry={() => void kpis.refetch()} />}
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_22rem]">
+      <div className="grid gap-[var(--ar-section-gap)] xl:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="flex min-w-0 flex-col gap-3">
-          <fieldset className="flex flex-wrap items-center gap-2">
-            <legend className="sr-only">{t("layers.label")}</legend>
-            <Layers aria-hidden="true" className="size-5 text-[var(--ar-text-muted)]" />
-            {MAP_LAYERS.map((layer) => (
-              <label className={LAYER_TOGGLE} key={layer}>
-                <input checked={layers.has(layer)} className="size-5 accent-[var(--ar-primary)]" onChange={() => toggleLayer(layer)} type="checkbox" />
-                <span aria-hidden="true">{t(`legend.glyph.${layer}`)}</span>
-                {t(`layers.${layer}`)}
-              </label>
-            ))}
-            <label className={LAYER_TOGGLE}>
-              <input checked={showBoundaries} className="size-5 accent-[var(--ar-primary)]" onChange={() => setShowBoundaries((v) => !v)} type="checkbox" />
-              <Shapes aria-hidden="true" className="size-4" />
-              {t("layers.boundaries")}
-            </label>
-            {satelliteUrl === null ? null : (
-              <button aria-pressed={baseMap === "satellite"} className={LAYER_TOGGLE} onClick={() => setBaseMap((b) => (b === "satellite" ? "map" : "satellite"))} type="button">
-                {baseMap === "satellite" ? <MapIcon aria-hidden="true" className="size-4" /> : <Satellite aria-hidden="true" className="size-4" />}
-                {t("layers.satellite")}
-              </button>
-            )}
-          </fieldset>
+          <LayerMenu
+            baseMap={baseMap}
+            layers={layers}
+            onToggleBaseMap={() => setBaseMap((b) => (b === "satellite" ? "map" : "satellite"))}
+            onToggleBoundaries={() => setShowBoundaries((v) => !v)}
+            onToggleLayer={toggleLayer}
+            satelliteAvailable={satelliteUrl !== null}
+            showBoundaries={showBoundaries}
+          />
           {showBoundaries && boundaries.error !== null ? <ErrorAlert compact error={boundaries.error} onRetry={() => void boundaries.refetch()} /> : null}
           {live.isLoading ? <LoadingState rows={6} /> : null}
           {live.error === null ? null : <ErrorAlert error={live.error} onRetry={() => void live.refetch()} />}
@@ -201,15 +193,18 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
               trail={selectedId === null ? null : (trail.data?.points ?? null)}
               view={view}
               baseMap={baseMap}
-              boundaries={showBoundaries ? (boundaries.data ?? null) : null}
+              boundaries={shownBoundaries}
+              dataReady={dataReady}
+              fallback={fallback}
+              fitTo={fitTo}
               satelliteUrl={satelliteUrl}
               visibleLayers={layers}
             />
           </div>
-          <dl aria-label={t("legend.label")} className="flex flex-wrap gap-x-5 gap-y-2 text-sm">
+          <dl aria-label={t("legend.label")} className="grid gap-x-6 gap-y-1.5 text-sm text-[var(--ar-text-muted)] sm:grid-cols-2">
             {(["operators", "operatorsStale", "reports", "reportsCritical", "workOrders", "workOrdersRisk", "assets", "rentals"] as const).map((k) => (
               <div className="flex items-center gap-2" key={k}>
-                <dt aria-hidden="true" className="font-bold">
+                <dt aria-hidden="true" className="w-4 shrink-0 text-center font-bold text-[var(--ar-text)]">
                   {t(`legend.glyph.${k}`)}
                 </dt>
                 <dd>{t(`legend.items.${k}`)}</dd>
@@ -217,11 +212,11 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
             ))}
           </dl>
         </div>
-        <aside className="flex flex-col gap-5">
+        <aside className="flex min-w-0 flex-col gap-[var(--ar-section-gap)]">
           {selected === undefined ? null : <OperatorPanel marker={selected} onClose={() => setUrl({ operator: null })} />}
           <AlertsPanel alerts={shownAlerts} />
           {alerts.error === null ? null : <ErrorAlert compact error={alerts.error} onRetry={() => void alerts.refetch()} />}
-          <OperatorList onSelect={(userId) => setUrl({ operator: userId })} operators={view.operators} selected={selectedId} />
+          <OperatorList onDuty={kpis.data?.counts.on_duty} onSelect={(userId) => setUrl({ operator: userId })} operators={view.operators} selected={selectedId} />
           <ActivityFeed live={liveActivity} />
           <ExportsPanel role={role} />
         </aside>

@@ -57,7 +57,7 @@ export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry,
       {toolbar === undefined ? null : <div className="flex flex-wrap items-end gap-3">{toolbar}</div>}
       <QueryState empty={empty} error={error} isEmpty={(rows?.length ?? 0) === 0} isLoading={isLoading} onRetry={onRetry}>
         <div className="overflow-x-auto rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]">
-          <table className="w-full min-w-[40rem] text-left text-sm">
+          <table className="ar-table w-full min-w-[40rem] text-left text-sm">
             <caption className="sr-only">{caption}</caption>
             <thead className="bg-[var(--ar-surface-muted)]">
               {table.getHeaderGroups().map((group) => (

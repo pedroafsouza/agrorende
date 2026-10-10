@@ -35,19 +35,27 @@ export interface KpiStripProps {
 export function KpiStrip({ kpis, active, onSelect, range, onRange }: KpiStripProps) {
   const t = useTranslations("ops.kpi");
   const locale = useLocale();
+  const summary = [
+    { key: "slaCompliance", value: kpis?.slaCompliancePct === null || kpis === undefined ? "—" : `${formatNumber(kpis.slaCompliancePct, locale, 1)}%` },
+    { key: "mttr", value: kpis?.mttrHours === null || kpis === undefined ? "—" : t("hours", { value: formatNumber(kpis.mttrHours, locale, 1) }) },
+    { key: "utilization", value: kpis?.utilizationPct === null || kpis === undefined ? "—" : `${formatNumber(kpis.utilizationPct, locale, 0)}%` },
+  ] as const;
   return (
-    <section aria-label={t("label")} className="flex flex-col gap-2">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--ar-text-muted)]">
-          <span>{t("slaCompliance", { value: kpis?.slaCompliancePct === null || kpis === undefined ? "—" : `${formatNumber(kpis.slaCompliancePct, locale, 1)}%` })}</span>
-          <span>{t("mttr", { value: kpis?.mttrHours === null || kpis === undefined ? "—" : formatNumber(kpis.mttrHours, locale, 1) })}</span>
-          <span>{t("utilization", { value: kpis?.utilizationPct === null || kpis === undefined ? "—" : `${formatNumber(kpis.utilizationPct, locale, 0)}%` })}</span>
-        </div>
+    <section aria-label={t("label")} className="flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <dl className="flex flex-wrap items-baseline gap-x-6 gap-y-1 text-sm" data-testid="kpi-summary">
+          {summary.map((item) => (
+            <div className="flex items-baseline gap-1.5" key={item.key}>
+              <dt className="text-[var(--ar-text-muted)]">{t(`summary.${item.key}`)}</dt>
+              <dd className="font-semibold tabular-nums">{item.value}</dd>
+            </div>
+          ))}
+        </dl>
         <div aria-label={t("range")} className="inline-flex rounded-controls border border-[var(--ar-border-strong)] bg-[var(--ar-surface)] p-0.5" role="group">
           {KPI_RANGE_OPTIONS.map((r) => (
             <button
               aria-pressed={range === r}
-              className="min-h-12 rounded-controls px-3 text-sm font-semibold aria-pressed:bg-[var(--ar-primary)] aria-pressed:text-[var(--ar-on-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
+              className="min-h-12 rounded-[6px] px-3 text-sm font-semibold aria-pressed:bg-[var(--ar-primary)] aria-pressed:text-[var(--ar-on-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
               key={r}
               onClick={() => onRange(r)}
               type="button"
@@ -57,29 +65,34 @@ export function KpiStrip({ kpis, active, onSelect, range, onRange }: KpiStripPro
           ))}
         </div>
       </div>
-      <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 xl:grid-cols-8">
+      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {KPI_KEYS.map((key) => {
           const Icon = ICONS[key];
           const value = kpis?.counts[key];
           const pressed = active === key;
           const alarming = ALARM.has(key) && (value ?? 0) > 0;
           return (
-            <li key={key}>
+            <li className="min-w-0" key={key}>
               <button
                 aria-pressed={pressed}
                 className={[
-                  "flex min-h-[4.5rem] w-full flex-col items-start justify-between rounded-cards border-2 px-3 py-2 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ar-focus)]",
-                  pressed ? "border-[var(--ar-primary)] bg-[var(--ar-primary-bg)]" : alarming ? "border-[var(--ar-warning)] bg-[var(--ar-surface)]" : "border-[var(--ar-border)] bg-[var(--ar-surface)] hover:border-[var(--ar-border-strong)]",
+                  "flex h-full min-h-20 w-full flex-col justify-between gap-1 rounded-cards border px-4 py-3 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--ar-focus)]",
+                  pressed
+                    ? "border-[var(--ar-primary)] bg-[var(--ar-primary-bg)] shadow-[inset_0_0_0_1px_var(--ar-primary)]"
+                    : alarming
+                      ? "border-[var(--ar-border)] bg-[var(--ar-warning-bg)] hover:border-[var(--ar-border-strong)]"
+                      : "border-[var(--ar-border)] bg-[var(--ar-surface)] hover:border-[var(--ar-border-strong)]",
                 ].join(" ")}
+                data-alarm={alarming ? "" : undefined}
                 data-kpi={key}
                 onClick={() => onSelect(pressed ? null : key)}
                 type="button"
               >
-                <span className="flex items-center gap-1.5 text-xs font-semibold text-[var(--ar-text-muted)]">
+                <span className={`flex min-w-0 items-center gap-2 text-sm font-medium ${alarming ? "text-[var(--ar-warning-text)]" : "text-[var(--ar-text-muted)]"}`}>
                   <Icon aria-hidden="true" className="size-4 shrink-0" />
-                  {t(`keys.${key}`)}
+                  <span className="leading-tight sm:truncate">{t(`keys.${key}`)}</span>
                 </span>
-                <span className="text-2xl font-bold tabular-nums">{value === undefined ? "—" : formatNumber(value, locale)}</span>
+                <span className={`text-2xl font-bold leading-none tabular-nums ${alarming ? "text-[var(--ar-warning-text)]" : ""}`}>{value === undefined ? "—" : formatNumber(value, locale)}</span>
               </button>
             </li>
           );

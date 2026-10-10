@@ -101,8 +101,30 @@ html[data-theme="outdoor"] body {
   font-size: 1.0625rem;
 }
 
-html[data-theme="outdoor"] [class*="border"] {
+/* Thicker borders in outdoor, but one-sided separators (border-t, border-b…) stay one-sided. */
+html[data-theme="outdoor"] [class*="border"]:not([class~="border-t"], [class~="border-b"], [class~="border-l"], [class~="border-r"], [class~="border-x"], [class~="border-y"]) {
   border-width: var(--ar-border-width);
+}
+
+html[data-theme="outdoor"] [class~="border-t"] {
+  border-top-width: var(--ar-border-width);
+}
+
+html[data-theme="outdoor"] [class~="border-b"] {
+  border-bottom-width: var(--ar-border-width);
+}
+
+html[data-theme="outdoor"] :is([class~="border-l"], [class~="border-x"]) {
+  border-left-width: var(--ar-border-width);
+}
+
+html[data-theme="outdoor"] :is([class~="border-r"], [class~="border-x"]) {
+  border-right-width: var(--ar-border-width);
+}
+
+html[data-theme="outdoor"] [class~="border-y"] {
+  border-top-width: var(--ar-border-width);
+  border-bottom-width: var(--ar-border-width);
 }
 
 body {

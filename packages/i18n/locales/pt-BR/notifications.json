@@ -62,8 +62,8 @@
     "body": "{title} está perto do prazo."
   },
   "DEVICE_STALE_SYNC": {
-    "title": "Celular sem sincronizar",
-    "body": "O celular de {name} tem dados esperando envio."
+    "title": "Celular com dados não enviados",
+    "body": "O celular de {name} tem dados que ainda não foram enviados."
   },
   "LATE_EVIDENCE": {
     "title": "Evidência tardia recebida",

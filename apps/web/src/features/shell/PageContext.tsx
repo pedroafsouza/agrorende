@@ -14,6 +14,8 @@ import { useCallback, useEffect, useId, useState } from "react";
 
 import type { Role } from "@agrorende/contracts/enums";
 
+import "@/components/layout/page.css";
+
 import { visibleNav } from "@/components/shell/nav";
 import {
   findNavItem,
@@ -86,12 +88,12 @@ export function PageContext({ role }: { readonly role: Role | null }) {
   const links = info.leaf === null ? crumbs.slice(0, -1) : crumbs;
 
   return (
-    <div className="mb-4 flex flex-col gap-2" data-testid="page-context">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="ar-page-context flex flex-col gap-1" data-testid="page-context">
+      <div className="flex items-center gap-x-2">
         <nav aria-label={t("context.breadcrumb")} className="min-w-0 flex-1">
-          <ol className="flex flex-wrap items-center gap-1 text-sm">
+          <ol className="flex min-w-0 items-center gap-1 text-sm">
             {links.map((crumb) => (
-              <li className="flex items-center gap-1" key={crumb.key}>
+              <li className="flex shrink-0 items-center gap-1" key={crumb.key}>
                 <Link className={crumbLink} href={crumb.href}>
                   {crumb.key === "home" ? (
                     <House aria-hidden="true" className="size-4" />
@@ -106,13 +108,14 @@ export function PageContext({ role }: { readonly role: Role | null }) {
             ))}
             {current === undefined ? null : (
               <li
-                className="flex min-h-12 items-center gap-1.5 px-1 font-semibold"
-                aria-current="page"
+                className="flex min-h-12 min-w-0 items-center gap-1.5 px-1 font-semibold"
               >
                 {current.key === "home" ? (
-                  <House aria-hidden="true" className="size-4" />
+                  <House aria-hidden="true" className="size-4 shrink-0" />
                 ) : null}
-                {current.label}
+                <span aria-current="page" className="truncate">
+                  {current.label}
+                </span>
               </li>
             )}
           </ol>
@@ -120,7 +123,7 @@ export function PageContext({ role }: { readonly role: Role | null }) {
         <button
           aria-controls={hidden ? undefined : panelId}
           aria-expanded={!hidden}
-          className="inline-flex min-h-12 items-center gap-2 rounded-md px-3 text-sm font-semibold text-[var(--ar-link)] hover:bg-[var(--ar-surface-muted)]"
+          className="-mr-3 inline-flex min-h-12 shrink-0 items-center gap-2 rounded-md px-3 text-sm font-semibold whitespace-nowrap text-[var(--ar-link)] hover:bg-[var(--ar-surface-muted)]"
           data-testid="page-context-toggle"
           onClick={toggle}
           type="button"
@@ -136,16 +139,16 @@ export function PageContext({ role }: { readonly role: Role | null }) {
       {hidden ? null : (
         <section
           aria-label={t("context.about")}
-          className="flex gap-4 rounded-xl border border-[var(--ar-border)] bg-[var(--ar-surface-muted)] p-4"
+          className="flex gap-3 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] px-4 py-3"
           id={panelId}
         >
           <span
             aria-hidden="true"
-            className="hidden size-12 shrink-0 items-center justify-center rounded-lg bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)] sm:flex"
+            className="hidden size-9 shrink-0 items-center justify-center rounded-controls bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)] sm:flex"
           >
-            <SectionIcon className="size-6" />
+            <SectionIcon className="size-5" />
           </span>
-          <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
             <p className="text-[var(--ar-text)]">
               {t(`context.pages.${info.key}.body`)}
             </p>
@@ -164,9 +167,9 @@ export function PageContext({ role }: { readonly role: Role | null }) {
             {related.length === 0 ? null : (
               <nav
                 aria-label={t("context.related")}
-                className="flex flex-wrap items-center gap-x-1 text-sm"
+                className="-mb-2 flex flex-wrap items-center gap-x-3 text-sm"
               >
-                <span className="mr-1 text-[var(--ar-text-muted)]">
+                <span className="w-full text-[var(--ar-text-muted)] sm:w-auto">
                   {t("context.related")}:
                 </span>
                 {related.map((item) => {

@@ -1,13 +1,13 @@
 "use client";
 
-import { Monitor, Moon, Sun, SunMedium } from "lucide-react";
+import { Check, Contrast, Monitor, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 const ORDER = ["system", "light", "dark", "outdoor"] as const;
 type ThemeChoice = (typeof ORDER)[number];
-const ICON = { system: Monitor, light: Sun, dark: Moon, outdoor: SunMedium } as const;
+const ICON = { system: Monitor, light: Sun, dark: Moon, outdoor: Contrast } as const;
 
 function useThemeChoice() {
   const { theme, setTheme } = useTheme();
@@ -17,7 +17,7 @@ function useThemeChoice() {
   return { current, setTheme };
 }
 
-/** The four themes as menu radio items, for the user menu (SIMPLER-TO-SELL §4). */
+/** The four themes as toggle buttons in the user menu (SIMPLER-TO-SELL §4); the chosen one shows a check. */
 export function ThemeChoices() {
   const t = useTranslations("admin");
   const { current, setTheme } = useThemeChoice();
@@ -28,15 +28,15 @@ export function ThemeChoices() {
         const selected = choice === current;
         return (
           <button
-            aria-checked={selected}
+            aria-pressed={selected}
             className={`flex min-h-12 items-center gap-2 rounded-controls border px-3 text-left text-sm font-semibold ${selected ? "border-[var(--ar-primary)] bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)]" : "border-transparent hover:bg-[var(--ar-surface-muted)]"}`}
             key={choice}
             onClick={() => setTheme(choice)}
-            role="menuitemradio"
             type="button"
           >
             <Icon aria-hidden="true" className="size-5 shrink-0" />
-            {t(`shell.theme.${choice}`)}
+            <span className="flex-1">{t(`shell.theme.${choice}`)}</span>
+            {selected ? <Check aria-hidden="true" className="size-4 shrink-0" /> : null}
           </button>
         );
       })}

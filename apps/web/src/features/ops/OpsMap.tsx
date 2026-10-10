@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/Button";
 import type { PlotBoundariesDTO } from "@agrorende/core/modules/ops/boundaries";
 
 import type { BaseMap, MapLayerKey, OpsView } from "./filters";
+import type { LngLatBounds, MapCenter } from "./mapBounds";
 import { trailSegments } from "./filters";
 import { startFrameLoop, type OperatorStore, type PointCollection } from "./operatorStore";
 import type { TrailPointDTO } from "./types";
@@ -112,20 +113,46 @@ export interface OpsMapProps {
   readonly baseMap?: BaseMap;
   /** XYZ raster template used when `baseMap` is `satellite`. */
   readonly satelliteUrl?: string | null;
+  /** Box around the organisation's data; the map fits it once, as soon as `dataReady` is true. */
+  readonly fitTo?: LngLatBounds | null;
+  /** True once the first live snapshot (and plot boundaries, when shown) have loaded. */
+  readonly dataReady?: boolean;
+  /** Where the map opens, and stays when nothing has a position. */
+  readonly fallback?: MapCenter;
 }
+
+const FIT_PADDING = 56;
+const FIT_MAX_ZOOM = 13;
+const DEFAULT_CENTER: MapCenter = { longitude: -51.9, latitude: -14.2, zoom: 4 };
 
 /**
  * Ops Center live map. Operators sit in one unclustered GeoJSON source fed by the frame loop;
  * reports, WOs and assets are clustered sources (A§14.3). Tile or style failures show the
  * EC-OPS-18 banner and keep the lists usable.
  */
-export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, onSelectEntity, emptyOperators, boundaries = null, baseMap = "map", satelliteUrl = null }: OpsMapProps) {
+export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, onSelectEntity, emptyOperators, boundaries = null, baseMap = "map", satelliteUrl = null, fitTo = null, dataReady = false, fallback = DEFAULT_CENTER }: OpsMapProps) {
   const t = useTranslations("ops");
   const ref = useRef<MapRef>(null);
   const [mapKey, setMapKey] = useState(0);
   const [failed, setFailed] = useState(false);
   const [initialOperators] = useState(() => store.takeFrame());
   const latest = useRef<PointCollection>(initialOperators);
+  const [loaded, setLoaded] = useState(false);
+  const fitted = useRef(false);
+
+  useEffect(() => {
+    if (!loaded || !dataReady || fitted.current) return;
+    const map = ref.current?.getMap() as
+      | { fitBounds?: (b: LngLatBounds, o: object) => void; jumpTo?: (o: object) => void }
+      | undefined;
+    if (map === undefined) return;
+    fitted.current = true;
+    if (fitTo === null) {
+      map.jumpTo?.({ center: [fallback.longitude, fallback.latitude], zoom: fallback.zoom });
+      return;
+    }
+    map.fitBounds?.(fitTo, { padding: FIT_PADDING, maxZoom: FIT_MAX_ZOOM, duration: 0 });
+  }, [loaded, dataReady, fitTo, fallback]);
 
   useEffect(
     () =>
@@ -173,6 +200,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
     }
     const source = ref.current?.getSource(OPERATOR_SOURCE) as { setData?: (data: unknown) => void } | undefined;
     source?.setData?.(latest.current);
+    setLoaded(true);
   };
 
   const onClick = (event: MapLayerMouseEvent) => {
@@ -188,7 +216,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
     <div aria-label={t("map.label")} className="relative h-full min-h-[420px] overflow-hidden rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface-muted)]" role="region">
       {failed ? null : (
         <Map
-          initialViewState={{ longitude: -51.9, latitude: -14.2, zoom: 3.5 }}
+          initialViewState={fallback}
           interactiveLayerIds={["ops-operators-dot", "ops-reports-point", "ops-wos-point", "ops-assets-point", "ops-rentals-point"]}
           key={mapKey}
           mapStyle={LIGHT_STYLE}
@@ -283,6 +311,8 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
               icon={<RotateCw aria-hidden="true" className="size-4" />}
               onClick={() => {
                 setFailed(false);
+                setLoaded(false);
+                fitted.current = false;
                 setMapKey((k) => k + 1);
               }}
             >
@@ -292,11 +322,11 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
         </div>
       ) : null}
       {emptyOperators && !failed ? (
-        <div className="pointer-events-none absolute inset-x-3 bottom-3 flex justify-center">
-          <div className="pointer-events-auto flex max-w-lg items-start gap-3 rounded-cards border border-[var(--ar-border-strong)] bg-[var(--ar-surface)] p-4 shadow-sm" role="status">
-            <UserX aria-hidden="true" className="mt-0.5 size-5 shrink-0" />
+        <div className="pointer-events-none absolute inset-x-3 bottom-9 flex justify-center">
+          <div className="pointer-events-auto flex max-w-md items-start gap-2.5 rounded-controls border border-[var(--ar-border)] bg-[var(--ar-surface)] px-3 py-2 shadow-sm" role="status">
+            <UserX aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-[var(--ar-text-muted)]" />
             <div>
-              <p className="font-semibold">{t("errors.OPS_NO_LIVE_OPERATORS.title")}</p>
+              <p className="text-sm font-semibold">{t("errors.OPS_NO_LIVE_OPERATORS.title")}</p>
               <p className="text-sm">{t("errors.OPS_NO_LIVE_OPERATORS.body")}</p>
             </div>
           </div>

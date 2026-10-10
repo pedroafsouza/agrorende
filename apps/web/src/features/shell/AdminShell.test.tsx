@@ -7,6 +7,7 @@ import { OPEN_COMMAND_PALETTE_EVENT } from "@/features/command-palette";
 import { renderWithProviders } from "@/features/ops/testing";
 
 import { AdminShell } from "./AdminShell";
+import { DEMO_ORG_ID } from "./demo";
 import { NAV_GROUPS_CLOSED_KEY } from "./useClosedNavGroups";
 import { SIDEBAR_COLLAPSED_KEY } from "./useSidebarCollapsed";
 
@@ -15,7 +16,8 @@ vi.mock("next/navigation", () => ({
   usePathname: () => "/ops",
   useSearchParams: () => new URLSearchParams(),
 }));
-vi.mock("./useMe", () => ({ useMe: () => ({ data: { user: { id: "u1", name: "Ana", role: "MANAGER" }, org: { name: "Fazenda Boa Vista" } } }) }));
+const meMock = vi.hoisted(() => ({ org: { id: "org-1", name: "Fazenda Boa Vista" } as { id: string; name: string } }));
+vi.mock("./useMe", () => ({ useMe: () => ({ data: { user: { id: "u1", name: "Ana", role: "MANAGER" }, org: meMock.org } }) }));
 vi.mock("./useRealtime", () => ({ useRealtime: () => "connected" }));
 vi.mock("./NotificationsBell", () => ({ NotificationsBell: () => null, useAttentionCount: () => 0 }));
 vi.mock("./UserMenu", () => ({ UserMenu: () => null }));
@@ -24,6 +26,8 @@ vi.mock("@/components/recovery/RealtimeStatus", () => ({ RealtimeStatus: () => n
 afterEach(() => {
   cleanup();
   window.localStorage.clear();
+  window.sessionStorage.clear();
+  meMock.org = { id: "org-1", name: "Fazenda Boa Vista" };
 });
 
 describe("AdminShell search box", () => {
@@ -43,6 +47,49 @@ describe("AdminShell search box", () => {
     await userEvent.click(trigger);
     expect(opened).toHaveBeenCalledTimes(1);
     window.removeEventListener(OPEN_COMMAND_PALETTE_EVENT, opened);
+  });
+
+  it("has a phone-sized icon button that opens the same palette", async () => {
+    const opened = vi.fn();
+    window.addEventListener(OPEN_COMMAND_PALETTE_EVENT, opened);
+    renderWithProviders(
+      <AdminShell ribbon={null} role="MANAGER">
+        <p>content</p>
+      </AdminShell>,
+    );
+    const icon = screen.getByTestId("shell-search-icon");
+    expect(icon.getAttribute("aria-label")).toBe("Search");
+    await userEvent.click(icon);
+    expect(opened).toHaveBeenCalledTimes(1);
+    window.removeEventListener(OPEN_COMMAND_PALETTE_EVENT, opened);
+  });
+});
+
+describe("AdminShell brand block", () => {
+  it("shows the wordmark and the full tenant name on its own line, without a demo indicator", () => {
+    renderWithProviders(
+      <AdminShell ribbon={null} role="MANAGER">
+        <p>content</p>
+      </AdminShell>,
+    );
+    const brand = screen.getByTestId("shell-brand");
+    expect(brand.getAttribute("title")).toBe("Fazenda Boa Vista");
+    expect(screen.getByTestId("shell-org-name").textContent).toBe("Fazenda Boa Vista");
+    expect(screen.queryByTestId("demo-pill")).toBeNull();
+    expect(screen.queryByTestId("demo-banner")).toBeNull();
+  });
+
+  it("shows only the demo pill in the tenant slot for the seeded demo organisation, plus a session banner", async () => {
+    meMock.org = { id: DEMO_ORG_ID, name: "AgroRende Demo Agro" };
+    renderWithProviders(
+      <AdminShell ribbon={null} role="MANAGER">
+        <p>content</p>
+      </AdminShell>,
+    );
+    expect(screen.queryByTestId("shell-org-name")).toBeNull();
+    expect(screen.getByTestId("demo-pill").textContent).toBe("Demo");
+    expect(screen.getByTestId("shell-brand").getAttribute("title")).toBe("AgroRende Demo Agro");
+    expect(await screen.findByTestId("demo-banner")).toBeTruthy();
   });
 });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { Clock, MapPinned, Smartphone, X } from "lucide-react";
+import { Clock, MapPinned, MapPinOff, Smartphone, X } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -50,31 +50,54 @@ export function StaleOperatorBanner({ marker }: { readonly marker: OperatorMarke
   );
 }
 
-export function OperatorList({ operators, selected, onSelect }: { readonly operators: readonly OperatorMarker[]; readonly selected: string | null; readonly onSelect: (userId: string) => void }) {
+export function OperatorList({
+  operators,
+  selected,
+  onSelect,
+  onDuty,
+}: {
+  readonly operators: readonly OperatorMarker[];
+  readonly selected: string | null;
+  readonly onSelect: (userId: string) => void;
+  /** Team members on duty according to the KPI count; some of them may not have sent a position yet. */
+  readonly onDuty?: number | undefined;
+}) {
   const t = useTranslations("ops.operators");
+  const onDutyOnMap = operators.filter((o) => o.dutyStatus === "ON_DUTY").length;
+  const missing = onDuty === undefined ? 0 : Math.max(0, onDuty - onDutyOnMap);
   return (
     <section aria-labelledby="ops-operators-title" className="flex flex-col gap-2">
       <h2 className="text-lg font-semibold" id="ops-operators-title">
         {t("title", { count: operators.length })}
       </h2>
-      <ul className="flex max-h-80 flex-col gap-1 overflow-auto">
-        {operators.map((o) => (
-          <li key={o.userId}>
-            <button
-              aria-pressed={selected === o.userId}
-              className="flex min-h-12 w-full items-center gap-3 rounded-controls px-2 text-left hover:bg-[var(--ar-surface-muted)] aria-pressed:bg-[var(--ar-primary-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
-              onClick={() => onSelect(o.userId)}
-              type="button"
-            >
-              <span aria-hidden="true" className={`flex size-9 shrink-0 items-center justify-center rounded-full border-4 text-xs font-bold ${o.stale ? "border-dashed border-[var(--ar-text-muted)] opacity-70" : "border-[var(--ar-primary)]"}`}>
-                {initials(o.name)}
-              </span>
-              <span className="min-w-0 flex-1 truncate font-medium">{o.name}</span>
-              <OperatorStateBadge marker={o} />
-            </button>
-          </li>
-        ))}
-      </ul>
+      {missing > 0 ? (
+        <p className="flex items-start gap-1.5 text-sm text-[var(--ar-text-muted)]" data-testid="operators-not-on-map">
+          <MapPinOff aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
+          {t("notOnMap", { count: missing })}
+        </p>
+      ) : operators.length === 0 ? (
+        <p className="text-sm text-[var(--ar-text-muted)]">{t("empty")}</p>
+      ) : null}
+      {operators.length === 0 ? null : (
+        <ul className="flex max-h-80 flex-col gap-1 overflow-auto">
+          {operators.map((o) => (
+            <li key={o.userId}>
+              <button
+                aria-pressed={selected === o.userId}
+                className="flex min-h-12 w-full items-center gap-3 rounded-controls px-2 text-left hover:bg-[var(--ar-surface-muted)] aria-pressed:bg-[var(--ar-primary-bg)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--ar-focus)]"
+                onClick={() => onSelect(o.userId)}
+                type="button"
+              >
+                <span aria-hidden="true" className={`flex size-9 shrink-0 items-center justify-center rounded-full border-4 text-xs font-bold ${o.stale ? "border-dashed border-[var(--ar-text-muted)] opacity-70" : "border-[var(--ar-primary)]"}`}>
+                  {initials(o.name)}
+                </span>
+                <span className="min-w-0 flex-1 truncate font-medium">{o.name}</span>
+                <OperatorStateBadge marker={o} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
     </section>
   );
 }

@@ -2,7 +2,7 @@
 
 import type { NotificationDTO } from "@agrorende/contracts/dto";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { Bell, CheckCheck } from "lucide-react";
+import { Bell, Check, CheckCheck } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
@@ -16,6 +16,8 @@ import { formatDateTime } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
 import { useUrlState } from "@/lib/url-state";
+
+import { notificationDisplay } from "./notificationDisplay";
 
 const ENTITY_PATHS: Partial<Record<string, string>> = {
   WORK_ORDER: "/work-orders",
@@ -67,22 +69,46 @@ export function NotificationsPage() {
       ) : items.length === 0 ? (
         <EmptyState body={t("notifications.emptyBody")} icon={<Bell className="size-8" />} title={t("notifications.emptyTitle")} />
       ) : (
-        <ul className="flex flex-col divide-y divide-[var(--ar-border)] rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]">
+        <ul className="flex flex-col divide-y divide-[var(--ar-border)] overflow-hidden rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]" data-testid="notifications-list">
           {items.map((n) => {
             const unread = (n.readAt ?? null) === null;
             const href = notificationHref(n);
+            const shown = notificationDisplay(n, (key, values) => t(`notifications.display.${key}`, values));
             return (
-              <li className={`flex flex-wrap items-start gap-3 p-4 ${unread ? "bg-[var(--ar-info-bg)]" : ""}`} key={n.id}>
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <span className="font-semibold">
+              <li className="grid grid-cols-[0.5rem_minmax(0,1fr)] sm:grid-cols-[0.5rem_minmax(0,1fr)_auto] items-start gap-x-3 px-4 py-3" data-unread={unread ? "true" : undefined} key={n.id}>
+                <span aria-hidden="true" className={`mt-2 size-2 rounded-full ${unread ? "bg-[var(--ar-primary)]" : ""}`} />
+                <div className="flex min-w-0 flex-col gap-1 py-1">
+                  <span className={unread ? "font-semibold" : "font-medium"}>
                     {unread ? <span className="sr-only">{t("notifications.unread")} </span> : null}
-                    {href === null ? n.title : <Link className="text-[var(--ar-link)] underline-offset-2 hover:underline" href={href} onClick={() => { if (unread) void markRead({ ids: [n.id] }); }}>{n.title}</Link>}
+                    {href === null ? (
+                      shown.title
+                    ) : (
+                      <Link
+                        className="text-[var(--ar-link)] underline-offset-2 hover:underline"
+                        href={href}
+                        onClick={() => {
+                          if (unread) void markRead({ ids: [n.id] });
+                        }}
+                      >
+                        {shown.title}
+                      </Link>
+                    )}
                   </span>
-                  <span>{n.body}</span>
-                  <span className="text-sm text-[var(--ar-text-muted)]">{formatDateTime(n.createdAt, locale)}</span>
+                  <span className="text-[var(--ar-text)]">{shown.body}</span>
+                  <span className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-[var(--ar-text-muted)]">
+                    {shown.reference === null ? null : (
+                      <span className="rounded-[4px] border border-[var(--ar-border)] px-1.5 font-mono text-xs leading-5 whitespace-nowrap">{shown.reference}</span>
+                    )}
+                    <time dateTime={n.createdAt}>{formatDateTime(n.createdAt, locale)}</time>
+                  </span>
                 </div>
                 {unread ? (
-                  <Button onClick={() => void markRead({ ids: [n.id] })} variant="ghost">
+                  <Button
+                    className="col-start-2 -ml-3 justify-self-start text-sm sm:col-start-3 sm:row-start-1 sm:-mr-3 sm:ml-0 sm:justify-self-end"
+                    icon={<Check aria-hidden="true" className="size-4" />}
+                    onClick={() => void markRead({ ids: [n.id] })}
+                    variant="ghost"
+                  >
                     {t("notifications.markRead")}
                   </Button>
                 ) : null}

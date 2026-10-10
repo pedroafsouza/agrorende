@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { Apple, ArrowLeft, ArrowRight, Check, ExternalLink, Play, SkipForward, Tractor, UserPlus, Wrench } from "lucide-react";
+import { Apple, ArrowLeft, ArrowRight, Check, Play, SkipForward, Tractor, UserPlus, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -144,7 +144,7 @@ function Stepper({ current, onSelect, tasks }: { readonly current: GuideStep; re
             <li key={step}>
               <button
                 aria-current={active ? "step" : undefined}
-                className={`flex min-h-12 w-full flex-col items-center gap-1 rounded-controls px-1 py-2 text-center text-xs font-semibold sm:flex-row sm:gap-2 sm:px-2 sm:text-left sm:text-sm ${active ? "bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)]" : "text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)]"}`}
+                className={`flex min-h-12 w-full flex-col items-center gap-1 rounded-controls px-1 py-2 text-center text-xs font-semibold sm:flex-row sm:gap-2 sm:px-2 sm:text-left sm:text-sm ${active ? "bg-[var(--ar-primary-bg)] text-[var(--ar-primary-text)] ring-2 ring-[var(--ar-primary)] ring-inset" : "text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)]"}`}
                 onClick={() => onSelect(step)}
                 type="button"
               >
@@ -177,21 +177,31 @@ function StepText({ title, body }: { readonly title: string; readonly body: stri
   );
 }
 
-function StepActions({ onBack, onSkip, children }: { readonly onBack?: () => void; readonly onSkip?: () => void; readonly children?: ReactNode }) {
+/**
+ * One primary action per step. On phones the primary comes first; the quiet "Pular esta etapa"
+ * (or "Continuar" once the task is already done) and "Voltar" follow it.
+ */
+function StepActions({ onBack, onSkip, skipDone = false, children }: { readonly onBack?: () => void; readonly onSkip?: () => void; readonly skipDone?: boolean; readonly children?: ReactNode }) {
   const t = useTranslations("tenancy.guide");
   return (
-    <div className="flex flex-col-reverse gap-2 border-t border-[var(--ar-border)] pt-4 sm:flex-row sm:flex-wrap sm:items-center">
+    <div className="flex flex-col gap-2 border-t border-[var(--ar-border)] pt-4 sm:flex-row sm:flex-wrap sm:items-center" data-testid="guide-step-actions">
+      <div className="flex flex-col gap-2 sm:order-last sm:ml-auto sm:flex-row">{children}</div>
+      {onSkip === undefined ? null : (
+        <button
+          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-controls px-3 text-sm font-semibold text-[var(--ar-link)] underline underline-offset-4 hover:bg-[var(--ar-surface-muted)] sm:order-2"
+          data-testid="guide-skip"
+          onClick={onSkip}
+          type="button"
+        >
+          {skipDone ? <ArrowRight aria-hidden="true" className="size-4" /> : <SkipForward aria-hidden="true" className="size-4" />}
+          {skipDone ? t("actions.next") : t("actions.skip")}
+        </button>
+      )}
       {onBack === undefined ? null : (
-        <Button icon={<ArrowLeft aria-hidden="true" className="size-4" />} onClick={onBack} variant="ghost">
+        <Button className="sm:order-1" icon={<ArrowLeft aria-hidden="true" className="size-4" />} onClick={onBack} variant="ghost">
           {t("actions.back")}
         </Button>
       )}
-      {onSkip === undefined ? null : (
-        <Button icon={<SkipForward aria-hidden="true" className="size-4" />} onClick={onSkip} variant="ghost">
-          {t("actions.skip")}
-        </Button>
-      )}
-      <div className="flex flex-col gap-2 sm:ml-auto sm:flex-row">{children}</div>
     </div>
   );
 }
@@ -211,7 +221,7 @@ function WelcomeStep({ onNext }: { readonly onNext: () => void }) {
   return (
     <>
       <StepText body={t("welcome.body")} title={t("welcome.title", { name })} />
-      <StepActions onSkip={onNext}>
+      <StepActions>
         <Button icon={<ArrowRight aria-hidden="true" className="size-5" />} onClick={onNext} size="primary" variant="primary">
           {t("actions.start")}
         </Button>
@@ -246,8 +256,8 @@ function MachineStep({ done, state, update, onNext, onBack }: { readonly done: b
       <StepText body={t("machine.body")} title={t("machine.title")} />
       {state.assetName !== undefined ? <DoneNote>{t("machine.saved", { name: state.assetName })}</DoneNote> : done ? <DoneNote>{t("machine.already")}</DoneNote> : null}
       <form className="flex flex-col gap-4" id="guide-machine" noValidate onSubmit={submit}>
-        <Field error={fe.name} label={t("machine.name")} required>
-          {(p) => <Input {...p} autoComplete="off" name="name" onChange={(e) => setName(e.target.value)} placeholder={t("machine.namePlaceholder")} required value={name} />}
+        <Field error={fe.name} hint={t("machine.namePlaceholder")} label={t("machine.name")} required>
+          {(p) => <Input {...p} autoComplete="off" name="name" onChange={(e) => setName(e.target.value)} required value={name} />}
         </Field>
         <Field error={fe.category} label={t("machine.category")} required>
           {(p) => (
@@ -261,17 +271,12 @@ function MachineStep({ done, state, update, onNext, onBack }: { readonly done: b
           )}
         </Field>
         <FormError error={saving.error} fieldErrors={fe} />
-        <Link className="inline-flex min-h-12 items-center gap-2 self-start font-semibold text-[var(--ar-link)] underline underline-offset-4" href="/assets/new">
-          <ExternalLink aria-hidden="true" className="size-4" />
+        <Link className="inline-flex min-h-12 items-center gap-2 self-start font-semibold text-[var(--ar-link)] underline underline-offset-4" href={name.trim().length > 0 ? `/assets/new?name=${encodeURIComponent(name.trim())}` : "/assets/new"}>
+          <ArrowRight aria-hidden="true" className="size-4" />
           {t("machine.more")}
         </Link>
       </form>
-      <StepActions onBack={onBack} onSkip={onNext}>
-        {done || state.assetId !== undefined ? (
-          <Button icon={<ArrowRight aria-hidden="true" className="size-4" />} onClick={onNext} variant="secondary">
-            {t("actions.next")}
-          </Button>
-        ) : null}
+      <StepActions onBack={onBack} onSkip={onNext} skipDone={done || state.assetId !== undefined}>
         <Button busy={saving.busy} disabled={name.trim().length === 0} form="guide-machine" icon={<Tractor aria-hidden="true" className="size-5" />} size="primary" type="submit" variant="primary">
           {t("machine.submit")}
         </Button>
@@ -321,12 +326,7 @@ function TeamStep({ done, onNext, onBack }: { readonly done: boolean; readonly o
         </Field>
         <FormError error={inviting.error} fieldErrors={fe} />
       </form>
-      <StepActions onBack={onBack} onSkip={onNext}>
-        {done ? (
-          <Button icon={<ArrowRight aria-hidden="true" className="size-4" />} onClick={onNext} variant="secondary">
-            {t("actions.next")}
-          </Button>
-        ) : null}
+      <StepActions onBack={onBack} onSkip={onNext} skipDone={done}>
         <Button busy={inviting.busy} disabled={name.trim().length === 0} form="guide-team" icon={<UserPlus aria-hidden="true" className="size-5" />} size="primary" type="submit" variant="primary">
           {t("team.submit")}
         </Button>
@@ -360,12 +360,7 @@ function WorkOrderStep({ done, state, update, onNext, onBack }: { readonly done:
         </Field>
         <FormError error={saving.error} fieldErrors={fe} />
       </form>
-      <StepActions onBack={onBack} onSkip={onNext}>
-        {done ? (
-          <Button icon={<ArrowRight aria-hidden="true" className="size-4" />} onClick={onNext} variant="secondary">
-            {t("actions.next")}
-          </Button>
-        ) : null}
+      <StepActions onBack={onBack} onSkip={onNext} skipDone={done}>
         <Button busy={saving.busy} disabled={title.trim().length === 0} form="guide-work-order" icon={<Wrench aria-hidden="true" className="size-5" />} size="primary" type="submit" variant="primary">
           {t("workOrder.submit")}
         </Button>
@@ -412,7 +407,7 @@ function DoneStep({ tasks, update, onBack }: { readonly tasks: Record<GuideTask,
                 {tasks[task] ? <Check className="size-3.5" /> : null}
               </span>
               <span className={tasks[task] ? "text-[var(--ar-text-muted)]" : "font-semibold"}>{t(`tasks.${task}`)}</span>
-              <span className="sr-only">{tasks[task] ? t("completed") : t("pending")}</span>
+              <span className="text-xs text-[var(--ar-text-muted)]">({tasks[task] ? t("completed") : t("pending")})</span>
             </li>
           ))}
         </ul>

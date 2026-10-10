@@ -62,8 +62,8 @@
     "body": "{title} is close to its deadline."
   },
   "DEVICE_STALE_SYNC": {
-    "title": "Phone not syncing",
-    "body": "{name}'s phone has data waiting to be sent."
+    "title": "Phone with unsent data",
+    "body": "{name}'s phone has data that has not been sent yet."
   },
   "LATE_EVIDENCE": {
     "title": "Late evidence received",

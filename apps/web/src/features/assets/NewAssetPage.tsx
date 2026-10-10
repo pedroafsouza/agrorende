@@ -1,7 +1,7 @@
 "use client";
 
 import { Save } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
@@ -18,7 +18,8 @@ export function NewAssetPage() {
   const t = useTranslations("assets");
   const common = useTranslations("common");
   const router = useRouter();
-  const form = useAssetFormState();
+  const prefillName = useSearchParams().get("name") ?? undefined;
+  const form = useAssetFormState(undefined, prefillName);
   const [save, state] = useSave("assets", (body: Record<string, unknown>) => api<AssetDTO>("/assets", { method: "POST", body }), (asset) => router.push(`/assets/${asset.id}`));
   return (
     <div className="flex flex-col gap-4">

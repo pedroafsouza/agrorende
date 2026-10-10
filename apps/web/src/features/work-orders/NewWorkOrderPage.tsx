@@ -51,7 +51,7 @@ export function NewWorkOrderPage() {
             </p>
             <p>{t("offDuty.body")}</p>
             <div className="flex flex-wrap gap-2">
-              <Button busy={state.busy} onClick={() => void save(newWorkOrderBody(values, true))} variant="primary">
+              <Button pending={state.busy} onClick={() => void save(newWorkOrderBody(values, true))} variant="primary">
                 {t("offDuty.confirm")}
               </Button>
               <Button onClick={() => { set({ assigneeId: null }); state.reset(); }}>{t("offDuty.leaveUnassigned")}</Button>
@@ -108,7 +108,7 @@ export function NewWorkOrderPage() {
         </Field>
         <div className="flex justify-end gap-2">
           <Button onClick={() => router.push("/work-orders")}>{common("actions.cancel")}</Button>
-          <Button busy={state.busy} disabled={values.title.trim().length === 0} icon={<Save aria-hidden="true" className="size-4" />} size="primary" type="submit" variant="primary">
+          <Button pending={state.busy} disabled={values.title.trim().length === 0} icon={<Save aria-hidden="true" className="size-4" />} size="primary" type="submit" variant="primary">
             {t("actions.create")}
           </Button>
         </div>

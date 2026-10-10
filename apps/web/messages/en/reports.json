@@ -127,7 +127,7 @@
     "allSites": "All sites",
     "allStatuses": "All statuses",
     "emptyBody": "When someone on the team reports a problem from their phone, even offline, it shows up here.",
-    "emptyTitle": "No reports in the queue",
+    "emptyTitle": "No new reports",
     "from": "From",
     "needsTriage": "To triage",
     "openCount": "{count, plural, =0 {No reports to triage} one {# report to triage} other {# reports to triage}}",

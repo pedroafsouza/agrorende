@@ -136,7 +136,7 @@
   },
   "INVALID_CREDENTIALS": {
     "title": "E-mail ou senha não conferem",
-    "body": "Confira os dados e tente de novo. Seus rascunhos deste celular continuam salvos.",
+    "body": "Confira os dados e tente de novo. O que você digitou neste navegador continua aqui.",
     "action": "Tentar novamente"
   },
   "INVALID_TRANSITION": {
@@ -246,7 +246,7 @@
   },
   "REFRESH_REUSED": {
     "title": "Sessão protegida",
-    "body": "Por segurança, entre de novo neste celular. Seus dados locais continuam salvos.",
+    "body": "Por segurança, entre de novo neste navegador. Nada do que estava salvo foi perdido.",
     "action": "Entrar de novo"
   },
   "RENTAL_ASSET_MISMATCH": {
@@ -301,7 +301,7 @@
   },
   "RESET_LINK_EXPIRED": {
     "title": "Link vencido",
-    "body": "Solicite um novo link e tente novamente. Nenhum dado do celular foi apagado.",
+    "body": "Solicite um novo link e tente novamente. Nenhum dado foi apagado.",
     "action": "Solicitar novo link"
   },
   "RESET_REQUIRED": {
@@ -316,7 +316,7 @@
   },
   "STORAGE_FULL": {
     "title": "Envio de arquivos pausado",
-    "body": "Seus arquivos estão guardados no celular. Vamos tentar de novo quando houver espaço.",
+    "body": "Seus arquivos continuam guardados neste aparelho. Vamos tentar de novo quando houver espaço.",
     "action": "Acompanhar envio"
   },
   "TEMPLATE_VERSION_IN_USE": {
@@ -331,7 +331,7 @@
   },
   "UNAUTHENTICATED": {
     "title": "Entre para continuar",
-    "body": "Seus rascunhos deste celular continuam salvos. Entre com a mesma conta para enviar.",
+    "body": "Sua sessão terminou. Entre com a mesma conta para continuar de onde parou.",
     "action": "Entrar"
   },
   "UNKNOWN_MUTATION": {

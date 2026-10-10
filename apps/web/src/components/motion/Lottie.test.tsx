@@ -1,11 +1,22 @@
 // @vitest-environment jsdom
-import { cleanup, render, waitFor } from "@testing-library/react";
+import { act, cleanup, fireEvent, render as rtlRender, waitFor } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
+import type { ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import type * as Motion from "@agrorende/motion";
 import { motionMeta } from "@agrorende/motion";
 
-import { Lottie } from "./Lottie";
+import en from "../../../messages/en/common.json";
+import { Lottie, needsPauseControl } from "./Lottie";
+
+function render(ui: ReactElement) {
+  return rtlRender(
+    <NextIntlClientProvider locale="en" messages={{ common: en }}>
+      {ui}
+    </NextIntlClientProvider>,
+  );
+}
 
 const player = vi.hoisted(() => {
   const listeners = new Map<string, () => void>();
@@ -63,7 +74,7 @@ describe("Lottie", () => {
   it("reserves the animation's aspect ratio and hides itself from assistive technology", () => {
     const { getByTestId } = render(<Lottie id="welcome" />);
     const box = getByTestId("lottie");
-    expect(box.getAttribute("aria-hidden")).toBe("true");
+    expect(getByTestId("lottie-canvas").getAttribute("aria-hidden")).toBe("true");
     expect(box.style.aspectRatio).toBe(`${motionMeta.welcome.width} / ${motionMeta.welcome.height}`);
   });
 
@@ -106,5 +117,32 @@ describe("Lottie", () => {
     unmount();
     expect(player.animation.destroy).toHaveBeenCalledTimes(1);
     expect(disconnect).toHaveBeenCalledTimes(1);
+  });
+
+  it("offers a 48 px pause and play control on looping animations", async () => {
+    expect(needsPauseControl(true, 1000)).toBe(true);
+    expect(needsPauseControl(false, 1000)).toBe(false);
+    const { findByRole } = render(<Lottie id="empty" />);
+    const button = await findByRole("button", { name: "Pause animation" });
+    expect(button.className).toContain("size-12");
+    player.animation.play.mockClear();
+    act(() => fireEvent.click(button));
+    expect(player.animation.pause).toHaveBeenCalled();
+    expect(await findByRole("button", { name: "Play animation" })).toBeTruthy();
+    observerCallback?.([{ isIntersecting: true }]);
+    expect(player.animation.play).not.toHaveBeenCalled();
+    act(() => fireEvent.click(button));
+    expect(player.animation.play).toHaveBeenCalledTimes(1);
+  });
+
+  it("has no pause control when the animation plays once or motion is reduced", async () => {
+    const once = render(<Lottie id="empty" playOnce />);
+    await waitFor(() => expect(player.loadAnimation).toHaveBeenCalled());
+    expect(once.queryByRole("button")).toBeNull();
+    once.unmount();
+    setReducedMotion(true);
+    const reduced = render(<Lottie id="empty" />);
+    await waitFor(() => expect(player.animation.goToAndStop).toHaveBeenCalled());
+    expect(reduced.queryByRole("button")).toBeNull();
   });
 });

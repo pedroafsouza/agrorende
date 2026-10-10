@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 
 import { Lottie } from "@/components/motion/Lottie";
+import { showUndoToast } from "@/components/recovery/UndoToast";
 import { Button, buttonVariants } from "@/components/ui/Button";
 import { useMe } from "@/features/shell/useMe";
 
@@ -16,9 +17,10 @@ import { useGuideProgress } from "./useGuideProgress";
 export const GUIDE_HREF = "/getting-started";
 
 /**
- * Compact "Primeiros passos 2 de 4" card for the overview (SIMPLER-TO-SELL §4). ADMIN only; it
- * disappears when every task is done, when the admin hides it or finishes the guide. A brand-new
- * organisation (no machines yet) is taken to the guide once, automatically.
+ * Compact "Primeiros passos: 2 de 4 tarefas" card for the overview (SIMPLER-TO-SELL §4). ADMIN
+ * only; it disappears when every task is done, when the admin hides it or finishes the guide.
+ * Hiding offers an undo toast, and the guide stays reachable from the user menu and the command
+ * palette. A brand-new organisation (no machines yet) is taken to the guide once, automatically.
  */
 export function GuideProgressCard() {
   const t = useTranslations("tenancy.guide");
@@ -38,6 +40,10 @@ export function GuideProgressCard() {
 
   if (!isAdmin || !ready || !progress.isReady || progress.complete || state.dismissed === true || state.finished === true) return null;
   const percent = Math.round((progress.done / progress.total) * 100);
+  const hide = () => {
+    update({ dismissed: true });
+    showUndoToast(t("card.hidden"), t("card.undo"), () => update({ dismissed: false }));
+  };
   return (
     <section aria-labelledby="guide-card-title" className="flex flex-col gap-4 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4 sm:flex-row sm:items-center sm:gap-6" data-testid="guide-progress-card">
       <Lottie className="hidden w-28 shrink-0 sm:block" id="welcome" playOnce />
@@ -54,7 +60,7 @@ export function GuideProgressCard() {
           aria-valuemax={progress.total}
           aria-valuemin={0}
           aria-valuenow={progress.done}
-          className="h-2 overflow-hidden rounded-full bg-[var(--ar-surface-muted)]"
+          className="h-2 overflow-hidden rounded-full border-[var(--ar-border)] bg-[var(--ar-surface-muted)] [html[data-theme=outdoor]_&]:border"
           role="progressbar"
         >
           <div className="h-full rounded-full bg-[var(--ar-primary)]" style={{ width: `${percent}%` }} />
@@ -65,7 +71,7 @@ export function GuideProgressCard() {
           {t("card.continue")}
           <ArrowRight aria-hidden="true" className="size-4" />
         </Link>
-        <Button icon={<X aria-hidden="true" className="size-4" />} onClick={() => update({ dismissed: true })} variant="ghost">
+        <Button icon={<X aria-hidden="true" className="size-4" />} onClick={hide} variant="ghost">
           {t("card.hide")}
         </Button>
       </div>

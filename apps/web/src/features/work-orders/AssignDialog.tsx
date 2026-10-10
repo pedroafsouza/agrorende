@@ -61,7 +61,7 @@ export function AssignDialog({ workOrder, mode, open, onClose, onDone }: { reado
             {t("offDuty.title")}
           </p>
           <p>{t("offDuty.body")}</p>
-          <Button busy={busy} onClick={() => void submit(true)} variant="primary">
+          <Button pending={busy} onClick={() => void submit(true)} variant="primary">
             {t("offDuty.confirm")}
           </Button>
         </div>

@@ -70,7 +70,7 @@
     "closedHidden": "{count, plural, one {# OS encerrada não aparece no quadro} other {# OS encerradas não aparecem no quadro}}. Use a tabela para vê-las."
   },
   "actions": {
-    "new": "Nova OS",
+    "new": "Nova ordem de serviço",
     "create": "Criar OS",
     "assign": "Atribuir",
     "reassign": "Reatribuir",

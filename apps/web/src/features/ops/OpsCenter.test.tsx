@@ -304,6 +304,15 @@ describe("OpsCenter", () => {
     expect(screen.getByText("No one is live right now")).toBeTruthy();
   });
 
+  it("shows the day summary beside the KPIs and explains on-duty people missing from the map", async () => {
+    setResponses(live([]));
+    renderWithProviders(<OpsCenter store={new OperatorStore(() => NOW.getTime())} />);
+    const summary = await screen.findByTestId("kpi-summary");
+    await waitFor(() => expect(summary.textContent).toContain("3.5 h"));
+    expect(summary.textContent).toContain("SLA met");
+    expect((await screen.findByTestId("operators-not-on-map")).textContent).toContain("1 person on duty has not sent a phone position yet.");
+  });
+
   it("hides the satellite toggle when no tile URL is configured and keeps the boundary layer toggle", async () => {
     setResponses(live([operator()]));
     const { container } = renderWithProviders(<OpsCenter satelliteUrl={null} store={new OperatorStore(() => NOW.getTime())} />);

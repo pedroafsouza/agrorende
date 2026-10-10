@@ -39,9 +39,12 @@
       "7d": "7 days",
       "30d": "30 days"
     },
-    "slaCompliance": "SLA met: {value}",
-    "mttr": "Average repair time: {value} h",
-    "utilization": "Fleet utilisation: {value}",
+    "summary": {
+      "slaCompliance": "SLA met",
+      "mttr": "Average repair time",
+      "utilization": "Fleet utilisation"
+    },
+    "hours": "{value} h",
     "keys": {
       "open_reports": "Open reports",
       "unassigned_wos": "Unassigned jobs",
@@ -225,6 +228,8 @@
   },
   "operators": {
     "title": "Team on the map ({count})",
+    "notOnMap": "{count, plural, one {# person on duty has not sent a phone position yet.} other {# people on duty have not sent a phone position yet.}}",
+    "empty": "No one from the team is on the map right now.",
     "staleTag": "Out of date",
     "state": {
       "OFFLINE": "Offline",
@@ -250,6 +255,8 @@
   },
   "layers": {
     "label": "Map layers",
+    "short": "Layers",
+    "count": "{shown} of {total}",
     "operators": "Team",
     "reports": "Reports",
     "workOrders": "Jobs",

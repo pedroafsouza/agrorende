@@ -108,6 +108,10 @@
     "pending": "Enviando…",
     "photo": "Foto"
   },
+  "motion": {
+    "pause": "Pausar animação",
+    "play": "Tocar animação"
+  },
   "no": "Não",
   "notFound": {
     "back": "Voltar ao início",

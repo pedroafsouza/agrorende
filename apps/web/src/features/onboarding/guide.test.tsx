@@ -147,7 +147,7 @@ describe("GuideProgressCard", () => {
     renderWithProviders(<GuideProgressCard />);
     expect(await screen.findByRole("heading", { name: "Getting started" })).toBeTruthy();
     expect(screen.getByRole("progressbar").getAttribute("aria-valuenow")).toBe("2");
-    expect(screen.getByText("2 of 4")).toBeTruthy();
+    expect(screen.getByText("2 of 4 tasks")).toBeTruthy();
     expect(screen.getByRole("link", { name: "Continue" }).getAttribute("href")).toBe("/getting-started");
     expect(nav.replace).not.toHaveBeenCalled();
 

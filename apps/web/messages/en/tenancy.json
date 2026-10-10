@@ -75,7 +75,7 @@
       "title": "Add your first machine",
       "body": "Just the name and type. The rest can wait.",
       "name": "Machine name",
-      "namePlaceholder": "E.g. John Deere 6110J tractor",
+      "namePlaceholder": "Example: John Deere 6110J tractor",
       "category": "Type",
       "submit": "Save machine",
       "more": "More details",
@@ -119,10 +119,12 @@
     },
     "card": {
       "title": "Getting started",
-      "progress": "{done} of {total}",
+      "progress": "{done} of {total} tasks",
       "body": "Just a few steps left before your team starts using AgroRende.",
       "continue": "Continue",
-      "hide": "Hide"
+      "hide": "Hide",
+      "hidden": "Getting started hidden. You can still open it from your account menu.",
+      "undo": "Undo"
     }
   }
 }

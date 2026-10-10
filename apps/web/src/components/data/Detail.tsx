@@ -13,9 +13,9 @@ export function Detail({ label, value }: { readonly label: string; readonly valu
 
 export function Card({ title, children, className = "", actions }: { readonly title?: string; readonly children: ReactNode; readonly className?: string; readonly actions?: ReactNode }) {
   return (
-    <section className={`rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4 ${className}`}>
+    <section className={`ar-card rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] ${className}`}>
       {title === undefined && actions === undefined ? null : (
-        <div className="mb-3 flex flex-wrap items-center gap-2">
+        <div className="ar-card-head flex flex-wrap items-center gap-2">
           {title === undefined ? null : <h2 className="flex-1 text-lg font-semibold">{title}</h2>}
           {actions}
         </div>

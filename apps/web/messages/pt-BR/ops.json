@@ -39,9 +39,12 @@
       "7d": "7 dias",
       "30d": "30 dias"
     },
-    "slaCompliance": "SLA cumprido: {value}",
-    "mttr": "Tempo médio de reparo: {value} h",
-    "utilization": "Uso da frota: {value}",
+    "summary": {
+      "slaCompliance": "SLA cumprido",
+      "mttr": "Tempo médio de reparo",
+      "utilization": "Uso da frota"
+    },
+    "hours": "{value} h",
     "keys": {
       "open_reports": "Relatos abertos",
       "unassigned_wos": "OS sem técnico",
@@ -225,6 +228,8 @@
   },
   "operators": {
     "title": "Equipe no mapa ({count})",
+    "notOnMap": "{count, plural, one {# pessoa em serviço ainda não enviou a posição do celular.} other {# pessoas em serviço ainda não enviaram a posição do celular.}}",
+    "empty": "Ninguém da equipe aparece no mapa agora.",
     "staleTag": "Desatualizado",
     "state": {
       "OFFLINE": "Offline",
@@ -250,6 +255,8 @@
   },
   "layers": {
     "label": "Camadas do mapa",
+    "short": "Camadas",
+    "count": "{shown} de {total}",
     "operators": "Equipe",
     "reports": "Relatos",
     "workOrders": "OS",

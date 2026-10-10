@@ -26,7 +26,7 @@ export default async function RootLayout({ children }: { readonly children: Reac
   const messages = await loadWebMessages(locale);
 
   return (
-    <html lang={locale} style={campoClaroThemeStyle}>
+    <html lang={locale} style={campoClaroThemeStyle} suppressHydrationWarning>
       <head>
         <meta name={REALTIME_URL_META} content={serverRealtimeUrl()} />
       </head>

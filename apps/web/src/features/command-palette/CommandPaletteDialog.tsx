@@ -6,6 +6,7 @@ import {
   Building2,
   CornerDownLeft,
   FileText,
+  Flag,
   Loader2,
   MapPinned,
   Plus,
@@ -44,11 +45,13 @@ const RESULT_GROUPS: readonly {
   { type: "customers", icon: Building2, showSubtitle: true },
   { type: "sites", icon: MapPinned, showSubtitle: true },
 ];
-const ACTIONS = [
+const ACTIONS: readonly { readonly key: string; readonly href: string; readonly icon: LucideIcon; readonly adminOnly?: boolean }[] = [
   { key: "newWorkOrder", href: "/work-orders/new", icon: Wrench },
   { key: "newRental", href: "/rentals/new", icon: Truck },
   { key: "newAsset", href: "/assets/new", icon: Tractor },
-] as const;
+  // The getting-started guide has no sidebar entry, so ADMINs reach it here and from the user menu.
+  { key: "gettingStarted", href: "/getting-started", icon: Flag, adminOnly: true },
+];
 
 const fold = (value: string) =>
   value
@@ -107,7 +110,7 @@ export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void
     [role, t],
   );
   const shownPages = filter === "" ? pages : pages.filter((p) => fold(p.label).includes(filter));
-  const shownActions = ACTIONS.map((a) => ({
+  const shownActions = ACTIONS.filter((a) => a.adminOnly !== true || role === "ADMIN").map((a) => ({
     ...a,
     label: t(`commandPalette.actions.${a.key}`),
   })).filter((a) => filter === "" || fold(a.label).includes(filter));
@@ -122,6 +125,7 @@ export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void
 
   return (
     <Dialog
+      className="mx-auto mt-[15vh] mb-auto max-w-[40rem]"
       closeLabel={t("commandPalette.close")}
       onClose={onClose}
       open
@@ -214,7 +218,7 @@ export function CommandPaletteDialog({ onClose }: { readonly onClose: () => void
                   onSelect={() => go(a.href)}
                   value={`action:${a.key}`}
                 >
-                  <Plus aria-hidden="true" className="size-5 shrink-0 text-[var(--ar-primary)]" />
+                  {a.adminOnly === true ? <span aria-hidden="true" className="size-5 shrink-0" /> : <Plus aria-hidden="true" className="size-5 shrink-0 text-[var(--ar-primary)]" />}
                   <a.icon
                     aria-hidden="true"
                     className="size-5 shrink-0 text-[var(--ar-text-muted)]"

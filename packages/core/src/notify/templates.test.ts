@@ -38,6 +38,6 @@ describe("notification templates", () => {
     expect(renderIcu("{n, plural, one {# item} other {# items}} for {name}", { n: 2, name: "Ana" }, "en")).toBe("2 items for Ana");
     expect(renderNotification("WO_ASSIGNED", { title: "Plantio" }, "en")).toEqual({ title: "New job assigned", body: "Plantio. Open the job to see the next step." });
     expect(renderNotification("COMMENT_ADDED", { name: "Ana", title: "Trator 3" }, "pt-BR")).toEqual({ title: "Novo comentário", body: "Ana comentou em Trator 3." });
-    expect(renderNotification("DEVICE_STALE_SYNC", { name: "Ana" }, "en").body).toBe("Ana's phone has data waiting to be sent.");
+    expect(renderNotification("DEVICE_STALE_SYNC", { name: "Ana" }, "en").body).toBe("Ana's phone has data that has not been sent yet.");
   });
 });
