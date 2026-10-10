@@ -214,7 +214,14 @@ jobs:
         env:
           MONGODB_DB: agrorende_e2e
           MEDIA_ROOT: ./.data/media-e2e
-        run: pnpm --filter web exec playwright test
+        # Load the public local values (JWT_SECRET, AUTH_ENCRYPTION_KEY, ...) from .env.example;
+        # E2E_ENV in apps/web/e2e/support/env.ts still overrides ports, database and media.
+        run: |
+          set -a
+          . ./.env.example
+          set +a
+          export MONGODB_DB=agrorende_e2e MEDIA_ROOT=./.data/media-e2e
+          pnpm --filter web exec playwright test
 
       - name: Upload Playwright results
         if: always()
