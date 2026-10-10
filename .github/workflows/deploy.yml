@@ -60,7 +60,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
@@ -149,7 +149,7 @@ jobs:
     steps:
       # Compose and Caddy files come from the commit of the image, so a rollback also rolls them back.
       - name: Checkout the deployed commit
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           ref: ${{ needs.guard.outputs.commit }}
 
