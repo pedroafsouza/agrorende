@@ -4,12 +4,12 @@ packages:
 
 # One version for libraries used by several packages.
 catalog:
-  typescript: ^5.9.0
+  typescript: ^7.0.2
   zod: ^4.1.0
   react: 19.x
   react-dom: 19.x
   vitest: ^3.2.0
-  "@types/node": ^24.0.0
+  "@types/node": ^26.6.4
   "@types/react": ^19.0.0
   mongodb: ^7.7.0
   bson: ^7.3.0
