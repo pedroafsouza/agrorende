@@ -272,6 +272,32 @@ describe("media", () => {
     expect(locked.status).toBe(409);
   });
 
+  it("signs the original for a missing thumbnail only when fallback=original is asked", async () => {
+    const { body } = await createPhoto(JPEG.byteLength);
+    const id = body.media.id;
+    expect((await put(body.upload.url, JPEG)).status).toBe(200);
+    expect((await call("POST /media/:id/complete", { token: admin, params: { id }, body: { variant: "original" } })).status).toBe(200);
+
+    const strict = await call("GET /media/:id/url", { token: admin, params: { id }, query: { variant: "thumb" } });
+    expect(strict.status).toBe(404);
+    expect(await strict.json()).toMatchObject({ error: { code: "MEDIA_NOT_IN_STORAGE" } });
+
+    const unsigned = await call("GET /media/:id/blob", { params: { id }, query: { variant: "thumb" } });
+    expect(unsigned.status).toBe(403);
+    expect(await unsigned.json()).toMatchObject({ error: { details: { reason: "media_token" } } });
+
+    const fallback = await call("GET /media/:id/url", { token: admin, params: { id }, query: { variant: "thumb", fallback: "original" } });
+    expect(fallback.status).toBe(302);
+    const location = new URL(fallback.headers.get("location") ?? "");
+    expect(location.searchParams.get("variant")).toBe("original");
+    const blob = await send("GET /media/:id/blob", "GET", location.toString(), { params: { id } });
+    expect(blob.status).toBe(200);
+    expect(blob.headers.get("content-type")).toBe("image/jpeg");
+
+    const invalid = await call("GET /media/:id/url", { token: admin, params: { id }, query: { variant: "thumb", fallback: "poster" } });
+    expect(invalid.status).toBe(422);
+  });
+
   it("rejects a token for another media id", async () => {
     const first = await createPhoto(JPEG.byteLength);
     const second = await createPhoto(JPEG.byteLength);

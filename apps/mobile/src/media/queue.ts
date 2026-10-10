@@ -5,6 +5,8 @@ import type { FileStore, UploadResponse } from "./files";
 export const MEDIA_CONCURRENCY = 2;
 export const MEDIA_BACKOFF_BASE_MS = 5_000;
 export const MEDIA_BACKOFF_MAX_MS = 30 * 60 * 1000;
+/** Mirrors the server's VARIANT_MAX_BYTES for thumb and poster uploads (ARCHITECTURE §7.7). */
+export const PREVIEW_MAX_BYTES = 2 * 1024 * 1024;
 export const MEDIA_KEEP_AFTER_DONE_MS = 7 * 24 * 60 * 60 * 1000;
 export const MEDIA_PRUNE_FREE_BYTES = 1024 * 1024 * 1024;
 
@@ -159,7 +161,9 @@ export async function uploadOne(deps: MediaQueueDeps, row: MediaFileRow): Promis
     if (row.thumbUri !== null && progress.thumb !== true && (await files.exists(row.thumbUri))) {
       const variant: MediaVariant = row.kind === "VIDEO" ? "poster" : "thumb";
       const size = await files.size(row.thumbUri);
-      const target = await alreadyStored(api.uploadUrl(row.mediaId, { sizeBytes: size, mimeType: "image/jpeg", variant }));
+      // An oversized preview (for example an annotated full-size image) would be refused with the terminal
+      // MEDIA_TOO_LARGE and fail the whole row; skip it instead and let the office fall back to the original.
+      const target = size > PREVIEW_MAX_BYTES ? STORED : await alreadyStored(api.uploadUrl(row.mediaId, { sizeBytes: size, mimeType: "image/jpeg", variant }));
       if (target !== STORED && target.mode === "single") {
         const response = await files.upload(target.url, row.thumbUri, { mimeType: "image/jpeg", ...(target.headers === undefined ? {} : { headers: target.headers }) });
         if (response.status >= 300 && !lockedResponse(response)) throw uploadError(response);

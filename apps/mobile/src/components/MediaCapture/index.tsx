@@ -33,6 +33,10 @@ export type MediaCaptureProps = {
 };
 
 /** Camera + voice note + tag chips + thumbnail strip; every capture is durable before it is shown (§7.7). */
+// Loaded on demand so the native image and video modules stay out of the first render.
+const preparePhoto: NonNullable<CaptureDeps["preparePhoto"]> = async (uri, width, height) => (await import("../../media/processing")).processPhoto(uri, width, height);
+const prepareVideoPoster: NonNullable<CaptureDeps["prepareVideoPoster"]> = async (uri) => (await import("../../media/processing")).processVideoPoster(uri);
+
 export function MediaCapture({ parent, allowedTags, silhouette, onChange, value, allowVideo = true, allowVoice = true, checklistItemKey, deps, onTypeNoteInstead }: MediaCaptureProps) {
   const services = useServices();
   const [internal, setInternal] = useState<readonly MediaDraft[]>([]);
@@ -42,7 +46,7 @@ export function MediaCapture({ parent, allowedTags, silhouette, onChange, value,
   const [error, setError] = useState<string | undefined>();
   const [annotating, setAnnotating] = useState<MediaDraft | undefined>();
   const resolved: CaptureDeps | undefined =
-    deps ?? (services.db !== undefined && services.files !== undefined ? { db: services.db, files: services.files, newId: services.newId ?? (() => `${Date.now()}`), now: services.now ?? Date.now } : undefined);
+    deps ?? (services.db !== undefined && services.files !== undefined ? { db: services.db, files: services.files, newId: services.newId ?? (() => `${Date.now()}`), now: services.now ?? Date.now, preparePhoto, prepareVideoPoster } : undefined);
   const counts = countByTag(drafts);
 
   const publish = (next: readonly MediaDraft[]) => {

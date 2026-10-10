@@ -322,14 +322,39 @@ async function loadForRead(ctx: Ctx, mediaId: string): Promise<Media> {
   return media;
 }
 
+const FallbackSchema = z.enum(["original"]);
+
+export interface ReadUrlOptions {
+  readonly now?: Date;
+  /**
+   * `fallback=original`: when the requested preview variant was never uploaded (web uploads and
+   * older app builds send no thumbnail), sign the stored original instead of answering
+   * `MEDIA_NOT_IN_STORAGE`. Without it the §7.7 step 9 behaviour is unchanged.
+   */
+  readonly fallback?: string | null;
+}
+
+/**
+ * Picks the variant to sign: the requested one when it is stored, otherwise the original when the
+ * caller opted into `fallback=original` and the original is stored.
+ */
+export function resolveReadVariant(media: Pick<Media, "variants">, requested: MediaVariant, fallback: "original" | null): MediaVariant | null {
+  if (variantStatus(media, requested) === "UPLOADED") return requested;
+  if (fallback === "original" && requested !== "original" && variantStatus(media, "original") === "UPLOADED") return "original";
+  return null;
+}
+
 /** `GET /media/:id/url`: a 5-minute signed absolute blob URL for the 302 redirect. */
-export async function readUrl(ctx: Ctx, mediaId: string, variantInput: string | null, now: Date = new Date()): Promise<{ url: string; expiresAt: string }> {
+export async function readUrl(ctx: Ctx, mediaId: string, variantInput: string | null, options: ReadUrlOptions = {}): Promise<{ url: string; expiresAt: string; variant: MediaVariant }> {
   const variant = VariantSchema.safeParse(variantInput ?? "original");
   if (!variant.success) throw new AppError("VALIDATION_FAILED", { fieldErrors: [{ path: "variant", code: "invalid_enum_value" }] });
+  const fallback = options.fallback === undefined || options.fallback === null || options.fallback === "" ? null : FallbackSchema.safeParse(options.fallback);
+  if (fallback !== null && !fallback.success) throw new AppError("VALIDATION_FAILED", { fieldErrors: [{ path: "fallback", code: "invalid_enum_value" }] });
   const media = await loadForRead(ctx, mediaId);
-  if (variantStatus(media, variant.data) !== "UPLOADED") throw new AppError("MEDIA_NOT_IN_STORAGE", { details: { id: mediaId, variant: variant.data } });
-  const t = await signToken({ sub: mediaId, v: variant.data, op: "get" }, READ_URL_TTL_S);
-  return { url: apiUrl(`/media/${mediaId}/blob`, { variant: variant.data, t }), expiresAt: expiresAt(now, READ_URL_TTL_S) };
+  const resolved = resolveReadVariant(media, variant.data, fallback === null ? null : fallback.data);
+  if (resolved === null) throw new AppError("MEDIA_NOT_IN_STORAGE", { details: { id: mediaId, variant: variant.data } });
+  const t = await signToken({ sub: mediaId, v: resolved, op: "get" }, READ_URL_TTL_S);
+  return { url: apiUrl(`/media/${mediaId}/blob`, { variant: resolved, t }), expiresAt: expiresAt(options.now ?? new Date(), READ_URL_TTL_S), variant: resolved };
 }
 
 export interface BlobRead {

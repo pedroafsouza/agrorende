@@ -166,7 +166,8 @@ export const mediaBlobGetHandler: RouteHandler = route(async (request, params) =
 /** `GET /media/:id/url`: 302 to a short-lived signed blob URL. */
 export const mediaUrlHandler: RouteHandler = route(async (request, params) => {
   const { ctx } = await authenticate(request);
-  const result = await readUrl(ctx, Id.parse(params.id), searchParams(request).get("variant"));
+  const query = searchParams(request);
+  const result = await readUrl(ctx, Id.parse(params.id), query.get("variant"), { fallback: query.get("fallback") });
   return new Response(null, { status: 302, headers: { location: result.url, "cache-control": "private, max-age=240" } });
 });
 
