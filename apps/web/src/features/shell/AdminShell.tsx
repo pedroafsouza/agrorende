@@ -15,6 +15,7 @@ import { isActive, visibleNav, type NavItem } from "@/components/shell/nav";
 import { cn } from "@/lib/cn";
 
 import { LanguageSwitch } from "./LanguageSwitch";
+import { PageContext } from "./PageContext";
 import { NotificationsBell, useAttentionCount } from "./NotificationsBell";
 import { ThemeToggle } from "./ThemeToggle";
 import { useMe } from "./useMe";
@@ -189,6 +190,7 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
           </header>
           {banner}
           <main className="mx-auto w-full max-w-7xl flex-1 p-4 lg:p-6" id="main" tabIndex={-1}>
+            <PageContext role={effectiveRole} />
             {children}
           </main>
         </div>

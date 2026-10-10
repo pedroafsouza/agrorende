@@ -154,5 +154,114 @@
       "newRental": "Nova locação",
       "newAsset": "Nova máquina"
     }
+  },
+  "context": {
+    "about": "Sobre esta página",
+    "breadcrumb": "Você está em",
+    "detail": "Detalhes",
+    "hide": "Ocultar explicação",
+    "home": "Início",
+    "new": "Novo",
+    "related": "Páginas relacionadas",
+    "show": "Sobre esta página",
+    "whatYouCanDo": "O que fazer aqui",
+    "pages": {
+      "ops": {
+        "body": "Visão do dia: o que está em campo, o que atrasou e quem está trabalhando agora.",
+        "tasks": "Acompanhe as ordens abertas, veja os técnicos no mapa e abra qualquer item para agir."
+      },
+      "attention": {
+        "body": "Tudo que precisa de uma decisão do escritório, em ordem de urgência.",
+        "tasks": "Resolva relatos críticos, ordens atrasadas, locações vencendo e falhas de sincronização."
+      },
+      "reports": {
+        "body": "Relatos enviados pelo app de campo: checklists, fotos, defeitos e assinaturas.",
+        "tasks": "Filtre por máquina ou status, revise o relato e gere uma ordem de serviço a partir dele."
+      },
+      "workOrders": {
+        "body": "Ordens de serviço do pedido até o fechamento: quem faz, onde, quando e quanto custou.",
+        "tasks": "Crie e atribua ordens, acompanhe o status e feche com peças, horas e assinatura."
+      },
+      "rentals": {
+        "body": "Máquinas alugadas para clientes, com período, valores e situação da devolução.",
+        "tasks": "Abra uma locação, registre retirada e devolução e veja o que está para vencer."
+      },
+      "assets": {
+        "body": "Cadastro das máquinas e implementos, com horímetro, histórico e documentos.",
+        "tasks": "Cadastre uma máquina, consulte o histórico de serviços e imprima a etiqueta QR."
+      },
+      "sites": {
+        "body": "Fazendas, talhões e pátios onde as máquinas trabalham ou ficam guardadas.",
+        "tasks": "Cadastre locais, veja o mapa e quais máquinas estão em cada um."
+      },
+      "customers": {
+        "body": "Clientes que contratam serviços ou locações, com contatos e locais.",
+        "tasks": "Cadastre clientes, veja suas ordens e locações e mantenha os contatos em dia."
+      },
+      "team": {
+        "body": "Pessoas da sua organização e o papel de cada uma no escritório ou no campo.",
+        "tasks": "Convide pessoas, mude papéis e veja a carga de trabalho de cada técnico."
+      },
+      "devices": {
+        "body": "Celulares e tablets que usam o app de campo com a conta da organização.",
+        "tasks": "Veja a última sincronização de cada aparelho e revogue o acesso de um aparelho perdido."
+      },
+      "templates": {
+        "body": "Modelos de checklist que os técnicos preenchem no app de campo.",
+        "tasks": "Crie e publique checklists, com itens obrigatórios, fotos e assinaturas."
+      },
+      "seasons": {
+        "body": "Safras que agrupam serviços e custos por período agrícola.",
+        "tasks": "Abra e encerre safras para comparar custos e produtividade entre períodos."
+      },
+      "costs": {
+        "body": "Custos lançados em ordens, máquinas e safras: peças, mão de obra e combustível.",
+        "tasks": "Lance custos, filtre por período e exporte para a contabilidade."
+      },
+      "imports": {
+        "body": "Importação de planilhas para cadastrar muitos registros de uma vez.",
+        "tasks": "Envie um CSV de máquinas, clientes ou equipe, confira a prévia e confirme."
+      },
+      "settings": {
+        "body": "Dados da organização, fuso horário, idioma e regras de trabalho.",
+        "tasks": "Ajuste os dados da empresa e as preferências que valem para toda a equipe."
+      },
+      "subscription": {
+        "body": "Plano contratado, limites de uso e faturas do AgroRende.",
+        "tasks": "Veja o uso do plano, mude de plano e baixe as faturas."
+      },
+      "notifications": {
+        "body": "Avisos recentes sobre ordens, relatos e locações que envolvem você.",
+        "tasks": "Marque avisos como lidos e abra o item relacionado com um toque."
+      },
+      "account": {
+        "body": "Seus dados pessoais, senha e preferências de acesso.",
+        "tasks": "Mude nome, senha, idioma e tema da sua conta."
+      },
+      "analytics": {
+        "body": "Indicadores de operação: disponibilidade das máquinas, prazos e custos.",
+        "tasks": "Compare períodos e encontre as máquinas e serviços que mais pesam."
+      },
+      "parts": {
+        "body": "Catálogo de peças usadas nas manutenções, com código e preço.",
+        "tasks": "Cadastre peças e veja em quais ordens e máquinas elas foram usadas."
+      },
+      "stock": {
+        "body": "Saldo de peças por local, com entradas, saídas e mínimo de reposição.",
+        "tasks": "Registre movimentações e veja o que está abaixo do mínimo."
+      },
+      "maintenance": {
+        "body": "Planos de manutenção preventiva por horímetro ou calendário.",
+        "tasks": "Crie planos, veja o que vence em breve e gere as ordens de serviço."
+      },
+      "fuel": {
+        "body": "Abastecimentos por máquina, com litros, horímetro e consumo médio.",
+        "tasks": "Registre abastecimentos e encontre máquinas com consumo fora do normal."
+      },
+      "billing": {
+        "body": "Cobranças de serviços e locações para os clientes.",
+        "tasks": "Gere cobranças, acompanhe pagamentos e exporte os documentos."
+      }
+    }
   }
 }

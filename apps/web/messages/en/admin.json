@@ -154,5 +154,114 @@
       "newRental": "New rental",
       "newAsset": "New machine"
     }
+  },
+  "context": {
+    "about": "About this page",
+    "breadcrumb": "You are here",
+    "detail": "Details",
+    "hide": "Hide explanation",
+    "home": "Home",
+    "new": "New",
+    "related": "Related pages",
+    "show": "About this page",
+    "whatYouCanDo": "What you can do here",
+    "pages": {
+      "ops": {
+        "body": "Today at a glance: what is in the field, what is late and who is working now.",
+        "tasks": "Follow open work orders, see technicians on the map and open any item to act on it."
+      },
+      "attention": {
+        "body": "Everything that needs an office decision, sorted by urgency.",
+        "tasks": "Resolve critical reports, late work orders, rentals about to end and sync failures."
+      },
+      "reports": {
+        "body": "Reports sent from the field app: checklists, photos, defects and signatures.",
+        "tasks": "Filter by asset or status, review a report and turn it into a work order."
+      },
+      "workOrders": {
+        "body": "Work orders from request to close: who does it, where, when and what it cost.",
+        "tasks": "Create and assign work orders, follow their status and close them with parts, hours and a signature."
+      },
+      "rentals": {
+        "body": "Assets rented to customers, with period, prices and return status.",
+        "tasks": "Open a rental, record pick-up and return, and see what is about to end."
+      },
+      "assets": {
+        "body": "Machines and implements, with hour meter, history and documents.",
+        "tasks": "Add an asset, check its service history and print its QR label."
+      },
+      "sites": {
+        "body": "Farms, fields and yards where assets work or are kept.",
+        "tasks": "Add sites, see them on the map and check which assets are at each one."
+      },
+      "customers": {
+        "body": "Customers who hire services or rentals, with their contacts and sites.",
+        "tasks": "Add customers, see their work orders and rentals and keep contacts up to date."
+      },
+      "team": {
+        "body": "People in your organisation and their office or field role.",
+        "tasks": "Invite people, change roles and see each technician's workload."
+      },
+      "devices": {
+        "body": "Phones and tablets that use the field app with your organisation's account.",
+        "tasks": "See when each device last synced and revoke access for a lost device."
+      },
+      "templates": {
+        "body": "Checklist templates that technicians fill in on the field app.",
+        "tasks": "Create and publish checklists with required items, photos and signatures."
+      },
+      "seasons": {
+        "body": "Seasons group services and costs by farming period.",
+        "tasks": "Open and close seasons to compare costs and output between periods."
+      },
+      "costs": {
+        "body": "Costs recorded on work orders, assets and seasons: parts, labour and fuel.",
+        "tasks": "Record costs, filter by period and export them for accounting."
+      },
+      "imports": {
+        "body": "Spreadsheet imports to add many records at once.",
+        "tasks": "Upload a CSV of assets, customers or team members, check the preview and confirm."
+      },
+      "settings": {
+        "body": "Organisation details, time zone, language and work rules.",
+        "tasks": "Adjust company details and the preferences that apply to the whole team."
+      },
+      "subscription": {
+        "body": "Your AgroRende plan, usage limits and invoices.",
+        "tasks": "Check plan usage, change plan and download invoices."
+      },
+      "notifications": {
+        "body": "Recent alerts about work orders, reports and rentals that involve you.",
+        "tasks": "Mark alerts as read and open the related item in one click."
+      },
+      "account": {
+        "body": "Your personal details, password and sign-in preferences.",
+        "tasks": "Change your name, password, language and theme."
+      },
+      "analytics": {
+        "body": "Operational indicators: asset availability, lead times and costs.",
+        "tasks": "Compare periods and find the assets and services that weigh the most."
+      },
+      "parts": {
+        "body": "Catalogue of parts used in maintenance, with code and price.",
+        "tasks": "Add parts and see which work orders and assets used them."
+      },
+      "stock": {
+        "body": "Parts on hand per site, with receipts, issues and reorder minimums.",
+        "tasks": "Record stock movements and see what is below the minimum."
+      },
+      "maintenance": {
+        "body": "Preventive maintenance plans by hour meter or calendar.",
+        "tasks": "Create plans, see what is due soon and generate the work orders."
+      },
+      "fuel": {
+        "body": "Fuel fills per asset, with litres, hour meter and average consumption.",
+        "tasks": "Record fuel fills and spot assets with unusual consumption."
+      },
+      "billing": {
+        "body": "Charges to customers for services and rentals.",
+        "tasks": "Create charges, follow payments and export the documents."
+      }
+    }
   }
 }
