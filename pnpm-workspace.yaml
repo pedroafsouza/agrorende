@@ -50,3 +50,22 @@ overrides:
   "@playwright/cli>@playwright/test": "1.64.0"
   "@playwright/cli>playwright": "1.64.0"
   "@playwright/cli>playwright-core": "1.64.0"
+  # GHSA-w5hq-g745-h8pq (uuid <11.1.1): `xcode` (Expo config plugins) pins uuid ^7 and only calls
+  # `require("uuid").v4()`, which uuid 11 still exports from its CommonJS build.
+  "xcode>uuid": "^11.1.1"
+
+# Advisories whose patched versions are not published on npmjs.org yet, so no override can reach
+# them. All three reach the tree only through Expo tooling in apps/mobile (development and build
+# time, never shipped in the app bundle or run by the web, realtime or worker services). Remove
+# each entry as soon as the patched version is published and add an override above instead.
+auditConfig:
+  ignoreGhsas:
+    # node-forge <=1.4.0, patched >=1.4.1 (latest published: 1.4.0). Used by @expo/cli and
+    # @expo/code-signing-certificates for local dev-server HTTPS and update code signing.
+    - GHSA-86w9-cpqp-85rv
+    # braces <=3.0.3, patched >=3.0.4 (latest published: 3.0.3). Used by micromatch inside the
+    # Metro bundler file map; patterns come from the repository's own configuration.
+    - GHSA-vfj7-8cjw-p6xm
+    # sprintf-js <=1.1.3, patched >=1.1.4 (latest published: 1.1.3). Used by argparse 1 through
+    # js-yaml 3 in the Jest/Babel tooling pulled in by Expo; format strings are not user input.
+    - GHSA-hp3w-g68c-fv3c

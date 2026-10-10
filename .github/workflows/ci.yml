@@ -43,8 +43,7 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      # Requires pnpm-lock.yaml, which is not committed yet and must be generated once on a
-      # machine with direct npmjs access. See the "Current state" section of README.md.
+      # pnpm-lock.yaml is committed; a dependency change must update it with `pnpm install`.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -140,8 +139,7 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      # Requires pnpm-lock.yaml, which is not committed yet and must be generated once on a
-      # machine with direct npmjs access. See the "Current state" section of README.md.
+      # pnpm-lock.yaml is committed; a dependency change must update it with `pnpm install`.
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 

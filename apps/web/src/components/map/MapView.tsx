@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { forwardRef, useEffect, useImperativeHandle, useRef, type ReactNode } from "react";
 import Map, { Marker, NavigationControl, type MapProps, type MapRef } from "react-map-gl/maplibre";
 
+import { MAPLIBRE_WORKER_URL } from "./maplibreWorker";
 import { useMapLayers } from "./useMapLayers";
 
 const LIGHT_STYLE = process.env.NEXT_PUBLIC_MAP_STYLE_URL ?? "https://tiles.openfreemap.org/styles/liberty";
@@ -81,7 +82,7 @@ export const MapView = forwardRef<MapRef, MapViewProps>(function MapView(
 
   return (
     <div aria-label={t("map.label")} className={className ?? "h-80 overflow-hidden rounded-cards border border-[var(--ar-border)]"} role="region">
-      <Map initialViewState={{ longitude: initial.lng, latitude: initial.lat, zoom: initial.zoom }} interactiveLayerIds={interactiveLayerIds} mapStyle={resolvedTheme === "dark" ? DARK_STYLE : LIGHT_STYLE} onClick={onClick} onError={onError} onLoad={onLoad} ref={ref}>
+      <Map initialViewState={{ longitude: initial.lng, latitude: initial.lat, zoom: initial.zoom }} interactiveLayerIds={interactiveLayerIds} mapStyle={resolvedTheme === "dark" ? DARK_STYLE : LIGHT_STYLE} onClick={onClick} onError={onError} onLoad={onLoad} ref={ref} workerUrl={MAPLIBRE_WORKER_URL}>
         <NavigationControl position="top-right" />
         {points.map((p) => (
           <MapMarker key={p.id} onClick={onPointClick} point={p} />

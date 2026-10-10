@@ -9,6 +9,7 @@ import Map, { Layer, NavigationControl, Source, type MapLayerMouseEvent, type Ma
 
 import { campoClaroPalette } from "@agrorende/design-tokens";
 
+import { MAPLIBRE_WORKER_URL } from "@/components/map/maplibreWorker";
 import { Button } from "@/components/ui/Button";
 
 import type { PlotBoundariesDTO } from "@agrorende/core/modules/ops/boundaries";
@@ -224,6 +225,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
           onError={() => setFailed(true)}
           onLoad={onLoad}
           ref={ref}
+          workerUrl={MAPLIBRE_WORKER_URL}
         >
           <NavigationControl position="top-right" />
           {satelliteUrl === null ? null : (
