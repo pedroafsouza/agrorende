@@ -37,6 +37,8 @@ test("pages are white by default and the dark theme stays accessible", async ({ 
 test("touch targets in the header and CTAs are at least 48 px tall", async ({ page }) => {
   await page.goto("/pt-br/?lite=0");
   for (const selector of ['[data-cta="signup"]', '[data-contact="whatsapp"]', '[data-cta="video"]', "[data-motion-toggle]"]) {
+    // The hero video link only ships when the video file was present at build time.
+    if (selector === '[data-cta="video"]' && (await page.locator(`main ${selector}`).count()) === 0) continue;
     const box = await page.locator(`main ${selector}`).first().boundingBox();
     expect(box?.height ?? 0, selector).toBeGreaterThanOrEqual(48);
     expect(box?.width ?? 0, selector).toBeGreaterThanOrEqual(48);

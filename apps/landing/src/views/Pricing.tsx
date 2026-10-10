@@ -87,7 +87,7 @@ export function PricingView({ locale, showPrices = siteConfig.showPrices }: { re
               {t("pricing.proposalTitle")}
             </h2>
             <p className="max-w-[60ch] text-lg text-fg-muted">{t("pricing.proposalBody")}</p>
-            <Contact locale={locale} channels="whatsapp" variant="primary" whatsappLabel={t("cta.proposal")} />
+            <Contact locale={locale} channels="whatsapp" variant="secondary" whatsappLabel={t("cta.proposal")} />
           </section>
         )}
 

@@ -31,12 +31,13 @@ describe("pricing", () => {
 
 describe("home", () => {
   it("has one primary CTA label, WhatsApp as the only secondary and no e-mail button", () => {
-    const html = renderToStaticMarkup(<HomeView locale="pt-br" />);
+    const html = renderToStaticMarkup(<HomeView locale="pt-br" showVideoLink />);
     expect(html).toContain("Saiba quanto cada máquina custa e rende");
     expect(html).toContain("Testar grátis por 30 dias");
     expect(html).toContain('data-contact="whatsapp"');
     expect(html).not.toContain('data-contact="email"');
     expect(html).toContain("/pt-br/recursos/#video");
+    expect(renderToStaticMarkup(<HomeView locale="pt-br" showVideoLink={false} />)).not.toContain('data-cta="video"');
     for (const id of ["welcome", "report-offline", "flow-loop", "machine-cost", "saved-on-phone"]) {
       expect(html).toContain(`data-animation="${id}"`);
     }

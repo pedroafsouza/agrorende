@@ -5,6 +5,7 @@ import { CtaGroup, StoreLinks } from "@/components/CtaGroup";
 import { JsonLd } from "@/components/JsonLd";
 import { container, sectionTitle } from "@/components/ui";
 import { siteConfig } from "@/lib/config";
+import { hasDemoVideo } from "@/lib/demoVideo";
 import { htmlLang, type SiteLocale } from "@/lib/locales";
 import { pagePath } from "@/lib/routes";
 import { getTranslator } from "@/i18n/messages";
@@ -73,7 +74,14 @@ function homeJsonLd(locale: SiteLocale) {
   ];
 }
 
-export function HomeView({ locale }: { readonly locale: SiteLocale }) {
+export function HomeView({
+  locale,
+  showVideoLink = hasDemoVideo(),
+}: {
+  readonly locale: SiteLocale;
+  /** The hero links to the product video only when the file shipped with this build. */
+  readonly showVideoLink?: boolean;
+}) {
   const t = getTranslator(locale);
   const steps = [
     { n: 1, animation: "report-offline" },
@@ -91,14 +99,16 @@ export function HomeView({ locale }: { readonly locale: SiteLocale }) {
             </h1>
             <p className="max-w-[60ch] text-lg text-pretty text-fg-muted sm:text-xl">{t("home.heroLead")}</p>
             <CtaGroup locale={locale} />
-            <a
-              href={`${pagePath("features", locale)}#video`}
-              className="prose-link inline-flex min-h-12 items-center gap-2 self-start font-semibold"
-              data-cta="video"
-            >
-              <PlayCircle aria-hidden="true" className="size-5" />
-              {t("cta.video")}
-            </a>
+            {showVideoLink ? (
+              <a
+                href={`${pagePath("features", locale)}#video`}
+                className="prose-link inline-flex min-h-12 items-center gap-2 self-start font-semibold"
+                data-cta="video"
+              >
+                <PlayCircle aria-hidden="true" className="size-5" />
+                {t("cta.video")}
+              </a>
+            ) : null}
           </div>
           <Animation id="welcome" locale={locale} playOnce className="w-full" />
         </div>
@@ -140,12 +150,12 @@ export function HomeView({ locale }: { readonly locale: SiteLocale }) {
             {steps.map(({ n, animation }) => (
               <li key={n} className="flex flex-col gap-4">
                 <Animation id={animation} locale={locale} className="w-full max-w-sm" />
-                <span className="flex items-center gap-3">
+                <div className="flex items-start gap-3">
                   <span className="tabular inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-action text-lg font-bold text-action-fg">
                     {n}
                   </span>
-                  <h3 className="text-xl font-bold">{t(`home.step${n}Title`)}</h3>
-                </span>
+                  <h3 className="pt-1 text-xl font-bold">{t(`home.step${n}Title`)}</h3>
+                </div>
                 <p className="max-w-[60ch] text-fg-muted">{t(`home.step${n}Body`)}</p>
               </li>
             ))}
