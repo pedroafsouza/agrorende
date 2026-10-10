@@ -2,7 +2,7 @@
   "actions": {
     "backInService": "Voltar a operar",
     "create": "Cadastrar máquina",
-    "downloadQr": "Baixar etiqueta QR",
+    "generateQr": "Gerar QR Code",
     "new": "Nova máquina",
     "outOfService": "Tirar de serviço",
     "retire": "Dar baixa"
@@ -149,6 +149,17 @@
   "qr": {
     "bulkRegion": "Ativos selecionados",
     "clear": "Limpar seleção",
+    "modal": {
+      "downloadPdf": "Baixar PDF",
+      "downloadPng": "Baixar PNG",
+      "preview": "QR Code de {code}",
+      "previewRegion": "Prévia das etiquetas",
+      "print": "Imprimir",
+      "sheetInfo": "{pages, plural, one {Sai em # folha A4} other {Sai em # folhas A4}}, com até {perPage} etiquetas por folha.",
+      "titleMulti": "{count, plural, one {# etiqueta QR} other {# etiquetas QR}}",
+      "titleSingle": "Etiqueta QR"
+    },
+    "pngReady": "Etiqueta PNG de {code} baixada",
     "print": "Imprimir etiquetas QR",
     "ready": "{count, plural, one {Folha de etiquetas QR de # ativo baixada} other {Folha de etiquetas QR de # ativos baixada}}",
     "select": "Selecionar {code}",

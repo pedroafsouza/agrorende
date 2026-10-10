@@ -1,19 +1,20 @@
 "use client";
 
 import { OrgStatusEnum, type OrgStatus } from "@agrorende/contracts/enums";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Building2, Search } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import type { PlatformOrgRowDTO } from "@agrorende/core/modules/tenancy/dto";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
-import { Field, Input, Select } from "@/components/ui/Field";
+import { Field, Select } from "@/components/ui/Field";
 import { OrgStatusBadge } from "@/features/tenancy/OrgStatusBadge";
 import { formatDay } from "@/features/tenancy/TenancyOrgBanner";
 import { useUrlState } from "@/lib/url-state";
@@ -33,17 +34,11 @@ export function PlatformOrgsPage() {
   const locale = useLocale();
   const router = useRouter();
   const [filters, setFilters] = useUrlState(KEYS);
-  const [q, setQ] = useState(filters.q);
-  useEffect(() => {
-    const id = setTimeout(() => {
-      if (q !== filters.q) setFilters({ q: q.trim().length === 0 ? null : q });
-    }, 300);
-    return () => clearTimeout(id);
-  }, [q, filters.q, setFilters]);
   const status = isStatus(filters.status) ? filters.status : undefined;
   const query = useQuery({
     queryKey: ["platform", "orgs", filters.q, status],
     queryFn: () => platformApi<{ items: PlatformOrgRowDTO[] }>("/orgs", { query: { q: filters.q, status } }),
+    placeholderData: keepPreviousData,
   });
   const number = new Intl.NumberFormat(locale);
 
@@ -84,16 +79,14 @@ export function PlatformOrgsPage() {
         onRowClick={(row) => router.push(`/platform/orgs/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
-          <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_14rem]">
-            <Field label={t("orgs.search")}>
-              {(p) => (
-                <div className="relative">
-                  <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 size-5 -translate-y-1/2 text-[var(--ar-text-muted)]" />
-                  <Input {...p} className="pl-10" name="q" onChange={(e) => setQ(e.target.value)} type="search" value={q} />
-                </div>
-              )}
-            </Field>
+          <FilterBar
+            active={filters.q.length > 0 || status !== undefined}
+            page={query.data}
+            onClear={() => setFilters({ q: null, status: null })}
+            search={<Field label={t("orgs.search")}>{(p) => <FilterSearch {...p} name="q" onSearch={(q) => setFilters({ q })} value={filters.q} />}</Field>}
+            selects={
             <Field label={t("orgs.statusFilter")}>
               {(p) => (
                 <Select {...p} name="status" onChange={(e) => setFilters({ status: e.target.value.length === 0 ? null : e.target.value })} value={status ?? ""}>
@@ -106,7 +99,8 @@ export function PlatformOrgsPage() {
                 </Select>
               )}
             </Field>
-          </div>
+            }
+          />
         }
       />
     </div>

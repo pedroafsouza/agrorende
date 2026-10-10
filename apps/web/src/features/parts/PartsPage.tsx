@@ -2,13 +2,14 @@
 
 import { AssetCategoryEnum } from "@agrorende/contracts/enums";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Archive, ArchiveRestore, Package, Pencil, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { FormDialog } from "@/components/forms/FormDialog";
 import { MoneyInput } from "@/components/forms/MoneyInput";
@@ -45,6 +46,7 @@ export function PartsPage() {
   const list = useQuery({
     queryKey: ["parts", { q, showArchived }],
     queryFn: () => api<ListPage<PartDTO>>("/parts", { query: { q: q.trim().length > 0 ? q.trim() : undefined, includeArchived: showArchived ? "true" : undefined } }),
+    placeholderData: keepPreviousData,
   });
   const [save, state] = useSave(
     "parts",
@@ -134,13 +136,18 @@ export function PartsPage() {
         onRetry={() => void list.refetch()}
         rowKey={(row) => row.id}
         rows={list.data?.items}
+        isRefreshing={list.isPlaceholderData}
         toolbar={
-          <>
-            <div className="w-full max-w-xs">
-              <Field label={t("catalog.search")}>{(p) => <Input {...p} onChange={(e) => setQ(e.target.value)} type="search" value={q} />}</Field>
-            </div>
-            <Checkbox checked={showArchived} label={t("catalog.showArchived")} onChange={(e) => setShowArchived(e.target.checked)} />
-          </>
+          <FilterBar
+            active={q.length > 0 || showArchived}
+            page={list.data}
+            onClear={() => {
+              setQ("");
+              setShowArchived(false);
+            }}
+            search={<Field label={t("catalog.search")}>{(p) => <FilterSearch {...p} onSearch={(value) => setQ(value ?? "")} value={q} />}</Field>}
+            toggles={<Checkbox checked={showArchived} label={t("catalog.showArchived")} onChange={(e) => setShowArchived(e.target.checked)} />}
+          />
         }
       />
       <FormDialog

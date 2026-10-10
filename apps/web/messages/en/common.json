@@ -82,7 +82,10 @@
   },
   "filters": {
     "includeArchived": "Show archived",
-    "search": "Search"
+    "search": "Search",
+    "clear": "Clear filters",
+    "results": "{count, plural, =0 {No results} one {# result} other {# results}}",
+    "resultsMore": "{count, plural, other {#+ results}}"
   },
   "form": {
     "summaryTitle": "{count, plural, one {Fix # field} other {Fix # fields}}"
@@ -104,6 +107,10 @@
       "PHOTO": "Photo",
       "SIGNATURE": "Signature",
       "VIDEO": "Video"
+    },
+    "loadFailed": {
+      "title": "Couldn't show this photo",
+      "body": "The file is safe. Try again in a moment."
     },
     "pending": "Uploading…",
     "photo": "Photo"

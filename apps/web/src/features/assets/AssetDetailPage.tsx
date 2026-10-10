@@ -23,6 +23,7 @@ import type { ListPage } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
 
 import { AssetFields, assetBody, assetFormValues, type AssetFormValues } from "./AssetForm";
+import { QrModal } from "./QrModal";
 import type { AssetDTO, AssetHistoryEntry } from "./types";
 
 export function AssetDetailPage({ id }: { readonly id: string }) {
@@ -35,6 +36,7 @@ export function AssetDetailPage({ id }: { readonly id: string }) {
   const [editing, setEditing] = useState(false);
   const [values, setValues] = useState<AssetFormValues>(assetFormValues());
   const [retiring, setRetiring] = useState(false);
+  const [qrOpen, setQrOpen] = useState(false);
   const [save, saveState] = useSave("assets", (body: Record<string, unknown>, version: string) => api<AssetDTO>(`/assets/${id}`, { method: "PATCH", body, version }), () => {
     setEditing(false);
     toast.success(common("toast.saved"));
@@ -115,10 +117,9 @@ export function AssetDetailPage({ id }: { readonly id: string }) {
         <section className="flex flex-col gap-3 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-4">
           <h2 className="text-lg font-semibold">{t("detail.qr")}</h2>
           <p className="text-sm text-[var(--ar-text-muted)]">{t("detail.qrBody")}</p>
-          <a className="inline-flex min-h-12 items-center gap-2 font-semibold text-[var(--ar-link)]" download href={`/api/v1/assets/${id}/qr.png`}>
-            <QrCode aria-hidden="true" className="size-5" />
-            {t("actions.downloadQr")}
-          </a>
+          <Button className="self-start" icon={<QrCode aria-hidden="true" className="size-4" />} onClick={() => setQrOpen(true)}>
+            {t("actions.generateQr")}
+          </Button>
           {asset.lastLat === null || asset.lastLat === undefined || asset.lastLng === null || asset.lastLng === undefined ? (
             <p className="text-sm">{t("detail.noLocation")}</p>
           ) : (
@@ -148,6 +149,7 @@ export function AssetDetailPage({ id }: { readonly id: string }) {
       >
         <AssetFields error={saveState.error} mode="edit" onChange={setValues} values={values} />
       </FormDialog>
+      <QrModal assets={[asset]} onClose={() => setQrOpen(false)} open={qrOpen} />
       <ConfirmDialog
         body={t("retire.body")}
         confirmLabel={t("actions.retire")}

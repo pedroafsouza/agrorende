@@ -9,6 +9,7 @@ import type { AnimationId } from "@agrorende/motion";
 import { Skeleton, SlowLoadingNotice, useSlowLoading } from "@/components/feedback/PageSkeleton";
 import { Lottie } from "@/components/motion/Lottie";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
+import { cn } from "@/lib/cn";
 
 /** The four screen states every list and detail renders (A§19, UX-03): loading, empty, error, offline. */
 export function LoadingState({ rows = 5 }: { readonly rows?: number }) {
@@ -19,6 +20,24 @@ export function LoadingState({ rows = 5 }: { readonly rows?: number }) {
       <span className="sr-only">{t("states.loading")}</span>
       {Array.from({ length: rows }, (_, i) => (
         <Skeleton className="h-12" key={i} />
+      ))}
+      {slow ? <SlowLoadingNotice className="top-1/2 -translate-y-1/2" /> : null}
+    </div>
+  );
+}
+
+/** Loading placeholder shaped like a `DataTable`: same border, a header bar and 57 px rows, so the page does not jump when data arrives. */
+export function TableLoadingState({ rows = 6 }: { readonly rows?: number }) {
+  const t = useTranslations("common");
+  const slow = useSlowLoading();
+  return (
+    <div aria-busy="true" aria-live="polite" className="relative overflow-hidden rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]" data-testid="table-loading" role="status">
+      <span className="sr-only">{t("states.loading")}</span>
+      <div className="h-12 bg-[var(--ar-surface-muted)]" />
+      {Array.from({ length: rows }, (_, i) => (
+        <div className="flex h-14 items-center border-t border-[var(--ar-border)] px-4" key={i}>
+          <Skeleton className="h-5 w-full" />
+        </div>
       ))}
       {slow ? <SlowLoadingNotice className="top-1/2 -translate-y-1/2" /> : null}
     </div>
@@ -64,8 +83,20 @@ export function OfflineState({ onRetry }: { readonly onRetry?: () => void }) {
   );
 }
 
-export function QueryState({ isLoading, error, isEmpty, empty, onRetry, children }: { readonly isLoading: boolean; readonly error: unknown; readonly isEmpty: boolean; readonly empty: ReactNode; readonly onRetry: () => void; readonly children: ReactNode }) {
-  if (isLoading) return <LoadingState />;
+/**
+ * Wraps results that stay on screen while new filters load (`placeholderData`): they dim and the
+ * region reports itself busy, instead of collapsing to a skeleton and making the page jump.
+ */
+export function RefreshingFrame({ isRefreshing, className, children }: { readonly isRefreshing: boolean; readonly className?: string; readonly children: ReactNode }) {
+  return (
+    <div aria-busy={isRefreshing || undefined} className={cn("transition-opacity motion-reduce:transition-none", isRefreshing && "opacity-60", className)} data-testid="refreshing-frame">
+      {children}
+    </div>
+  );
+}
+
+export function QueryState({ isLoading, error, isEmpty, empty, onRetry, children, loading }: { readonly isLoading: boolean; readonly error: unknown; readonly isEmpty: boolean; readonly empty: ReactNode; readonly onRetry: () => void; readonly children: ReactNode; readonly loading?: ReactNode }) {
+  if (isLoading) return <>{loading ?? <LoadingState />}</>;
   if (error !== null && error !== undefined) return <ErrorAlert error={error} onRetry={onRetry} />;
   if (isEmpty) return <>{empty}</>;
   return <>{children}</>;

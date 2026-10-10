@@ -1,13 +1,14 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus, ReceiptText } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button, buttonVariants } from "@/components/ui/Button";
@@ -39,6 +40,7 @@ export function BillingListPage() {
       api<ListPage<BillingDocumentDTO>>("/billing-documents", {
         query: { status: tabStatus(filters.tab), source: filters.source.length > 0 ? filters.source : undefined, cursor: filters.cursor.length > 0 ? filters.cursor : undefined, limit: 50 },
       }),
+    placeholderData: keepPreviousData,
   });
   const columns = useMemo<ColumnDef<BillingDocumentDTO, unknown>[]>(
     () => [
@@ -90,15 +92,23 @@ export function BillingListPage() {
         onRowClick={(row) => router.push(`/billing/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
-          <Select aria-label={t("fields.source")} className="max-w-xs" onChange={(e) => setFilters({ source: e.target.value.length > 0 ? e.target.value : null, cursor: null })} value={filters.source}>
-            <option value="">{t("list.allSources")}</option>
-            {BILLING_SOURCES.map((source) => (
-              <option key={source} value={source}>
-                {t(`source.${source}`)}
-              </option>
-            ))}
-          </Select>
+          <FilterBar
+            active={filtered}
+            page={query.data}
+            onClear={() => setFilters({ tab: null, source: null, cursor: null })}
+            selects={
+              <Select aria-label={t("fields.source")} onChange={(e) => setFilters({ source: e.target.value.length > 0 ? e.target.value : null, cursor: null })} value={filters.source}>
+                <option value="">{t("list.allSources")}</option>
+                {BILLING_SOURCES.map((source) => (
+                  <option key={source} value={source}>
+                    {t(`source.${source}`)}
+                  </option>
+                ))}
+              </Select>
+            }
+          />
         }
       />
       {creating ? <BillingCreateDialog onClose={() => setCreating(false)} onCreated={(doc) => router.push(`/billing/${doc.id}`)} prefill={null} source={null} /> : null}

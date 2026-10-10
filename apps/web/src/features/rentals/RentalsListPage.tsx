@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { CalendarDays, List, Plus, Truck } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,10 +10,10 @@ import { useMemo } from "react";
 
 import { StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { buttonVariants } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/cn";
 import { formatDateTime, formatMoney } from "@/lib/format";
@@ -47,6 +47,7 @@ export function RentalsListPage() {
           limit: 50,
         },
       }),
+    placeholderData: keepPreviousData,
   });
   const columns = useMemo<ColumnDef<RentalListItem, unknown>[]>(
     () => [
@@ -151,7 +152,15 @@ export function RentalsListPage() {
         onRowClick={(row) => router.push(`/rentals/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
-        toolbar={<Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value, cursor: null })} placeholder={t("list.searchPlaceholder")} type="search" />}
+        isRefreshing={query.isPlaceholderData}
+        toolbar={
+          <FilterBar
+            active={filtered}
+            page={query.data}
+            onClear={() => setFilters({ q: null, tab: null, cursor: null })}
+            search={<FilterSearch aria-label={common("filters.search")} onSearch={(q) => setFilters({ q, cursor: null })} placeholder={t("list.searchPlaceholder")} value={filters.q} />}
+          />
+        }
       />
         </>
       )}

@@ -1,27 +1,27 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus, QrCode, Tractor, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { ConditionBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
-import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button, buttonVariants } from "@/components/ui/Button";
-import { Checkbox, Input, Select } from "@/components/ui/Field";
+import { Checkbox, Select } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatNumber } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
 import { useUrlState } from "@/lib/url-state";
 
-import { fetchQrSheet, QR_SHEET_MAX_ASSETS, saveFile } from "./qrSheetApi";
+import { isQrSheetTooLarge, QR_SHEET_MAX_ASSETS } from "./qrSheetApi";
+import { QrModal, type QrModalAsset } from "./QrModal";
 import { CATEGORIES, CONDITIONS, type AssetDTO } from "./types";
 
 const KEYS = ["q", "category", "condition", "includeRetired", "cursor"] as const;
@@ -35,21 +35,20 @@ export function AssetsListPage() {
   const query = useQuery({
     queryKey: ["assets", filters],
     queryFn: () => api<ListPage<AssetDTO>>("/assets", { query: { ...filters, limit: 50 } }),
+    placeholderData: keepPreviousData,
   });
   const [selected, setSelected] = useState<ReadonlySet<string>>(() => new Set());
-  const [printing, setPrinting] = useState(false);
-  const [printError, setPrintError] = useState<unknown>(null);
-  const printLabels = async () => {
-    setPrinting(true);
-    setPrintError(null);
-    try {
-      saveFile(await fetchQrSheet([...selected]));
-      toast.success(t("qr.ready", { count: selected.size }));
-    } catch (error) {
-      setPrintError(error);
-    } finally {
-      setPrinting(false);
-    }
+  // Selection survives paging, so remember every asset row seen to label the QR preview.
+  const seen = useRef(new Map<string, QrModalAsset>());
+  useEffect(() => {
+    for (const asset of query.data?.items ?? []) seen.current.set(asset.id, { id: asset.id, code: asset.code, name: asset.name });
+  }, [query.data]);
+  const [qrAssets, setQrAssets] = useState<readonly QrModalAsset[]>([]);
+  const [qrOpen, setQrOpen] = useState(false);
+  const tooMany = isQrSheetTooLarge(selected.size);
+  const openQrModal = () => {
+    setQrAssets([...selected].map((id) => seen.current.get(id) ?? { id, code: "—", name: "" }));
+    setQrOpen(true);
   };
   const columns = useMemo<ColumnDef<AssetDTO, unknown>[]>(
     () => [
@@ -77,16 +76,16 @@ export function AssetsListPage() {
       {selected.size === 0 ? null : (
         <div aria-live="polite" className="flex flex-wrap items-center gap-3 rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface-muted)] p-3" role="region" aria-label={t("qr.bulkRegion")}>
           <p className="font-semibold">{t("qr.selected", { count: selected.size })}</p>
-          <Button busy={printing} disabled={selected.size > QR_SHEET_MAX_ASSETS} icon={<QrCode aria-hidden="true" className="size-4" />} onClick={() => void printLabels()} variant="primary">
+          <Button disabled={tooMany} icon={<QrCode aria-hidden="true" className="size-4" />} onClick={openQrModal} variant="primary">
             {t("qr.print")}
           </Button>
-          <Button icon={<X aria-hidden="true" className="size-4" />} onClick={() => { setSelected(new Set()); setPrintError(null); }} variant="ghost">
+          <Button icon={<X aria-hidden="true" className="size-4" />} onClick={() => setSelected(new Set())} variant="ghost">
             {t("qr.clear")}
           </Button>
-          {selected.size > QR_SHEET_MAX_ASSETS ? <p className="text-sm font-semibold text-[var(--ar-danger)]">{t("qr.tooMany", { max: QR_SHEET_MAX_ASSETS })}</p> : null}
+          {tooMany ? <p className="text-sm font-semibold text-[var(--ar-danger)]">{t("qr.tooMany", { max: QR_SHEET_MAX_ASSETS })}</p> : null}
         </div>
       )}
-      {printError === null ? null : <ErrorAlert compact error={printError} onRetry={() => void printLabels()} />}
+      <QrModal assets={qrAssets} onClose={() => setQrOpen(false)} open={qrOpen} />
       <DataTable
         caption={t("list.title")}
         columns={columns}
@@ -116,27 +115,35 @@ export function AssetsListPage() {
         rowKey={(row) => row.id}
         rows={query.data?.items}
         selection={{ selectedIds: selected, onChange: setSelected, label: (row) => t("qr.select", { code: row.code }), pageLabel: t("qr.selectPage") }}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
-          <>
-            <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value })} placeholder={t("list.searchPlaceholder")} type="search" />
-            <Select aria-label={t("fields.category")} className="max-w-48" onChange={(e) => setFilters({ category: e.target.value })} value={filters.category}>
-              <option value="">{t("list.allCategories")}</option>
-              {CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {common(`category.${c}`)}
-                </option>
-              ))}
-            </Select>
-            <Select aria-label={t("fields.condition")} className="max-w-48" onChange={(e) => setFilters({ condition: e.target.value })} value={filters.condition}>
-              <option value="">{t("list.allConditions")}</option>
-              {CONDITIONS.map((c) => (
-                <option key={c} value={c}>
-                  {common(`condition.${c}`)}
-                </option>
-              ))}
-            </Select>
-            <Checkbox checked={filters.includeRetired === "true"} label={t("list.includeRetired")} onChange={(e) => setFilters({ includeRetired: e.target.checked ? "true" : null })} />
-          </>
+          <FilterBar
+            active={filtered || filters.includeRetired === "true"}
+            page={query.data}
+            onClear={() => setFilters({ q: null, category: null, condition: null, includeRetired: null })}
+            search={<FilterSearch aria-label={common("filters.search")} onSearch={(q) => setFilters({ q })} placeholder={t("list.searchPlaceholder")} value={filters.q} />}
+            selects={
+              <>
+                <Select aria-label={t("fields.category")} onChange={(e) => setFilters({ category: e.target.value })} value={filters.category}>
+                  <option value="">{t("list.allCategories")}</option>
+                  {CATEGORIES.map((c) => (
+                    <option key={c} value={c}>
+                      {common(`category.${c}`)}
+                    </option>
+                  ))}
+                </Select>
+                <Select aria-label={t("fields.condition")} onChange={(e) => setFilters({ condition: e.target.value })} value={filters.condition}>
+                  <option value="">{t("list.allConditions")}</option>
+                  {CONDITIONS.map((c) => (
+                    <option key={c} value={c}>
+                      {common(`condition.${c}`)}
+                    </option>
+                  ))}
+                </Select>
+              </>
+            }
+            toggles={<Checkbox checked={filters.includeRetired === "true"} label={t("list.includeRetired")} onChange={(e) => setFilters({ includeRetired: e.target.checked ? "true" : null })} />}
+          />
         }
       />
     </div>

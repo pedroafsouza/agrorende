@@ -1,13 +1,14 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Fuel, Gauge, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { EntityPicker } from "@/components/forms/EntityPicker";
 import { MoneyInput } from "@/components/forms/MoneyInput";
@@ -36,6 +37,7 @@ export function FuelPage() {
   const list = useQuery({
     queryKey: ["fuel", "list", filters],
     queryFn: () => api<ListPage<FuelLogListItem>>("/fuel-logs", { query: { assetId: assetId ?? undefined, cursor: filters.cursor.length > 0 ? filters.cursor : undefined, limit: 50 } }),
+    placeholderData: keepPreviousData,
   });
   const columns = useMemo<ColumnDef<FuelLogListItem, unknown>[]>(
     () => [
@@ -81,10 +83,14 @@ export function FuelPage() {
         onRetry={() => void list.refetch()}
         rowKey={(row) => row.id}
         rows={list.data?.items}
+        isRefreshing={list.isPlaceholderData}
         toolbar={
-          <div className="w-full max-w-xs">
-            <Field label={t("list.assetFilter")}>{(p) => <EntityPicker {...p} entity="assets" onChange={(id) => setFilters({ assetId: id, cursor: null })} value={assetId} />}</Field>
-          </div>
+          <FilterBar
+            active={assetId !== null}
+            page={list.data}
+            onClear={() => setFilters({ assetId: null, cursor: null })}
+            search={<Field label={t("list.assetFilter")}>{(p) => <EntityPicker {...p} entity="assets" onChange={(id) => setFilters({ assetId: id, cursor: null })} value={assetId} />}</Field>}
+          />
         }
       />
       {open ? <FuelLogDialog defaultAssetId={assetId} onClose={() => setOpen(false)} /> : null}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { AlertOctagon, ClipboardList, Images, UserPlus } from "lucide-react";
 import Link from "next/link";
@@ -10,6 +10,7 @@ import { useMemo } from "react";
 
 import { PriorityBadge, StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { buttonVariants } from "@/components/ui/Button";
@@ -46,6 +47,7 @@ export function ReportsInboxPage() {
           limit: 50,
         },
       }),
+    placeholderData: keepPreviousData,
   });
   const sites = useQuery({ queryKey: ["sites", { picker: true }], queryFn: () => api<ListPage<{ id: string; name: string }>>("/sites", { query: { limit: 100 } }) });
   const columns = useMemo<ColumnDef<FieldReportListItem, unknown>[]>(
@@ -132,10 +134,16 @@ export function ReportsInboxPage() {
         onRowClick={(row) => router.push(`/reports/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
+          <FilterBar
+            active={filtered}
+            page={query.data}
+            onClear={() => setFilters({ q: null, status: null, priority: null, siteId: null, from: null, to: null, cursor: null })}
+            search={<FilterSearch aria-label={common("filters.search")} onSearch={(q) => setFilters({ q, cursor: null })} placeholder={t("inbox.searchPlaceholder")} value={filters.q} />}
+            selects={
           <>
-            <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value, cursor: null })} placeholder={t("inbox.searchPlaceholder")} type="search" />
-            <Select aria-label={t("fields.status")} className="max-w-56" onChange={(e) => setFilters({ status: e.target.value, cursor: null })} value={filters.status}>
+            <Select aria-label={t("fields.status")} onChange={(e) => setFilters({ status: e.target.value, cursor: null })} value={filters.status}>
               <option value={TRIAGE_STATUSES}>{t("inbox.needsTriage")}</option>
               <option value={ALL}>{t("inbox.allStatuses")}</option>
               {REPORT_STATUSES.map((s) => (
@@ -144,7 +152,7 @@ export function ReportsInboxPage() {
                 </option>
               ))}
             </Select>
-            <Select aria-label={t("fields.priority")} className="max-w-48" onChange={(e) => setFilters({ priority: e.target.value, cursor: null })} value={filters.priority}>
+            <Select aria-label={t("fields.priority")} onChange={(e) => setFilters({ priority: e.target.value, cursor: null })} value={filters.priority}>
               <option value="">{t("inbox.allPriorities")}</option>
               {PRIORITIES.map((p) => (
                 <option key={p} value={p}>
@@ -152,7 +160,7 @@ export function ReportsInboxPage() {
                 </option>
               ))}
             </Select>
-            <Select aria-label={t("fields.site")} className="max-w-56" onChange={(e) => setFilters({ siteId: e.target.value, cursor: null })} value={filters.siteId}>
+            <Select aria-label={t("fields.site")} onChange={(e) => setFilters({ siteId: e.target.value, cursor: null })} value={filters.siteId}>
               <option value="">{t("inbox.allSites")}</option>
               {(sites.data?.items ?? []).map((site) => (
                 <option key={site.id} value={site.id}>
@@ -162,13 +170,15 @@ export function ReportsInboxPage() {
             </Select>
             <label className="flex items-center gap-2 text-sm font-semibold">
               {t("inbox.from")}
-              <Input className="max-w-44" onChange={(e) => setFilters({ from: e.target.value.length > 0 ? e.target.value : null, cursor: null })} type="date" value={filters.from} />
+              <Input className="min-w-0 flex-1" onChange={(e) => setFilters({ from: e.target.value.length > 0 ? e.target.value : null, cursor: null })} type="date" value={filters.from} />
             </label>
             <label className="flex items-center gap-2 text-sm font-semibold">
               {t("inbox.to")}
-              <Input className="max-w-44" onChange={(e) => setFilters({ to: e.target.value.length > 0 ? e.target.value : null, cursor: null })} type="date" value={filters.to} />
+              <Input className="min-w-0 flex-1" onChange={(e) => setFilters({ to: e.target.value.length > 0 ? e.target.value : null, cursor: null })} type="date" value={filters.to} />
             </label>
           </>
+            }
+          />
         }
       />
     </div>

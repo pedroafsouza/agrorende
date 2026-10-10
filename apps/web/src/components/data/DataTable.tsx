@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
 
 import { Button } from "@/components/ui/Button";
 
-import { QueryState } from "./States";
+import { QueryState, RefreshingFrame, TableLoadingState } from "./States";
 
 export interface DataTableProps<T> {
   readonly columns: ColumnDef<T, unknown>[];
@@ -24,6 +24,8 @@ export interface DataTableProps<T> {
   readonly hasPrevious?: boolean;
   readonly caption: string;
   readonly toolbar?: ReactNode;
+  /** Showing the previous page while new filters load (`placeholderData`): rows stay and dim instead of collapsing to a skeleton. */
+  readonly isRefreshing?: boolean;
   /** Row selection for bulk actions: a leading 48 dp checkbox column kept out of the row click. */
   readonly selection?: DataTableSelection<T>;
 }
@@ -47,16 +49,16 @@ function toggled(current: ReadonlySet<string>, ids: readonly string[], on: boole
 }
 
 /** TanStack table with cursor paging; filters live in the URL via `useUrlState` (A§14.2). */
-export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry, empty, onRowClick, nextCursor, onNext, onFirst, hasPrevious = false, caption, toolbar, selection }: DataTableProps<T>) {
+export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry, empty, onRowClick, nextCursor, onNext, onFirst, hasPrevious = false, caption, toolbar, selection, isRefreshing = false }: DataTableProps<T>) {
   const t = useTranslations("common");
   const table = useReactTable({ data: rows as T[] ?? [], columns, getCoreRowModel: getCoreRowModel(), getRowId: rowKey });
   const pageIds = (rows ?? []).map(rowKey);
   const allOnPage = selection !== undefined && pageIds.length > 0 && pageIds.every((id) => selection.selectedIds.has(id));
   return (
     <div className="flex flex-col gap-3">
-      {toolbar === undefined ? null : <div className="flex flex-wrap items-end gap-3">{toolbar}</div>}
-      <QueryState empty={empty} error={error} isEmpty={(rows?.length ?? 0) === 0} isLoading={isLoading} onRetry={onRetry}>
-        <div className="overflow-x-auto rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]">
+      {toolbar}
+      <QueryState empty={empty} error={error} isEmpty={(rows?.length ?? 0) === 0} isLoading={isLoading} loading={<TableLoadingState />} onRetry={onRetry}>
+        <RefreshingFrame className="overflow-x-auto rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)]" isRefreshing={isRefreshing}>
           <table className="ar-table w-full min-w-[40rem] text-left text-sm">
             <caption className="sr-only">{caption}</caption>
             <thead className="bg-[var(--ar-surface-muted)]">
@@ -120,7 +122,7 @@ export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry,
               ))}
             </tbody>
           </table>
-        </div>
+        </RefreshingFrame>
         {(nextCursor ?? null) === null && !hasPrevious ? null : (
           <nav aria-label={t("table.pagination")} className="flex justify-end gap-2">
             {hasPrevious && onFirst !== undefined ? <Button onClick={onFirst}>{t("table.first")}</Button> : null}

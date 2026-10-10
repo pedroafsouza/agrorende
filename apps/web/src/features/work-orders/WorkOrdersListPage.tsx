@@ -11,11 +11,12 @@ import { toast } from "sonner";
 
 import { PriorityBadge, StatusBadge } from "@/components/data/badges";
 import { DataTable } from "@/components/data/DataTable";
-import { EmptyState, LoadingState } from "@/components/data/States";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
+import { EmptyState, LoadingState, RefreshingFrame } from "@/components/data/States";
 import { ErrorAlert } from "@/components/recovery/ErrorAlert";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button, buttonVariants } from "@/components/ui/Button";
-import { Input, Select } from "@/components/ui/Field";
+import { Select } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import { formatDateTime } from "@/lib/format";
 import type { ListPage } from "@/lib/forms";
@@ -50,6 +51,8 @@ export function WorkOrdersListPage() {
           limit: board ? 200 : 50,
         },
       }),
+    // Keep the previous rows while filters change, but not across the board/table switch (different page sizes).
+    placeholderData: (previous, previousQuery) => ((previousQuery?.queryKey[1] as { readonly view?: string } | undefined)?.view === filters.view ? previous : undefined),
   });
   const users = useQuery({ queryKey: ["users", { picker: "FIELD" }], queryFn: () => api<ListPage<{ id: string; name: string }>>("/users", { query: { role: "FIELD", limit: 100 } }) });
   const columns = useMemo<ColumnDef<WorkOrderListItem, unknown>[]>(
@@ -97,9 +100,14 @@ export function WorkOrdersListPage() {
   const filtered = filters.q.length > 0 || filters.priority.length > 0 || filters.assigneeId.length > 0 || filters.due.length > 0 || filters.status !== "active";
   const empty = <EmptyState action={filtered ? undefined : <Link className={buttonVariants({ variant: "primary" })} href="/work-orders/new"><Plus aria-hidden="true" className="size-4" />{t("actions.new")}</Link>} body={filtered ? common("states.noMatchesBody") : t("list.emptyBody")} animation={filtered ? undefined : "first-work-order"} icon={<Wrench className="size-8" />} title={filtered ? common("states.noMatches") : t("list.emptyTitle")} />;
   const toolbar = (
+    <FilterBar
+      active={filtered}
+      page={query.data}
+      onClear={() => setFilters({ q: null, status: null, priority: null, assigneeId: null, due: null, cursor: null })}
+      search={<FilterSearch aria-label={common("filters.search")} onSearch={(q) => setFilters({ q, cursor: null })} placeholder={t("list.searchPlaceholder")} value={filters.q} />}
+      selects={
     <>
-      <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value, cursor: null })} placeholder={t("list.searchPlaceholder")} type="search" />
-      <Select aria-label={t("fields.status")} className="max-w-56" onChange={(e) => setFilters({ status: e.target.value, cursor: null })} value={filters.status}>
+      <Select aria-label={t("fields.status")} onChange={(e) => setFilters({ status: e.target.value, cursor: null })} value={filters.status}>
         <option value="active">{t("list.activeStatuses")}</option>
         <option value="all">{t("list.allStatuses")}</option>
         {WORK_ORDER_STATUSES.map((s) => (
@@ -108,7 +116,7 @@ export function WorkOrdersListPage() {
           </option>
         ))}
       </Select>
-      <Select aria-label={t("fields.priority")} className="max-w-48" onChange={(e) => setFilters({ priority: e.target.value, cursor: null })} value={filters.priority}>
+      <Select aria-label={t("fields.priority")} onChange={(e) => setFilters({ priority: e.target.value, cursor: null })} value={filters.priority}>
         <option value="">{t("list.allPriorities")}</option>
         {PRIORITIES.map((p) => (
           <option key={p} value={p}>
@@ -116,7 +124,7 @@ export function WorkOrdersListPage() {
           </option>
         ))}
       </Select>
-      <Select aria-label={t("fields.assignee")} className="max-w-56" onChange={(e) => setFilters({ assigneeId: e.target.value, cursor: null })} value={filters.assigneeId}>
+      <Select aria-label={t("fields.assignee")} onChange={(e) => setFilters({ assigneeId: e.target.value, cursor: null })} value={filters.assigneeId}>
         <option value="">{t("list.allAssignees")}</option>
         <option value="none">{t("unassigned")}</option>
         {(users.data?.items ?? []).map((user) => (
@@ -125,7 +133,7 @@ export function WorkOrdersListPage() {
           </option>
         ))}
       </Select>
-      <Select aria-label={t("fields.dueAt")} className="max-w-48" onChange={(e) => setFilters({ due: e.target.value, cursor: null })} value={filters.due}>
+      <Select aria-label={t("fields.dueAt")} onChange={(e) => setFilters({ due: e.target.value, cursor: null })} value={filters.due}>
         <option value="">{t("list.anyDue")}</option>
         {DUE_FILTERS.map((d) => (
           <option key={d} value={d}>
@@ -134,6 +142,8 @@ export function WorkOrdersListPage() {
         ))}
       </Select>
     </>
+      }
+    />
   );
   return (
     <div className="flex flex-col gap-4">
@@ -158,7 +168,7 @@ export function WorkOrdersListPage() {
       />
       {board ? (
         <>
-          <div className="flex flex-wrap items-center gap-2">{toolbar}</div>
+          {toolbar}
           {query.isLoading ? (
             <LoadingState />
           ) : query.error !== null ? (
@@ -166,7 +176,9 @@ export function WorkOrdersListPage() {
           ) : (query.data?.items.length ?? 0) === 0 ? (
             empty
           ) : (
-            <Board items={query.data?.items ?? []} />
+            <RefreshingFrame isRefreshing={query.isPlaceholderData}>
+              <Board items={query.data?.items ?? []} />
+            </RefreshingFrame>
           )}
         </>
       ) : (
@@ -184,6 +196,7 @@ export function WorkOrdersListPage() {
           onRowClick={(row) => router.push(`/work-orders/${row.id}`)}
           rowKey={(row) => row.id}
           rows={query.data?.items}
+          isRefreshing={query.isPlaceholderData}
           toolbar={toolbar}
         />
       )}

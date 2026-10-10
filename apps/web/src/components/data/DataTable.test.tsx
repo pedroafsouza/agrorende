@@ -77,3 +77,45 @@ describe("DataTable selection (T16-004)", () => {
     expect(screen.queryAllByRole("checkbox")).toHaveLength(0);
   });
 });
+
+describe("DataTable loading and refreshing (FILTERS-ALIGN)", () => {
+  function table(props: { readonly isLoading?: boolean; readonly isRefreshing?: boolean; readonly rows?: readonly Row[] | undefined }) {
+    return (
+      <DataTable
+        caption="Machines"
+        columns={columns}
+        empty={null}
+        error={null}
+        isLoading={props.isLoading ?? false}
+        isRefreshing={props.isRefreshing ?? false}
+        onRetry={() => undefined}
+        rowKey={(row) => row.id}
+        rows={"rows" in props ? props.rows : rows}
+        toolbar={<input aria-label="Toolbar search" />}
+      />
+    );
+  }
+
+  it("keeps the previous rows dimmed and busy while new filters load, then clears both", () => {
+    const { rerender } = renderWithProviders(table({ isRefreshing: true }));
+    expect(screen.getByText("TR-01")).toBeTruthy();
+    const frame = screen.getByTestId("refreshing-frame");
+    expect(frame.getAttribute("aria-busy")).toBe("true");
+    expect(frame.className).toContain("opacity-60");
+    expect(frame.contains(screen.getByRole("table"))).toBe(true);
+    rerender(table({ isRefreshing: false }));
+    expect(screen.getByTestId("refreshing-frame").hasAttribute("aria-busy")).toBe(false);
+    expect(screen.getByTestId("refreshing-frame").className).not.toContain("opacity-60");
+  });
+
+  it("shows the table skeleton on first load with the toolbar already mounted", () => {
+    const { rerender } = renderWithProviders(table({ isLoading: true, rows: undefined }));
+    const toolbar = screen.getByRole("textbox", { name: "Toolbar search" });
+    expect(screen.getByTestId("table-loading")).toBeTruthy();
+    expect(screen.queryByRole("table")).toBeNull();
+    rerender(table({ isLoading: false }));
+    expect(screen.queryByTestId("table-loading")).toBeNull();
+    expect(screen.getByRole("textbox", { name: "Toolbar search" })).toBe(toolbar);
+    expect(screen.getByTestId("refreshing-frame").hasAttribute("aria-busy")).toBe(false);
+  });
+});

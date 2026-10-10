@@ -2,7 +2,7 @@
 
 import type { ChecklistTemplateDTO } from "@agrorende/contracts/dto";
 import { ChecklistKindEnum } from "@agrorende/contracts/enums";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { ClipboardList, Plus } from "lucide-react";
 import Link from "next/link";
@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Badge } from "@/components/ui/Badge";
@@ -27,7 +28,7 @@ export function TemplatesListPage() {
   const common = useTranslations("common");
   const router = useRouter();
   const [filters, setFilters] = useUrlState(KEYS);
-  const query = useQuery({ queryKey: ["checklist-templates", filters], queryFn: () => api<ListPage<ChecklistTemplateDTO>>("/checklist-templates", { query: filters }) });
+  const query = useQuery({ queryKey: ["checklist-templates", filters], queryFn: () => api<ListPage<ChecklistTemplateDTO>>("/checklist-templates", { query: filters }), placeholderData: keepPreviousData });
   const columns = useMemo<ColumnDef<ChecklistTemplateDTO, unknown>[]>(
     () => [
       { header: t("fields.name"), accessorKey: "name", cell: (c) => <span className="font-semibold">{c.row.original.name}</span> },
@@ -66,18 +67,24 @@ export function TemplatesListPage() {
         onRowClick={(row) => router.push(`/templates/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
-          <>
-            <Select aria-label={t("fields.appliesTo")} className="max-w-56" onChange={(e) => setFilters({ kind: e.target.value })} value={filters.kind}>
-              <option value="">{t("list.allKinds")}</option>
-              {ChecklistKindEnum.options.map((k) => (
-                <option key={k} value={k}>
-                  {t(`kind.${k}`)}
-                </option>
-              ))}
-            </Select>
-            <Checkbox checked={filters.includeArchived === "true"} label={common("filters.includeArchived")} onChange={(e) => setFilters({ includeArchived: e.target.checked ? "true" : null })} />
-          </>
+          <FilterBar
+            active={filters.kind.length > 0 || filters.includeArchived === "true"}
+            page={query.data}
+            onClear={() => setFilters({ kind: null, includeArchived: null })}
+            selects={
+              <Select aria-label={t("fields.appliesTo")} onChange={(e) => setFilters({ kind: e.target.value })} value={filters.kind}>
+                <option value="">{t("list.allKinds")}</option>
+                {ChecklistKindEnum.options.map((k) => (
+                  <option key={k} value={k}>
+                    {t(`kind.${k}`)}
+                  </option>
+                ))}
+              </Select>
+            }
+            toggles={<Checkbox checked={filters.includeArchived === "true"} label={common("filters.includeArchived")} onChange={(e) => setFilters({ includeArchived: e.target.checked ? "true" : null })} />}
+          />
         }
       />
     </div>

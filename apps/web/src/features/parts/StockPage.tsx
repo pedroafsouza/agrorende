@@ -2,13 +2,14 @@
 
 import type { StockLocationType } from "@agrorende/contracts/enums";
 import type { ColumnDef } from "@tanstack/react-table";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, ArrowRightLeft, Boxes, CheckCircle2, MinusCircle, Plus, Truck, Warehouse } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar } from "@/components/data/FilterBar";
 import { Card } from "@/components/data/Detail";
 import { EmptyState, QueryState } from "@/components/data/States";
 import { EntityPicker } from "@/components/forms/EntityPicker";
@@ -62,10 +63,12 @@ export function StockPage() {
   const levels = useQuery({
     queryKey: ["stock-levels", { locationId, lowOnly }],
     queryFn: () => api<ListPage<StockLevelRow>>("/stock-levels", { query: { locationId: locationId.length > 0 ? locationId : undefined, low: lowOnly ? "true" : undefined } }),
+    placeholderData: keepPreviousData,
   });
   const movements = useQuery({
     queryKey: ["stock-movements", { locationId }],
     queryFn: () => api<ListPage<StockMovementDTO>>("/stock-movements", { query: { locationId: locationId.length > 0 ? locationId : undefined, limit: 20 } }),
+    placeholderData: keepPreviousData,
   });
   const locationItems = locations.data?.items ?? [];
   const locationName = (id: string | null) => (id === null ? "—" : (locationItems.find((l) => l.id === id)?.name ?? "—"));
@@ -155,9 +158,16 @@ export function StockPage() {
           onRetry={() => void levels.refetch()}
           rowKey={(row) => row.id}
           rows={levels.data?.items}
+          isRefreshing={levels.isPlaceholderData}
           toolbar={
-            <>
-              <div className="w-full max-w-xs">
+            <FilterBar
+              active={locationId.length > 0 || lowOnly}
+              page={levels.data}
+              onClear={() => {
+                setLocationId("");
+                setLowOnly(false);
+              }}
+              selects={
                 <Field label={t("fields.location")}>
                   {(p) => (
                     <Select {...p} onChange={(e) => setLocationId(e.target.value)} value={locationId}>
@@ -170,9 +180,9 @@ export function StockPage() {
                     </Select>
                   )}
                 </Field>
-              </div>
-              <Checkbox checked={lowOnly} label={t("stock.lowOnly")} onChange={(e) => setLowOnly(e.target.checked)} />
-            </>
+              }
+              toggles={<Checkbox checked={lowOnly} label={t("stock.lowOnly")} onChange={(e) => setLowOnly(e.target.checked)} />}
+            />
           }
         />
       </section>

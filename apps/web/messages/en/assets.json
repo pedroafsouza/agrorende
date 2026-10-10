@@ -2,7 +2,7 @@
   "actions": {
     "backInService": "Back in service",
     "create": "Create asset",
-    "downloadQr": "Download QR label",
+    "generateQr": "Generate QR code",
     "new": "New asset",
     "outOfService": "Take out of service",
     "retire": "Retire"
@@ -149,6 +149,17 @@
   "qr": {
     "bulkRegion": "Selected assets",
     "clear": "Clear selection",
+    "modal": {
+      "downloadPdf": "Download PDF",
+      "downloadPng": "Download PNG",
+      "preview": "QR code for {code}",
+      "previewRegion": "Label preview",
+      "print": "Print",
+      "sheetInfo": "{pages, plural, one {Prints on # A4 sheet} other {Prints on # A4 sheets}}, up to {perPage} labels per sheet.",
+      "titleMulti": "{count, plural, one {# QR label} other {# QR labels}}",
+      "titleSingle": "QR label"
+    },
+    "pngReady": "PNG label for {code} downloaded",
     "print": "Print QR labels",
     "ready": "{count, plural, one {QR label sheet for # asset downloaded} other {QR label sheet for # assets downloaded}}",
     "select": "Select {code}",

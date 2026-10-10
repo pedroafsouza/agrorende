@@ -62,3 +62,92 @@
 .ar-page-context {
   margin-bottom: var(--ar-section-gap);
 }
+
+/*
+ * Filter toolbar (FILTERS-ALIGN): search, selects, toggles, then count and "Clear filters" on the
+ * right. Every control is 48 px high and has a width that does not depend on its value, and the
+ * clear button keeps its space while hidden, so changing a filter never moves the row.
+ */
+.ar-filterbar {
+  --ar-filter-select-w: 13rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ar-space-3);
+  align-items: end;
+}
+
+.ar-filterbar-selects,
+.ar-filterbar-toggles {
+  display: contents;
+}
+
+.ar-filterbar-search,
+.ar-filterbar-toggles > *,
+.ar-filterbar-end {
+  grid-column: 1 / -1;
+}
+
+/* An odd last select takes the whole row instead of leaving a hole in the two-column grid. */
+.ar-filterbar-selects > :last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.ar-filterbar-selects > *,
+.ar-filterbar-search {
+  min-width: 0;
+}
+
+.ar-filterbar-toggles > * {
+  white-space: nowrap;
+}
+
+.ar-filterbar-end {
+  display: flex;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ar-space-2);
+}
+
+.ar-filterbar-count {
+  min-width: 7rem;
+  font-size: 0.875rem;
+  color: var(--ar-text-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ar-filterbar-clear {
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .ar-filterbar {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .ar-filterbar-search {
+    flex: 1 1 15rem;
+    max-width: 24rem;
+  }
+
+  .ar-filterbar-selects > * {
+    flex: 0 0 var(--ar-filter-select-w);
+    width: var(--ar-filter-select-w);
+  }
+
+  .ar-filterbar-toggles > * {
+    flex: 0 0 auto;
+  }
+
+  .ar-filterbar-end {
+    flex: 0 0 auto;
+    margin-left: auto;
+    justify-content: flex-end;
+  }
+
+  .ar-filterbar-count {
+    text-align: right;
+  }
+}

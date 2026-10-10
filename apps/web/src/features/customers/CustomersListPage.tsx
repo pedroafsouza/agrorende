@@ -1,7 +1,7 @@
 "use client";
 
 import type { CustomerDTO } from "@agrorende/contracts/dto";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Plus, Users } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -9,12 +9,13 @@ import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
 import { DataTable } from "@/components/data/DataTable";
+import { FilterBar, FilterSearch } from "@/components/data/FilterBar";
 import { EmptyState } from "@/components/data/States";
 import { FormDialog } from "@/components/forms/FormDialog";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Checkbox, Input } from "@/components/ui/Field";
+import { Checkbox } from "@/components/ui/Field";
 import { api } from "@/lib/api";
 import type { ListPage } from "@/lib/forms";
 import { useSave } from "@/lib/useSave";
@@ -31,7 +32,7 @@ export function CustomersListPage() {
   const [filters, setFilters] = useUrlState(KEYS);
   const [creating, setCreating] = useState(false);
   const [values, setValues] = useState(customerFormValues());
-  const query = useQuery({ queryKey: ["customers", filters], queryFn: () => api<ListPage<CustomerDTO>>("/customers", { query: { ...filters, limit: 50 } }) });
+  const query = useQuery({ queryKey: ["customers", filters], queryFn: () => api<ListPage<CustomerDTO>>("/customers", { query: { ...filters, limit: 50 } }), placeholderData: keepPreviousData });
   const [create, state] = useSave("customers", (body: Record<string, unknown>) => api<CustomerDTO>("/customers", { method: "POST", body }), (c) => router.push(`/customers/${c.id}`));
   const columns = useMemo<ColumnDef<CustomerDTO, unknown>[]>(
     () => [
@@ -91,13 +92,21 @@ export function CustomersListPage() {
         onRowClick={(row) => router.push(`/customers/${row.id}`)}
         rowKey={(row) => row.id}
         rows={query.data?.items}
+        isRefreshing={query.isPlaceholderData}
         toolbar={
-          <>
-            <Input aria-label={common("filters.search")} className="max-w-xs" defaultValue={filters.q} onChange={(e) => setFilters({ q: e.target.value })} placeholder={t("customers.list.searchPlaceholder")} type="search" />
-            <Checkbox checked={filters.supplier === "true"} label={t("customers.list.suppliersOnly")} onChange={(e) => setFilters({ supplier: e.target.checked ? "true" : null })} />
-            <Checkbox checked={filters.incomplete === "true"} label={t("customers.list.incompleteOnly")} onChange={(e) => setFilters({ incomplete: e.target.checked ? "true" : null })} />
-            <Checkbox checked={filters.includeArchived === "true"} label={common("filters.includeArchived")} onChange={(e) => setFilters({ includeArchived: e.target.checked ? "true" : null })} />
-          </>
+          <FilterBar
+            active={filtered || filters.includeArchived === "true"}
+            page={query.data}
+            onClear={() => setFilters({ q: null, supplier: null, incomplete: null, includeArchived: null })}
+            search={<FilterSearch aria-label={common("filters.search")} onSearch={(q) => setFilters({ q })} placeholder={t("customers.list.searchPlaceholder")} value={filters.q} />}
+            toggles={
+              <>
+                <Checkbox checked={filters.supplier === "true"} label={t("customers.list.suppliersOnly")} onChange={(e) => setFilters({ supplier: e.target.checked ? "true" : null })} />
+                <Checkbox checked={filters.incomplete === "true"} label={t("customers.list.incompleteOnly")} onChange={(e) => setFilters({ incomplete: e.target.checked ? "true" : null })} />
+                <Checkbox checked={filters.includeArchived === "true"} label={common("filters.includeArchived")} onChange={(e) => setFilters({ includeArchived: e.target.checked ? "true" : null })} />
+              </>
+            }
+          />
         }
       />
       <FormDialog busy={state.busy} dirty={JSON.stringify(values) !== JSON.stringify(customerFormValues())} error={state.error} formId="customer-new" onClose={() => setCreating(false)} onSubmit={() => void create(customerBody(values))} open={creating} size="lg" submitLabel={t("customers.actions.create")} title={t("customers.new.title")}>
