@@ -20,9 +20,33 @@ async function png(svg: string, size: number, out: string, height = size): Promi
   return buffer;
 }
 
-/** An ICO file whose entries are PNG images, which every current browser accepts. */
-async function ico(svg: string, sizes: readonly number[], out: string): Promise<void> {
-  const images = await Promise.all(sizes.map((size) => sharp(source(svg), { density: 600 }).resize(size, size).png().toBuffer()));
+/** Renders a lockup at the given height and pads it on the right to the given width, so it stays left-aligned. */
+async function lockupPng(svg: string, width: number, height: number, out: string): Promise<Buffer> {
+  const rendered = await sharp(source(svg), { density: 600 }).resize({ height }).png().toBuffer();
+  const { width: drawn = width } = await sharp(rendered).metadata();
+  const buffer = await sharp(rendered)
+    .extend({ right: Math.max(0, width - drawn), background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .resize(width, height, { fit: "cover", position: "left" })
+    .png()
+    .toBuffer();
+  mkdirSync(dirname(out), { recursive: true });
+  writeFileSync(out, buffer);
+  return buffer;
+}
+
+/**
+ * An ICO file whose entries are PNG images, which every current browser accepts. Entries up
+ * to 32 px use the pixel-hinted favicon drawing; larger entries use the master mark.
+ */
+async function ico(sizes: readonly number[], out: string): Promise<void> {
+  const images = await Promise.all(
+    sizes.map((size) =>
+      sharp(source(size <= 32 ? "agrorende-favicon.svg" : "agrorende-mark.svg"), { density: 600 })
+        .resize(size, size)
+        .png()
+        .toBuffer(),
+    ),
+  );
   const header = Buffer.alloc(6 + 16 * images.length);
   header.writeUInt16LE(0, 0);
   header.writeUInt16LE(1, 2);
@@ -47,22 +71,30 @@ const web = join(root, "apps/web/src/app");
 const mobile = join(root, "apps/mobile/assets/images");
 
 mkdirSync(join(site, "brand"), { recursive: true });
-copyFileSync(join(brand, "agrorende-mark.svg"), join(site, "icon.svg"));
-copyFileSync(join(brand, "agrorende-logo.svg"), join(site, "brand/agrorende-logo.svg"));
-copyFileSync(join(brand, "agrorende-logo-dark.svg"), join(site, "brand/agrorende-logo-dark.svg"));
+copyFileSync(join(brand, "agrorende-favicon.svg"), join(site, "icon.svg"));
+for (const name of [
+  "agrorende-mark.svg",
+  "agrorende-mark-mono.svg",
+  "agrorende-mark-reversed.svg",
+  "agrorende-favicon.svg",
+  "agrorende-logo.svg",
+  "agrorende-logo-dark.svg",
+]) {
+  copyFileSync(join(brand, name), join(site, "brand", name));
+}
 await png("agrorende-mark.svg", 192, join(site, "icon-192.png"));
 await png("agrorende-mark.svg", 512, join(site, "icon-512.png"));
 await png("agrorende-mark.svg", 180, join(site, "apple-touch-icon.png"));
-await ico("agrorende-mark.svg", [16, 32, 48], join(site, "favicon.ico"));
+await ico([16, 32, 48], join(site, "favicon.ico"));
 
-copyFileSync(join(brand, "agrorende-mark.svg"), join(web, "icon.svg"));
+copyFileSync(join(brand, "agrorende-favicon.svg"), join(web, "icon.svg"));
 await png("agrorende-mark.svg", 180, join(web, "apple-icon.png"));
-await ico("agrorende-mark.svg", [16, 32, 48], join(web, "favicon.ico"));
+await ico([16, 32, 48], join(web, "favicon.ico"));
 
 await png("app-icon.svg", 1024, join(mobile, "icon.png"));
 await png("adaptive-foreground.svg", 1024, join(mobile, "adaptive-icon.png"));
 await png("splash-icon.svg", 1024, join(mobile, "splash-icon.png"));
-await png("agrorende-logo.svg", 888, join(mobile, "logo.png"), 192);
-await png("agrorende-logo-dark.svg", 888, join(mobile, "logo-dark.png"), 192);
+await lockupPng("agrorende-logo.svg", 888, 192, join(mobile, "logo.png"));
+await lockupPng("agrorende-logo-dark.svg", 888, 192, join(mobile, "logo-dark.png"));
 
 console.log("brand assets written");
