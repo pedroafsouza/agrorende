@@ -246,7 +246,8 @@ describe("realtime gateway", () => {
     expect(ack).toEqual({ ok: true, accepted: 1 });
     field.disconnect();
     await gateway.stop();
-    expect(await collections.locationPings(handle.db).countDocuments({ organizationId: ORG, userId: FIELD })).toBe(1);
+    // Scoped to this test's fix: the previous test's ping may or may not have been flushed already.
+    expect(await collections.locationPings(handle.db).countDocuments({ organizationId: ORG, userId: FIELD, lat: 1, lng: 2 })).toBe(1);
   });
 });
 
