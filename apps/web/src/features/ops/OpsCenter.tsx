@@ -31,6 +31,8 @@ import { OpsMap } from "./OpsMap";
 import { useOpsRealtime } from "./realtime";
 import { isKpiKey, OPS_QUERY_KEYS, type KpiRange, type OpsActivityItemDTO } from "./types";
 
+const subscribeNever = (): (() => void) => () => undefined;
+
 const URL_KEYS = ["kpi", "range", "operator"] as const;
 const URL_DEFAULTS = { range: "today" };
 const LIVE_ACTIVITY_MAX = 50;
@@ -136,7 +138,9 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
   const selected = selectedId === null ? undefined : operators.find((o) => o.userId === selectedId);
   const noLiveOperators = live.data !== undefined && operators.every((o) => o.stale || o.state === "OFFLINE" || o.dutyStatus !== "ON_DUTY");
 
-  const role = me.data?.user.role ?? "MANAGER";
+  // The server never has the cached /me answer, so the first client render must match it.
+  const hydrated = useSyncExternalStore(subscribeNever, () => true, () => false);
+  const role = (hydrated ? me.data?.user.role : undefined) ?? "MANAGER";
   const timezone = me.data?.org?.timezone;
   const fallback = useMemo(() => fallbackCenter(timezone), [timezone]);
   const shownBoundaries = showBoundaries ? (boundaries.data ?? null) : null;

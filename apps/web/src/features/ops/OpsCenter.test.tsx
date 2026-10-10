@@ -86,6 +86,7 @@ vi.mock("react-map-gl/maplibre", () => {
     default: FakeMap,
     Layer: () => null,
     NavigationControl: () => null,
+    useMap: () => ({ current: undefined }),
     Source: ({ children, id, data, tiles }: { readonly children?: ReactNode; readonly id: string; readonly data?: { readonly features?: readonly unknown[] }; readonly tiles?: readonly string[] }) => (
       <div data-features={data?.features?.length ?? ""} data-source={id} data-tiles={tiles?.join(",") ?? ""}>
         {children}

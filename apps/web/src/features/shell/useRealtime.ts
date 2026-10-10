@@ -42,7 +42,8 @@ type Handler = (payload: unknown) => void;
  */
 const handlers = new Map<string, Set<Handler>>();
 const statusListeners = new Set<() => void>();
-let status: RealtimeStatus = { state: "connecting", lastMessageAt: null, reconnectCount: 0 };
+const INITIAL_STATUS: RealtimeStatus = { state: "connecting", lastMessageAt: null, reconnectCount: 0 };
+let status: RealtimeStatus = INITIAL_STATUS;
 
 function setStatus(next: Partial<RealtimeStatus>): void {
   status = { ...status, ...next };
@@ -80,7 +81,8 @@ export function useRealtimeStatus(): RealtimeStatus {
       return () => statusListeners.delete(listener);
     },
     () => status,
-    () => status,
+    // The server render has no socket; hydration must start from the same initial status.
+    () => INITIAL_STATUS,
   );
 }
 

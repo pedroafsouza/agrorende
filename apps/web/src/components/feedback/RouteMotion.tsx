@@ -49,7 +49,22 @@ interface PendingTransition {
   skip?: () => void;
 }
 
-type StartViewTransition = (update: () => Promise<void>) => { skipTransition?: () => void } | undefined;
+interface ViewTransitionHandle {
+  readonly skipTransition?: () => void;
+  readonly ready?: Promise<unknown>;
+  readonly finished?: Promise<unknown>;
+  readonly updateCallbackDone?: Promise<unknown>;
+}
+
+type StartViewTransition = (update: () => Promise<void>) => ViewTransitionHandle | undefined;
+
+/** A skipped transition rejects its promises with an AbortError; that is expected, not a failure. */
+function settleQuietly(transition: ViewTransitionHandle | undefined): void {
+  if (transition === undefined) return;
+  for (const promise of [transition.ready, transition.finished, transition.updateCallbackDone]) {
+    promise?.catch(() => undefined);
+  }
+}
 
 function viewTransitionApi(): StartViewTransition | null {
   if (typeof document === "undefined") return null;
@@ -144,6 +159,7 @@ export function RouteMotionProvider({ children }: { readonly children: ReactNode
           if (transitionRef.current === pending) transitionRef.current = null;
         }),
       );
+      settleQuietly(transition);
       pending.skip = () => transition?.skipTransition?.();
     } catch {
       transitionRef.current = null;

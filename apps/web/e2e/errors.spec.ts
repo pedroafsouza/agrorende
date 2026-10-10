@@ -90,19 +90,26 @@ test.describe("error journeys", () => {
 
     test(`EC-OPS-17 realtime loss shows the paused banner and recovers (${locale})`, async ({ page }) => {
       let blocked = false;
+      let handshakes = 0;
       const sockets: { close: (options?: { code?: number; reason?: string }) => Promise<void> }[] = [];
       await page.routeWebSocket(/localhost:4101/u, (ws) => {
         if (blocked) {
           void ws.close({ code: 4000, reason: "e2e realtime loss" });
           return;
         }
-        ws.connectToServer();
+        const server = ws.connectToServer();
+        server.onMessage((message) => {
+          // Socket.IO's CONNECT packet ("40…") means the namespace handshake completed.
+          if (typeof message === "string" && message.startsWith("40")) handshakes += 1;
+          ws.send(message);
+        });
         sockets.push(ws);
       });
 
       await signIn(page, SEED.manager, "/ops", SEED_PASSWORD, uiLocale(locale));
       await expect(page.getByRole("heading", { name: msg(locale, "ops", "title"), level: 1 })).toBeVisible();
-      await expect.poll(() => sockets.length, { timeout: 30_000 }).toBeGreaterThan(0);
+      // Cut the link only after a real connection; a handshake that never finished is not a lost connection.
+      await expect.poll(() => handshakes, { timeout: 30_000 }).toBeGreaterThan(0);
       const banner = page.getByTestId("realtime-paused");
       await expect(banner).toHaveCount(0);
 

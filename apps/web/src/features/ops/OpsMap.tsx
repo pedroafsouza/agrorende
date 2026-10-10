@@ -5,7 +5,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import { MapPinOff, RotateCw, UserX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
-import Map, { Layer, NavigationControl, Source, type MapLayerMouseEvent, type MapRef } from "react-map-gl/maplibre";
+import Map, { Layer, NavigationControl, Source, useMap, type MapLayerMouseEvent, type MapRef } from "react-map-gl/maplibre";
 
 import { campoClaroPalette } from "@agrorende/design-tokens";
 
@@ -88,6 +88,26 @@ const SHAPE_IMAGES: readonly (readonly [string, ShapeKind, string])[] = [
   ["rental", "triangle", COLORS.primary],
   ["rental-overdue", "triangle", COLORS.danger],
 ];
+
+/**
+ * Registers the shape icons on demand. Symbol layers are added as soon as the style loads, which
+ * can be before `onLoad`; without a resolver MapLibre warns that the icon is missing.
+ */
+function ShapeImageResolver() {
+  const { current } = useMap();
+  useEffect(() => {
+    const map = current?.getMap();
+    if (map === undefined) return undefined;
+    map.setMissingStyleImageResolver((id) => {
+      const entry = SHAPE_IMAGES.find(([name]) => name === id);
+      if (entry !== undefined && !map.hasImage(id)) map.addImage(id, shapeImage(entry[1], entry[2]));
+    });
+    return () => {
+      map.setMissingStyleImageResolver(null);
+    };
+  }, [current]);
+  return null;
+}
 
 type SourceData = Extract<ComponentProps<typeof Source>, { type: "geojson" }>["data"];
 /** Our GeoJSON builders return readonly arrays; MapLibre's typings want mutable ones. */
@@ -227,6 +247,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
           ref={ref}
           workerUrl={MAPLIBRE_WORKER_URL}
         >
+          <ShapeImageResolver />
           <NavigationControl position="top-right" />
           {satelliteUrl === null ? null : (
             <Source id="ops-satellite" maxzoom={19} tileSize={256} tiles={[satelliteUrl]} type="raster">

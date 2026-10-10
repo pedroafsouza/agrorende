@@ -41,7 +41,10 @@ test("warms the dev server routes used by the suite", async ({ page }) => {
   test.setTimeout(600_000);
   const response = await page.request.post("/api/v1/auth/login", { data: { email: SEED.admin, password: "agrorende123" } });
   expect(response.status()).toBe(200);
-  for (const path of ["/login", "/ops", "/reports", "/work-orders", "/rentals", "/rentals/new", "/assets", "/assets/new", "/sites", "/customers", "/templates", "/team", "/settings", "/account", "/attention"]) {
+  // Detail routes too: a create flow that `router.push`es into an uncompiled `[id]` route can wait on the dev compiler for longer than an assertion.
+  const anyId = "00000000-0000-7000-8000-000000000000";
+  const details = ["/assets", "/sites", "/rentals", "/customers", "/work-orders", "/team", "/templates"].map((base) => `${base}/${anyId}`);
+  for (const path of ["/login", "/ops", "/reports", "/work-orders", "/rentals", "/rentals/new", "/assets", "/assets/new", "/sites", "/customers", "/templates", "/team", "/settings", "/account", "/attention", "/analytics", ...details]) {
     const visit = await page.goto(path, { timeout: 300_000 });
     expect(visit?.status(), path).toBeLessThan(500);
   }

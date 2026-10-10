@@ -22,11 +22,18 @@ test.describe("master data", () => {
     await expect(page).toHaveURL(/\/assets\/[0-9a-f-]{36}$/u);
     await expect(page.getByRole("heading", { name, level: 1 })).toBeVisible();
 
+    // The QR action opens a label preview modal; the PNG download is one of its actions.
+    await page.getByRole("button", { name: "Generate QR code" }).click();
+    const modal = dialog(page, "QR label");
+    await expect(modal).toBeVisible();
+    await expect(modal.getByTestId("qr-label")).toContainText(code);
     const download = page.waitForEvent("download");
-    await page.getByRole("link", { name: "Download QR label" }).click();
+    await modal.getByRole("button", { name: "Download PNG" }).click();
     const file = await download;
+    expect(file.suggestedFilename()).toMatch(/\.png$/u);
     const bytes = await readFile(await file.path());
     expect(bytes.subarray(0, 8).toString("hex")).toBe(PNG_SIGNATURE);
+    await expect(toast(page, `PNG label for ${code} downloaded`)).toBeVisible();
   });
 
   test("create a site with coordinates and see it on the map", async ({ page }) => {

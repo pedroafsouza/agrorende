@@ -1,5 +1,6 @@
 // @vitest-environment jsdom
 import { act, renderHook } from "@testing-library/react";
+import { renderToString } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 import { RealtimeServerEvents } from "@agrorende/contracts/realtime";
@@ -21,5 +22,14 @@ describe("shared realtime subscriptions (T09-002)", () => {
     const { result } = renderHook(() => useRealtimeStatus());
     act(() => dispatchRealtimeEvent(RealtimeServerEvents.notificationNew, {}));
     expect(result.current.lastMessageAt).toBeInstanceOf(Date);
+  });
+
+  it("renders the initial status on the server so hydration matches", () => {
+    dispatchRealtimeEvent(RealtimeServerEvents.notificationNew, {});
+    function Probe() {
+      const status = useRealtimeStatus();
+      return <span>{`${status.state}:${status.lastMessageAt === null ? "none" : "seen"}`}</span>;
+    }
+    expect(renderToString(<Probe />)).toContain("connecting:none");
   });
 });

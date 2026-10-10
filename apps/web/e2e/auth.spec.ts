@@ -29,8 +29,9 @@ test.describe("authentication", () => {
     await expect(page).toHaveURL(/\/ops$/u);
     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 
-    await page.getByRole("button", { name: "Paulo Gerente" }).click();
-    await page.getByRole("menuitem", { name: "Sign out" }).click();
+    // The account button opens a disclosure panel (not a menu) that holds the sign-out button.
+    await page.getByRole("button", { name: "Account and preferences for Paulo Gerente" }).click();
+    await page.getByRole("region", { name: "Account and preferences for Paulo Gerente" }).getByRole("button", { name: "Sign out" }).click();
     await expect(page).toHaveURL(/\/login/u);
     await page.goto("/ops");
     await expect(page).toHaveURL(/\/login/u);
@@ -64,10 +65,13 @@ test.describe("authentication", () => {
 
   test("switch the language to Portuguese and back", async ({ page }) => {
     await signIn(page, SEED.manager, "/ops");
-    const language = page.getByRole("combobox", { name: "Language" });
-    await pickOption(language, "Português");
+    // The language switch lives in the account panel of the top bar.
+    await page.getByRole("button", { name: "Account and preferences for Paulo Gerente" }).click();
+    await pickOption(page.getByRole("combobox", { name: "Language" }), "Português");
     await expect(page.getByRole("link", { name: "Visão geral", exact: true })).toBeVisible();
-    await pickOption(page.getByRole("combobox", { name: "Idioma" }), "English");
+    const idioma = page.getByRole("combobox", { name: "Idioma" });
+    if (!(await idioma.isVisible())) await page.getByRole("button", { name: "Conta e preferências de Paulo Gerente" }).click();
+    await pickOption(idioma, "English");
     await expect(page.getByRole("link", { name: "Overview", exact: true })).toBeVisible();
   });
 

@@ -53,9 +53,11 @@ export function AnalyticsPage() {
   const onTabKey = (event: KeyboardEvent<HTMLButtonElement>) => {
     if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
     event.preventDefault();
+    // Move from the tab that has focus, which can differ from the selected one while the URL updates.
+    const focused = TABS.find((candidate) => event.currentTarget.id === `analytics-tab-${candidate}`) ?? tab;
     const next =
       TABS[
-        (TABS.indexOf(tab) + (event.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length
+        (TABS.indexOf(focused) + (event.key === "ArrowRight" ? 1 : TABS.length - 1)) % TABS.length
       ] ?? "operations";
     setState({ tab: next });
     document.getElementById(`analytics-tab-${next}`)?.focus();

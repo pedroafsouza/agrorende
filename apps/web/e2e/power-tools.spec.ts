@@ -61,9 +61,13 @@ test.describe("power tools", () => {
     await expect(page).toHaveURL(/\/analytics/u);
     await expect(page.getByRole("heading", { name: "Analytics" })).toBeVisible();
     await expect(page.getByRole("heading", { name: "Mean time to repair" })).toBeVisible();
-    await page.getByRole("tab", { name: "Operations" }).focus();
-    await page.keyboard.press("ArrowRight");
-    await expect(page.getByRole("tab", { name: "Costs" })).toHaveAttribute("aria-selected", "true");
+    // A key pressed before the tab list hydrates is lost on a cold dev compile; retry until it lands.
+    await expect(async () => {
+      await page.getByRole("tab", { name: "Operations" }).focus();
+      await page.keyboard.press("ArrowRight");
+      await expect(page.getByRole("tab", { name: "Costs" })).toHaveAttribute("aria-selected", "true", { timeout: 2_000 });
+    }).toPass({ timeout: 30_000 });
+    await expect(page.getByRole("tab", { name: "Costs" })).toBeFocused();
     await expect(page).toHaveURL(/tab=costs/u);
     await expect(page.locator("caption", { hasText: /Costs by/u })).toBeAttached();
   });
@@ -82,8 +86,13 @@ test.describe("power tools", () => {
     await expect(bar).toContainText("2 assets selected");
     await expect(page).toHaveURL(/\/assets\?/u);
 
-    const download = page.waitForEvent("download");
+    // The bulk action previews the A4 sheet in a modal first; its PDF button downloads the sheet.
     await bar.getByRole("button", { name: "Print QR labels" }).click();
+    const modal = dialog(page, "2 QR labels");
+    await expect(modal).toBeVisible();
+    await expect(modal.getByTestId("qr-label")).toHaveCount(2);
+    const download = page.waitForEvent("download");
+    await modal.getByRole("button", { name: "Download PDF" }).click();
     const file = await download;
     expect(file.suggestedFilename()).toBe("agrorende-qr.pdf");
     const bytes = await readFile(await file.path());
