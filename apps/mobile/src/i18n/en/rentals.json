@@ -1,7 +1,7 @@
 {
   "list": {
     "new": "New rental",
-    "pending": "Waiting to send",
+    "pending": "Saved on phone",
     "emptyTitle": "No rentals in progress",
     "emptyBody": "Reservations and active rentals show up here, even without internet."
   },
@@ -253,6 +253,6 @@
     "reading": "Hour-meter reading",
     "hours": "h",
     "send": "Send again",
-    "sent": "Reading sent again. It syncs when there is signal."
+    "sent": "Reading saved on the phone. It will be sent when there is signal."
   }
 }

@@ -21,7 +21,7 @@ export function MyReportsScreen() {
   if (query.data.length === 0) {
     return (
       <Screen testID="reports-empty">
-        <EmptyState icon={FileText} titleKey="reports.list.emptyTitle" bodyKey="reports.list.emptyBody" action={{ labelKey: "reports.list.new", icon: FilePlus2, onPress: () => router.push("/reports/new") }} />
+        <EmptyState animation="report-offline" titleKey="reports.list.emptyTitle" bodyKey="reports.list.emptyBody" action={{ labelKey: "reports.list.new", icon: FilePlus2, onPress: () => router.push("/reports/new") }} />
       </Screen>
     );
   }

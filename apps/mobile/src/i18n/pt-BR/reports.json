@@ -3,7 +3,7 @@
     "emptyTitle": "Nenhum relato ainda",
     "emptyBody": "Quando você relatar um problema em uma máquina, acompanhe aqui.",
     "new": "Novo relato",
-    "pending": "Aguardando envio",
+    "pending": "Salvo no celular",
     "noNumber": "Número após o envio",
     "notOperable": "Parada"
   },
@@ -101,7 +101,7 @@
     "withdrawReasonPlaceholder": "Exemplo: relatei a máquina errada",
     "withdrawn": "Você retirou este relato.",
     "notFoundTitle": "Relato não encontrado",
-    "notFoundBody": "Ele pode ainda estar baixando. Sincronize ou volte para Meus relatos.",
+    "notFoundBody": "Ele pode ainda estar chegando. Toque em Enviar agora, em Envios, ou volte para Meus relatos.",
     "edit": "Editar relato",
     "editTitle": "Editar relato",
     "addPhoto": "Adicionar fotos",

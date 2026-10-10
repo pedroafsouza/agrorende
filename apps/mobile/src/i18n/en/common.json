@@ -221,7 +221,8 @@
     "auth": {
       "changePassword": "Change password",
       "login": "Sign in",
-      "onboarding": "Welcome"
+      "onboarding": "Welcome",
+      "intro": "Meet AgroRende"
     },
     "dev": {
       "styleGuide": "Style guide"
@@ -249,7 +250,7 @@
     "root": "AgroRende",
     "scan": "Scan code",
     "settings": "Settings",
-    "syncCenter": "Sync center",
+    "syncCenter": "Sending",
     "tabs": {
       "jobs": "Jobs",
       "more": "More",
@@ -307,7 +308,8 @@
     },
     "empty": {
       "body": "When there is something here, it shows up in this list.",
-      "title": "Nothing here"
+      "title": "Nothing here",
+      "refresh": "Check again"
     },
     "error": {
       "body": "Your data is saved on this device. Try again.",
@@ -343,8 +345,8 @@
       "scanBody": "Machine QR or tag",
       "settings": "Settings",
       "settingsBody": "Language, theme and account",
-      "sync": "Sync",
-      "syncBody": "Pending items and uploads"
+      "sync": "Sending",
+      "syncBody": "What is saved on the phone and what was already sent"
     },
     "number": {
       "decrease": "Decrease",
@@ -353,7 +355,7 @@
     "recovery": {
       "alt": "Use another way",
       "auto": "Try again",
-      "diag": "Send diagnostics",
+      "diag": "Send information to support",
       "draft": "Save draft",
       "fallback": "Continue without it",
       "fix": "Fix it",
@@ -389,8 +391,8 @@
     },
     "status": {
       "failed": "Failed",
-      "pending": "Pending",
-      "synced": "Synced"
+      "pending": "Saved on phone",
+      "synced": "Sent"
     },
     "toast": {
       "saved": "Saved on this device"

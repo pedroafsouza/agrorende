@@ -1,7 +1,7 @@
 {
   "list": {
     "new": "Nova locação",
-    "pending": "Aguardando envio",
+    "pending": "Salvo no celular",
     "emptyTitle": "Nenhuma locação em andamento",
     "emptyBody": "Reservas e locações ativas aparecem aqui, mesmo sem internet."
   },
@@ -253,6 +253,6 @@
     "reading": "Leitura do horímetro",
     "hours": "h",
     "send": "Reenviar",
-    "sent": "Leitura reenviada. Será sincronizada quando houver sinal."
+    "sent": "Leitura salva no celular. Será enviada quando tiver sinal."
   }
 }

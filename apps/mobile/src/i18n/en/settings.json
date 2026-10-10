@@ -15,9 +15,9 @@
     "sendNowHint": "Sends everything now, including videos over mobile data this time."
   },
   "help": {
-    "body": "Diagnostics, app version and contact",
-    "syncCenter": "Sync center",
-    "syncCenterBody": "See what still needs sending",
+    "body": "Information for support, app version and contact",
+    "syncCenter": "Sending",
+    "syncCenterBody": "See what is still saved on the phone",
     "title": "Help"
   },
   "language": {

@@ -31,7 +31,7 @@
     "add": "Add fuel",
     "empty": "No fuel logged for this machine yet.",
     "row": "{liters} L",
-    "pending": "Waiting to send",
+    "pending": "Saved on phone",
     "consumption": "Consumption: {litersPerHour} L/h over {hours} h",
     "noConsumption": "Log the hour meter twice to see litres per hour."
   }

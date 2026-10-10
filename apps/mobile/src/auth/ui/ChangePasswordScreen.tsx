@@ -5,10 +5,12 @@ import { useState } from "react";
 import type { AppErrorCode } from "@agrorende/contracts/errors";
 
 import { errorCodeOf } from "../../lib/errors";
+import { loadDevicePrefs } from "../../lib/app/prefs";
 import { getApiClient } from "../../lib/app/session";
 import { Button, Card, Screen, Text, TextField } from "../../ui";
 import { ErrorBanner } from "../../ui/recovery";
 
+import { firstRunRoute } from "./firstRun";
 import { newPasswordProblem } from "./rules";
 
 /** Forced or voluntary password change (EC-PLT-04 `PASSWORD_CHANGE_REQUIRED`). */
@@ -26,7 +28,7 @@ export function ChangePasswordScreen() {
     setError(undefined);
     try {
       await getApiClient().changePassword({ ...(current.length > 0 ? { current } : {}), next });
-      router.replace("/today");
+      router.replace(firstRunRoute(await loadDevicePrefs()));
     } catch (failure) {
       setError(errorCodeOf(failure, "INTERNAL"));
     } finally {

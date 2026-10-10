@@ -4,7 +4,7 @@
     "upcoming": "Upcoming",
     "done": "Done",
     "overdue": "Overdue",
-    "pending": "Waiting to send",
+    "pending": "Saved on phone",
     "empty": {
       "today": {
         "title": "Nothing for today",
@@ -135,7 +135,9 @@
     "alreadyTitle": "Job already finished",
     "alreadyBody": "This job has already been finished.",
     "notReadyTitle": "Not ready to finish",
-    "notReadyBody": "Start the work before finishing."
+    "notReadyBody": "Start the work before finishing.",
+    "doneTitle": "Job completed",
+    "doneBody": "The completion and signature are saved on the phone and go to the office as soon as there is signal."
   },
   "toast": {
     "accept": "Job accepted",
@@ -167,7 +169,7 @@
     "reading": "Hour-meter reading",
     "hours": "h",
     "send": "Send again",
-    "sent": "Reading sent again. It syncs when there is signal."
+    "sent": "Reading saved on the phone. It will be sent when there is signal."
   },
   "arrival": {
     "title": "Arrived at {name}?",

@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Plus, Truck } from "lucide-react-native";
+import { Plus, RefreshCw } from "lucide-react-native";
 import { useSyncExternalStore } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -18,7 +18,9 @@ export function RentalsScreen() {
   const auth = useSyncExternalStore(authStore.subscribe, authStore.getState);
   const office = isOfficeRole(auth.user?.role);
   const query = useLocalQuery(async (db) => ({ rentals: await listOpenRentals(db), settings: await loadOrgRentalSettings(db) }), []);
-  const newAction = office ? { labelKey: "rentals.list.new", icon: Plus, onPress: () => router.push("/rentals/new") } : undefined;
+  const emptyAction = office
+    ? { labelKey: "rentals.list.new", icon: Plus, onPress: () => router.push("/rentals/new") }
+    : { labelKey: "ui.empty.refresh", icon: RefreshCw, onPress: () => void Promise.resolve(services.syncNow?.()).catch(() => undefined).finally(query.reload) };
   const footer = office ? <Button testID="rentals-new" icon={Plus} labelKey="rentals.list.new" onPress={() => router.push("/rentals/new")} /> : undefined;
 
   if (query.status === "loading") return <Screen testID="rentals-loading"><Skeleton lines={6} /></Screen>;
@@ -27,7 +29,7 @@ export function RentalsScreen() {
   if (rentals.length === 0) {
     return (
       <Screen testID="rentals-empty" banner={<OfflineBanner />}>
-        <EmptyState icon={Truck} titleKey="rentals.list.emptyTitle" bodyKey="rentals.list.emptyBody" {...(newAction === undefined ? {} : { action: newAction })} />
+        <EmptyState animation="rental-handover" titleKey="rentals.list.emptyTitle" bodyKey="rentals.list.emptyBody" action={emptyAction} />
       </Screen>
     );
   }

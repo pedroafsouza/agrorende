@@ -3,7 +3,7 @@
     "emptyTitle": "No reports yet",
     "emptyBody": "When you report a problem with a machine, you can follow it here.",
     "new": "New report",
-    "pending": "Waiting to send",
+    "pending": "Saved on phone",
     "noNumber": "Number after sending",
     "notOperable": "Stopped"
   },
@@ -101,7 +101,7 @@
     "withdrawReasonPlaceholder": "Example: I reported the wrong machine",
     "withdrawn": "You withdrew this report.",
     "notFoundTitle": "Report not found",
-    "notFoundBody": "It may still be downloading. Pull to sync or go back to My reports.",
+    "notFoundBody": "It may still be arriving. Tap Send now in Sending, or go back to My reports.",
     "edit": "Edit report",
     "editTitle": "Edit report",
     "addPhoto": "Add photos",

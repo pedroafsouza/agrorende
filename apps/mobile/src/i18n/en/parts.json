@@ -24,7 +24,7 @@
     "holdWaitingParts": "On hold · waiting for parts",
     "holdNote": "Waiting for {name} ({quantity} {unit})",
     "keptDraft": "Your part is kept. Choose how to go on.",
-    "rejectedTitle": "This part was not in your van when the job synced",
+    "rejectedTitle": "This part was not in your van when the job was sent",
     "rejectedBody": "{name} ({quantity} {unit}) was not taken from stock. Choose how to go on.",
     "savedFreeText": "Part saved as free text",
     "savedHold": "Job on hold, waiting for parts"

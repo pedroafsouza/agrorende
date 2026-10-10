@@ -1,7 +1,7 @@
 {
   "action": {
     "discard": "Discard",
-    "syncNow": "Sync now",
+    "syncNow": "Send now",
     "understood": "Got it",
     "sendNow": "Send now",
     "saveCopy": "Save a copy"
@@ -9,30 +9,30 @@
   "badge": {
     "failed": "Send failed",
     "offline": "Offline",
-    "pending": "Pending",
+    "pending": "Saved on phone",
     "sending": "Sending",
     "synced": "All sent"
   },
   "center": {
-    "open": "Open sync"
+    "open": "Open sending"
   },
   "diagnostics": {
-    "body": "{count, plural, one {{count} diagnostics entry} other {{count} diagnostics entries}}",
-    "send": "Send diagnostics",
-    "sent": "Diagnostics sent",
-    "title": "Diagnostics"
+    "body": "{count, plural, one {{count} technical record ready for support} other {{count} technical records ready for support}}",
+    "send": "Send information to support",
+    "sent": "Information sent to support",
+    "title": "Support help"
   },
   "discard": {
     "body": "This item will not be sent and cannot be recovered.",
     "title": "Discard this item?"
   },
   "empty": {
-    "body": "Nothing is waiting to be sent.",
-    "title": "All caught up"
+    "body": "Everything you recorded has reached the office.",
+    "title": "All sent"
   },
   "lastSync": {
-    "at": "Last sync: {when}",
-    "never": "Not synced yet"
+    "at": "Last sent: {when}",
+    "never": "Nothing sent yet"
   },
   "mutation": {
     "asset": {
@@ -76,12 +76,12 @@
     }
   },
   "offline": {
-    "body": "Your work is saved and sent when the connection returns.",
+    "body": "Your work is saved on the phone and will be sent when there is signal.",
     "title": "No connection"
   },
   "pending": {
     "bytes": "{size} to send",
-    "summary": "{count, plural, one {{count} pending} other {{count} pending}}"
+    "summary": "{count, plural, one {{count} saved on phone} other {{count} saved on phone}}"
   },
   "section": {
     "conflicts": "Needs attention",
@@ -94,7 +94,7 @@
   },
   "status": {
     "IN_FLIGHT": "Sending",
-    "PENDING": "Queued",
+    "PENDING": "Saved on phone",
     "REJECTED": "Rejected"
   },
   "time": {
@@ -114,18 +114,24 @@
     "state": {
       "DONE": "Sent",
       "FAILED": "Failed",
-      "QUEUED": "Queued",
+      "QUEUED": "Saved on phone",
       "UPLOADED": "Processing",
       "UPLOADING": "Uploading",
-      "WAITING_PARENT": "Waiting for record"
+      "WAITING_PARENT": "Goes with the record"
     },
     "waitingWifi": "Waiting for Wi-Fi"
   },
   "copy": {
-    "title": "Copy of pending items",
+    "title": "Copy of items saved on the phone",
     "failed": "Could not save the copy. Your data is still on this device."
   },
   "attention": {
     "title": "Needs attention"
+  },
+  "header": {
+    "pendingTitle": "Saved on phone",
+    "pendingBody": "It will be sent when there is signal. You can keep working.",
+    "doneTitle": "All sent",
+    "doneBody": "The office has received everything you recorded."
   }
 }

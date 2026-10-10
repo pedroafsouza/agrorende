@@ -1,7 +1,7 @@
 {
   "action": {
     "discard": "Descartar",
-    "syncNow": "Sincronizar agora",
+    "syncNow": "Enviar agora",
     "understood": "Entendi",
     "sendNow": "Enviar agora",
     "saveCopy": "Salvar cópia"
@@ -9,30 +9,30 @@
   "badge": {
     "failed": "Falha no envio",
     "offline": "Sem conexão",
-    "pending": "Pendente",
+    "pending": "Salvo no celular",
     "sending": "Enviando",
     "synced": "Tudo enviado"
   },
   "center": {
-    "open": "Abrir sincronização"
+    "open": "Abrir envios"
   },
   "diagnostics": {
-    "body": "{count, plural, one {{count} registro de diagnóstico} other {{count} registros de diagnóstico}}",
-    "send": "Enviar diagnóstico",
-    "sent": "Diagnóstico enviado",
-    "title": "Diagnóstico"
+    "body": "{count, plural, one {{count} registro técnico pronto para o suporte} other {{count} registros técnicos prontos para o suporte}}",
+    "send": "Enviar informações para o suporte",
+    "sent": "Informações enviadas para o suporte",
+    "title": "Ajuda do suporte"
   },
   "discard": {
     "body": "Este item não será enviado e não pode ser recuperado.",
     "title": "Descartar este item?"
   },
   "empty": {
-    "body": "Não há nada esperando envio.",
-    "title": "Tudo em dia"
+    "body": "Tudo o que você registrou já chegou ao escritório.",
+    "title": "Tudo enviado"
   },
   "lastSync": {
-    "at": "Última sincronização: {when}",
-    "never": "Ainda não sincronizou"
+    "at": "Último envio: {when}",
+    "never": "Nada enviado ainda"
   },
   "mutation": {
     "asset": {
@@ -76,12 +76,12 @@
     }
   },
   "offline": {
-    "body": "Seu trabalho fica salvo e é enviado quando a conexão voltar.",
+    "body": "Seu trabalho fica salvo no celular e será enviado quando tiver sinal.",
     "title": "Sem conexão"
   },
   "pending": {
     "bytes": "{size} para enviar",
-    "summary": "{count, plural, one {{count} pendente} other {{count} pendentes}}"
+    "summary": "{count, plural, one {{count} salvo no celular} other {{count} salvos no celular}}"
   },
   "section": {
     "conflicts": "Precisa de atenção",
@@ -94,7 +94,7 @@
   },
   "status": {
     "IN_FLIGHT": "Enviando",
-    "PENDING": "Na fila",
+    "PENDING": "Salvo no celular",
     "REJECTED": "Recusado"
   },
   "time": {
@@ -114,18 +114,24 @@
     "state": {
       "DONE": "Enviado",
       "FAILED": "Falhou",
-      "QUEUED": "Na fila",
+      "QUEUED": "Salvo no celular",
       "UPLOADED": "Processando",
       "UPLOADING": "Enviando",
-      "WAITING_PARENT": "Aguardando registro"
+      "WAITING_PARENT": "Vai junto com o registro"
     },
     "waitingWifi": "Aguardando Wi-Fi"
   },
   "copy": {
-    "title": "Cópia dos itens pendentes",
+    "title": "Cópia dos itens salvos no celular",
     "failed": "Não foi possível salvar a cópia. Seus dados continuam neste aparelho."
   },
   "attention": {
     "title": "Precisa de atenção"
+  },
+  "header": {
+    "pendingTitle": "Salvo no celular",
+    "pendingBody": "Será enviado quando tiver sinal. Você pode continuar trabalhando.",
+    "doneTitle": "Tudo enviado",
+    "doneBody": "O escritório já recebeu tudo o que você registrou."
   }
 }

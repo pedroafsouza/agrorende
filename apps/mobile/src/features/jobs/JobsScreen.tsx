@@ -1,4 +1,4 @@
-import { CalendarCheck, CalendarClock, CircleCheck, List, Map as MapIcon } from "lucide-react-native";
+import { CalendarCheck, CalendarClock, CircleCheck, List, Map as MapIcon, RefreshCw } from "lucide-react-native";
 import { lazy, Suspense, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -26,7 +26,7 @@ const JobsMap = lazy(() => loadJobsMap().then((m) => ({ default: m.JobsMap })));
 
 /** Jobs tab (WO-03): Today · Upcoming · Done, read from the local mirror so it works offline. */
 export function JobsScreen() {
-  const { userId, now: clock } = useServices();
+  const { userId, now: clock, syncNow } = useServices();
   const [tab, setTab] = useState<JobBucket>("today");
   const [view, setView] = useState<"list" | "map">("list");
   const query = useLocalQuery(async (db) => (userId === undefined ? [] : listMyJobs(db, userId)), [userId]);
@@ -48,7 +48,12 @@ export function JobsScreen() {
           <JobsMap jobs={jobs} />
         </Suspense>
       ) : jobs.length === 0 ? (
-        <EmptyState icon={TABS.find((t) => t.value === tab)?.icon} titleKey={`jobs.list.empty.${tab}.title`} bodyKey={`jobs.list.empty.${tab}.body`} />
+        <EmptyState
+          animation="first-work-order"
+          titleKey={`jobs.list.empty.${tab}.title`}
+          bodyKey={`jobs.list.empty.${tab}.body`}
+          action={{ labelKey: "ui.empty.refresh", icon: RefreshCw, onPress: () => void Promise.resolve(syncNow?.()).catch(() => undefined).finally(query.reload) }}
+        />
       ) : (
         jobs.map((job) => <JobRow key={job.id} job={job} now={now} />)
       )}

@@ -13,6 +13,7 @@ export * from "./Header";
 export * from "./Icon";
 export * from "./IconButton";
 export * from "./ListItem";
+export * from "./Lottie";
 export * from "./NumberField";
 export * from "./OfflineBanner";
 export * from "./Screen";

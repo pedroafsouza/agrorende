@@ -15,9 +15,9 @@
     "sendNowHint": "Envia tudo agora, inclusive vídeos por dados móveis desta vez."
   },
   "help": {
-    "body": "Diagnóstico, versão do app e contato",
-    "syncCenter": "Central de sincronização",
-    "syncCenterBody": "Veja o que falta enviar",
+    "body": "Informações para o suporte, versão do app e contato",
+    "syncCenter": "Envios",
+    "syncCenterBody": "Veja o que ainda está salvo no celular",
     "title": "Ajuda"
   },
   "language": {

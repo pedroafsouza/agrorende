@@ -94,7 +94,7 @@ describe("translations", () => {
   test("pt-BR and en render ICU plurals", () => {
     initI18n("pt-BR");
     setLocale("pt-BR");
-    expect(message("sync.pending.summary", { count: 2 })).toBe("2 pendentes");
+    expect(message("sync.pending.summary", { count: 2 })).toBe("2 salvos no celular");
     expect(message("routes.tabs.today")).toBe("Hoje");
     setLocale("en");
     expect(message("sync.time.minutes", { count: 1 })).toBe("1 minute ago");

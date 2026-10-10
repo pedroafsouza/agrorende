@@ -6,7 +6,7 @@
     "locationAlwaysAndWhenInUsePermission": "Permita que o AgroRende acompanhe sua localização durante o serviço, mesmo em segundo plano.",
     "locationAlwaysPermission": "Permita que o AgroRende acompanhe sua localização em segundo plano durante o serviço.",
     "locationWhenInUsePermission": "Permita que o AgroRende use sua localização para encontrar máquinas, talhões e rotas.",
-    "notificationsPermission": "Permita que o AgroRende envie avisos de serviço, sincronização e locação.",
+    "notificationsPermission": "Permita que o AgroRende envie avisos de serviço, de envios e de locação.",
     "photosPermission": "Permita que o AgroRende selecione fotos e vídeos para evidências."
   }
 }

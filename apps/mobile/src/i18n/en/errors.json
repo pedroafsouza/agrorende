@@ -6,7 +6,7 @@
   },
   "ACCOUNT_DISABLED": {
     "title": "Your access was turned off",
-    "body": "Your items are still saved. See what is pending or send diagnostics.",
+    "body": "Your items are still saved on the phone. See what is left to send or send information to support.",
     "action": "Ask the office"
   },
   "ACCOUNT_IN_OTHER_ORG": {
@@ -26,12 +26,12 @@
   },
   "ALREADY_RESOLVED": {
     "title": "This item was already resolved",
-    "body": "There is nothing else to do. We refreshed the queue for you.",
+    "body": "There is nothing else to do. We refreshed the sending list for you.",
     "action": "Continue with safe option"
   },
   "APP_UPDATE_REQUIRED": {
     "title": "Update AgroRende",
-    "body": "The update keeps your local data. Then come back to send what is pending.",
+    "body": "The update keeps your data on the phone. Then come back to send what is left.",
     "action": "Update app"
   },
   "ASSET_DOUBLE_BOOKED": {
@@ -136,17 +136,17 @@
   },
   "DEVICE_UNSYNCED_STALE": {
     "title": "Nothing sent for a day",
-    "body": "Your data is safe on this device. Try sending now or send diagnostics.",
-    "action": "Sync now"
+    "body": "Your data is saved on this phone. Try sending now or send information to support.",
+    "action": "Send now"
   },
   "DIAGNOSTICS_SEND_FAILED": {
-    "title": "Diagnostics saved",
+    "title": "Support information saved",
     "body": "We will try to send it later. It does not include form contents or personal data.",
     "action": "Wait for sending"
   },
   "DIAGNOSTICS_UNAVAILABLE": {
-    "title": "Diagnostic unavailable",
-    "body": "The queue is still safe. Ask for a new diagnostic if you still need to investigate.",
+    "title": "Support information unavailable",
+    "body": "Your records are still saved on the phone. Send the information to support again if you still need help.",
     "action": "Continue with safe option"
   },
   "EXPORT_JOB_STARTED": {
@@ -261,7 +261,7 @@
   },
   "LOCAL_DB_REPAIR_REQUIRED": {
     "title": "We need to repair app data",
-    "body": "Do not delete the app. Try repair, send diagnostics, or save a protected copy when it can be read.",
+    "body": "Do not delete the app. Try repair, send information to support, or save a protected copy when it can be read.",
     "action": "Repair now"
   },
   "LOCAL_MEDIA_CORRUPT": {
@@ -322,7 +322,7 @@
   "MEDIA_NOT_IN_STORAGE": {
     "title": "Original video is still uploading",
     "body": "The original video is still being sent. We show the preview and let you know when it finishes.",
-    "action": "Send diagnostics"
+    "action": "Send information to support"
   },
   "MEDIA_PART_MISSING": {
     "title": "A piece of the file is missing",
@@ -391,8 +391,8 @@
   },
   "OFFICE_CONTACT_MISSING": {
     "title": "Office contact not set",
-    "body": "Use Send diagnostics or contact the channel your team already uses. Your data is saved.",
-    "action": "Send diagnostics"
+    "body": "Use Send information to support or contact the channel your team already uses. Your data is saved.",
+    "action": "Send information to support"
   },
   "OFFICE_ROLE_REQUIRED": {
     "title": "The office is for Admins and Managers",
@@ -431,7 +431,7 @@
   },
   "OUTBOX_ITEM_STUCK": {
     "title": "One item is stuck",
-    "body": "Your data is safe. Try sending again or send diagnostics to the office.",
+    "body": "Your data is saved on the phone. Try sending again or send information to support.",
     "action": "Try sending again"
   },
   "PASSWORD_CHANGE_REQUIRED": {
@@ -806,7 +806,7 @@
   },
   "UNKNOWN_MUTATION": {
     "title": "Update to send this action",
-    "body": "The action stayed saved. Update AgroRende and send diagnostics if it continues.",
+    "body": "The action stayed saved on the phone. Update AgroRende and send information to support if it continues.",
     "action": "Update app"
   },
   "UNSUPPORTED_BROWSER": {

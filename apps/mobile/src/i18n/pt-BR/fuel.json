@@ -31,7 +31,7 @@
     "add": "Registrar abastecimento",
     "empty": "Nenhum abastecimento registrado para esta máquina.",
     "row": "{liters} L",
-    "pending": "Aguardando envio",
+    "pending": "Salvo no celular",
     "consumption": "Consumo: {litersPerHour} L/h em {hours} h",
     "noConsumption": "Registre o horímetro duas vezes para ver litros por hora."
   }

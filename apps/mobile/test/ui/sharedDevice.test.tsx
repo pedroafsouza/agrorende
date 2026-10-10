@@ -68,8 +68,8 @@ describe("shared device (PLT-12)", () => {
 
     await render(<DeviceUsersCard sources={sources} />);
     const joanaRow = await screen.findByTestId(`device-user-${JOANA}`);
-    expect(within(joanaRow).getByText("2 aguardando envio")).toBeTruthy();
-    expect(within(screen.getByTestId(`device-user-${CARLOS}`)).getByText("1 aguardando envio")).toBeTruthy();
+    expect(within(joanaRow).getByText("2 salvos no celular")).toBeTruthy();
+    expect(within(screen.getByTestId(`device-user-${CARLOS}`)).getByText("1 salvo no celular")).toBeTruthy();
     expect(screen.getByText("Neste celular")).toBeTruthy();
   });
 

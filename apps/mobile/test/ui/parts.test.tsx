@@ -92,7 +92,7 @@ describe("Job parts (WO-09 P1)", () => {
     expect(await getMirrorRow(runtime.db, "stockLevels", ids.level)).toMatchObject({ quantity: 1 });
     await recordConflict(runtime.db, { id: testId(), row: rejected, code: "WO_PART_NOT_IN_VAN_STOCK", now: ISO });
     await render(<JobPartsScreen id={ids.wo} />);
-    expect(await screen.findByText("Esta peça não estava na sua viatura quando a OS sincronizou")).toBeTruthy();
+    expect(await screen.findByText("Esta peça não estava na sua viatura quando a OS foi enviada")).toBeTruthy();
     fireEvent.press(screen.getByText("Escolher outro caminho"));
     expect(await screen.findByTestId("part-stock-rejected")).toBeTruthy();
     fireEvent.press(screen.getByTestId("part-stock-free-text"));

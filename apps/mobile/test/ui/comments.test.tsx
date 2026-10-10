@@ -35,7 +35,7 @@ describe("CommentThread (PLT-10)", () => {
     await fireEvent.changeText(screen.getByTestId("comment-input"), "  Trocar a correia amanhã  ");
     await fireEvent.press(screen.getByTestId("comment-send"));
     expect(await screen.findByText("Trocar a correia amanhã")).toBeTruthy();
-    expect(screen.getByText("Aguardando envio")).toBeTruthy();
+    expect(screen.getByText("Salvo no celular")).toBeTruthy();
     expect(screen.getByText("Você")).toBeTruthy();
 
     const outbox = await listOutbox(runtime.db);
@@ -56,7 +56,7 @@ describe("CommentThread (PLT-10)", () => {
     await render(<CommentThread entityType="WORK_ORDER" entityId={jobId} />);
     expect(await screen.findByText("Primeiro")).toBeTruthy();
     expect(screen.getAllByText("Ana Gestora")).toHaveLength(2);
-    expect(screen.queryByText("Aguardando envio")).toBeNull();
+    expect(screen.queryByText("Salvo no celular")).toBeNull();
     const bodies = screen.getAllByText(/Primeiro|Segundo/).map((node) => node.props.children);
     expect(bodies).toEqual(["Primeiro", "Segundo"]);
     await waitFor(() => expect(screen.queryByTestId("comments-empty")).toBeNull());

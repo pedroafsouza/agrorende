@@ -6,7 +6,7 @@
   },
   "ACCOUNT_DISABLED": {
     "title": "Seu acesso foi desativado",
-    "body": "Seus itens continuam salvos. Veja o que está pendente ou envie um diagnóstico.",
+    "body": "Seus itens continuam salvos no celular. Veja o que falta enviar ou envie informações para o suporte.",
     "action": "Falar com o escritório"
   },
   "ACCOUNT_IN_OTHER_ORG": {
@@ -26,12 +26,12 @@
   },
   "ALREADY_RESOLVED": {
     "title": "Este item já foi resolvido",
-    "body": "Nada mais precisa ser feito. Atualizamos a fila para você.",
+    "body": "Nada mais precisa ser feito. Atualizamos a lista de envios para você.",
     "action": "Continuar com opção segura"
   },
   "APP_UPDATE_REQUIRED": {
     "title": "Atualize o AgroRende",
-    "body": "A atualização mantém seus dados locais. Depois, volte para enviar o que está pendente.",
+    "body": "A atualização mantém seus dados no celular. Depois, volte para enviar o que falta.",
     "action": "Atualizar aplicativo"
   },
   "ASSET_DOUBLE_BOOKED": {
@@ -136,17 +136,17 @@
   },
   "DEVICE_UNSYNCED_STALE": {
     "title": "Nada enviado há mais de um dia",
-    "body": "Seus dados estão guardados neste aparelho. Tente enviar agora ou mande um diagnóstico.",
+    "body": "Seus dados estão salvos neste celular. Tente enviar agora ou envie informações para o suporte.",
     "action": "Enviar agora"
   },
   "DIAGNOSTICS_SEND_FAILED": {
-    "title": "Diagnóstico guardado",
+    "title": "Informações para o suporte guardadas",
     "body": "Vamos tentar enviar depois. Ele não inclui conteúdo dos formulários nem dados pessoais.",
     "action": "Aguardar envio"
   },
   "DIAGNOSTICS_UNAVAILABLE": {
-    "title": "Diagnóstico indisponível",
-    "body": "A fila continua segura. Peça um novo diagnóstico se ainda precisar investigar.",
+    "title": "Informações para o suporte indisponíveis",
+    "body": "Seus registros continuam salvos no celular. Envie as informações para o suporte de novo se ainda precisar de ajuda.",
     "action": "Continuar com opção segura"
   },
   "EXPORT_JOB_STARTED": {
@@ -261,7 +261,7 @@
   },
   "LOCAL_DB_REPAIR_REQUIRED": {
     "title": "Precisamos reparar os dados do app",
-    "body": "Não apague o app. Tente reparar, envie diagnóstico ou salve uma cópia protegida quando ela puder ser lida.",
+    "body": "Não apague o app. Tente reparar, envie informações para o suporte ou salve uma cópia protegida quando ela puder ser lida.",
     "action": "Reparar agora"
   },
   "LOCAL_MEDIA_CORRUPT": {
@@ -322,7 +322,7 @@
   "MEDIA_NOT_IN_STORAGE": {
     "title": "Vídeo original ainda enviando",
     "body": "O vídeo original ainda está sendo enviado. Mostramos a prévia e avisamos quando terminar.",
-    "action": "Enviar diagnóstico"
+    "action": "Enviar informações para o suporte"
   },
   "MEDIA_PART_MISSING": {
     "title": "Faltou um pedaço do arquivo",
@@ -391,8 +391,8 @@
   },
   "OFFICE_CONTACT_MISSING": {
     "title": "Contato da central não configurado",
-    "body": "Use Enviar diagnóstico ou fale pelo canal que sua equipe já usa. Seus dados estão salvos.",
-    "action": "Enviar diagnóstico"
+    "body": "Use Enviar informações para o suporte ou fale pelo canal que sua equipe já usa. Seus dados estão salvos.",
+    "action": "Enviar informações para o suporte"
   },
   "OFFICE_ROLE_REQUIRED": {
     "title": "O escritório é para Administrador e Gestor",
@@ -431,7 +431,7 @@
   },
   "OUTBOX_ITEM_STUCK": {
     "title": "Um item está parado",
-    "body": "Seus dados estão guardados. Tente enviar de novo ou mande um diagnóstico para a central.",
+    "body": "Seus dados estão salvos no celular. Tente enviar de novo ou envie informações para o suporte.",
     "action": "Tentar enviar de novo"
   },
   "PASSWORD_CHANGE_REQUIRED": {
@@ -470,7 +470,7 @@
     "action": "Atualizar dados"
   },
   "PUSH_PARTIAL_RETRY": {
-    "title": "Alguns itens ainda estão na fila",
+    "title": "Alguns itens ainda estão salvos no celular",
     "body": "O que já foi enviado está seguro. O restante ficou guardado e vai continuar na ordem certa.",
     "action": "Acompanhar envio"
   },
@@ -806,7 +806,7 @@
   },
   "UNKNOWN_MUTATION": {
     "title": "Atualize para enviar esta ação",
-    "body": "A ação ficou salva. Atualize o AgroRende e envie um diagnóstico se continuar.",
+    "body": "A ação ficou salva no celular. Atualize o AgroRende e envie informações para o suporte se continuar.",
     "action": "Atualizar aplicativo"
   },
   "UNSUPPORTED_BROWSER": {

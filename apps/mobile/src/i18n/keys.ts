@@ -5,6 +5,7 @@ export const routeKeys = {
   login: "routes.auth.login",
   changePassword: "routes.auth.changePassword",
   onboarding: "routes.auth.onboarding",
+  intro: "routes.auth.intro",
   appShell: "routes.app.shell",
   tabsShell: "routes.tabs.shell",
   today: "routes.tabs.today",

@@ -1,6 +1,6 @@
 import type { WorkOrderStatus } from "@agrorende/contracts/enums";
 import { useRouter } from "expo-router";
-import { CheckCircle2, ClipboardList } from "lucide-react-native";
+import { ArrowRight, CheckCircle2, ClipboardList } from "lucide-react-native";
 import { useEffect, useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
@@ -12,7 +12,7 @@ import { errorCodeOf } from "../../lib/errors";
 import { useServices } from "../../lib/services";
 import { completeWorkOrder } from "../../sync/mutators/jobs";
 import { registerMedia } from "../../sync/mutators/media";
-import { Banner, Button, Card, Chip, EmptyState, ErrorState, NumberField, Screen, Skeleton, Text, TextField, showToast } from "../../ui";
+import { Banner, Button, Card, Chip, EmptyState, ErrorState, Lottie, NumberField, Screen, Skeleton, Text, TextField, showToast } from "../../ui";
 import { ErrorSheet } from "../../ui/recovery/ErrorSheet";
 import { InlineError } from "../../ui/recovery/InlineError";
 import "./i18n";
@@ -45,6 +45,7 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
   const [sheetCode, setSheetCode] = useState<string | undefined>();
   const [busy, setBusy] = useState(false);
   const [jumpDialog, setJumpDialog] = useState(false);
+  const [completed, setCompleted] = useState(false);
   const registered = useRef(new Set<string>());
   const restored = useRef(false);
 
@@ -63,6 +64,17 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
     if (db !== undefined) void saveDraft(db, { id: completionDraftId(id), kind: "WO_COMPLETE", refId: id, step: "form", payload: next, updatedAt: new Date(now?.() ?? Date.now()).toISOString() });
   };
 
+  if (completed) {
+    return (
+      <Screen testID="job-complete-done" footer={<Button testID="job-complete-done-back" labelKey="jobs.detail.backToJob" icon={ArrowRight} onPress={() => router.replace(`/jobs/${id}`)} />}>
+        <View style={styles.done}>
+          <Lottie id="success" playOnce size={200} testID="job-complete-success" />
+          <Text i18nKey="jobs.complete.doneTitle" variant="title" accessibilityRole="header" accessibilityLiveRegion="polite" style={styles.doneText} />
+          <Text i18nKey="jobs.complete.doneBody" tone="secondary" style={styles.doneText} />
+        </View>
+      </Screen>
+    );
+  }
   if (query.status === "loading") return <Screen testID="job-complete-loading"><Skeleton lines={8} /></Screen>;
   if (query.status === "error") return <Screen testID="job-complete-error"><ErrorState onRetry={query.reload} /></Screen>;
   if (query.data === undefined) return <Screen testID="job-complete-missing"><EmptyState icon={ClipboardList} titleKey="jobs.detail.notFoundTitle" bodyKey="jobs.detail.notFoundBody" /></Screen>;
@@ -118,7 +130,7 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
       });
       if (db !== undefined) await deleteDraft(db, completionDraftId(id));
       showToast({ messageKey: "jobs.toast.complete", tone: "success" });
-      router.replace(`/jobs/${id}`);
+      setCompleted(true);
     } catch (err) {
       setSheetCode(errorCodeOf(err));
     } finally {
@@ -224,4 +236,8 @@ export function JobCompleteScreen({ id }: { readonly id: string }) {
   );
 }
 
-const styles = StyleSheet.create({ row: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" } });
+const styles = StyleSheet.create({
+  row: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 8, flexWrap: "wrap" },
+  done: { alignItems: "center", gap: 16, paddingVertical: 24 },
+  doneText: { textAlign: "center" },
+});

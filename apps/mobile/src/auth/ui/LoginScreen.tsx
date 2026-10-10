@@ -17,6 +17,7 @@ import { AskOfficeButton, ErrorBanner } from "../../ui/recovery";
 import { space, useTheme } from "../../ui/theme";
 import { nativeDeviceUserSources } from "../deviceUsersNative";
 import { DeviceUsersCard } from "./DeviceUsersCard";
+import { firstRunRoute } from "./firstRun";
 import { finishLogin, loginErrorCode } from "./flow";
 
 /**
@@ -41,8 +42,7 @@ export function LoginScreen() {
   }, []);
 
   async function done(): Promise<void> {
-    const prefs = await loadDevicePrefs();
-    router.replace(prefs.onboarded === true ? "/today" : "/onboarding");
+    router.replace(firstRunRoute(await loadDevicePrefs()));
   }
 
   async function run(kind: NonNullable<typeof busy>, action: () => Promise<Parameters<typeof finishLogin>[0]>): Promise<void> {

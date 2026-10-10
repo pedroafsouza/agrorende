@@ -8,6 +8,8 @@ export interface DevicePrefs {
   readonly locale?: AppLocale;
   readonly theme?: ThemePreference;
   readonly onboarded?: boolean;
+  /** The technician has seen (or skipped) the three-card product introduction. */
+  readonly introSeen?: boolean;
 }
 
 function prefsFile(): File {

@@ -10,6 +10,7 @@ export default function AuthLayout() {
     <Stack screenOptions={{ headerShown: true, headerTintColor: theme.text, headerStyle: { backgroundColor: theme.background }, contentStyle: { backgroundColor: theme.background } }}>
       <Stack.Screen name="login" options={{ headerShown: false, title: t(routeKeys.login) }} />
       <Stack.Screen name="change-password" options={{ title: t(routeKeys.changePassword) }} />
+      <Stack.Screen name="intro" options={{ headerShown: false, title: t(routeKeys.intro), gestureEnabled: false }} />
       <Stack.Screen name="onboarding" options={{ headerShown: false, title: t(routeKeys.onboarding) }} />
     </Stack>
   );

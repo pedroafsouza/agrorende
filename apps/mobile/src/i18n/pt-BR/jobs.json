@@ -4,7 +4,7 @@
     "upcoming": "Próximos",
     "done": "Feitos",
     "overdue": "Atrasado",
-    "pending": "Aguardando envio",
+    "pending": "Salvo no celular",
     "empty": {
       "today": {
         "title": "Nada para hoje",
@@ -135,7 +135,9 @@
     "alreadyTitle": "Serviço já concluído",
     "alreadyBody": "Este serviço já foi concluído.",
     "notReadyTitle": "Ainda não dá para concluir",
-    "notReadyBody": "Comece o serviço antes de concluir."
+    "notReadyBody": "Comece o serviço antes de concluir.",
+    "doneTitle": "Serviço concluído",
+    "doneBody": "A conclusão e a assinatura estão salvas no celular e vão para o escritório assim que tiver sinal."
   },
   "toast": {
     "accept": "Serviço aceito",
@@ -167,7 +169,7 @@
     "reading": "Leitura do horímetro",
     "hours": "h",
     "send": "Reenviar",
-    "sent": "Leitura reenviada. Será sincronizada quando houver sinal."
+    "sent": "Leitura salva no celular. Será enviada quando tiver sinal."
   },
   "arrival": {
     "title": "Chegou em {name}?",

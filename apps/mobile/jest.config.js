@@ -3,6 +3,7 @@ const shared = {
     "^@agrorende/contracts$": "<rootDir>/../../packages/contracts/src/index.ts",
     "^@agrorende/contracts/(.*)$": "<rootDir>/../../packages/contracts/src/$1",
     "^@agrorende/design-tokens$": "<rootDir>/../../packages/design-tokens/src/index.ts",
+    "^@agrorende/motion$": "<rootDir>/../../packages/motion/src/index.ts",
     "^@agrorende/i18n$": "<rootDir>/../../packages/i18n/src/index.ts",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },

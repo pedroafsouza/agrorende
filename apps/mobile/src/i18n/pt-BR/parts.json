@@ -24,7 +24,7 @@
     "holdWaitingParts": "Em espera · aguardando peças",
     "holdNote": "Aguardando {name} ({quantity} {unit})",
     "keptDraft": "Sua peça foi mantida. Escolha como seguir.",
-    "rejectedTitle": "Esta peça não estava na sua viatura quando a OS sincronizou",
+    "rejectedTitle": "Esta peça não estava na sua viatura quando a OS foi enviada",
     "rejectedBody": "{name} ({quantity} {unit}) não saiu do estoque. Escolha como seguir.",
     "savedFreeText": "Peça salva como texto livre",
     "savedHold": "OS em espera, aguardando peças"

@@ -221,7 +221,8 @@
     "auth": {
       "changePassword": "Trocar senha",
       "login": "Entrar",
-      "onboarding": "Boas-vindas"
+      "onboarding": "Boas-vindas",
+      "intro": "Conheça o AgroRende"
     },
     "dev": {
       "styleGuide": "Guia de estilo"
@@ -249,7 +250,7 @@
     "root": "AgroRende",
     "scan": "Ler código",
     "settings": "Configurações",
-    "syncCenter": "Central de sincronização",
+    "syncCenter": "Envios",
     "tabs": {
       "jobs": "Serviços",
       "more": "Mais",
@@ -307,7 +308,8 @@
     },
     "empty": {
       "body": "Quando houver algo aqui, aparece nesta lista.",
-      "title": "Nada por aqui"
+      "title": "Nada por aqui",
+      "refresh": "Verificar de novo"
     },
     "error": {
       "body": "Seus dados estão salvos no aparelho. Tente de novo.",
@@ -343,8 +345,8 @@
       "scanBody": "QR ou etiqueta da máquina",
       "settings": "Configurações",
       "settingsBody": "Idioma, tema e conta",
-      "sync": "Sincronização",
-      "syncBody": "Pendências e envios"
+      "sync": "Envios",
+      "syncBody": "O que está salvo no celular e o que já foi enviado"
     },
     "number": {
       "decrease": "Diminuir",
@@ -353,7 +355,7 @@
     "recovery": {
       "alt": "Usar outra forma",
       "auto": "Tentar de novo",
-      "diag": "Enviar diagnóstico",
+      "diag": "Enviar informações para o suporte",
       "draft": "Salvar rascunho",
       "fallback": "Continuar sem isso",
       "fix": "Corrigir",
@@ -389,7 +391,7 @@
     },
     "status": {
       "failed": "Falhou",
-      "pending": "Pendente",
+      "pending": "Salvo no celular",
       "synced": "Enviado"
     },
     "toast": {

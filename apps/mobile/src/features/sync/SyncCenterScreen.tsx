@@ -1,12 +1,13 @@
-import { CloudUpload, FileWarning, ImageUp, RefreshCw, Send, Trash2 } from "lucide-react-native";
+import { FileWarning, ImageUp, RefreshCw, Send, Trash2 } from "lucide-react-native";
 import { useState } from "react";
+import { StyleSheet } from "react-native";
 
 import { useServices } from "../../lib/services";
 import { bumpLocalData, useLocalQuery } from "../../lib/useLocalQuery";
 import { discardMediaFile, retryMediaFile } from "../../media/queue";
 import { acknowledgeConflict } from "../../sync/conflicts";
 import { discardRejected } from "../../sync/outbox";
-import { Banner, Button, Card, ConfirmDialog, EmptyState, ErrorState, IconButton, ListItem, Screen, Skeleton, StatusPill, SyncBadge, Text, showToast, useSyncSnapshot } from "../../ui";
+import { Banner, Button, Card, ConfirmDialog, ErrorState, IconButton, ListItem, Lottie, Screen, Skeleton, StatusPill, SyncBadge, Text, showToast, useSyncSnapshot } from "../../ui";
 import { AskOfficeButton } from "../../ui/recovery";
 import { recoveryConfig } from "../../ui/recovery/config";
 import { loadSyncCenter, mutationLabelKey } from "./data";
@@ -58,10 +59,18 @@ export function SyncCenterScreen() {
 
   const footer = <Button testID="sync-now" labelKey="sync.action.syncNow" icon={RefreshCw} loading={syncing || snapshot.phase !== "idle"} onPress={() => void syncNow()} />;
   const offline = snapshot.network === "offline";
+  const allSent = query.status === "ready" && query.data.outbox.length === 0 && query.data.uploads.length === 0 && query.data.conflicts.length === 0 && snapshot.pendingBytes === 0;
 
   return (
     <Screen footer={footer} refreshing={false} onRefresh={query.reload} testID="sync-center">
-      <Card>
+      <Card testID={allSent ? "sync-header-done" : "sync-header-pending"}>
+        {query.status === "ready" ? (
+          <>
+            <Lottie key={allSent ? "done" : "pending"} id={allSent ? "success" : "saved-on-phone"} playOnce={allSent} size={140} testID="sync-header-animation" />
+            <Text i18nKey={allSent ? "sync.header.doneTitle" : "sync.header.pendingTitle"} variant="title" accessibilityRole="header" style={styles.center} />
+            <Text i18nKey={allSent ? "sync.header.doneBody" : "sync.header.pendingBody"} tone="secondary" style={styles.center} />
+          </>
+        ) : null}
         <SyncBadge />
         {snapshot.lastSyncAt === undefined ? (
           <Text i18nKey="sync.lastSync.never" tone="secondary" />
@@ -79,9 +88,6 @@ export function SyncCenterScreen() {
       {query.status === "error" ? <ErrorState onRetry={query.reload} /> : null}
       {query.status === "ready" ? (
         <>
-          {query.data.outbox.length === 0 && query.data.uploads.length === 0 && query.data.conflicts.length === 0 ? (
-            <EmptyState icon={CloudUpload} titleKey="sync.empty.title" bodyKey="sync.empty.body" />
-          ) : null}
           {query.data.conflicts.length > 0 ? <Text i18nKey="sync.section.conflicts" variant="heading" /> : null}
           {query.data.conflicts.map((conflict) => (
             <Card key={conflict.id} testID={`sync-conflict-${conflict.id}`}>
@@ -168,3 +174,5 @@ export function SyncCenterScreen() {
     </Screen>
   );
 }
+
+const styles = StyleSheet.create({ center: { textAlign: "center" } });
