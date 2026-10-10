@@ -46,4 +46,30 @@ describe("HelpSearch", () => {
     expect(screen.getByRole("searchbox")).toHaveProperty("value", "foto");
     expect(screen.getAllByRole("link")).toHaveLength(1);
   });
+
+  it("opens the collapsed index for a search or a #codigos link", () => {
+    window.history.replaceState(null, "", "/pt-br/ajuda/?q=foto");
+    const { container } = render(
+      <details id="codigos">
+        <summary>Codes</summary>
+        <HelpSearch groups={groups} hrefBase="/pt-br/ajuda/erros/" labels={labels} />
+      </details>,
+    );
+    const details = container.querySelector("details");
+    expect(details?.open).toBe(true);
+    cleanup();
+    window.history.replaceState(null, "", "/pt-br/ajuda/");
+    const second = render(
+      <details id="codigos">
+        <summary>Codes</summary>
+        <HelpSearch groups={groups} hrefBase="/pt-br/ajuda/erros/" labels={labels} />
+      </details>,
+    );
+    const closed = second.container.querySelector("details");
+    expect(closed?.open).toBe(false);
+    Element.prototype.scrollIntoView = () => undefined;
+    window.location.hash = "codigos";
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+    expect(closed?.open).toBe(true);
+  });
 });

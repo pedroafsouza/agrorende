@@ -97,6 +97,7 @@ test.describe("EC-SITE-05 JavaScript disabled", () => {
     await page.locator('a[href="/pt-br/planos/"]').first().click();
     await expect(page).toHaveURL(/\/pt-br\/planos\/$/u);
     await page.goto("/pt-br/ajuda/");
+    await page.locator("details#codigos > summary").click();
     await expect(page.locator('a[href="/pt-br/ajuda/erros/first-sync-large/"]')).toBeVisible();
   });
 });
@@ -113,7 +114,7 @@ test.describe("EC-SITE-06 slow network", () => {
   });
 
   test("a failed image switches to lite mode", async ({ page }) => {
-    await page.route("**/img/**", (route) => route.abort());
+    await page.route("**/brand/**", (route) => route.abort());
     await page.goto("/pt-br/");
     await expect(page.locator("html")).toHaveAttribute("data-lite", "on");
   });

@@ -72,6 +72,17 @@ function escapeXml(value: string): string {
   return value.replace(/&/gu, "&amp;").replace(/</gu, "&lt;").replace(/>/gu, "&gt;");
 }
 
+/** Breaks the headline into lines of at most `max` characters for the share card. */
+function wrapWords(text: string, max: number): string[] {
+  const lines: string[] = [];
+  for (const word of text.split(/\s+/u)) {
+    const last = lines.at(-1);
+    if (last !== undefined && `${last} ${word}`.length <= max) lines[lines.length - 1] = `${last} ${word}`;
+    else lines.push(word);
+  }
+  return lines;
+}
+
 async function renderOg(locale: "pt-br" | "en", logo: string): Promise<void> {
   const messages = locale === "en" ? enSite : ptSite;
   const heroPng = await sharp(await readFile(join(assets, "hero-field.svg")))
@@ -85,11 +96,10 @@ async function renderOg(locale: "pt-br" | "en", logo: string): Promise<void> {
   <g transform="translate(72 72) scale(1.25)">${logoInner}</g>
   <text x="168" y="128" font-family="Helvetica, Arial, sans-serif" font-size="44" font-weight="700" fill="#1C1F23">AgroRende</text>
   <rect x="72" y="214" width="56" height="6" rx="3" fill="#E8590C"/>
-  <text font-family="Helvetica, Arial, sans-serif" font-weight="700" fill="#1C1F23" font-size="56">
-    <tspan x="72" y="300">${escapeXml(messages.home.heroTitle)}</tspan>
-  </text>
-  <text font-family="Helvetica, Arial, sans-serif" font-weight="700" fill="#237032" font-size="56">
-    <tspan x="72" y="372">${escapeXml(messages.home.heroSubtitle)}</tspan>
+  <text font-family="Helvetica, Arial, sans-serif" font-weight="700" fill="#1C1F23" font-size="52">
+${wrapWords(messages.home.heroTitle, 20)
+  .map((line, index) => `    <tspan x="72" y="${290 + index * 64}">${escapeXml(line)}</tspan>`)
+  .join("\n")}
   </text>
   <text x="72" y="540" font-family="Helvetica, Arial, sans-serif" font-size="28" fill="#3D434B">${escapeXml(messages.cta.primary)}</text>
 </svg>`;

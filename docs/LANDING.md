@@ -12,10 +12,10 @@ The public landing site lives in `apps/landing` (package `landing`; it was calle
 
 | Page | Portuguese | English | Notes |
 |---|---|---|---|
-| Home | `/pt-br/` | `/en/` | Hero, five feature blocks, how it works, FAQ, CTAs. JSON-LD: Organization, SoftwareApplication, FAQPage. |
-| Features | `/pt-br/recursos/` | `/en/features/` | One section per product area. |
-| Pricing | `/pt-br/planos/` | `/en/pricing/` | Numeric prices only with `SITE_SHOW_PRICES=true`; otherwise a "talk to us" card. |
-| Help | `/pt-br/ajuda/` | `/en/help/` | FAQ plus the searchable index of every error code. |
+| Home | `/pt-br/` | `/en/` | Seven sections: hero, today versus with AgroRende, how it works in three steps, works without signal, mission, buyer FAQ, final CTA. JSON-LD: Organization, SoftwareApplication, FAQPage (buyer questions). |
+| Features | `/pt-br/recursos/` | `/en/features/` | Product video (`#video`), one block per job (field report, proof of work, machine cost), then the modules in brief. |
+| Pricing | `/pt-br/planos/` | `/en/pricing/` | Numeric prices only with `SITE_SHOW_PRICES=true`; otherwise a "Pedir uma proposta" card that opens WhatsApp. With prices shown, an example line for a team of five technicians. |
+| Help | `/pt-br/ajuda/` | `/en/help/` | WhatsApp and e-mail first, then common questions; the searchable error-code index sits in a collapsed `<details id="codigos">`, opened automatically by `?q=` or `#codigos`. |
 | Error help | `/pt-br/ajuda/erros/<code-kebab>/` | `/en/help/errors/<code-kebab>/` | One page per code in `ERROR_META`, 188 per locale. |
 | Unknown code | `/pt-br/ajuda/erros/codigo-desconhecido/` | `/en/help/errors/unknown-code/` | EC-SITE-07; `noindex`. |
 | Privacy policy | `/pt-br/privacidade/` | `/en/privacy/` | Legal-review marker and terms version. |
@@ -33,7 +33,7 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 | Variable | Default | Effect |
 |---|---|---|
 | `SITE_URL` | `https://agrorende.com.br` | Origin of canonical, `hreflang`, Open Graph and sitemap URLs. |
-| `APP_URL` | `https://app.agrorende.com.br` | Target of "Comece grátis — 30 dias" (`APP_URL/signup`) and "Entrar" (`APP_URL/login`). |
+| `APP_URL` | `https://app.agrorende.com.br` | Target of the only primary CTA, "Testar grátis por 30 dias" (`APP_URL/signup`) and "Entrar" (`APP_URL/login`). |
 | `SITE_SHOW_PRICES` | off | `true` shows the numeric price on the pricing page. |
 | `SITE_WHATSAPP`, then `PLATFORM_SUPPORT_WHATSAPP` | `+5511999999999` | Public WhatsApp number for `wa.me` links and the copy panel. The default is a placeholder. |
 | `SITE_CONTACT_EMAIL` | `contato@agrorende.com.br` | Public contact address. |
@@ -50,13 +50,15 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 - **Error help pages** are generated from `ERROR_META` in `@agrorende/contracts/errors` and the `errors` namespace of `@agrorende/i18n`: title, body, action, the optional `help` copy, the recovery patterns and the EC entries of `docs/ERRORS.md`. Nothing is hand-written per code, so a new error code gets its help page on the next build. `scripts/postbuild.ts` fails the build if any code lacks a page in either locale or if `helpUrl(code, locale)` disagrees with the site route.
 - **No invented proof.** There are no testimonials, customer logos, ratings or usage metrics. When real ones exist they need written permission before they go on the site.
 - **Pricing.** The PRD hypothesis of R$ 149 per field user per month is in `src/views/Pricing.tsx` and only shows with `SITE_SHOW_PRICES=true`. Until pricing is confirmed the page offers a conversation instead of a number.
+- **One primary CTA.** Every page offers "Testar grátis por 30 dias" (`APP_URL/signup`) as the primary action and "Falar no WhatsApp" as the only secondary one. E-mail appears only in the footer and on the help page; "Entrar" stays a quiet header link.
 - **Contact without lead capture.** WhatsApp and e-mail CTAs open `wa.me` and `mailto:` links with prefilled, localized text. The site never stores or sends what the visitor writes. When the hand-off fails, a panel offers to copy the phone number, address and message (EC-SITE-03 and EC-SITE-04).
 
 ## 3. Images, fonts and screenshot sources
 
-- **Product demos.** The "See AgroRende at work" section of the home page (`src/components/Demos.tsx`) shows three looping infographics: an offline inspection reaching "Needs attention", a work order moving across the board to a signed and costed close, and the monthly cost of a machine down to its cost per working hour. They are inline SVG animated by CSS keyframes in `globals.css`, not video files, so they cost no extra request, follow the light and dark theme and are translated from `home.demo.*` like the rest of the copy. All three share one 12 second timeline. The default styles are the final frame, which is what visitors with reduced motion see; the "Pause animations" button (body script, `html[data-demos="paused"]`) stops every loop and stores nothing. The figures are decorative (`aria-hidden`), and each caption carries the story in text. A video export (WebM or MP4 for social posts) can be recorded from the running page with Playwright when needed.
+- **Animations.** The home and features pages use the Lottie animations from `@agrorende/motion` through `src/components/Lottie.tsx` (wrapped by the server component `Animation.tsx`). The component loads `lottie-web/build/player/lottie_light` and the animation JSON lazily in the browser, so no `unsafe-eval` is needed and the content security policy is unchanged. Each animation sits on a light rounded stage with a fixed aspect ratio from `motionMeta`, also in dark mode, because the drawings assume a light surface. Animations are decorative (`aria-hidden`); the text beside them carries the story. With `prefers-reduced-motion: reduce` the poster frame is shown and nothing plays. An IntersectionObserver plays an animation only while it is on screen, every looping animation has a 48 px pause and play button, `playOnce` animations stop after one run, lite mode loads nothing, and the player is destroyed on unmount.
+- **Product video.** The features page looks for `public/video/agrorende-demo-pt-BR.mp4` at build time, with captions in `agrorende-demo-pt-BR.vtt` and an optional poster `agrorende-demo-pt-BR.jpg`. When the video exists it renders a `<video controls preload="none">` with a Portuguese captions track; until then it shows the `flow-loop` animation and "Vídeo de demonstração em breve". Adding the files and rebuilding is enough to switch.
 
-- **Illustrations.** The hero and the five feature images are drawn placeholders in `apps/landing/assets/*.svg` in the Campo claro palette. `pnpm --filter landing images` (`scripts/images.ts`, sharp) renders them to AVIF and WebP at 640, 1024 and 1600 px in `public/img/`, writes the Open Graph cards per locale in `public/og/`, the favicon set, and `src/lib/images.generated.ts`, which the `<Picture>` component reads for sizes and placeholder colours. The outputs are committed so the build never needs sharp.
+- **Illustrations.** The hero and the five feature images (no longer shown on the pages since the Lottie animations replaced them; the hero image still feeds the Open Graph cards) are drawn placeholders in `apps/landing/assets/*.svg` in the Campo claro palette. `pnpm --filter landing images` (`scripts/images.ts`, sharp) renders them to AVIF and WebP at 640, 1024 and 1600 px in `public/img/`, writes the Open Graph cards per locale in `public/og/`, the favicon set, and `src/lib/images.generated.ts`, which the `<Picture>` component reads for sizes and placeholder colours. The outputs are committed so the build never needs sharp.
 - **Product screenshots are missing.** None of the images is a real screenshot yet. `pnpm --filter landing screenshots --storage <state.json>` captures the admin web screens listed in `scripts/screenshots.ts` (attention, work orders, fuel, rentals, costs and sites, in pt-BR and en, 1600 × 1000) to `.data/site-screenshots/` when the local stack is running and a signed-in demo session is supplied; without the stack it prints the list of missing shots and exits successfully. A person then picks and crops the shots, saves them as new sources in `assets/` and reruns `images`. Mobile screenshots (field home, outbox, work-order completion) must be captured from a simulator by hand.
 - **Fonts.** Geist Sans and Geist Mono (SIL Open Font License, `src/fonts/OFL.txt`) are self-hosted through `next/font/local` as variable WOFF2 files cut down to the Latin range, about 33 KB each. They were taken from the `geist` npm package 1.7.2 (`dist/fonts/geist-sans/Geist-Variable.woff2` and `dist/fonts/geist-mono/GeistMono-Variable.woff2`) and subset with fontTools:
 
@@ -112,7 +114,7 @@ The canonical URLs are baked in at build time, so the end-to-end SEO test expect
 
 ## 6. Legal review
 
-The privacy policy, terms of use and DPA are drafts written from the PRD and ARCHITECTURE (LGPD roles, data categories, retention, sub-processors, account deletion). Each page prints a visible "pending legal review" note (`data-legal-review="pending"`) and the terms version (`data-terms-version`). A lawyer must review all three texts in both languages before launch. After the review, remove the marker in `src/views/Legal.tsx` and set `TERMS_VERSION` to the reviewed version in the site build and the web app together.
+The privacy policy, terms of use and DPA are drafts written from the PRD and ARCHITECTURE (LGPD roles, data categories, retention, sub-processors, account deletion). Each page ends with a small footnote saying the text is under legal review (`data-legal-review="pending"`) and the terms version (`data-terms-version`). A lawyer must review all three texts in both languages before launch. After the review, remove the marker in `src/views/Legal.tsx` and set `TERMS_VERSION` to the reviewed version in the site build and the web app together.
 
 ## 7. Launch checklist
 

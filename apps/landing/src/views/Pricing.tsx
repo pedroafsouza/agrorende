@@ -12,6 +12,9 @@ import { PageIntro } from "./PageIntro";
 /** Hypothesis from docs/PRD.md: R$ 149 per field user per month. Shown only with SITE_SHOW_PRICES=true. */
 export const FIELD_PRICE_CENTS = 14_900;
 
+/** The worked example under the prices: a crew of five technicians. */
+export const EXAMPLE_TECHNICIANS = 5;
+
 export function formatBrl(cents: number, locale: SiteLocale): string {
   return new Intl.NumberFormat(appLocale(locale), {
     style: "currency",
@@ -28,7 +31,7 @@ export function PricingView({ locale, showPrices = siteConfig.showPrices }: { re
       <div className={`${container} flex flex-col gap-12 py-16`}>
         <section className={`${card} bg-surface`}>
           <h2 className="text-2xl font-bold">{t("pricing.trialTitle")}</h2>
-          <p className="mt-2 max-w-2xl text-lg text-fg-muted">{t("pricing.trialBody")}</p>
+          <p className="mt-2 max-w-[60ch] text-lg text-fg-muted">{t("pricing.trialBody")}</p>
           <div className="mt-6">
             <CtaGroup locale={locale} withContact={false} />
           </div>
@@ -67,13 +70,24 @@ export function PricingView({ locale, showPrices = siteConfig.showPrices }: { re
           </section>
         </div>
         {showPrices ? (
-          <p className="text-sm text-fg-muted" data-price-hypothesis="true">
-            {t("pricing.pricesHypothesis")}
-          </p>
+          <div className="flex flex-col gap-3">
+            <p className="tabular text-xl font-bold" data-price="example">
+              {t("pricing.example", {
+                count: EXAMPLE_TECHNICIANS,
+                total: formatBrl(FIELD_PRICE_CENTS * EXAMPLE_TECHNICIANS, locale),
+              })}
+            </p>
+            <p className="max-w-[65ch] text-fg-muted" data-price-hypothesis="true">
+              {t("pricing.pricesHypothesis")}
+            </p>
+          </div>
         ) : (
-          <section className="flex flex-col gap-4">
-            <p className="max-w-2xl text-lg">{t("pricing.priceOnRequestBody")}</p>
-            <Contact locale={locale} />
+          <section className={`${card} flex flex-col gap-4 bg-surface`} aria-labelledby="proposal-title" data-proposal="true">
+            <h2 id="proposal-title" className="text-2xl font-bold">
+              {t("pricing.proposalTitle")}
+            </h2>
+            <p className="max-w-[60ch] text-lg text-fg-muted">{t("pricing.proposalBody")}</p>
+            <Contact locale={locale} channels="whatsapp" variant="primary" whatsappLabel={t("cta.proposal")} />
           </section>
         )}
 

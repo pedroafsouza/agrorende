@@ -108,7 +108,7 @@
   }
 
   body {
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     line-height: 1.6;
     text-rendering: optimizeLegibility;
   }
@@ -277,197 +277,50 @@ img[data-failed="true"] {
 }
 
 /*
- * Product demos on the home page (src/components/Demos.tsx). The rules outside the motion query
- * draw the final frame of each story, which is what reduced-motion visitors see. Every loop shares
- * one 12 second timeline, so percentages below line up across the three demos.
+ * Lottie animations (src/components/Lottie.tsx). The animations are drawn for a light surface, so
+ * their stage stays light in the dark theme too, with its own focus colour for the pause button.
  */
-.demo {
-  --demo-loop: 12s;
+.motion-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid var(--graphite-200);
+  background: var(--graphite-50);
+  color: var(--graphite-900);
 }
 
-.demo svg {
-  font-family: var(--font-sans);
+html[data-theme="dark"] .motion-stage {
+  border-color: var(--graphite-700);
+  background: var(--graphite-100);
 }
 
-.demo text {
-  fill: var(--fg);
+.motion-stage svg {
+  display: block;
 }
 
-.demo .d-xs { font-size: 10px; }
-.demo .d-sm { font-size: 11.5px; }
-.demo .d-md { font-size: 14px; }
-.demo .d-xl { font-size: 26px; letter-spacing: -0.02em; }
-.demo .d-b { font-weight: 700; }
-.demo text.d-muted { fill: var(--fg-muted); }
-.demo text.d-t-ok { fill: var(--success); }
-.demo text.d-t-warn { fill: var(--warning); }
-.demo text.d-t-info { fill: var(--info); }
-.demo text.d-t-bad { fill: var(--danger); }
-.demo text.d-t-brand { fill: var(--brand); }
-.demo text.d-t-on { fill: var(--bg); }
-
-.demo .d-device { fill: var(--bg); stroke: var(--border); stroke-width: 1.5; }
-.demo .d-strong { fill: var(--surface-strong); }
-.demo .d-ghost { opacity: 0.6; }
-.demo .d-box { fill: none; stroke: var(--fg-muted); stroke-width: 1.5; }
-.demo .d-flash { fill: #ffffff; opacity: 0; }
-
-.demo .d-stroke-ok,
-.demo .d-stroke-bad,
-.demo .d-stroke-line,
-.demo .d-stroke-fg,
-.demo .d-stroke-muted,
-.demo .d-stroke-on {
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.demo .d-stroke-ok { stroke: var(--success); }
-.demo .d-stroke-bad { stroke: var(--danger); }
-.demo .d-stroke-line { stroke: var(--border); stroke-width: 1.5; }
-.demo .d-stroke-fg { stroke: var(--fg); stroke-width: 1.5; }
-.demo .d-stroke-muted { stroke: var(--fg-muted); stroke-width: 1.2; }
-.demo .d-stroke-on { stroke: var(--bg); }
-.demo .d-dash { stroke-dasharray: 3 4; opacity: 0; }
-
-.demo .d-fill-ok { fill: var(--success); }
-.demo .d-fill-bad { fill: var(--danger); }
-.demo .d-fill-warn { fill: var(--warning); }
-.demo .d-fill-info { fill: var(--info); }
-.demo .d-fill-muted { fill: var(--border); }
-
-.demo .d-chip { fill: var(--bg); stroke-width: 1.5; }
-.demo .d-chip-ok { stroke: var(--success); }
-.demo .d-chip-warn { stroke: var(--warning); }
-.demo .d-chip-info { stroke: var(--info); }
-.demo .d-chip-bad { stroke: var(--danger); }
-
-.demo .d-seg-fuel { fill: var(--mata-700); }
-.demo .d-seg-labour { fill: var(--mata-400); }
-.demo .d-seg-parts { fill: var(--graphite-500); }
-
-.demo .d1-packet { opacity: 0; }
-.demo .d1-ring { stroke: var(--danger); stroke-width: 2; stroke-opacity: 0; }
-.demo .d2-card { transform: translateX(264px); }
-.demo .d2-bar { fill: var(--success); }
-.demo .d2-sign { stroke-dasharray: 120; stroke-dashoffset: 0; }
-.demo .d3-bar { transform-box: fill-box; transform-origin: 50% 100%; }
-.demo .demo-progress span { transform: scaleX(1); }
-
-/* The pause control needs the body script and has nothing to pause when motion is reduced. */
-html:not([data-js="on"]) [data-demo-toggle] {
-  display: none;
+.motion-toggle {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  display: inline-flex;
+  min-width: 3rem;
+  min-height: 3rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--graphite-200);
+  border-radius: 999px;
+  background: #ffffff;
+  color: var(--graphite-900);
+  cursor: pointer;
 }
 
-[data-demo-toggle][aria-pressed="true"] {
-  background: var(--surface-strong);
+.motion-toggle:hover {
+  border-color: var(--graphite-500);
 }
 
-@media (prefers-reduced-motion: reduce) {
-  [data-demo-toggle],
-  .demo .demo-progress {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  @keyframes d-scene { 0% { opacity: 0; } 3%, 95% { opacity: 1; } 100% { opacity: 0; } }
-  .demo .d-scene { animation: d-scene var(--demo-loop) linear infinite; }
-
-  @keyframes d-progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-  .demo .demo-progress span { animation: d-progress var(--demo-loop) linear infinite; }
-
-  @keyframes d-in-8 { 0%, 8% { opacity: 0; } 10%, 100% { opacity: 1; } }
-  .demo .in-8 { animation: d-in-8 var(--demo-loop) linear infinite; }
-  @keyframes d-in-14 { 0%, 14% { opacity: 0; } 16%, 100% { opacity: 1; } }
-  .demo .in-14 { animation: d-in-14 var(--demo-loop) linear infinite; }
-  @keyframes d-in-20 { 0%, 20% { opacity: 0; } 22%, 100% { opacity: 1; } }
-  .demo .in-20 { animation: d-in-20 var(--demo-loop) linear infinite; }
-  @keyframes d-in-30 { 0%, 30% { opacity: 0; } 32%, 100% { opacity: 1; } }
-  .demo .in-30 { animation: d-in-30 var(--demo-loop) linear infinite; }
-  @keyframes d-in-44 { 0%, 44% { opacity: 0; } 46%, 100% { opacity: 1; } }
-  .demo .in-44 { animation: d-in-44 var(--demo-loop) linear infinite; }
-  @keyframes d-in-55 { 0%, 55% { opacity: 0; } 57%, 100% { opacity: 1; } }
-  .demo .in-55 { animation: d-in-55 var(--demo-loop) linear infinite; }
-  @keyframes d-in-62 { 0%, 62% { opacity: 0; } 64%, 100% { opacity: 1; } }
-  .demo .in-62 { animation: d-in-62 var(--demo-loop) linear infinite; }
-  @keyframes d-in-64 { 0%, 64% { opacity: 0; } 66%, 100% { opacity: 1; } }
-  .demo .in-64 { animation: d-in-64 var(--demo-loop) linear infinite; }
-  @keyframes d-in-66 { 0%, 66% { opacity: 0; } 68%, 100% { opacity: 1; } }
-  .demo .in-66 { animation: d-in-66 var(--demo-loop) linear infinite; }
-  @keyframes d-in-74 { 0%, 74% { opacity: 0; } 76%, 100% { opacity: 1; } }
-  .demo .in-74 { animation: d-in-74 var(--demo-loop) linear infinite; }
-  @keyframes d-out-30 { 0%, 30% { opacity: 1; } 31%, 100% { opacity: 0; } }
-  .demo .out-30 { animation: d-out-30 var(--demo-loop) linear infinite; }
-  @keyframes d-out-55 { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
-  .demo .out-55 { animation: d-out-55 var(--demo-loop) linear infinite; }
-  @keyframes d-win-36-55 { 0%, 36% { opacity: 0; } 37%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
-  .demo .win-36-55 { animation: d-win-36-55 var(--demo-loop) linear infinite; }
-  @keyframes d-win-55-62 { 0%, 55% { opacity: 0; } 56%, 62% { opacity: 1; } 63%, 100% { opacity: 0; } }
-  .demo .win-55-62 { animation: d-win-55-62 var(--demo-loop) linear infinite; }
-  @keyframes d3-grow-0 { 0%, 8% { transform: scaleY(0); } 15%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-0 { animation: d3-grow-0 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-  @keyframes d3-grow-1 { 0%, 14% { transform: scaleY(0); } 21%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-1 { animation: d3-grow-1 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-  @keyframes d3-grow-2 { 0%, 20% { transform: scaleY(0); } 27%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-2 { animation: d3-grow-2 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-  @keyframes d3-grow-3 { 0%, 26% { transform: scaleY(0); } 33%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-3 { animation: d3-grow-3 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-  @keyframes d3-grow-4 { 0%, 32% { transform: scaleY(0); } 39%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-4 { animation: d3-grow-4 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-  @keyframes d3-grow-5 { 0%, 38% { transform: scaleY(0); } 45%, 100% { transform: scaleY(1); } }
-  .demo .d3-bar-5 { animation: d3-grow-5 var(--demo-loop) cubic-bezier(0.2, 0.7, 0.2, 1) infinite; }
-
-  @keyframes d-flash { 0%, 27.5% { opacity: 0; } 28.5% { opacity: 0.9; } 31%, 100% { opacity: 0; } }
-  .demo .flash-28 { animation: d-flash var(--demo-loop) linear infinite; }
-
-  @keyframes d1-packet {
-    0%, 55% { opacity: 0; transform: translate(0, 0); }
-    56% { opacity: 1; transform: translate(0, 0); }
-    63% { opacity: 1; transform: translate(30px, -126px); }
-    64%, 100% { opacity: 0; transform: translate(30px, -126px); }
-  }
-  .demo .d1-packet { animation: d1-packet var(--demo-loop) ease-in-out infinite; }
-
-  @keyframes d1-wire { 0%, 54% { opacity: 0; } 56%, 63% { opacity: 1; } 65%, 100% { opacity: 0; } }
-  .demo .d-dash { animation: d1-wire var(--demo-loop) linear infinite; }
-
-  @keyframes d1-rows { 0%, 63% { transform: translateY(-40px); } 66%, 100% { transform: translateY(0); } }
-  .demo .d1-rows { animation: d1-rows var(--demo-loop) ease-out infinite; }
-
-  @keyframes d1-new {
-    0%, 64% { opacity: 0; transform: translateX(14px); }
-    67%, 100% { opacity: 1; transform: translateX(0); }
-  }
-  .demo .d1-new { animation: d1-new var(--demo-loop) ease-out infinite; }
-
-  @keyframes d1-ring { 0%, 66% { stroke-opacity: 0; } 70% { stroke-opacity: 1; } 74% { stroke-opacity: 0.2; } 78% { stroke-opacity: 1; } 86%, 100% { stroke-opacity: 0; } }
-  .demo .d1-ring { animation: d1-ring var(--demo-loop) linear infinite; }
-
-  @keyframes d2-card {
-    0%, 18% { transform: translateX(0); }
-    21%, 40% { transform: translateX(88px); }
-    43%, 64% { transform: translateX(176px); }
-    67%, 100% { transform: translateX(264px); }
-  }
-  .demo .d2-card { animation: d2-card var(--demo-loop) cubic-bezier(0.3, 0.7, 0.2, 1) infinite; }
-
-  @keyframes d2-bar {
-    0%, 19% { fill: var(--graphite-500); }
-    20%, 41% { fill: var(--info); }
-    42%, 65% { fill: var(--warning); }
-    66%, 100% { fill: var(--success); }
-  }
-  .demo .d2-bar { animation: d2-bar var(--demo-loop) step-end infinite; }
-
-  @keyframes d2-sign { 0%, 66% { stroke-dashoffset: 120; } 74%, 100% { stroke-dashoffset: 0; } }
-  .demo .d2-sign { animation: d2-sign var(--demo-loop) linear infinite; }
-
-  html[data-demos="paused"] .demo,
-  html[data-demos="paused"] .demo * {
-    animation-play-state: paused !important;
-  }
+.motion-toggle:focus-visible {
+  outline: 3px solid var(--mata-800);
+  outline-offset: 2px;
 }
 
 @media (prefers-reduced-motion: no-preference) {

@@ -1,11 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-test("CTAs point at the web app, WhatsApp and e-mail", async ({ page }) => {
+test("CTAs point at the web app and WhatsApp, with e-mail in the footer and on help", async ({ page }) => {
   await page.goto("/pt-br/?lite=0");
   await expect(page.locator('[data-cta="signup"]').first()).toHaveAttribute("href", /\/signup$/u);
+  await expect(page.locator('main [data-cta="signup"]').first()).toHaveText("Testar grátis por 30 dias");
   const signin = page.locator('[data-cta="signin"]').first();
   if (await signin.isVisible()) await expect(signin).toHaveAttribute("href", /\/login$/u);
   await expect(page.locator('[data-contact="whatsapp"]').first()).toHaveAttribute("href", /^https:\/\/wa\.me\/\d+\?text=/u);
+  await expect(page.locator('main [data-contact="email"]')).toHaveCount(0);
+  await expect(page.locator('footer a[href^="mailto:"]').first()).toBeVisible();
+  await expect(page.locator('main a[href$="/recursos/#video"]')).toBeVisible();
+  await page.goto("/pt-br/ajuda/?lite=0");
   await expect(page.locator('[data-contact="email"]').first()).toHaveAttribute("href", /^mailto:[^?]+@[^?]+\?subject=/u);
 });
 
@@ -27,7 +32,7 @@ test("EC-SITE-03: a blocked WhatsApp popup opens the copy panel", async ({ page 
 });
 
 test("EC-SITE-04: a mailto link nobody handles opens the copy panel", async ({ page }) => {
-  await page.goto("/en/?lite=0");
+  await page.goto("/en/help/?lite=0");
   await page.waitForLoadState("load");
   await page.evaluate(() => {
     document.addEventListener("click", (event) => {
@@ -40,10 +45,11 @@ test("EC-SITE-04: a mailto link nobody handles opens the copy panel", async ({ p
   await expect(panel.locator("input").first()).toHaveValue(/@/u);
 });
 
-test("pricing hides prices by default and offers contact instead", async ({ page }) => {
+test("pricing hides prices by default and offers a proposal on WhatsApp instead", async ({ page }) => {
   await page.goto("/pt-br/planos/");
   await expect(page.locator('[data-prices="hidden"]')).toBeVisible();
   await expect(page.locator("main")).not.toContainText("R$");
+  await expect(page.locator('[data-proposal] [data-contact="whatsapp"]')).toHaveText("Pedir uma proposta");
 });
 
 test("legal pages show the terms version and the pending legal review marker", async ({ page }) => {

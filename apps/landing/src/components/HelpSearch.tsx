@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useEffect, useId, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 
 import { normalizeQuery } from "@/lib/helpMatch";
 
@@ -49,11 +49,25 @@ export function HelpSearch({
   const id = useId();
   const [ready, setReady] = useState(false);
   const [query, setQuery] = useState("");
+  const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get("q");
     if (q !== null) setQuery(q.slice(0, 80));
     setReady(true);
+    // The index sits in a collapsed <details> on the help page; a search or a #codigos link opens it.
+    const details = root.current?.closest("details");
+    if (!details) return;
+    const reveal = () => {
+      if (window.location.hash === `#${details.id}`) {
+        details.open = true;
+        details.scrollIntoView();
+      }
+    };
+    if (q !== null) details.open = true;
+    reveal();
+    window.addEventListener("hashchange", reveal);
+    return () => window.removeEventListener("hashchange", reveal);
   }, []);
 
   const filtered = useMemo(() => filterGroups(groups, query), [groups, query]);
@@ -61,7 +75,7 @@ export function HelpSearch({
   const status = total === 0 ? labels.searchEmpty : total === 1 ? labels.countOne : labels.countOther.replace("{count}", String(total));
 
   return (
-    <div className="flex flex-col gap-6">
+    <div ref={root} className="flex flex-col gap-6">
       <div className="flex flex-col gap-2" hidden={!ready}>
         <label htmlFor={id} className="font-semibold">
           {labels.searchLabel}

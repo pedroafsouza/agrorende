@@ -1,4 +1,4 @@
-import { FileText, TriangleAlert } from "lucide-react";
+import { FileText } from "lucide-react";
 
 import { LEGAL_CONTENT, type LegalDocumentKey } from "../../content";
 import { container } from "@/components/ui";
@@ -19,16 +19,6 @@ export function LegalView({ locale, document }: { readonly locale: SiteLocale; r
         <p className="mt-3 text-sm text-fg-muted" data-terms-version={siteConfig.termsVersion}>
           {t("legal.version", { version: siteConfig.termsVersion })}
         </p>
-        <aside
-          className="mt-6 flex gap-3 rounded-[12px] border-2 border-[color:var(--warning-fill)] bg-surface p-4"
-          data-legal-review="pending"
-        >
-          <TriangleAlert aria-hidden="true" className="mt-0.5 size-5 shrink-0 text-warning" />
-          <div>
-            <p className="font-semibold">{t("legal.pendingReview")}</p>
-            <p className="text-fg-muted">{t("legal.pendingReviewBody")}</p>
-          </div>
-        </aside>
         <p className="mt-8 text-lg">{doc.intro}</p>
         {doc.sections.map((section) => (
           <section key={section.id} id={section.id} aria-labelledby={`${section.id}-h`} className="mt-10 scroll-mt-6">
@@ -49,6 +39,9 @@ export function LegalView({ locale, document }: { readonly locale: SiteLocale; r
             ) : null}
           </section>
         ))}
+        <p className="mt-12 border-t border-border pt-4 text-sm text-fg-muted" data-legal-review="pending">
+          {t("legal.pendingReview")} {t("legal.pendingReviewBody")}
+        </p>
       </article>
       <aside className="flex flex-col gap-8 lg:sticky lg:top-6 lg:self-start">
         <nav aria-label={t("legal.contents")}>

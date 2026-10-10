@@ -1,43 +1,44 @@
-import { ArrowRight, Building2, ChevronDown, ClipboardCheck, KeyRound, LayoutDashboard, Tractor, Wrench } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, PlayCircle, X } from "lucide-react";
 
+import { Animation } from "@/components/Animation";
 import { CtaGroup, StoreLinks } from "@/components/CtaGroup";
-import { Demos } from "@/components/Demos";
 import { JsonLd } from "@/components/JsonLd";
-import { Picture } from "@/components/Picture";
-import { StatusChip } from "@/components/StatusChip";
-import { card, container, sectionTitle } from "@/components/ui";
+import { container, sectionTitle } from "@/components/ui";
 import { siteConfig } from "@/lib/config";
 import { htmlLang, type SiteLocale } from "@/lib/locales";
 import { pagePath } from "@/lib/routes";
 import { getTranslator } from "@/i18n/messages";
 
-const FAQ_KEYS = [1, 2, 3, 4, 5] as const;
-const MODULE_KEYS = ["f1", "f2", "f3", "f4", "f5"] as const;
+export type FaqKey = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 
-export function FaqList({ locale }: { readonly locale: SiteLocale }) {
+/** Questions a buyer asks before signing up: price, contract, data, support, after the trial, brands. */
+export const BUYER_FAQ_KEYS: readonly FaqKey[] = [1, 2, 3, 4, 5, 6];
+export const ALL_FAQ_KEYS: readonly FaqKey[] = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+export function FaqList({ locale, keys = ALL_FAQ_KEYS }: { readonly locale: SiteLocale; readonly keys?: readonly FaqKey[] }) {
   const t = getTranslator(locale);
   return (
     <div className="divide-y divide-border border-y border-border">
-      {FAQ_KEYS.map((n) => (
+      {keys.map((n) => (
         <details key={n} className="faq group">
           <summary className="flex min-h-14 cursor-pointer items-center justify-between gap-4 py-4 text-lg font-semibold">
             {t(`faq.q${n}`)}
             <ChevronDown aria-hidden="true" className="faq-chevron motion-safe-transition size-5 shrink-0" />
           </summary>
-          <p className="max-w-3xl pb-5 text-fg-muted">{t(`faq.a${n}`)}</p>
+          <p className="max-w-[65ch] pb-5 text-fg-muted">{t(`faq.a${n}`)}</p>
         </details>
       ))}
     </div>
   );
 }
 
-export function faqJsonLd(locale: SiteLocale) {
+export function faqJsonLd(locale: SiteLocale, keys: readonly FaqKey[] = ALL_FAQ_KEYS) {
   const t = getTranslator(locale);
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     inLanguage: htmlLang(locale),
-    mainEntity: FAQ_KEYS.map((n) => ({
+    mainEntity: keys.map((n) => ({
       "@type": "Question",
       name: t(`faq.q${n}`),
       acceptedAnswer: { "@type": "Answer", text: t(`faq.a${n}`) },
@@ -68,152 +69,129 @@ function homeJsonLd(locale: SiteLocale) {
       url,
       offers: { "@type": "Offer", price: "0", priceCurrency: "BRL", description: t("pricing.trialTitle") },
     },
-    faqJsonLd(locale),
+    faqJsonLd(locale, BUYER_FAQ_KEYS),
   ];
 }
 
 export function HomeView({ locale }: { readonly locale: SiteLocale }) {
   const t = getTranslator(locale);
   const steps = [
-    { n: 1, icon: ClipboardCheck },
-    { n: 2, icon: Wrench },
-    { n: 3, icon: KeyRound },
-    { n: 4, icon: LayoutDashboard },
-  ] as const;
-  const audiences = [
-    { n: 1, icon: Wrench },
-    { n: 2, icon: Tractor },
-    { n: 3, icon: Building2 },
+    { n: 1, animation: "report-offline" },
+    { n: 2, animation: "flow-loop" },
+    { n: 3, animation: "machine-cost" },
   ] as const;
   return (
     <>
       <JsonLd data={homeJsonLd(locale)} />
-      <section className="relative isolate overflow-hidden bg-graphite-950 text-white">
-        <div className="absolute inset-0 -z-10">
-          <Picture name="hero-field" alt="" sizes="100vw" priority className="h-full w-full !aspect-auto" />
-          <div className="absolute inset-0 bg-gradient-to-r from-graphite-950 via-graphite-950/85 to-graphite-950/30" />
+      <section className="border-b border-border">
+        <div className={`${container} grid items-center gap-10 py-14 sm:py-20 lg:grid-cols-[1.1fr_1fr]`}>
+          <div className="flex flex-col gap-6">
+            <h1 className="accent-rule max-w-[18ch] text-4xl leading-[1.08] font-bold tracking-tight text-balance sm:text-5xl lg:text-6xl">
+              {t("home.heroTitle")}
+            </h1>
+            <p className="max-w-[60ch] text-lg text-pretty text-fg-muted sm:text-xl">{t("home.heroLead")}</p>
+            <CtaGroup locale={locale} />
+            <a
+              href={`${pagePath("features", locale)}#video`}
+              className="prose-link inline-flex min-h-12 items-center gap-2 self-start font-semibold"
+              data-cta="video"
+            >
+              <PlayCircle aria-hidden="true" className="size-5" />
+              {t("cta.video")}
+            </a>
+          </div>
+          <Animation id="welcome" locale={locale} playOnce className="w-full" />
         </div>
-        <div className={`${container} flex min-h-[560px] flex-col justify-center gap-6 py-20 sm:min-h-[620px]`}>
-          <h1 className="accent-rule max-w-3xl text-5xl leading-[1.05] font-bold tracking-tight text-balance sm:text-6xl">
-            {t("home.heroTitle")}
-            <span className="mt-2 block text-[color:var(--mata-400)]">{t("home.heroSubtitle")}</span>
-          </h1>
-          <p className="max-w-2xl text-lg text-pretty text-white/90 sm:text-xl">{t("home.heroLead")}</p>
-          <CtaGroup locale={locale} tone="onDark" />
-        </div>
-        <p className="sr-only">{t("home.heroImageAlt")}</p>
       </section>
 
-      <section className={`${container} grid gap-10 py-20 lg:grid-cols-[2fr_3fr]`}>
-        <div>
-          <h2 className={sectionTitle}>{t("home.problemTitle")}</h2>
-          <p className="mt-4 text-lg text-fg-muted">{t("home.problemLead")}</p>
-        </div>
-        <ul className="grid gap-4 sm:grid-cols-2">
-          {([1, 2, 3, 4] as const).map((n) => (
-            <li key={n} className={`${card} bg-surface`}>
-              <p className="text-lg">{t(`home.problem${n}`)}</p>
+      <section className={`${container} py-16 sm:py-20`} aria-labelledby="problem-title">
+        <h2 id="problem-title" className={sectionTitle}>
+          {t("home.problemTitle")}
+        </h2>
+        <p className="mt-4 max-w-[60ch] text-lg text-fg-muted">{t("home.problemLead")}</p>
+        <ul className="mt-10 grid gap-4">
+          {([1, 2, 3] as const).map((n) => (
+            <li key={n} className="grid overflow-hidden rounded-[12px] border border-border sm:grid-cols-2">
+              <div className="flex gap-3 bg-surface p-5">
+                <X aria-hidden="true" className="mt-1 size-5 shrink-0 text-danger" />
+                <p>
+                  <span className="block text-sm font-semibold text-fg-muted">{t("home.todayLabel")}</span>
+                  {t(`home.problem${n}Today`)}
+                </p>
+              </div>
+              <div className="flex gap-3 border-t border-border bg-bg p-5 sm:border-t-0 sm:border-l">
+                <Check aria-hidden="true" className="mt-1 size-5 shrink-0 text-success" />
+                <p>
+                  <span className="block text-sm font-semibold text-success">{t("home.withLabel")}</span>
+                  {t(`home.problem${n}With`)}
+                </p>
+              </div>
             </li>
           ))}
         </ul>
       </section>
 
-      <section className="border-y border-border bg-surface py-20">
+      <section className="border-y border-border bg-surface py-16 sm:py-20" aria-labelledby="steps-title">
         <div className={container}>
-          <h2 className={sectionTitle}>{t("home.stepsTitle")}</h2>
-          <ol className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {steps.map(({ n, icon: Icon }) => (
-              <li key={n} className={`${card} flex flex-col gap-3`}>
+          <h2 id="steps-title" className={sectionTitle}>
+            {t("home.stepsTitle")}
+          </h2>
+          <ol className="mt-10 grid gap-10 md:grid-cols-3 md:gap-6">
+            {steps.map(({ n, animation }) => (
+              <li key={n} className="flex flex-col gap-4">
+                <Animation id={animation} locale={locale} className="w-full max-w-sm" />
                 <span className="flex items-center gap-3">
-                  <span className="tabular inline-flex size-10 items-center justify-center rounded-full bg-brand text-lg font-bold text-white">
+                  <span className="tabular inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-action text-lg font-bold text-action-fg">
                     {n}
                   </span>
-                  <Icon aria-hidden="true" className="size-6 text-brand" />
+                  <h3 className="text-xl font-bold">{t(`home.step${n}Title`)}</h3>
                 </span>
-                <h3 className="text-xl font-bold">{t(`home.step${n}Title`)}</h3>
-                <p className="text-fg-muted">{t(`home.step${n}Body`)}</p>
+                <p className="max-w-[60ch] text-fg-muted">{t(`home.step${n}Body`)}</p>
               </li>
             ))}
           </ol>
         </div>
       </section>
 
-      <Demos locale={locale} />
-
-      <section className={`${container} grid items-center gap-10 py-20 lg:grid-cols-2`}>
+      <section className={`${container} grid items-center gap-10 py-16 sm:py-20 md:grid-cols-[3fr_2fr]`} aria-labelledby="offline-title">
         <div>
-          <h2 className={sectionTitle}>{t("home.offlineTitle")}</h2>
-          <p className="mt-4 text-lg text-fg-muted">{t("home.offlineBody")}</p>
+          <h2 id="offline-title" className={sectionTitle}>
+            {t("home.offlineTitle")}
+          </h2>
+          <p className="mt-4 max-w-[60ch] text-lg text-fg-muted">{t("home.offlineBody")}</p>
         </div>
-        <ol className={`${card} flex flex-col gap-4 bg-surface`}>
-          <li className="flex items-center justify-between gap-4">
-            <span className="font-semibold">{t("home.step1Title")}</span>
-            <StatusChip status="pending" label={t("home.offlineSaved")} />
-          </li>
-          <li className="flex items-center justify-between gap-4">
-            <span className="font-semibold">{t("home.step2Title")}</span>
-            <StatusChip status="progress" label={t("home.offlineSending")} />
-          </li>
-          <li className="flex items-center justify-between gap-4">
-            <span className="font-semibold">{t("home.step3Title")}</span>
-            <StatusChip status="success" label={t("home.offlineSynced")} />
-          </li>
-        </ol>
+        <Animation id="saved-on-phone" locale={locale} className="w-full max-w-sm justify-self-center" />
       </section>
 
-      <section className="border-y border-border bg-surface py-20">
-        <div className={container}>
-          <h2 className={sectionTitle}>{t("home.audienceTitle")}</h2>
-          <ul className="mt-10 grid gap-6 md:grid-cols-3">
-            {audiences.map(({ n, icon: Icon }) => (
-              <li key={n} className={`${card} flex flex-col gap-3`}>
-                <Icon aria-hidden="true" className="size-7 text-brand" />
-                <h3 className="text-xl font-bold">{t(`home.audience${n}Title`)}</h3>
-                <p className="text-fg-muted">{t(`home.audience${n}Body`)}</p>
-              </li>
-            ))}
-          </ul>
+      <section className="border-y border-border bg-surface py-16 sm:py-20" aria-labelledby="mission-title">
+        <div className={`${container} grid items-center gap-10 md:grid-cols-[2fr_3fr]`}>
+          <Animation id="office-live" locale={locale} className="order-last w-full max-w-sm justify-self-center md:order-first" />
+          <div>
+            <h2 id="mission-title" className={sectionTitle}>
+              {t("home.missionTitle")}
+            </h2>
+            <p className="mt-4 max-w-[60ch] text-lg text-pretty">{t("home.missionBody")}</p>
+          </div>
         </div>
       </section>
 
-      <section className={`${container} py-20`}>
-        <h2 className={sectionTitle}>{t("home.modulesTitle")}</h2>
-        <p className="mt-4 max-w-2xl text-lg text-fg-muted">{t("home.modulesLead")}</p>
-        <ul className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {MODULE_KEYS.map((key) => (
-            <li key={key} className={`${card} flex flex-col gap-2`}>
-              <h3 className="text-xl font-bold">{t(`modules.${key}Title`)}</h3>
-              <p className="text-fg-muted">{t(`modules.${key}Body`)}</p>
-            </li>
-          ))}
-        </ul>
-        <a href={pagePath("features", locale)} className="prose-link mt-8 inline-flex min-h-12 items-center gap-2 text-lg font-semibold">
-          {t("home.modulesLink")}
+      <section className={`${container} py-16 sm:py-20`} aria-labelledby="faq-title">
+        <h2 id="faq-title" className={sectionTitle}>
+          {t("home.faqTitle")}
+        </h2>
+        <div className="mt-8">
+          <FaqList locale={locale} keys={BUYER_FAQ_KEYS} />
+        </div>
+        <a href={pagePath("help", locale)} className="prose-link mt-6 inline-flex min-h-12 items-center gap-2 font-semibold">
+          {t("home.faqMore")}
           <ArrowRight aria-hidden="true" className="size-5" />
         </a>
       </section>
 
-      <section className="border-y border-border bg-surface py-20">
-        <div className={`${container} max-w-3xl`}>
-          <h2 className={sectionTitle}>{t("home.pilotTitle")}</h2>
-          <p className="mt-4 text-lg">{t("home.pilotBody")}</p>
-          <p className="mt-4 rounded-[8px] border-2 border-dashed border-border p-4 text-sm text-fg-muted" data-placeholder="pilot">
-            {t("home.pilotPlaceholder")}
-          </p>
-        </div>
-      </section>
-
-      <section className={`${container} py-20`}>
-        <h2 className={sectionTitle}>{t("home.faqTitle")}</h2>
-        <div className="mt-8">
-          <FaqList locale={locale} />
-        </div>
-      </section>
-
-      <section className="bg-[color:var(--mata-800)] py-20 text-white">
+      <section className="bg-[color:var(--mata-800)] py-16 text-white sm:py-20">
         <div className={`${container} flex flex-col gap-6`}>
           <h2 className={`${sectionTitle} max-w-2xl`}>{t("home.finalTitle")}</h2>
-          <p className="max-w-2xl text-lg text-white/90">{t("home.finalBody")}</p>
+          <p className="max-w-[60ch] text-lg text-white/90">{t("home.finalBody")}</p>
           <CtaGroup locale={locale} tone="onDark" />
           <StoreLinks locale={locale} tone="onDark" />
         </div>

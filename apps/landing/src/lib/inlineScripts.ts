@@ -32,8 +32,7 @@ document.addEventListener("error",function(e){var el=e.target;if(el&&el.tagName=
 }
 
 /**
- * Runs at the end of <body> on every page: the light/dark theme toggle, the pause control of the
- * home page demos (not stored), the "load images" retry of
+ * Runs at the end of <body> on every page: the light/dark theme toggle, the "load images" retry of
  * lite mode and the unsupported-locale banner (EC-SITE-01), revealed when `?unsupported=` is present.
  */
 export function bodyScript(): string {
@@ -46,8 +45,6 @@ document.addEventListener("click",function(e){var t=e.target;
 var g=t&&t.closest?t.closest("[data-theme-toggle]"):null;if(g){if(e.defaultPrevented)return;e.preventDefault();var dark=d.getAttribute("data-theme")!=="dark";
 if(dark)d.setAttribute("data-theme","dark");else d.removeAttribute("data-theme");
 try{localStorage.setItem("${THEME_KEY}",dark?"dark":"light")}catch(x){}theme();return}
-var q=t&&t.closest?t.closest("[data-demo-toggle]"):null;if(q){if(e.defaultPrevented)return;e.preventDefault();var on=d.getAttribute("data-demos")!=="paused";
-if(on)d.setAttribute("data-demos","paused");else d.removeAttribute("data-demos");q.setAttribute("aria-pressed",on?"true":"false");return}
 var b=t&&t.closest?t.closest("[data-lite-retry]"):null;
 if(b){d.setAttribute("data-lite","off");var imgs=document.querySelectorAll("img[data-failed]");
 for(var i=0;i<imgs.length;i++){var img=imgs[i];img.removeAttribute("data-failed");var s=img.getAttribute("src");if(s){img.setAttribute("src","");img.setAttribute("src",s)}}}

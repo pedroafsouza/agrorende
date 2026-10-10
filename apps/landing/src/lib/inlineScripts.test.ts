@@ -154,18 +154,3 @@ describe("theme", () => {
     expect(window.localStorage.getItem(THEME_KEY)).toBe("light");
   });
 });
-
-describe("demo pause", () => {
-  it("pauses and resumes the home page demos without storing anything", () => {
-    document.body.innerHTML = '<button data-demo-toggle aria-pressed="false">pause</button>';
-    run(bodyScript());
-    const button = document.querySelector("button");
-    button?.click();
-    expect(document.documentElement.dataset.demos).toBe("paused");
-    expect(button?.getAttribute("aria-pressed")).toBe("true");
-    button?.click();
-    expect(document.documentElement.hasAttribute("data-demos")).toBe(false);
-    expect(button?.getAttribute("aria-pressed")).toBe("false");
-    expect(window.localStorage.length + window.sessionStorage.length).toBe(0);
-  });
-});

@@ -36,6 +36,10 @@ export interface ContactActionsProps {
   readonly className?: string;
   /** `onDark` restyles the two main buttons for the dark hero and the final CTA band. */
   readonly tone?: "default" | "onDark";
+  /** `whatsapp` shows only the WhatsApp button; e-mail stays in the fallback panel, the footer and help. */
+  readonly channels?: "whatsapp" | "both";
+  /** `primary` gives the WhatsApp button the filled action style, for "ask for a proposal". */
+  readonly variant?: "secondary" | "primary";
 }
 
 type Channel = "whatsapp" | "email";
@@ -44,6 +48,7 @@ const actionBase =
   "motion-safe-transition inline-flex min-h-12 items-center justify-center gap-2 rounded-[8px] border-2 px-5 py-2 text-base font-semibold no-underline";
 const actionClass = `${actionBase} border-border bg-bg text-fg hover:border-fg`;
 const actionOnDark = `${actionBase} border-white/70 bg-transparent text-white hover:border-white hover:bg-white/10`;
+const actionPrimary = `${actionBase} border-transparent bg-action text-action-fg hover:bg-action-hover`;
 
 function CopyField({ label, value, labels }: { label: string; value: string; labels: ContactLabels }) {
   const id = useId();
@@ -109,8 +114,11 @@ export function ContactActions({
   message,
   className,
   tone = "default",
+  channels = "both",
+  variant = "secondary",
 }: ContactActionsProps) {
   const mainClass = tone === "onDark" ? actionOnDark : actionClass;
+  const whatsappClass = variant === "primary" && tone !== "onDark" ? actionPrimary : mainClass;
   const [panel, setPanel] = useState<Channel | null>(null);
   const timer = useRef<number | undefined>(undefined);
   const left = useRef(false);
@@ -182,16 +190,18 @@ export function ContactActions({
           target="_blank"
           rel="noopener noreferrer"
           onClick={openWhatsApp}
-          className={mainClass}
+          className={whatsappClass}
           data-contact="whatsapp"
         >
           <MessageCircle aria-hidden="true" className="size-5" />
           {labels.whatsapp}
         </a>
-        <a href={mailtoHref} onClick={openEmail} className={mainClass} data-contact="email">
-          <Mail aria-hidden="true" className="size-5" />
-          {labels.email}
-        </a>
+        {channels === "both" ? (
+          <a href={mailtoHref} onClick={openEmail} className={mainClass} data-contact="email">
+            <Mail aria-hidden="true" className="size-5" />
+            {labels.email}
+          </a>
+        ) : null}
       </div>
       {panel !== null ? (
         <section

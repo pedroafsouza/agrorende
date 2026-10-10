@@ -9,10 +9,17 @@ export function Contact({
   locale,
   className,
   tone = "default",
+  channels = "both",
+  variant = "secondary",
+  whatsappLabel,
 }: {
   readonly locale: SiteLocale;
   readonly className?: string;
   readonly tone?: "default" | "onDark";
+  readonly channels?: "whatsapp" | "both";
+  readonly variant?: "secondary" | "primary";
+  /** Replaces "Falar no WhatsApp", for example with "Pedir uma proposta". */
+  readonly whatsappLabel?: string;
 }) {
   const t = getTranslator(locale);
   const whatsapp = errorCopy(locale, "WHATSAPP_UNAVAILABLE");
@@ -23,6 +30,8 @@ export function Contact({
     <ContactActions
       className={className}
       tone={tone}
+      channels={channels}
+      variant={variant}
       whatsappHref={whatsappHref(siteConfig.whatsappNumber, message)}
       mailtoHref={mailtoHref(siteConfig.contactEmail, subject, t("cta.emailBody"))}
       phone={displayPhone(siteConfig.whatsappNumber)}
@@ -30,7 +39,7 @@ export function Contact({
       subject={subject}
       message={message}
       labels={{
-        whatsapp: t("cta.whatsapp"),
+        whatsapp: whatsappLabel ?? t("cta.whatsapp"),
         email: t("cta.email"),
         phoneLabel: t("contact.phoneLabel"),
         emailLabel: t("contact.emailLabel"),

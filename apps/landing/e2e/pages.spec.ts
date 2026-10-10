@@ -26,7 +26,7 @@ test("pages are white by default and the dark theme stays accessible", async ({ 
   await page.goto("/pt-br/?lite=0");
   await expect(page.locator("html")).not.toHaveAttribute("data-theme", "dark");
   await page.evaluate(() => localStorage.setItem("agrorende.landing.theme", "dark"));
-  for (const path of ["/pt-br/", "/en/pricing/", "/pt-br/ajuda/erros/first-sync-large/"]) {
+  for (const path of ["/pt-br/", "/pt-br/recursos/", "/en/pricing/", "/pt-br/ajuda/erros/first-sync-large/"]) {
     await page.goto(`${path}?lite=0`);
     await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
     await expect(page.locator("[data-theme-toggle]").first()).toHaveAttribute("aria-pressed", "true");
@@ -36,8 +36,12 @@ test("pages are white by default and the dark theme stays accessible", async ({ 
 
 test("touch targets in the header and CTAs are at least 48 px tall", async ({ page }) => {
   await page.goto("/pt-br/?lite=0");
-  for (const selector of ['[data-cta="signup"]', '[data-contact="whatsapp"]', '[data-contact="email"]']) {
+  for (const selector of ['[data-cta="signup"]', '[data-contact="whatsapp"]', '[data-cta="video"]', "[data-motion-toggle]"]) {
     const box = await page.locator(`main ${selector}`).first().boundingBox();
     expect(box?.height ?? 0, selector).toBeGreaterThanOrEqual(48);
+    expect(box?.width ?? 0, selector).toBeGreaterThanOrEqual(48);
   }
+  await page.goto("/pt-br/ajuda/?lite=0");
+  const email = await page.locator('main [data-contact="email"]').first().boundingBox();
+  expect(email?.height ?? 0).toBeGreaterThanOrEqual(48);
 });

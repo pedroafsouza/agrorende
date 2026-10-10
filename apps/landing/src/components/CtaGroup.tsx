@@ -15,7 +15,10 @@ export function signInHref(): string {
   return `${siteConfig.appUrl}/login`;
 }
 
-/** Primary CTA ("Comece grátis — 30 dias" → APP_URL/signup) plus WhatsApp and e-mail (SITE-04). */
+/**
+ * The one primary CTA ("Testar grátis por 30 dias" → APP_URL/signup) plus WhatsApp as the only
+ * secondary action (SITE-04). E-mail lives in the footer and on the help page.
+ */
 export function CtaGroup({
   locale,
   showNote = true,
@@ -40,7 +43,7 @@ export function CtaGroup({
           <p className={tone === "onDark" ? "text-sm text-white/85" : "text-sm text-fg-muted"}>{t("cta.primaryNote")}</p>
         ) : null}
       </div>
-      {withContact ? <Contact locale={locale} tone={tone} /> : null}
+      {withContact ? <Contact locale={locale} tone={tone} channels="whatsapp" /> : null}
     </div>
   );
 }
