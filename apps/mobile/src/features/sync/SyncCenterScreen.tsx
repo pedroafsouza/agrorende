@@ -7,12 +7,24 @@ import { bumpLocalData, useLocalQuery } from "../../lib/useLocalQuery";
 import { discardMediaFile, retryMediaFile } from "../../media/queue";
 import { acknowledgeConflict } from "../../sync/conflicts";
 import { discardRejected } from "../../sync/outbox";
-import { Banner, Button, Card, ConfirmDialog, ErrorState, IconButton, ListItem, Lottie, Screen, Skeleton, StatusPill, SyncBadge, Text, showToast, useSyncSnapshot } from "../../ui";
+import { type AnimationId, Banner, Button, Card, ConfirmDialog, ErrorState, IconButton, ListItem, Lottie, Screen, Skeleton, StatusPill, SyncBadge, Text, showToast, useSyncSnapshot } from "../../ui";
+import type { MessageKey } from "../../i18n/messages";
 import { AskOfficeButton } from "../../ui/recovery";
 import { recoveryConfig } from "../../ui/recovery/config";
 import { loadSyncCenter, mutationLabelKey } from "./data";
 import { formatBytes, formatRelative } from "./format";
 import { SyncAttentionBanners } from "./SyncAttention";
+
+type SyncHeaderState = "attention" | "done" | "sending" | "pending" | "waiting";
+
+/** Header copy per state: offline work is safe on the phone, sending is in progress, rejected work needs a decision, or everything is sent. */
+const HEADER_COPY: Record<SyncHeaderState, { readonly title: MessageKey; readonly body: MessageKey; readonly animation?: AnimationId }> = {
+  attention: { title: "sync.header.attentionTitle", body: "sync.header.attentionBody" },
+  done: { title: "sync.header.doneTitle", body: "sync.header.doneBody", animation: "success" },
+  sending: { title: "sync.header.sendingTitle", body: "sync.header.sendingBody", animation: "loading" },
+  pending: { title: "sync.header.pendingTitle", body: "sync.header.pendingBody", animation: "saved-on-phone" },
+  waiting: { title: "sync.header.pendingTitle", body: "sync.header.waitingBody", animation: "saved-on-phone" },
+};
 
 /** Sync Center (OFF-05/06): last sync, queued work, uploads, conflicts, Sync now and diagnostics. */
 export function SyncCenterScreen() {
@@ -60,15 +72,24 @@ export function SyncCenterScreen() {
   const footer = <Button testID="sync-now" labelKey="sync.action.syncNow" icon={RefreshCw} loading={syncing || snapshot.phase !== "idle"} onPress={() => void syncNow()} />;
   const offline = snapshot.network === "offline";
   const allSent = query.status === "ready" && query.data.outbox.length === 0 && query.data.uploads.length === 0 && query.data.conflicts.length === 0 && snapshot.pendingBytes === 0;
+  const needsAttention =
+    query.status === "ready" &&
+    (query.data.conflicts.some((conflict) => conflict.acknowledgedAt === null) ||
+      query.data.outbox.some((row) => row.status === "REJECTED") ||
+      query.data.uploads.some((file) => file.state === "FAILED"));
+  const header: SyncHeaderState = needsAttention ? "attention" : allSent ? "done" : snapshot.phase !== "idle" && !offline ? "sending" : offline ? "pending" : "waiting";
+  const headerCopy = HEADER_COPY[header];
 
   return (
     <Screen footer={footer} refreshing={false} onRefresh={query.reload} testID="sync-center">
-      <Card testID={allSent ? "sync-header-done" : "sync-header-pending"}>
+      <Card testID={`sync-header-${header}`}>
         {query.status === "ready" ? (
           <>
-            <Lottie key={allSent ? "done" : "pending"} id={allSent ? "success" : "saved-on-phone"} playOnce={allSent} size={140} testID="sync-header-animation" />
-            <Text i18nKey={allSent ? "sync.header.doneTitle" : "sync.header.pendingTitle"} variant="title" accessibilityRole="header" style={styles.center} />
-            <Text i18nKey={allSent ? "sync.header.doneBody" : "sync.header.pendingBody"} tone="secondary" style={styles.center} />
+            {headerCopy.animation === undefined ? null : (
+              <Lottie key={header} id={headerCopy.animation} loop={header === "sending"} playOnce={header === "done"} size={140} testID="sync-header-animation" />
+            )}
+            <Text i18nKey={headerCopy.title} variant="title" accessibilityRole="header" style={styles.center} />
+            <Text i18nKey={headerCopy.body} tone="secondary" style={styles.center} />
           </>
         ) : null}
         <SyncBadge />

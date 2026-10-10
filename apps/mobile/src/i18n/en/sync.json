@@ -132,6 +132,11 @@
     "pendingTitle": "Saved on phone",
     "pendingBody": "It will be sent when there is signal. You can keep working.",
     "doneTitle": "All sent",
-    "doneBody": "The office has received everything you recorded."
+    "doneBody": "The office has received everything you recorded.",
+    "waitingBody": "It will be sent on the next sync. You can keep working.",
+    "sendingTitle": "Sending…",
+    "sendingBody": "Keep the app open until it finishes. You can keep working.",
+    "attentionTitle": "Some items need your attention",
+    "attentionBody": "See below what was not accepted and choose what to do."
   }
 }

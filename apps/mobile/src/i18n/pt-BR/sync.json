@@ -132,6 +132,11 @@
     "pendingTitle": "Salvo no celular",
     "pendingBody": "Será enviado quando tiver sinal. Você pode continuar trabalhando.",
     "doneTitle": "Tudo enviado",
-    "doneBody": "O escritório já recebeu tudo o que você registrou."
+    "doneBody": "O escritório já recebeu tudo o que você registrou.",
+    "waitingBody": "Será enviado na próxima sincronização. Você pode continuar trabalhando.",
+    "sendingTitle": "Enviando…",
+    "sendingBody": "Mantenha o app aberto até terminar. Você pode continuar trabalhando.",
+    "attentionTitle": "Alguns envios precisam da sua atenção",
+    "attentionBody": "Veja abaixo o que não foi aceito e escolha o que fazer."
   }
 }
