@@ -194,7 +194,8 @@ jobs:
   promote:
     name: promote ${{ github.ref_name }}
     needs: meta
-    if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    # Promotion requires a staging deployment; without staging, android-apk.yml creates the release.
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && vars.STAGING_DEPLOY == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:

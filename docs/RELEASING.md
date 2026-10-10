@@ -176,9 +176,9 @@ These come from ARCHITECTURE §18.4 and are done once by a person:
    The `guard` job refuses anything but a `vX.Y.Z` tag whose images equal the staged digests and
    whose commit has a successful staging deployment. A reviewer approves the `production`
    environment, then the deploy runs.
-5. The same tag starts `mobile.yml` for the production profile (§6), which also waits for the
+5. When `vars.EAS_ENABLED` is `true`, the same tag starts `mobile.yml` for the production profile (§6), which also waits for the
    `production` environment approval.
-6. The same tag also starts `android-apk.yml`, which attaches an unsigned Android APK to the
+6. The same tag also starts `android-apk.yml`, which publishes the Android APK on the
    release (§6.1).
 
 ## 5. SSH deploy flow (Phase 1)
@@ -237,44 +237,62 @@ Mobile rollback: republish the previous update group with
 `eas update:republish --group <previous group id>` (the group ids are in the `mobile.yml` job
 summary and in the EAS dashboard). A store build cannot be rolled back; ship a fix forward.
 
-### 6.1 Android APK (unsigned)
+### 6.1 Android APK on GitHub Releases
 
-`android-apk.yml` attaches an unsigned Android APK of the production variant to every GitHub
-Release, for testers and for side-loading outside the stores. It does not replace the EAS store
-builds of §6 and needs no Expo account or `EXPO_TOKEN`.
+`android-apk.yml` builds the Android APK on the runner (`expo prebuild --platform android
+--clean`, then `./gradlew assembleRelease`) and publishes it on GitHub Releases, for testers and
+for side-loading outside the stores. It does not replace the EAS store builds of §6 and needs no
+Expo account or `EXPO_TOKEN`.
 
-- **Trigger:** the same `vX.Y.Z` tag push that starts `release.yml`. The job builds on the runner
-  (`expo prebuild --platform android --clean`, then `./gradlew assembleRelease`), waits up to 30
-  minutes for `release.yml` to create the release, and uploads
-  `agrorende-vX.Y.Z-unsigned.apk` and `agrorende-vX.Y.Z-unsigned.apk.sha256` with
-  `gh release upload --clobber`. The files are also kept as a workflow artifact for 30 days.
-- **Manual run:** **Actions → android-apk → Run workflow** with `tag` (an existing `vX.Y.Z`
-  release: rebuild and replace its APK) and `variant` (`production` or `preview`). With `tag`
-  empty, the selected branch is built and the APK is only a workflow artifact
-  (`agrorende-<sha>[-preview]-unsigned.apk`).
-- **Configuration:** the job runs without a GitHub Environment, so it reads only
-  repository-level variables and secrets. `APP_HOST`, `WS_HOST` and `SITE_HOST` default to the
-  production hosts (`app.agrorende.com.br`, `ws.agrorende.com.br`, `agrorende.com.br`; staging
-  hosts for `preview`). `PLATFORM_SUPPORT_WHATSAPP`, `EXPO_PUBLIC_SENTRY_DSN`, `EAS_UPDATE_URL`,
-  `EAS_PROJECT_ID` and the secret `GOOGLE_MAPS_ANDROID_API_KEY` are optional; without the
-  Maps key the map screens show no tiles. `ANDROID_APK_ARCHS` (default
-  `armeabi-v7a,arm64-v8a`) chooses the ABIs. The Sentry source map upload is skipped.
-- **Version:** the APK carries the `version` of `apps/mobile/app.config.ts` and `versionCode` 1;
-  the file name carries the tag.
+| Trigger | Result |
+|---|---|
+| Tag `vX.Y.Z` | `agrorende-vX.Y.Z.apk` and `.sha256` on the release `vX.Y.Z`, with `version` X.Y.Z and `versionCode` `X*10000 + Y*100 + Z`. When `vars.STAGING_DEPLOY` is `true`, the job waits up to 30 minutes for `release.yml` (`promote`) to create the release; otherwise it creates the release itself with generated notes. |
+| Push to `main` that changes `apps/mobile/**`, the packages the app uses or the lockfile | The rolling prerelease `android-latest` is recreated at that commit with `agrorende-latest.apk`, so testers always have one download link. It is never marked as the latest release. |
+| Manual run (**Actions → android-apk → Run workflow**) | `tag` set: rebuild and replace the APK of that release. `tag` empty: the selected ref is only a workflow artifact (`agrorende-<sha>[-preview].apk`). `variant` is `production` or `preview`. |
 
-**Why unsigned:** the workflow removes the debug key from the release build type, so no key ever
-lives in CI and nobody installs an APK signed with the public debug key. Android refuses to
-install an unsigned APK ("App not installed" / `INSTALL_PARSE_FAILED_NO_CERTIFICATES`). Sign it
-with your own key first, using the Android SDK build tools:
+Every build is also kept as a workflow artifact for 30 days. Main builds cancel each other;
+release builds never do.
+
+**Cutting a release:** `git tag v1.2.0 && git push origin v1.2.0`. `app.config.ts` reads
+`APP_VERSION`, which the workflow sets from the tag; locally the version stays `0.1.0`.
+
+**Configuration:** the job runs without a GitHub Environment, so it reads only repository-level
+variables and secrets. `APP_HOST`, `WS_HOST` and `SITE_HOST` default to the production hosts
+(`app.agrorende.com.br`, `ws.agrorende.com.br`, `agrorende.com.br`; staging hosts for `preview`).
+`PLATFORM_SUPPORT_WHATSAPP`, `EXPO_PUBLIC_SENTRY_DSN`, `EAS_UPDATE_URL`, `EAS_PROJECT_ID` and the
+secret `GOOGLE_MAPS_ANDROID_API_KEY` are optional; without the Maps key the map screens show no
+tiles. `ANDROID_APK_ARCHS` (default `armeabi-v7a,arm64-v8a`) chooses the ABIs. The Sentry source
+map upload is skipped. `mobile.yml` only reacts to tags when `vars.EAS_ENABLED` is `true`, so
+releases do not fail while EAS is not set up.
+
+**Signing.** The workflow always removes the public debug key from the release build type. With
+the secrets below, the APK is aligned and signed with the project key (`zipalign` + `apksigner`)
+and installs and updates in place. Without them it is published as `…-unsigned.apk`.
+
+| Secret | Value |
+|---|---|
+| `ANDROID_KEYSTORE_BASE64` | The keystore, `base64 -i agrorende-release.jks` |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_ALIAS` | Key alias, e.g. `agrorende` |
+| `ANDROID_KEY_PASSWORD` | Optional; defaults to the keystore password |
+
+Create the key once, keep the keystore and passwords in the password manager (a lost key means
+installed phones can never update in place again), and never commit it:
 
 ```bash
-# Once: create a keystore (keep it out of the repository).
-keytool -genkeypair -v -keystore agrorende-sideload.jks -alias agrorende \
+keytool -genkeypair -v -keystore agrorende-release.jks -alias agrorende \
   -keyalg RSA -keysize 4096 -validity 10000
+base64 -i agrorende-release.jks | gh secret set ANDROID_KEYSTORE_BASE64
+gh secret set ANDROID_KEYSTORE_PASSWORD
+gh secret set ANDROID_KEY_ALIAS --body agrorende
+```
 
+To install an unsigned APK, sign it locally with the same commands the workflow uses:
+
+```bash
 sha256sum -c agrorende-v1.2.0-unsigned.apk.sha256
 zipalign -p -f 4 agrorende-v1.2.0-unsigned.apk agrorende-v1.2.0-aligned.apk
-apksigner sign --ks agrorende-sideload.jks --ks-key-alias agrorende \
+apksigner sign --ks agrorende-release.jks --ks-key-alias agrorende \
   --out agrorende-v1.2.0.apk agrorende-v1.2.0-aligned.apk
 apksigner verify --print-certs agrorende-v1.2.0.apk
 adb install agrorende-v1.2.0.apk

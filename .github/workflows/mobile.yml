@@ -47,7 +47,9 @@ concurrency:
 jobs:
   plan:
     name: plan
-    if: ${{ github.event_name != 'pull_request' }}
+    # Tag pushes only reach EAS once the project is set up (vars.EAS_ENABLED); the unsigned/signed
+    # APK of android-apk.yml covers Android releases until then.
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && vars.EAS_ENABLED == 'true') }}
     runs-on: ubuntu-latest
     outputs:
       profile: ${{ steps.plan.outputs.profile }}

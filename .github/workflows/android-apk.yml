@@ -1,23 +1,34 @@
-# Unsigned Android APK for every release (docs/RELEASING.md §6.1).
+# Android APK published on GitHub Releases (docs/RELEASING.md §6.1).
 #
 # - Tag vX.Y.Z: build the production variant on the runner (expo prebuild + Gradle, no EAS and no
-#   Expo account), then attach `agrorende-vX.Y.Z-unsigned.apk` and its `.sha256` to the GitHub
-#   Release that `release.yml` (job `promote`) creates for the same tag.
-# - Manual run: build any ref or tag with the chosen variant. When `tag` names an existing release,
-#   the files are attached to it too (`--clobber` replaces earlier uploads).
-# The APK is deliberately unsigned: Android refuses to install it until someone signs it with
-# their own key (`zipalign` + `apksigner`, see docs/RELEASING.md). Store builds stay on EAS
-# (`mobile.yml`).
+#   Expo account) with version X.Y.Z and versionCode X*10000+Y*100+Z, then attach
+#   `agrorende-vX.Y.Z.apk` and its `.sha256` to the GitHub Release of the tag. When the staging
+#   promotion of `release.yml` is disabled (vars.STAGING_DEPLOY), this job creates the release.
+# - Push to main touching the app: refresh the rolling prerelease `android-latest`, so testers
+#   always have one download link for the newest build.
+# - Manual run: build any ref or tag with the chosen variant; `tag` attaches to that release.
+# Signing: with the ANDROID_KEYSTORE_* secrets the APK is signed with the project key and installs
+# and updates directly. Without them it is unsigned (`-unsigned.apk`) and must be signed before
+# installing. Store builds stay on EAS (`mobile.yml`).
 #
-# Releases created by `release.yml` with GITHUB_TOKEN never trigger `release:` events, so this
-# workflow listens to the tag push and waits for the release to appear instead; that also keeps a
-# single upload per tag.
+# Releases created with GITHUB_TOKEN never trigger `release:` events, so this workflow listens to
+# the tag push itself.
 name: android-apk
 
 on:
   push:
     tags:
       - "v*.*.*"
+    branches:
+      - main
+    paths:
+      - "apps/mobile/**"
+      - "packages/contracts/**"
+      - "packages/api-client/**"
+      - "packages/i18n/**"
+      - "packages/design-tokens/**"
+      - "pnpm-lock.yaml"
+      - ".github/workflows/android-apk.yml"
   workflow_dispatch:
     inputs:
       tag:
@@ -39,11 +50,12 @@ permissions:
 
 concurrency:
   group: android-apk-${{ inputs.tag || github.ref_name }}-${{ inputs.variant || 'production' }}
-  cancel-in-progress: false
+  # Only the rolling main build may be superseded; release builds always finish.
+  cancel-in-progress: ${{ github.ref == 'refs/heads/main' }}
 
 jobs:
   apk:
-    name: unsigned apk (${{ inputs.variant || 'production' }})
+    name: apk (${{ inputs.variant || 'production' }})
     runs-on: ubuntu-latest
     timeout-minutes: 75
     permissions:
@@ -51,6 +63,8 @@ jobs:
     env:
       TAG: ${{ inputs.tag || (github.ref_type == 'tag' && github.ref_name) || '' }}
       APP_VARIANT: ${{ inputs.variant || 'production' }}
+      ROLLING: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+      ROLLING_TAG: android-latest
       # Only the ABIs real phones use; x86 emulator ABIs would double the native build time.
       ANDROID_ARCHS: ${{ vars.ANDROID_APK_ARCHS || 'armeabi-v7a,arm64-v8a' }}
       EAS_UPDATE_URL: ${{ vars.EAS_UPDATE_URL }}
@@ -72,6 +86,8 @@ jobs:
             echo "::error::Release tags must look like vX.Y.Z (got $TAG)."
             exit 1
           fi
+          # app.config.ts reads APP_VERSION for `version` and the Android `versionCode`.
+          if [[ -n "$TAG" ]]; then echo "APP_VERSION=${TAG#v}" >> "$GITHUB_ENV"; fi
 
       - name: Checkout
         uses: actions/checkout@v4
@@ -132,8 +148,13 @@ jobs:
         working-directory: apps/mobile/android
         run: ./gradlew assembleRelease --no-daemon -PreactNativeArchitectures="$ANDROID_ARCHS"
 
-      - name: Check, rename and hash the APK
+      - name: Sign, rename and hash the APK
         id: apk
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
           apk="$(find apps/mobile/android/app/build/outputs/apk/release -name 'app-release-unsigned.apk' -print -quit)"
           if [[ -z "$apk" ]]; then
@@ -141,25 +162,48 @@ jobs:
             find apps/mobile/android/app/build/outputs -name '*.apk' -print
             exit 1
           fi
-          apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -n 1)"
-          if [[ -n "$apksigner" ]] && "$apksigner" verify "$apk" > /dev/null 2>&1; then
-            echo "::error::The APK is signed; expected an unsigned build."
+          tools="$(find "$ANDROID_HOME/build-tools" -mindepth 1 -maxdepth 1 -type d | sort -V | tail -n 1)"
+          if "$tools/apksigner" verify "$apk" > /dev/null 2>&1; then
+            echo "::error::Gradle produced a signed APK; expected an unsigned build."
             exit 1
           fi
           label="${TAG:-$(git rev-parse --short=12 HEAD)}"
+          if [[ "$ROLLING" == "true" ]]; then label="latest"; fi
           suffix=""
           if [[ "$APP_VARIANT" != "production" ]]; then suffix="-$APP_VARIANT"; fi
-          name="agrorende-${label}${suffix}-unsigned.apk"
           mkdir -p dist
-          cp "$apk" "dist/$name"
+          if [[ -n "$KEYSTORE_BASE64" ]]; then
+            if [[ -z "$KEYSTORE_PASSWORD" || -z "$KEY_ALIAS" ]]; then
+              echo "::error::ANDROID_KEYSTORE_BASE64 is set but ANDROID_KEYSTORE_PASSWORD or ANDROID_KEY_ALIAS is missing."
+              exit 1
+            fi
+            export KEY_PASSWORD="${KEY_PASSWORD:-$KEYSTORE_PASSWORD}"
+            keystore="$RUNNER_TEMP/release.jks"
+            trap 'rm -f "$keystore"' EXIT
+            printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$keystore"
+            name="agrorende-${label}${suffix}.apk"
+            "$tools/zipalign" -p -f 4 "$apk" "$RUNNER_TEMP/aligned.apk"
+            "$tools/apksigner" sign --ks "$keystore" --ks-key-alias "$KEY_ALIAS" \
+              --ks-pass env:KEYSTORE_PASSWORD --key-pass env:KEY_PASSWORD \
+              --out "dist/$name" "$RUNNER_TEMP/aligned.apk"
+            "$tools/apksigner" verify "dist/$name"
+            signed="signed with the project key"
+          else
+            name="agrorende-${label}${suffix}-unsigned.apk"
+            cp "$apk" "dist/$name"
+            signed="unsigned: sign it before installing (docs/RELEASING.md §6.1)"
+          fi
           (cd dist && sha256sum "$name" > "$name.sha256")
-          echo "name=$name" >> "$GITHUB_OUTPUT"
           {
-            echo "### Unsigned Android APK"
-            echo "- file: \`$name\` ($(du -h "dist/$name" | cut -f1))"
+            echo "name=$name"
+            echo "signed=$signed"
+            echo "version=$(node -p "require('./apps/mobile/package.json').version")"
+          } >> "$GITHUB_OUTPUT"
+          {
+            echo "### Android APK"
+            echo "- file: \`$name\` ($(du -h "dist/$name" | cut -f1)), $signed"
             echo "- sha256: \`$(cut -d' ' -f1 "dist/$name.sha256")\`"
-            echo "- variant: \`$APP_VARIANT\`, ABIs: \`$ANDROID_ARCHS\`, API: \`$EXPO_PUBLIC_API_URL\`"
-            echo "- sign it before installing (docs/RELEASING.md §6.1)."
+            echo "- version: \`${APP_VERSION:-default}\`, variant: \`$APP_VARIANT\`, ABIs: \`$ANDROID_ARCHS\`, API: \`$EXPO_PUBLIC_API_URL\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Upload the workflow artifact
@@ -175,15 +219,47 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           NAME: ${{ steps.apk.outputs.name }}
+          PROMOTE: ${{ vars.STAGING_DEPLOY == 'true' && github.event_name == 'push' }}
         run: |
-          # release.yml creates the release after its staging checks; wait up to 30 minutes for it.
-          for _ in $(seq 1 60); do
-            if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-              gh release upload "$TAG" "dist/$NAME" "dist/$NAME.sha256" --clobber --repo "$GITHUB_REPOSITORY"
-              echo "- attached to release \`$TAG\`" >> "$GITHUB_STEP_SUMMARY"
-              exit 0
+          files=("dist/$NAME" "dist/$NAME.sha256")
+          if [[ "$PROMOTE" == "true" ]]; then
+            # release.yml creates the release after its staging checks; wait up to 30 minutes for it.
+            for _ in $(seq 1 60); do
+              gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1 && break
+              sleep 30
+            done
+          fi
+          if ! gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            if [[ "$PROMOTE" == "true" ]]; then
+              echo "::error::No GitHub Release $TAG after 30 minutes. Fix release.yml, then rerun this workflow with tag=$TAG."
+              exit 1
             fi
-            sleep 30
-          done
-          echo "::error::No GitHub Release $TAG after 30 minutes. Fix release.yml, then rerun this workflow with tag=$TAG."
-          exit 1
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag --title "$TAG" --generate-notes
+            echo "- created release \`$TAG\`" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          gh release upload "$TAG" "${files[@]}" --clobber --repo "$GITHUB_REPOSITORY"
+          echo "- attached to release \`$TAG\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Refresh the rolling prerelease
+        if: ${{ env.ROLLING == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NAME: ${{ steps.apk.outputs.name }}
+          SIGNED: ${{ steps.apk.outputs.signed }}
+          VERSION: ${{ steps.apk.outputs.version }}
+        run: |
+          short="$(git rev-parse --short=7 HEAD)"
+          {
+            echo "Build automática do app Android a partir do \`main\` (commit \`$short\`, $(date -u +%Y-%m-%d))."
+            echo
+            echo "- Versão base: $VERSION"
+            echo "- Arquivo: \`$NAME\` ($SIGNED)"
+            echo "- Servidor: $EXPO_PUBLIC_API_URL"
+            echo
+            echo "Esta é uma versão de teste, substituída a cada mudança no app. Para versões estáveis, use as releases \`vX.Y.Z\`."
+          } > "$RUNNER_TEMP/notes.md"
+          # Move the tag to this commit by recreating the release; old assets go with it.
+          gh release delete "$ROLLING_TAG" --repo "$GITHUB_REPOSITORY" --cleanup-tag --yes > /dev/null 2>&1 || true
+          gh release create "$ROLLING_TAG" --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --prerelease --latest=false \
+            --title "Android (main, $short)" --notes-file "$RUNNER_TEMP/notes.md" "dist/$NAME" "dist/$NAME.sha256"
+          echo "- published prerelease \`$ROLLING_TAG\`" >> "$GITHUB_STEP_SUMMARY"

@@ -40,16 +40,28 @@ export function resolveEasProjectId(env: Readonly<Record<string, string | undefi
   return value;
 }
 
+/** `APP_VERSION` (semver, set by the release workflows from the tag) or the development default. */
+export function resolveAppVersion(raw: string | undefined): string {
+  return raw !== undefined && /^\d+\.\d+\.\d+$/u.test(raw) ? raw : "0.1.0";
+}
+
+/** Android `versionCode` derived from the semver, so every release installs over the previous one. */
+export function androidVersionCode(version: string): number {
+  const [major = 0, minor = 0, patch = 0] = version.split(".").map(Number);
+  return major * 10_000 + minor * 100 + patch;
+}
+
 export default ({ config }: ConfigContext): ExpoConfig => {
   const variant = variants[resolveVariant(process.env.APP_VARIANT)];
   const updateUrl = process.env.EAS_UPDATE_URL;
   const easProjectId = resolveEasProjectId(process.env);
+  const version = resolveAppVersion(process.env.APP_VERSION);
   return {
     ...config,
     name: variant.name,
     slug: "agrorende",
     scheme: variant.scheme,
-    version: "0.1.0",
+    version,
     orientation: "portrait",
     icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",
@@ -75,6 +87,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       ...config.android,
       package: variant.packageName,
+      versionCode: androidVersionCode(version),
       adaptiveIcon: {
         foregroundImage: "./assets/images/adaptive-icon.png",
         monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
