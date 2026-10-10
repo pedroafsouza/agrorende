@@ -165,8 +165,8 @@ The full demo script is in [`docs/DEMO.md`](docs/DEMO.md).
 | `pnpm dev` | [automated-local] | Web (3000), realtime (4001) and worker (health on 4002) in watch mode. |
 | `pnpm dev:setup` | [automated-local] | First-time local setup (see above). |
 | `pnpm dev:mobile` | [human] | Metro for the Expo dev client. |
-| `pnpm dev:site` | [automated-local] | Public website on 3300. |
-| `pnpm build` / `pnpm build:site` | [automated-local] | Production builds; `build:site` serves the static site on 3301. |
+| `pnpm dev:landing` | [automated-local] | Public website on 3300. |
+| `pnpm build` / `pnpm build:landing` | [automated-local] | Production builds; `build:landing` serves the static site on 3301. |
 | `pnpm lint` · `pnpm typecheck` · `pnpm test` | [automated-local] | One step of the quality gate across the workspace. |
 | `pnpm check` | [automated-local] | Lint, typecheck and test everything. |
 | `pnpm check:only <filters>` | [automated-local] | The same gate for selected packages, for example `pnpm check:only worker web`. |

@@ -37,7 +37,7 @@ flowchart LR
     V["Public visitors"]
   end
   subgraph Platform
-    SITE["apps/site<br/>static site + help pages"]
+    SITE["apps/landing<br/>static site + help pages"]
     API["apps/web<br/>Next.js: admin UI + REST /api/v1"]
     RT["apps/realtime<br/>Socket.IO gateway"]
     WK["apps/worker<br/>BullMQ jobs"]
@@ -226,9 +226,9 @@ ESLint (flat config) and Prettier live in `packages/config`. pnpm 11 is the only
 
 | Concern | Choice |
 |---|---|
-| App | `apps/site`, Next.js 16 App Router with `output: "export"`, no API routes and no server runtime |
+| App | `apps/landing`, Next.js 16 App Router with `output: "export"`, no API routes and no server runtime |
 | Content | Locale-prefixed routes (`/pt-br`, `/en`) with `next-intl`, MDX or typed content files, and help pages generated from `ERROR_META` + the `errors` namespace |
-| Quality | Playwright smoke, axe checks, `@lhci/cli` Lighthouse CI budgets, same-origin request checks, sharp-generated responsive images via `apps/site/scripts/images.ts` |
+| Quality | Playwright smoke, axe checks, `@lhci/cli` Lighthouse CI budgets, same-origin request checks, sharp-generated responsive images via `apps/landing/scripts/images.ts` |
 
 ### 3.7 Visual direction
 
@@ -348,7 +348,7 @@ agrorende/
 ├─ scripts/                           # devloop.ts, check-only.ts, vendor-skills.sh, devloop/, i18n-check.ts, smoke.ts
 ├─ patches/                           # pnpm patch files (empty at start, reviewed like code)
 ├─ infra/                             # compose/app.yml, compose/vm.yml, caddy/Caddyfile, backup/, vm/README.md, aws/README.md (Phase 2)
-├─ docs/                              # PRD.md, ARCHITECTURE.md, DELIVERY-PLAN.md, TASKS.md, LANDSCAPE.md, ERRORS.md, SITE.md, SUPPORT.md, TRANSLATING.md, RELEASING.md, RUNBOOK.md, DEMO.md, change-requests/, progress/, reviews/
+├─ docs/                              # PRD.md, ARCHITECTURE.md, DELIVERY-PLAN.md, TASKS.md, LANDSCAPE.md, ERRORS.md, LANDING.md, SUPPORT.md, TRANSLATING.md, RELEASING.md, RUNBOOK.md, DEMO.md, change-requests/, progress/, reviews/
 ├─ AGENTS.md
 ├─ THIRD_PARTY.md
 ├─ .mcp.json
@@ -2477,7 +2477,7 @@ Page code lives in `src/features/<feature>/` (`ops`, `reports`, `work-orders`, `
 
 Each task tests the error catalog entries it owns. T10 checks the code index ↔ `ERROR_META` ↔ i18n keys and localized help URLs, T11 covers web error journeys, import errors and browser gate, T12 covers every sync/media error in the chaos suite, and T17 (P1) adds Maestro permission and recovery flows. Component tests render key screens in pt-BR, en and `en-XA`; T11 runs the web E2E smoke in en and takes pseudo-locale screenshots.
 
-**CI** (§18.2): `ci.yml` has `checks`, `build` and `e2e`. `checks` uses a frozen install, `docker compose up -d --wait mongo redis` for local MongoDB and Redis parity, `pnpm check`, `pnpm i18n:check` and `pnpm audit --prod --audit-level high`, writing JUnit and coverage artifacts. `build` runs the web build, `pnpm --filter site build` and `pnpm --filter mobile exec expo export --platform android`; `e2e` runs Playwright after T11.
+**CI** (§18.2): `ci.yml` has `checks`, `build` and `e2e`. `checks` uses a frozen install, `docker compose up -d --wait mongo redis` for local MongoDB and Redis parity, `pnpm check`, `pnpm i18n:check` and `pnpm audit --prod --audit-level high`, writing JUnit and coverage artifacts. `build` runs the web build, `pnpm --filter landing build` and `pnpm --filter mobile exec expo export --platform android`; `e2e` runs Playwright after T11.
 
 ---
 
@@ -2554,8 +2554,8 @@ volumes: { mongodata: {} }
 | `pnpm dev` | `pnpm --parallel --filter web --filter realtime --filter worker run dev` (web 3000, realtime 4001, worker health 4002) |
 | `pnpm dev:setup` | Copy `.env.example` → `.env` when missing → `docker compose up -d` → wait for health → `pnpm db:migrate` → `pnpm storage:init` → `pnpm db:seed` → `pnpm storage:seed` |
 | `pnpm devloop` | Interactive menu and flags for checks, setup, LAN env, mobile rebuilds, resets, doctor checks and cleanup (§16.1) |
-| `pnpm dev:site` | `pnpm --filter site dev` (public site on 3300) |
-| `pnpm build:site` | `pnpm --filter site build` then serve static `out/` on 3301 for T19 smoke/Lighthouse |
+| `pnpm dev:landing` | `pnpm --filter landing dev` (public site on 3300) |
+| `pnpm build:landing` | `pnpm --filter landing build` then serve static `out/` on 3301 for T19 smoke/Lighthouse |
 | `pnpm dev:mobile` | `pnpm --filter mobile start` (Expo dev client) |
 | `pnpm db:migrate` | Run `ensureIndexes()` and ordered data migrations (`packages/db/migrations/*`), expand → migrate → contract |
 | `pnpm db:seed` | Seed documents; refuses when `APP_ENV=production` |
@@ -2701,7 +2701,7 @@ The repository is private. `main` has a ruleset with PR required, required check
 
 | Workflow | Owner | Trigger | Jobs |
 |---|---|---|---|
-| `ci.yml` | T01 (T11 may enable `e2e`) | PR, push to `main` | `checks`: `pnpm install --frozen-lockfile` → `docker compose up -d --wait mongo redis` → `pnpm check` → `pnpm i18n:check` → `pnpm audit --prod --audit-level high`; affected local runs use `pnpm check:only "...[origin/main]"`. `build`: `pnpm --filter web build`, `pnpm --filter site build`, `pnpm --filter mobile exec expo export --platform android`; `e2e` disabled until T11. Uploads `coverage/` and JUnit. Required checks: `ci / checks`, `ci / build` |
+| `ci.yml` | T01 (T11 may enable `e2e`) | PR, push to `main` | `checks`: `pnpm install --frozen-lockfile` → `docker compose up -d --wait mongo redis` → `pnpm check` → `pnpm i18n:check` → `pnpm audit --prod --audit-level high`; affected local runs use `pnpm check:only "...[origin/main]"`. `build`: `pnpm --filter web build`, `pnpm --filter landing build`, `pnpm --filter mobile exec expo export --platform android`; `e2e` disabled until T11. Uploads `coverage/` and JUnit. Required checks: `ci / checks`, `ci / build` |
 | `codeql.yml` | T01 | PR, push to `main`, weekly | CodeQL `javascript-typescript` |
 | `copilot-setup-steps.yml` | T01 | Used by the Copilot cloud agent | Job `copilot-setup-steps`: checkout, Node 24, pnpm 11, `pnpm install --frozen-lockfile`, `pnpm exec playwright install --with-deps chromium`, `docker compose up -d --wait mongo redis`, `pnpm db:migrate` |
 | `release.yml` | T18 | PR (build only), push to `main`, tag `v*` | Builds the three images with `docker/build-push-action` using `pnpm deploy --filter <app> --prod /out` in the builder stage (pnpm isolated deploy; set `inject-workspace-packages=true` / `force-legacy-deploy` only if pnpm requires it) and builds the static `site` artifact. Next.js images copy `.next/standalone`, `.next/static` and `public`, then run `node server.js`. On `main`, pushes `sha-<commit>` images and deploys staging. On tags, promotes the exact staged digest with `docker buildx imagetools create` (no rebuild) and creates a GitHub Release. |
@@ -3068,20 +3068,20 @@ Catalog: `docs/ERRORS.md`; T10 fails the build if this list, `ERROR_META`, the c
 
 ---
 
-## 22. Public website (`apps/site`)
+## 22. Public website (`apps/landing`)
 
 The public site is built last (T19) as a static app. It explains AgroRende, links existing customers to sign in or app stores, and sends leads through WhatsApp or email; a stored lead form is P1. The site uses the Campo claro palette (§3.7): Mata green for primary actions, Terra orange only for brand/editorial accents, graphite surfaces, real field photography and no generic SaaS illustration style.
 
 ### 22.1 App and content
 
-- `apps/site`: Next.js 16 App Router with `output: "export"`, Tailwind 4 using `@agrorende/design-tokens`, `next-intl` with `[locale]` (`pt-br`, `en`) and `generateStaticParams`, MDX or typed content files in `content/<locale>/*.mdx`, no API routes and no server runtime.
+- `apps/landing`: Next.js 16 App Router with `output: "export"`, Tailwind 4 using `@agrorende/design-tokens`, `next-intl` with `[locale]` (`pt-br`, `en`) and `generateStaticParams`, MDX or typed content files in `content/<locale>/*.mdx`, no API routes and no server runtime.
 - Pages: Home, Features, Pricing, Help, Privacy policy, Terms of use and 404. Legal pages carry **"Revisão jurídica pendente"** until approved. No invented testimonials, logos or metrics.
 - Locale URLs: `/pt-br/...`, `/en/...`; Caddy redirects `/` by `Accept-Language` (`en*` → `/en/`, otherwise `/pt-br/`), and the static `index.html` meta-refreshes to `/pt-br/` as a fallback; language switch keeps the page; `hreflang` and `x-default` are generated.
 - Help pages for REC-15 are generated at build time from `ERROR_META` plus `@agrorende/i18n` `errors` namespace (`title`, `body`, `action`, optional `help`) for every code. Canonical paths are `/pt-br/ajuda/erros/<code-kebab>` and `/en/help/errors/<code-kebab>` (next-intl localized pathnames). Apps call `helpUrl(code, locale)` from `packages/i18n` and prepend `SITE_URL` / `EXPO_PUBLIC_SITE_URL` only when online and set.
 
 ### 22.2 Assets, screenshots and privacy
 
-Static export cannot use the Next image optimizer. `apps/site/scripts/images.ts` uses `sharp` to generate AVIF/WebP at three widths into `public/img/`, consumed by a `<picture>` component; fonts are self-hosted with `next/font/local`. `apps/site/scripts/screenshots.ts` uses Playwright against the local stack for web/admin screenshots in pt-BR and en and Expo MCP or simulator tools for mobile when available; missing mobile shots are listed in progress and placeholders are used.
+Static export cannot use the Next image optimizer. `apps/landing/scripts/images.ts` uses `sharp` to generate AVIF/WebP at three widths into `public/img/`, consumed by a `<picture>` component; fonts are self-hosted with `next/font/local`. `apps/landing/scripts/screenshots.ts` uses Playwright against the local stack for web/admin screenshots in pt-BR and en and Expo MCP or simulator tools for mobile when available; missing mobile shots are listed in progress and placeholders are used.
 
 The MVP site has no cookies and no third-party scripts, so it needs no cookie banner. Analytics and a lead form are P1.
 
@@ -3089,4 +3089,4 @@ The MVP site has no cookies and no third-party scripts, so it needs no cookie ba
 
 Caddy serves `/srv/agrorende/site` on `SITE_HOST` with `www.` redirecting to apex and `/` redirected by `Accept-Language`; app and websocket hosts are `APP_HOST` and `WS_HOST` (§18.3). Static assets get long cache headers, HTML no-cache.
 
-Ports: `pnpm dev:site` serves 3300; T19 serves static `out/` on 3301 for E2E and Lighthouse. CI runs `pnpm --filter site build`, Playwright smoke for every page in both locales, link checks, no-console assertions, axe accessibility checks and `@lhci/cli` Lighthouse budgets (mobile ≥ 90 performance, ≥ 95 accessibility, SEO and best practices). Playwright also asserts every request is same-origin.
+Ports: `pnpm dev:landing` serves 3300; T19 serves static `out/` on 3301 for E2E and Lighthouse. CI runs `pnpm --filter landing build`, Playwright smoke for every page in both locales, link checks, no-console assertions, axe accessibility checks and `@lhci/cli` Lighthouse budgets (mobile ≥ 90 performance, ≥ 95 accessibility, SEO and best practices). Playwright also asserts every request is same-origin.

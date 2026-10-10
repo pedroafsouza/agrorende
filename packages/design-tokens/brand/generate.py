@@ -5,7 +5,7 @@ render the logo. Run from the repository root:
 
     python3 -m venv /tmp/brandenv && /tmp/brandenv/bin/pip install fonttools brotli
     /tmp/brandenv/bin/python packages/design-tokens/brand/generate.py
-    pnpm --filter site brand
+    pnpm --filter landing brand
 """
 import math, os
 from fontTools.ttLib import TTFont
@@ -50,7 +50,7 @@ def badge(rx=14):
 
 # text outlines
 ROOT=os.path.abspath(os.path.join(os.path.dirname(__file__),"..","..",".."))
-font=TTFont(os.path.join(ROOT,"apps/site/src/fonts/Geist-Variable-latin.woff2"))
+font=TTFont(os.path.join(ROOT,"apps/landing/src/fonts/Geist-Variable-latin.woff2"))
 font=instantiateVariableFont(font,{"wght":700})
 gs=font.getGlyphSet(); cmap=font.getBestCmap(); upm=font["head"].unitsPerEm
 hmtx=font["hmtx"]

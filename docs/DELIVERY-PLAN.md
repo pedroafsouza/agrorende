@@ -48,7 +48,7 @@ These rules are **mandatory**. The orchestrator repeats them to each subagent.
 | R1 | **Read first.** Read `docs/PRD.md`, `docs/ARCHITECTURE.md`, this plan, your task's section in `docs/TASKS.md`, and the `docs/ERRORS.md` sections for your task; `docs/LANDSCAPE.md` is not needed to build. Names in ARCHITECTURE (packages, files, models, enums, mutation names, events, routes, env vars, error codes) are **normative**: use them exactly. |
 | R2 | **Stay in your lane.** Edit only the paths your task owns (§3). You may read everything. You may always create `docs/progress/<TASK>.md` and `docs/change-requests/<TASK>-<NNN>.md`. |
 | R3 | **Change requests, not edits.** If you need something outside your paths (a contract field, a seam signature, a dependency, a factory, a translation key in another namespace), write a change request (§7.2), work around it inside your own folder with a typed adapter, and keep going. Never edit another owner's file. |
-| R4 | **Frozen foundations after T01.** In waves 2+ nobody runs `pnpm add`/`pnpm remove`, edits `pnpm-lock.yaml`, `packages/db/**`, `packages/contracts/**`, root configs (`.npmrc`, `.node-version`, `patches/**`, `scripts/devloop*`, `scripts/check-only.ts`) or `.github/**` except T18's `.github/workflows/{release,deploy,mobile}.yml` and T11's narrow `e2e` job enablement. T01 installs **every** dependency listed in ARCHITECTURE §3 up front. Exception: W7/T19 runs alone and may edit every T19-owned path in its card (site app, Caddy site block, CI/release/deploy workflow site steps and root `dev:site`/`build:site` scripts) and add site-only dependencies. |
+| R4 | **Frozen foundations after T01.** In waves 2+ nobody runs `pnpm add`/`pnpm remove`, edits `pnpm-lock.yaml`, `packages/db/**`, `packages/contracts/**`, root configs (`.npmrc`, `.node-version`, `patches/**`, `scripts/devloop*`, `scripts/check-only.ts`) or `.github/**` except T18's `.github/workflows/{release,deploy,mobile}.yml` and T11's narrow `e2e` job enablement. T01 installs **every** dependency listed in ARCHITECTURE §3 up front. Exception: W7/T19 runs alone and may edit every T19-owned path in its card (site app, Caddy site block, CI/release/deploy workflow site steps and root `dev:landing`/`build:landing` scripts) and add site-only dependencies. |
 | R5 | **No git from subagents.** Subagents never run state-changing git commands (`commit`, `checkout`, `switch`, `branch`, `stash`, `reset`, `rebase`, `merge`). The orchestrator commits once per task after the wave gate passes. |
 | R6 | **Isolated test database.** Before running tests set `MONGODB_DB=agrorende_<task>` (for example `agrorende_t07`) and use `setupTestDb(name)` from `@agrorende/db/testing`. Redis channels and BullMQ prefixes derive from `MONGODB_DB`; media tests use `MEDIA_ROOT=.data/media-<task>`, created and emptied by test setup. After T01 creates `docker-compose.yml`, the orchestrator starts `docker compose up -d --wait mongo redis` before each later wave. |
 | R7 | **Green before done.** Run `pnpm check:only <filters>` for every package you touched (or `pnpm check` for the whole workspace), plus `pnpm i18n:check` when you touched translations. All must pass. |
@@ -103,7 +103,7 @@ T00 creates the agent-toolkit files, then T01 keeps them. T01 creates the skelet
 | Agent toolkit (`.mcp.json`, `.github/skills/**`, `.github/skills/THIRD_PARTY.md`, `.github/agents/ui-reviewer.agent.md`, `scripts/vendor-skills.sh`, initial `.github/copilot-instructions.md`, `.gitignore` with `.data/`) | T00, then T01 (frozen) |
 | Root (`package.json`, `pnpm-workspace.yaml`, `.env.example`, `.gitignore`, `.dockerignore`, `docker-compose.yml`, `.npmrc`, `.node-version`, `pnpm-lock.yaml`), `**/AGENTS.md`, `scripts/devloop.ts`, `scripts/devloop/**`, `scripts/check-only.ts`, `scripts/i18n-check.ts`, `patches/**`, `.github/**` except `.github/workflows/{release,deploy,mobile}.yml`, `packages/config/**`, `packages/contracts/**`, `packages/db/**` (MongoDB driver wrapper, Zod document schemas, `indexes.ts`, migrations and `setupTestDb`), `packages/design-tokens/**`, `packages/i18n/**`, `docs/reviews/**` | T01 (frozen) |
 | `infra/**`, `apps/{web,realtime,worker}/Dockerfile`, `.github/workflows/{release,deploy,mobile}.yml` | T18 |
-| `apps/site/**`, `docs/SITE.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, root `package.json` scripts `dev:site` and `build:site` | T19 |
+| `apps/landing/**`, `docs/LANDING.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, root `package.json` scripts `dev:landing` and `build:landing` | T19 |
 | `packages/core/src/{context.ts, errors.ts, testing/**}`, `core/src/sync/{types,withSyncTx,registry}.ts`, `packages/core/src/events/**` (event outbox writer skeleton), `core/src/{numbering,activity,jobs}/**`, `core/src/pdf/base.tsx`, `core/src/auth/jwt.ts`, `packages/core/scripts/**` | T01 (frozen) |
 | `packages/core/src/auth/**` (except `jwt.ts`), `packages/core/src/storage/**`, `core/src/sync/{push,pull,scopes,touch}.ts`, `core/src/notify/**`, `core/src/modules/{users,devices,media,notifications}/**` | T02 |
 | `packages/api-client/**` | T02 |
@@ -168,7 +168,7 @@ T00 creates the agent-toolkit files, then T01 keeps them. T01 creates the skelet
 | `docs/PRD.md`, `docs/ARCHITECTURE.md`, `docs/DELIVERY-PLAN.md`, `docs/TASKS.md`, `docs/ERRORS.md`, `docs/LANDSCAPE.md` | Human (read-only for agents; T10 may merge proposed EC entries into `docs/ERRORS.md`) |
 | `README.md`, `docs/RUNBOOK.md`, `docs/DEMO.md`, `docs/SUPPORT.md`, `docs/TRANSLATING.md` | T13 (T01 creates a minimal README) |
 | `docs/RELEASING.md` | T18 |
-| `docs/SITE.md` | T19 |
+| `docs/LANDING.md` | T19 |
 | `docs/progress/<TASK>.md`, `docs/change-requests/<TASK>-<NNN>.md` | Each task, its own files only |
 
 
@@ -723,19 +723,19 @@ Each card lists the goal, dependencies, scope, acceptance criteria (AC) and the 
 
 ### T19 · Public website (W7, single agent)
 
-**Depends on:** W5 by default (or W6 if v1.1 ships first). **Owns:** `apps/site/**`, `docs/SITE.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, and root `package.json` scripts `dev:site` and `build:site`. **R4 exception:** W7 runs alone and may add site-only dependencies (`next-intl`, `@lhci/cli`, `sharp`, MDX) if absent, recording them in the progress file.
+**Depends on:** W5 by default (or W6 if v1.1 ships first). **Owns:** `apps/landing/**`, `docs/LANDING.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, and root `package.json` scripts `dev:landing` and `build:landing`. **R4 exception:** W7 runs alone and may add site-only dependencies (`next-intl`, `@lhci/cli`, `sharp`, MDX) if absent, recording them in the progress file.
 
 **Scope:**
-- Build `apps/site` as a static Next.js 16 app (`output: "export"`) with locale-prefixed `pt-br` and `en` routes, self-hosted fonts and images, no API routes, no cookies and no third-party scripts.
+- Build `apps/landing` as a static Next.js 16 app (`output: "export"`) with locale-prefixed `pt-br` and `en` routes, self-hosted fonts and images, no API routes, no cookies and no third-party scripts.
 - Implement Home, Features, Pricing, Help, one help page per error code, Privacy policy, Terms of use, DPA, account-deletion page and 404.
 - CTAs use primary "Comece grátis — 30 dias" to `APP_URL/signup`, with WhatsApp, e-mail, Sign in and optional store badges as secondary actions.
 - Generate SEO metadata, Open Graph images, `sitemap.xml`, `robots.txt`, JSON-LD and alternate links.
-- Create `docs/SITE.md` with content, screenshot, legal-review and launch notes.
+- Create `docs/LANDING.md` with content, screenshot, legal-review and launch notes.
 - Add the Caddy site block, release/deploy site artifact steps and CI build/check steps.
 
 **AC:**
 - SITE-01…SITE-08, SITE-10 and SITE-11 are met.
-- `pnpm --filter site build` passes; Playwright smoke is green in both locales; help pages exist for every code in `ERROR_META`.
+- `pnpm --filter landing build` passes; Playwright smoke is green in both locales; help pages exist for every code in `ERROR_META`.
 - Lighthouse CI budgets pass: mobile performance ≥ 90, accessibility/SEO/best practices ≥ 95, LCP < 2.5 s on 4G.
 - No cookies and no third-party requests; Playwright asserts every request is same-origin.
 - Legal pages carry the pending-review marker.

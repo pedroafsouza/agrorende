@@ -147,7 +147,7 @@ jobs:
           node-version: 24
           cache: pnpm
 
-      # The artifact is the production build of apps/site (T19). deploy.yml rebuilds the site with
+      # The artifact is the production build of apps/landing (T19). deploy.yml rebuilds the site with
       # the target environment's SITE_URL, so staging canonical URLs never point at production.
       - name: Build the static site
         env:
@@ -163,10 +163,10 @@ jobs:
           SITE_PLAY_STORE_URL: ${{ vars.SITE_PLAY_STORE_URL }}
         run: |
           pnpm install --frozen-lockfile --filter "site..."
-          pnpm --filter site build
+          pnpm --filter landing build
 
       - name: Package the site
-        run: tar -czf site.tar.gz -C apps/site/out .
+        run: tar -czf site.tar.gz -C apps/landing/out .
 
       - name: Upload the site artifact
         uses: actions/upload-artifact@v4

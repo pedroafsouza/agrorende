@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from "node:fs";
 
 import { describe, expect, it } from "vitest";
 
-/** The unicode ranges the Geist subsets in src/fonts were cut with (docs/SITE.md). */
+/** The unicode ranges the Geist subsets in src/fonts were cut with (docs/LANDING.md). */
 const RANGES: readonly [number, number][] = [
   [0x0000, 0x00ff],
   [0x0131, 0x0131],

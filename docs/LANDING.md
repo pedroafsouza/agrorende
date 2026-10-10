@@ -1,10 +1,10 @@
-# AgroRende public site
+# AgroRende landing site
 
-The public site lives in `apps/site`. It is the marketing, pricing, help and legal surface of AgroRende at `https://agrorende.com.br`, and the target of every "Learn more" link in the mobile and web apps (`helpUrl(code, locale)` from `@agrorende/i18n`). This document covers how it is built, where its content comes from, what is still pending before launch and which dependencies it brought in. ARCHITECTURE §22 is the normative description; this file is the working guide.
+The public landing site lives in `apps/landing` (package `landing`; it was called `apps/site` until October 2026). It is the marketing, pricing, help and legal surface of AgroRende at `https://agrorende.com.br`, and the target of every "Learn more" link in the mobile and web apps (`helpUrl(code, locale)` from `@agrorende/i18n`). This document covers how it is built, where its content comes from, what is still pending before launch and which dependencies it brought in. ARCHITECTURE §22 is the normative description; this file is the working guide.
 
 ## 1. What the site is
 
-- **Static export.** `next.config.ts` sets `output: "export"`. `pnpm --filter site build` runs `next build --webpack` and then `scripts/postbuild.ts`, and the result in `apps/site/out/` is plain HTML, CSS, JavaScript, fonts and images. There are no API routes, no middleware, no server actions, no cookies, no analytics and no third-party requests. Playwright fails the build in CI if any page makes a cross-origin request, logs a console error or sets a cookie.
+- **Static export.** `next.config.ts` sets `output: "export"`. `pnpm --filter landing build` runs `next build --webpack` and then `scripts/postbuild.ts`, and the result in `apps/landing/out/` is plain HTML, CSS, JavaScript, fonts and images. There are no API routes, no middleware, no server actions, no cookies, no analytics and no third-party requests. Playwright fails the build in CI if any page makes a cross-origin request, logs a console error or sets a cookie.
 - **Two locales, prefixed paths.** Portuguese lives under `/pt-br/` and English under `/en/`. The route table in `src/lib/routes.ts` is the single source of every path, and the language switch in the header maps each page to its counterpart.
 - **Campo claro.** The visual direction is ARCHITECTURE §3.7: the one palette from `@agrorende/design-tokens`, 48 px minimum touch targets, outdoor contrast in light and dark mode, and an icon together with text on every action. Where the `frontend-design` skill suggested something else, §3.7 won.
 
@@ -45,8 +45,8 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 
 ## 2. Content notes
 
-- **Copy.** Every interface string is an ICU message in `apps/site/messages/pt-BR/site.json` and `apps/site/messages/en/site.json`, checked by `pnpm i18n:check` and by `src/i18n/messages.test.ts`. Portuguese is the source language; English is a faithful translation, not a rewrite.
-- **Legal texts.** The privacy policy, terms of use and DPA are typed content in `apps/site/content/<locale>/{privacy,terms,dpa}.ts`, so headings and anchors are checked by the compiler and the same structure exists in both locales.
+- **Copy.** Every interface string is an ICU message in `apps/landing/messages/pt-BR/site.json` and `apps/landing/messages/en/site.json`, checked by `pnpm i18n:check` and by `src/i18n/messages.test.ts`. Portuguese is the source language; English is a faithful translation, not a rewrite.
+- **Legal texts.** The privacy policy, terms of use and DPA are typed content in `apps/landing/content/<locale>/{privacy,terms,dpa}.ts`, so headings and anchors are checked by the compiler and the same structure exists in both locales.
 - **Error help pages** are generated from `ERROR_META` in `@agrorende/contracts/errors` and the `errors` namespace of `@agrorende/i18n`: title, body, action, the optional `help` copy, the recovery patterns and the EC entries of `docs/ERRORS.md`. Nothing is hand-written per code, so a new error code gets its help page on the next build. `scripts/postbuild.ts` fails the build if any code lacks a page in either locale or if `helpUrl(code, locale)` disagrees with the site route.
 - **No invented proof.** There are no testimonials, customer logos, ratings or usage metrics. When real ones exist they need written permission before they go on the site.
 - **Pricing.** The PRD hypothesis of R$ 149 per field user per month is in `src/views/Pricing.tsx` and only shows with `SITE_SHOW_PRICES=true`. Until pricing is confirmed the page offers a conversation instead of a number.
@@ -54,8 +54,8 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 
 ## 3. Images, fonts and screenshot sources
 
-- **Illustrations.** The hero and the five feature images are drawn placeholders in `apps/site/assets/*.svg` in the Campo claro palette. `pnpm --filter site images` (`scripts/images.ts`, sharp) renders them to AVIF and WebP at 640, 1024 and 1600 px in `public/img/`, writes the Open Graph cards per locale in `public/og/`, the favicon set, and `src/lib/images.generated.ts`, which the `<Picture>` component reads for sizes and placeholder colours. The outputs are committed so the build never needs sharp.
-- **Product screenshots are missing.** None of the images is a real screenshot yet. `pnpm --filter site screenshots --storage <state.json>` captures the admin web screens listed in `scripts/screenshots.ts` (attention, work orders, fuel, rentals, costs and sites, in pt-BR and en, 1600 × 1000) to `.data/site-screenshots/` when the local stack is running and a signed-in demo session is supplied; without the stack it prints the list of missing shots and exits successfully. A person then picks and crops the shots, saves them as new sources in `assets/` and reruns `images`. Mobile screenshots (field home, outbox, work-order completion) must be captured from a simulator by hand.
+- **Illustrations.** The hero and the five feature images are drawn placeholders in `apps/landing/assets/*.svg` in the Campo claro palette. `pnpm --filter landing images` (`scripts/images.ts`, sharp) renders them to AVIF and WebP at 640, 1024 and 1600 px in `public/img/`, writes the Open Graph cards per locale in `public/og/`, the favicon set, and `src/lib/images.generated.ts`, which the `<Picture>` component reads for sizes and placeholder colours. The outputs are committed so the build never needs sharp.
+- **Product screenshots are missing.** None of the images is a real screenshot yet. `pnpm --filter landing screenshots --storage <state.json>` captures the admin web screens listed in `scripts/screenshots.ts` (attention, work orders, fuel, rentals, costs and sites, in pt-BR and en, 1600 × 1000) to `.data/site-screenshots/` when the local stack is running and a signed-in demo session is supplied; without the stack it prints the list of missing shots and exits successfully. A person then picks and crops the shots, saves them as new sources in `assets/` and reruns `images`. Mobile screenshots (field home, outbox, work-order completion) must be captured from a simulator by hand.
 - **Fonts.** Geist Sans and Geist Mono (SIL Open Font License, `src/fonts/OFL.txt`) are self-hosted through `next/font/local` as variable WOFF2 files cut down to the Latin range, about 33 KB each. They were taken from the `geist` npm package 1.7.2 (`dist/fonts/geist-sans/Geist-Variable.woff2` and `dist/fonts/geist-mono/GeistMono-Variable.woff2`) and subset with fontTools:
 
   ```sh
@@ -70,20 +70,20 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 
 | Command | What it does |
 |---|---|
-| `pnpm dev:site` | Development server on port 3300 (`next dev`). |
-| `pnpm build:site` or `pnpm --filter site build` | Static export to `apps/site/out/` plus `scripts/postbuild.ts`. |
-| `pnpm --filter site serve` | Serves `out/` on port 3301 with `scripts/serve.ts`, a small mirror of the Caddy site block: same redirects, 404 mapping, cache headers, security headers, gzip and case-sensitive paths. `--port` overrides the port. |
+| `pnpm dev:landing` | Development server on port 3300 (`next dev`). |
+| `pnpm build:landing` or `pnpm --filter landing build` | Static export to `apps/landing/out/` plus `scripts/postbuild.ts`. |
+| `pnpm --filter landing serve` | Serves `out/` on port 3301 with `scripts/serve.ts`, a small mirror of the Caddy site block: same redirects, 404 mapping, cache headers, security headers, gzip and case-sensitive paths. `--port` overrides the port. |
 | `pnpm check:only site` | Lint, typecheck and unit tests (Vitest, 57 tests). |
-| `pnpm --filter site e2e` | Playwright against `out/` on port 3191 (`SITE_E2E_PORT` overrides it): smoke and axe on every page in both locales, desktop and Pixel 7, the link checker, SEO metadata, the EC-SITE journeys, JavaScript disabled and the same-origin, no-console-error and no-cookie assertions. |
-| `pnpm --filter site lhci` | Lighthouse CI (mobile, simulated throttling) on port 3192 with the budgets in `lighthouserc.json`; the summary is written to `.data/lhci-site/`. |
+| `pnpm --filter landing e2e` | Playwright against `out/` on port 3191 (`SITE_E2E_PORT` overrides it): smoke and axe on every page in both locales, desktop and Pixel 7, the link checker, SEO metadata, the EC-SITE journeys, JavaScript disabled and the same-origin, no-console-error and no-cookie assertions. |
+| `pnpm --filter landing lhci` | Lighthouse CI (mobile, simulated throttling) on port 3192 with the budgets in `lighthouserc.json`; the summary is written to `.data/lhci-site/`. |
 
 The canonical URLs are baked in at build time, so the end-to-end SEO test expects the build to use `SITE_URL=http://localhost:3191`, as CI does.
 
 ### 4.1 Continuous integration, release and deploy
 
-- `ci.yml`, job `build`: builds the site with `SITE_URL=http://localhost:3191`, installs Chromium, runs `pnpm --filter site e2e` and `pnpm --filter site lhci`, and uploads the results when a step fails. Lint, typecheck and unit tests run in the `checks` job through `pnpm check`.
-- `release.yml`, job `site`: builds the production site and uploads `site.tar.gz` (the contents of `apps/site/out`) as the `site` artifact.
-- `deploy.yml`: builds the site for the target environment and copies `apps/site/out/` to `/srv/agrorende/site` with `rsync --delete`. `infra/compose/vm.yml` mounts that directory read-only at `/srv/site` in the Caddy container.
+- `ci.yml`, job `build`: builds the site with `SITE_URL=http://localhost:3191`, installs Chromium, runs `pnpm --filter landing e2e` and `pnpm --filter landing lhci`, and uploads the results when a step fails. Lint, typecheck and unit tests run in the `checks` job through `pnpm check`.
+- `release.yml`, job `site`: builds the production site and uploads `site.tar.gz` (the contents of `apps/landing/out`) as the `site` artifact.
+- `deploy.yml`: builds the site for the target environment and copies `apps/landing/out/` to `/srv/agrorende/site` with `rsync --delete`. `infra/compose/vm.yml` mounts that directory read-only at `/srv/site` in the Caddy container.
 
 ### 4.2 Caddy site block
 
@@ -117,15 +117,15 @@ The privacy policy, terms of use and DPA are drafts written from the PRD and ARC
 - [ ] Legal review of the privacy policy, terms of use and DPA in both languages; remove the pending-review marker and set `TERMS_VERSION`.
 - [ ] Set the real public WhatsApp number in `SITE_WHATSAPP` or `PLATFORM_SUPPORT_WHATSAPP`, and confirm the contact and privacy addresses receive mail.
 - [ ] Decide on pricing and set `SITE_SHOW_PRICES` accordingly.
-- [ ] Replace the placeholder illustrations with real product screenshots (section 3) and rerun `pnpm --filter site images`.
+- [ ] Replace the placeholder illustrations with real product screenshots (section 3) and rerun `pnpm --filter landing images`.
 - [ ] Set `SITE_APP_STORE_URL` and `SITE_PLAY_STORE_URL` once the apps are published.
 - [ ] Point the DNS for the apex and `www` at the VM and set `SITE_HOST` in the GitHub environments.
 - [ ] After the first deploy, check `https://<host>/` redirects by language, `/sitemap.xml` and `/robots.txt` answer, and submit the sitemap to search engines.
-- [ ] Run `pnpm --filter site lhci` against the built site and confirm the budgets still pass.
+- [ ] Run `pnpm --filter landing lhci` against the built site and confirm the budgets still pass.
 
 ## 8. Dependencies
 
-All of these were added to `apps/site/package.json` under the W7 R4 exception in DELIVERY-PLAN §3; no other package changed.
+All of these were added to `apps/landing/package.json` under the W7 R4 exception in DELIVERY-PLAN §3; no other package changed.
 
 | Package | Version installed | Why |
 |---|---|---|

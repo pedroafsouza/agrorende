@@ -1,6 +1,6 @@
 /**
  * Serves `out/` the way the production Caddy site block does (infra/caddy/Caddyfile), for local
- * review, Playwright and Lighthouse. Usage: `pnpm --filter site serve [--port 3301]`.
+ * review, Playwright and Lighthouse. Usage: `pnpm --filter landing serve [--port 3301]`.
  * It never writes anything and only reads files below `out/`.
  */
 import { createReadStream, existsSync, realpathSync, statSync } from "node:fs";
@@ -132,7 +132,7 @@ function main(): void {
   const port = Number(portArg === -1 ? (process.env.PORT ?? DEFAULT_PORT) : process.argv[portArg + 1]);
   const outDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..", "out");
   if (!existsSync(outDir)) {
-    console.error("serve: out/ is missing; run `pnpm --filter site build` first");
+    console.error("serve: out/ is missing; run `pnpm --filter landing build` first");
     process.exit(1);
   }
   startServer(port, outDir);

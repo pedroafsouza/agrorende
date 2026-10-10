@@ -237,7 +237,7 @@ jobs:
           SITE_PRIVACY_EMAIL: ${{ vars.SITE_PRIVACY_EMAIL }}
           SITE_APP_STORE_URL: ${{ vars.SITE_APP_STORE_URL }}
           SITE_PLAY_STORE_URL: ${{ vars.SITE_PLAY_STORE_URL }}
-        run: pnpm --filter site build
+        run: pnpm --filter landing build
 
       - name: Set up SSH
         env:
@@ -267,7 +267,7 @@ jobs:
           ssh agrorende-vm 'install -d -m 755 /srv/agrorende/site /srv/agrorende/restore'
           scp infra/compose/app.yml infra/compose/vm.yml infra/caddy/Caddyfile agrorende-vm:/srv/agrorende/
           ssh agrorende-vm 'umask 077 && cat > /srv/agrorende/.env.next && mv /srv/agrorende/.env.next /srv/agrorende/.env && chmod 600 /srv/agrorende/.env' < "$ENV_FILE"
-          rsync -a --delete apps/site/out/ agrorende-vm:/srv/agrorende/site/
+          rsync -a --delete apps/landing/out/ agrorende-vm:/srv/agrorende/site/
 
       - name: Pull images
         env:

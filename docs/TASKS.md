@@ -1934,13 +1934,13 @@ T18 is numbered last but runs in W5 with T11, T12, and T13.
 | Agent persona | Senior frontend and growth engineer for static public site, SEO, accessibility, and launch quality |
 | Wave and mode | W7 single agent |
 | Depends on | W5 by default, or W6 if v1.1 ships first |
-| Owns | `apps/site/**`, `docs/SITE.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, root `package.json` scripts `dev:site` and `build:site`; see D§3.1 |
+| Owns | `apps/landing/**`, `docs/LANDING.md`; additive edits to `infra/caddy/Caddyfile`, `.github/workflows/{ci,release,deploy}.yml`, root `package.json` scripts `dev:landing` and `build:landing`; see D§3.1 |
 | Read first | D§5 T19; Arch §3.7 visual direction and single palette; A§20, A§22; PRD SITE-01..SITE-08, REC-15, PLT-03, PLT-17; docs/ERRORS.md code index |
 
 **Subtasks**
 
-1. `T19.1` **Do:** Create `apps/site` as a static Next.js 16 app with `output: "export"`, Tailwind 4, the Arch §3.7 single palette/design tokens, `next-intl`, locale-prefixed `pt-br` and `en` routes, self-hosted fonts, no API routes, no cookies and no third-party scripts.  
-   **Done when:** `pnpm --filter site build` emits static `out/` and Playwright sees no cross-origin requests.  
+1. `T19.1` **Do:** Create `apps/landing` as a static Next.js 16 app with `output: "export"`, Tailwind 4, the Arch §3.7 single palette/design tokens, `next-intl`, locale-prefixed `pt-br` and `en` routes, self-hosted fonts, no API routes, no cookies and no third-party scripts.  
+   **Done when:** `pnpm --filter landing build` emits static `out/` and Playwright sees no cross-origin requests.  
    **Refs:** A§22; SITE-03, SITE-05, SITE-06.
 
 2. `T19.2` **Do:** Implement Home, Features, Pricing, Help, Privacy policy, Terms of use, DPA, account-deletion page and 404 with typed content or MDX per locale, pending legal-review markers, no invented testimonials, logos or metrics, and pricing visibility controlled by `SITE_SHOW_PRICES`.  
@@ -1959,11 +1959,11 @@ T18 is numbered last but runs in W5 with T11, T12, and T13.
    **Done when:** Playwright or a link checker validates alternates, sitemap entries and metadata on every page.  
    **Refs:** SITE-07.
 
-6. `T19.6` **Do:** Build static asset pipeline: `apps/site/scripts/images.ts` with sharp, AVIF/WebP at three widths, `<picture>` component, self-hosted fonts and screenshot placeholders or generated screenshots from local stack.  
-   **Done when:** `pnpm --filter site exec tsx apps/site/scripts/images.ts` runs, generated assets are committed under `apps/site/public/img/`, and progress lists any missing mobile screenshots.  
+6. `T19.6` **Do:** Build static asset pipeline: `apps/landing/scripts/images.ts` with sharp, AVIF/WebP at three widths, `<picture>` component, self-hosted fonts and screenshot placeholders or generated screenshots from local stack.  
+   **Done when:** `pnpm --filter landing exec tsx apps/landing/scripts/images.ts` runs, generated assets are committed under `apps/landing/public/img/`, and progress lists any missing mobile screenshots.  
    **Refs:** A§22.2, SITE-08.
 
-7. `T19.7` **Do:** Add site CI, release and deploy integration: root scripts `dev:site` and `build:site`, CI build/check steps, release artifact, SSH deploy copy to `/srv/agrorende/site`, and Caddy site block with apex/`www` redirect plus `/` `Accept-Language` routing (`en*` → `/en/`, otherwise `/pt-br/`) and static `index.html` meta-refresh fallback to `/pt-br/`.  
+7. `T19.7` **Do:** Add site CI, release and deploy integration: root scripts `dev:landing` and `build:landing`, CI build/check steps, release artifact, SSH deploy copy to `/srv/agrorende/site`, and Caddy site block with apex/`www` redirect plus `/` `Accept-Language` routing (`en*` → `/en/`, otherwise `/pt-br/`) and static `index.html` meta-refresh fallback to `/pt-br/`.  
    **Done when:** `docker run --rm -v "$PWD/infra/caddy:/etc/caddy:ro" --entrypoint caddy caddy:2 validate --config /etc/caddy/Caddyfile --adapter caddyfile` passes with the site block and workflows pass actionlint.  
    **Refs:** A§22.3, D§5 T19.
 
@@ -1971,7 +1971,7 @@ T18 is numbered last but runs in W5 with T11, T12, and T13.
    **Done when:** Lighthouse mobile performance is at least 90, accessibility/SEO/best practices at least 95, LCP under 2.5 s, and all checks are recorded.  
    **Refs:** SITE-05, SITE-06.
 
-9. `T19.9` **Do:** Apply `frontend-design` guidance within Arch §3.7 Campo claro rules and the single palette and write `docs/SITE.md` with content notes, screenshot sources, legal-review notes, launch checklist and dependency changes.  
+9. `T19.9` **Do:** Apply `frontend-design` guidance within Arch §3.7 Campo claro rules and the single palette and write `docs/LANDING.md` with content notes, screenshot sources, legal-review notes, launch checklist and dependency changes.  
    **Done when:** `ui-reviewer` has no blocking findings against the style-guide baselines and progress records every site-only dependency added under the W7 R4 exception.  
    **Refs:** SITE-08, A§4.3.
 
@@ -2009,9 +2009,9 @@ T18 is numbered last but runs in W5 with T11, T12, and T13.
 
 **Final check**
 
-- `pnpm --filter site build`
+- `pnpm --filter landing build`
 - `pnpm i18n:check`
-- Serve `apps/site/out` on 3301 and run Playwright smoke for both locales
+- Serve `apps/landing/out` on 3301 and run Playwright smoke for both locales
 - Run axe and link checks
 - Run Lighthouse CI budgets with `@lhci/cli`
 - `docker run --rm -v "$PWD/infra/caddy:/etc/caddy:ro" --entrypoint caddy caddy:2 validate --config /etc/caddy/Caddyfile --adapter caddyfile`
@@ -2191,7 +2191,7 @@ T20 makes AgroRende a multi-tenant SaaS without changing the single shared deplo
 
 - [ ] `docs/progress/T19.md` exists.
 - [ ] `pnpm install --frozen-lockfile` is stable after site-only dependency changes are recorded.
-- [ ] `pnpm --filter site build` passes.
+- [ ] `pnpm --filter landing build` passes.
 - [ ] `pnpm i18n:check` passes for site messages and help pages.
 - [ ] Playwright smoke, link check, axe and Lighthouse budgets pass in both locales.
 - [ ] Help pages exist for every code in `ERROR_META`.

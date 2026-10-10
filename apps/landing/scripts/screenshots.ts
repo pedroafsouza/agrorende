@@ -8,7 +8,7 @@
  * reachable it only lists the screenshots that are still missing and exits successfully, so it
  * never blocks a build.
  *
- * Usage: `pnpm --filter site screenshots [--web http://localhost:3000] [--storage state.json]`.
+ * Usage: `pnpm --filter landing screenshots [--web http://localhost:3000] [--storage state.json]`.
  * `--storage` is a Playwright storage-state file of a signed-in demo session; it is read
  * from disk and never written by this script.
  */

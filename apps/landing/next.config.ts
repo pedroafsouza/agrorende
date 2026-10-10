@@ -4,7 +4,7 @@ import { parseEnv } from "node:util";
 
 import type { NextConfig } from "next";
 
-// The site is built from apps/site, so load the monorepo root `.env` without overriding variables
+// The site is built from apps/landing, so load the monorepo root `.env` without overriding variables
 // already set in the shell (CI and the deploy workflow pass the public URLs explicitly).
 const rootEnv = path.resolve(process.cwd(), "../../.env");
 if (existsSync(rootEnv)) {

@@ -1,6 +1,6 @@
 /**
  * Rasterises the AgroRende brand SVGs in packages/design-tokens/brand into the icons that
- * the site, the admin web app and the mobile app ship. Run with `pnpm --filter site brand`
+ * the site, the admin web app and the mobile app ship. Run with `pnpm --filter landing brand`
  * after packages/design-tokens/brand/generate.py has changed an SVG.
  */
 import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -42,7 +42,7 @@ async function ico(svg: string, sizes: readonly number[], out: string): Promise<
   writeFileSync(out, Buffer.concat([header, ...images]));
 }
 
-const site = join(root, "apps/site/public");
+const site = join(root, "apps/landing/public");
 const web = join(root, "apps/web/src/app");
 const mobile = join(root, "apps/mobile/assets/images");
 

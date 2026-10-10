@@ -149,21 +149,21 @@ jobs:
         run: pnpm --filter web build
 
       # The canonical and hreflang URLs are baked in at build time, so the CI build points them
-      # at the local server the site checks below use (port 3191, see apps/site/playwright.config.ts).
+      # at the local server the site checks below use (port 3191, see apps/landing/playwright.config.ts).
       - name: Build public site
         env:
           SITE_URL: http://localhost:3191
-        run: pnpm --filter site build
+        run: pnpm --filter landing build
 
       - name: Install Chromium for the site checks
-        run: pnpm --filter site exec playwright install --with-deps chromium
+        run: pnpm --filter landing exec playwright install --with-deps chromium
 
       # Smoke on every page in both locales, axe, link checker, same-origin and no-cookie checks.
       - name: Public site end-to-end checks
-        run: pnpm --filter site e2e
+        run: pnpm --filter landing e2e
 
       - name: Public site Lighthouse budgets
-        run: pnpm --filter site lhci
+        run: pnpm --filter landing lhci
 
       - name: Upload public site check results
         if: ${{ failure() }}

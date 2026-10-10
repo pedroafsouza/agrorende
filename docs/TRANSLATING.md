@@ -17,7 +17,7 @@ and the full checklist for adding a language. The design is described in
 | Office web app | `apps/web/messages/<locale>/*.json` | One file per area (`team.json`, `jobs.json`, `signup.json`, …). Loaded by locale name, so a new folder is picked up automatically. |
 | Mobile app | `apps/mobile/src/i18n/<locale>/*.json` | One file per area. Registered in `apps/mobile/src/i18n/resources.ts` (the app bundles every language so it can switch offline). |
 | Mobile app name and permission prompts (shown by Android and iOS, not by the app) | `apps/mobile/locales/<locale>.json` | Registered in the `locales` map of `apps/mobile/app.config.ts`. |
-| Public website | `apps/site` (pages under `/pt-br` and `/en`) | Includes the error help pages the apps link to. |
+| Public website | `apps/landing` (pages under `/pt-br` and `/en`) | Includes the error help pages the apps link to. |
 | Content inside the data (checklist items, accessory names, rental terms, seed text) | `LocalizedText` values in the database | Edited in the web app (templates, settings), not in files. |
 | App store listings | Google Play Console and App Store Connect | See §6. |
 

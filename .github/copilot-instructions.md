@@ -36,7 +36,7 @@ read-only `ui-reviewer` agent in `.github/agents/`, and a single MCP server in `
 | Work | Skills to load |
 |---|---|
 | Mobile UI (`apps/mobile`) | `expo-router`, `expo-native-ui`, `expo-design-system`, `expo-animation`, `expo-data-fetching`, `expo-project-structure`, plus `frontend-design` |
-| Admin web (`apps/web`) and public site (`apps/site`) | `frontend-design` plus `playwright-cli` |
+| Admin web (`apps/web`) and public site (`apps/landing`) | `frontend-design` plus `playwright-cli` |
 | Any chat reply | `caveman` |
 | Any review finding | `caveman-review` |
 
