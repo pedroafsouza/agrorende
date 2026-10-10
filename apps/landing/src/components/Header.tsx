@@ -1,4 +1,4 @@
-import { Languages, LogIn, Menu, Moon } from "lucide-react";
+import { Languages, LogIn, Menu, Moon, Sun } from "lucide-react";
 
 import { otherLocale, htmlLang, type SiteLocale } from "@/lib/locales";
 import { pagePath, pathFor, type SiteRoute } from "@/lib/routes";
@@ -30,9 +30,29 @@ export function LanguageSwitch({ locale, route }: { readonly locale: SiteLocale;
   );
 }
 
-/** Light/dark toggle. Light is the default; the body script wires the click and remembers the choice. */
-export function ThemeToggle({ locale }: { readonly locale: SiteLocale }) {
+/**
+ * Light/dark toggle. Light is the default; the body script wires the click and remembers the choice.
+ * In the header bar it is a quiet icon button (moon in light mode, sun in dark mode) with the label
+ * kept for screen readers and as a tooltip; inside the mobile menu it shows its text.
+ */
+export function ThemeToggle({ locale, compact = false }: { readonly locale: SiteLocale; readonly compact?: boolean }) {
   const t = getTranslator(locale);
+  if (compact) {
+    return (
+      <button
+        type="button"
+        aria-pressed="false"
+        aria-label={t("nav.themeDark")}
+        suppressHydrationWarning
+        title={t("nav.themeLabel")}
+        className="inline-flex size-12 cursor-pointer items-center justify-center rounded-[8px] text-fg-muted hover:bg-surface hover:text-fg"
+        data-theme-toggle="true"
+      >
+        <Moon aria-hidden="true" className="theme-icon-light size-5" />
+        <Sun aria-hidden="true" className="theme-icon-dark size-5" />
+      </button>
+    );
+  }
   return (
     <button type="button" aria-pressed="false" suppressHydrationWarning title={t("nav.themeLabel")} className={`${navLink} cursor-pointer`} data-theme-toggle="true">
       <Moon aria-hidden="true" className="mr-1.5 size-5" />
@@ -67,7 +87,6 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
           {links}
         </nav>
         <div className="hidden items-center gap-1 lg:flex">
-          <ThemeToggle locale={locale} />
           <LanguageSwitch locale={locale} route={route} />
           <a href={signInHref()} className={navLink} data-cta="signin">
             <LogIn aria-hidden="true" className="mr-1.5 size-5" />
@@ -76,6 +95,7 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
           <a href={signupHref()} className={`${buttonPrimary} ml-2`} data-cta="signup">
             {t("cta.primary")}
           </a>
+          <ThemeToggle locale={locale} compact />
         </div>
         <details className="menu relative lg:hidden">
           <summary className="inline-flex min-h-12 cursor-pointer list-none items-center gap-2 rounded-[8px] border-2 border-border px-4 font-semibold">
@@ -87,7 +107,6 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
               {links}
             </nav>
             <hr className="my-1 border-border" />
-            <ThemeToggle locale={locale} />
             <LanguageSwitch locale={locale} route={route} />
             <a href={signInHref()} className={navLink}>
               <LogIn aria-hidden="true" className="mr-1.5 size-5" />
@@ -96,6 +115,8 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
             <a href={signupHref()} className={`${buttonPrimary} mt-1`}>
               {t("cta.primary")}
             </a>
+            <hr className="my-1 border-border" />
+            <ThemeToggle locale={locale} />
           </div>
         </details>
       </div>

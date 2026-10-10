@@ -161,11 +161,14 @@
   }
 
   .logo-dark,
+  .theme-icon-dark,
+  html[data-theme="dark"] .theme-icon-light,
   html[data-theme="dark"] .logo-light {
     display: none;
   }
 
-  html[data-theme="dark"] .logo-dark {
+  html[data-theme="dark"] .logo-dark,
+  html[data-theme="dark"] .theme-icon-dark {
     display: block;
   }
 
