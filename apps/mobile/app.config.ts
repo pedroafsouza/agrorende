@@ -75,9 +75,14 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       ...config.android,
       package: variant.packageName,
-      adaptiveIcon: { foregroundImage: "./assets/images/adaptive-icon.png", backgroundColor: "#2B8A3E" },
+      adaptiveIcon: {
+        foregroundImage: "./assets/images/adaptive-icon.png",
+        monochromeImage: "./assets/images/adaptive-icon-monochrome.png",
+        backgroundColor: "#2B8A3E",
+      },
       config: { ...config.android?.config, googleMaps: { apiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY } },
     },
+    web: { ...config.web, bundler: "metro", output: "single" },
     plugins: [
       "expo-router",
       "expo-sqlite",

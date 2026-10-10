@@ -28,6 +28,18 @@ export default function AppLayout() {
       <Stack.Screen name="scan" options={{ title: t(routeKeys.scan), presentation: "fullScreenModal" }} />
       <Stack.Screen name="sync-center" options={{ title: t(routeKeys.syncCenter) }} />
       <Stack.Screen name="settings" options={{ title: t(routeKeys.settings) }} />
+      <Stack.Screen name="notifications" options={{ title: t(routeKeys.notifications) }} />
+      <Stack.Screen name="reports/new" options={{ title: t(routeKeys.reportNew) }} />
+      <Stack.Screen name="reports/[id]" options={{ title: t(routeKeys.reportDetail) }} />
+      <Stack.Screen name="jobs/[id]/index" options={{ title: t(routeKeys.jobDetail) }} />
+      <Stack.Screen name="jobs/[id]/checklist" options={{ title: t(routeKeys.jobChecklist) }} />
+      <Stack.Screen name="jobs/[id]/parts" options={{ title: t(routeKeys.jobParts) }} />
+      <Stack.Screen name="jobs/[id]/complete" options={{ title: t(routeKeys.jobComplete) }} />
+      <Stack.Screen name="rentals/new" options={{ title: t(routeKeys.rentalNew) }} />
+      <Stack.Screen name="rentals/[id]/index" options={{ title: t(routeKeys.rentalDetail) }} />
+      <Stack.Screen name="rentals/[id]/checkout" options={{ title: t(routeKeys.rentalCheckout) }} />
+      <Stack.Screen name="rentals/[id]/checkin" options={{ title: t(routeKeys.rentalCheckin) }} />
+      <Stack.Screen name="fuel/new" options={{ title: t(routeKeys.fuelNew) }} />
     </Stack>
   );
 }

@@ -80,7 +80,8 @@ async function openSession(userId: string): Promise<UserSession> {
   const db = opened.db;
   const transport = createHttpTransport({
     baseUrl: appConfig.apiUrl,
-    fetch: fetch as unknown as FetchLike,
+    // Wrapped so `fetch` is never invoked with `this` bound to the options object (browsers throw "Illegal invocation").
+    fetch: ((input, init) => fetch(input, init)) as FetchLike,
     getAccessToken: () => auth?.accessToken(),
     onUnauthorized: () => auth?.refresh() ?? Promise.resolve(false),
   });
