@@ -69,12 +69,14 @@
     "attentionCount": "{count, plural, =0 {Nothing needs attention} one {# item needs attention} other {# items need attention}}",
     "brand": "AgroRende",
     "closeMenu": "Close menu",
+    "collapseMenu": "Collapse menu",
     "env": {
       "ci": "Test environment (CI)",
       "local": "Local environment",
       "production": "Production",
       "staging": "Staging — test data"
     },
+    "expandMenu": "Expand menu",
     "language": "Language",
     "mainNav": "Main navigation",
     "more": "More",

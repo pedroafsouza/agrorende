@@ -69,12 +69,14 @@
     "attentionCount": "{count, plural, =0 {Nada precisa de atenção} one {# item precisa de atenção} other {# itens precisam de atenção}}",
     "brand": "AgroRende",
     "closeMenu": "Fechar menu",
+    "collapseMenu": "Recolher menu",
     "env": {
       "ci": "Ambiente de testes (CI)",
       "local": "Ambiente local",
       "production": "Produção",
       "staging": "Homologação — dados de teste"
     },
+    "expandMenu": "Expandir menu",
     "language": "Idioma",
     "mainNav": "Navegação principal",
     "more": "Mais",
