@@ -14,9 +14,14 @@ test("CTAs point at the web app and WhatsApp, with e-mail in the footer and on h
   await expect(page.locator('[data-contact="whatsapp"]').first()).toHaveAttribute("href", /^https:\/\/wa\.me\/\d+\?text=/u);
   await expect(page.locator('main [data-contact="email"]')).toHaveCount(0);
   await expect(page.locator('footer a[href^="mailto:"]').first()).toBeVisible();
-  // The hero links to the video only when the video file was present at build time.
-  if (hasVideo) await expect(page.locator('main a[href$="/recursos/#video"]')).toBeVisible();
-  else await expect(page.locator('main a[href$="/recursos/#video"]')).toHaveCount(0);
+  // The hero links to the home demo video only when the video file was present at build time.
+  if (hasVideo) {
+    await expect(page.locator('main a[href="#demo"]')).toBeVisible();
+    await expect(page.locator('#demo video[data-video="demo"]')).toBeAttached();
+  } else {
+    await expect(page.locator('main a[href="#demo"]')).toHaveCount(0);
+    await expect(page.locator("#demo")).toHaveCount(0);
+  }
   await page.goto("/pt-br/ajuda/?lite=0");
   await expect(page.locator('[data-contact="email"]').first()).toHaveAttribute("href", /^mailto:[^?]+@[^?]+\?subject=/u);
 });

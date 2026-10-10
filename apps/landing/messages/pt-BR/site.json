@@ -118,7 +118,11 @@
     "faqTitle": "Perguntas de quem vai contratar",
     "faqMore": "Ver todas as perguntas",
     "finalTitle": "Teste com a sua equipe nesta safra",
-    "finalBody": "Cadastre a empresa em minutos, convide a equipe pelo WhatsApp e use tudo por 30 dias."
+    "finalBody": "Cadastre a empresa em minutos, convide a equipe pelo WhatsApp e use tudo por 30 dias.",
+    "videoTitle": "Veja o AgroRende funcionando",
+    "videoBody": "Do relato no celular, mesmo sem sinal, ao escritório acompanhando tudo e ao custo de cada máquina fechado no fim do mês.",
+    "videoLength": "2 minutos",
+    "videoCaptions": "Narrado em português, com legendas"
   },
   "faq": {
     "q1": "Quanto custa?",

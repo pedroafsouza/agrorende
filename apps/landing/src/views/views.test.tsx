@@ -31,18 +31,38 @@ describe("pricing", () => {
 
 describe("home", () => {
   it("has one primary CTA label, WhatsApp as the only secondary and no e-mail button", () => {
-    const html = renderToStaticMarkup(<HomeView locale="pt-br" showVideoLink />);
+    const html = renderToStaticMarkup(<HomeView locale="pt-br" video={{ video: true, captions: true, poster: true }} />);
     expect(html).toContain("Saiba quanto cada máquina custa e rende");
     expect(html).toContain("Testar grátis por 30 dias");
     expect(html).toContain('data-contact="whatsapp"');
     expect(html).not.toContain('data-contact="email"');
-    expect(html).toContain("/pt-br/recursos/#video");
-    expect(renderToStaticMarkup(<HomeView locale="pt-br" showVideoLink={false} />)).not.toContain('data-cta="video"');
+    expect(html).toContain('href="#demo"');
+    const noVideo = renderToStaticMarkup(<HomeView locale="pt-br" video={{ video: false, captions: false, poster: false }} />);
+    expect(noVideo).not.toContain('data-cta="video"');
+    expect(noVideo).not.toContain('id="demo"');
     for (const id of ["welcome", "report-offline", "flow-loop", "machine-cost", "saved-on-phone"]) {
       expect(html).toContain(`data-animation="${id}"`);
     }
     expect(html).not.toContain("data-placeholder");
     expect(html).not.toMatch(/ERP/u);
+  });
+});
+
+describe("home demo video", () => {
+  it("places the captioned player between the problem and the steps, loading nothing until play", () => {
+    const html = renderToStaticMarkup(<HomeView locale="pt-br" video={{ video: true, captions: true, poster: true }} />);
+    expect(html).toContain("Veja o AgroRende funcionando");
+    expect(html).toContain("Narrado em português, com legendas");
+    expect(html).toContain('preload="none"');
+    expect(html.indexOf('id="problem-title"')).toBeLessThan(html.indexOf('id="demo"'));
+    expect(html.indexOf('id="demo"')).toBeLessThan(html.indexOf('id="steps-title"'));
+  });
+
+  it("hides the captions note when the captions file is missing", () => {
+    const html = renderToStaticMarkup(<HomeView locale="en" video={{ video: true, captions: false, poster: false }} />);
+    expect(html).toContain("See AgroRende at work");
+    expect(html).not.toContain("with captions");
+    expect(html).not.toContain("<track");
   });
 });
 

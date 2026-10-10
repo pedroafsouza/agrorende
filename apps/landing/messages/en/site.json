@@ -118,7 +118,11 @@
     "faqTitle": "Questions buyers ask",
     "faqMore": "See every question",
     "finalTitle": "Try it with your crew this season",
-    "finalBody": "Register the company in minutes, invite the crew by WhatsApp and use everything for 30 days."
+    "finalBody": "Register the company in minutes, invite the crew by WhatsApp and use everything for 30 days.",
+    "videoTitle": "See AgroRende at work",
+    "videoBody": "From the report on the phone, even without signal, to the office following everything and the cost of each machine closed at the end of the month.",
+    "videoLength": "2 minutes",
+    "videoCaptions": "Narrated in Portuguese, with captions"
   },
   "faq": {
     "q1": "How much does it cost?",

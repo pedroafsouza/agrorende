@@ -1,11 +1,12 @@
-import { ArrowRight, Check, ChevronDown, PlayCircle, X } from "lucide-react";
+import { ArrowRight, Captions, Check, ChevronDown, Clock, PlayCircle, X } from "lucide-react";
 
 import { Animation } from "@/components/Animation";
 import { CtaGroup, StoreLinks } from "@/components/CtaGroup";
+import { DemoVideo } from "@/components/DemoVideo";
 import { JsonLd } from "@/components/JsonLd";
 import { container, sectionTitle } from "@/components/ui";
 import { siteConfig } from "@/lib/config";
-import { hasDemoVideo } from "@/lib/demoVideo";
+import { demoVideoAssets, type DemoVideoAssets } from "@/lib/demoVideo";
 import { htmlLang, type SiteLocale } from "@/lib/locales";
 import { pagePath } from "@/lib/routes";
 import { getTranslator } from "@/i18n/messages";
@@ -76,13 +77,14 @@ function homeJsonLd(locale: SiteLocale) {
 
 export function HomeView({
   locale,
-  showVideoLink = hasDemoVideo(),
+  video = demoVideoAssets(),
 }: {
   readonly locale: SiteLocale;
-  /** The hero links to the product video only when the file shipped with this build. */
-  readonly showVideoLink?: boolean;
+  /** The demo section and the hero link only render when the video file shipped with this build. */
+  readonly video?: DemoVideoAssets;
 }) {
   const t = getTranslator(locale);
+  const showVideo = video.video;
   const steps = [
     { n: 1, animation: "report-offline" },
     { n: 2, animation: "flow-loop" },
@@ -99,9 +101,9 @@ export function HomeView({
             </h1>
             <p className="max-w-[60ch] text-lg text-pretty text-fg-muted sm:text-xl">{t("home.heroLead")}</p>
             <CtaGroup locale={locale} />
-            {showVideoLink ? (
+            {showVideo ? (
               <a
-                href={`${pagePath("features", locale)}#video`}
+                href="#demo"
                 className="prose-link inline-flex min-h-12 items-center gap-2 self-start font-semibold"
                 data-cta="video"
               >
@@ -140,6 +142,32 @@ export function HomeView({
           ))}
         </ul>
       </section>
+
+      {showVideo ? (
+        <section id="demo" className="scroll-mt-20 border-t border-border bg-surface py-16 sm:py-20" aria-labelledby="demo-title">
+          <div className={`${container} grid items-center gap-10 lg:grid-cols-[2fr_3fr]`}>
+            <div className="flex flex-col gap-4">
+              <h2 id="demo-title" className={sectionTitle}>
+                {t("home.videoTitle")}
+              </h2>
+              <p className="max-w-[50ch] text-lg text-fg-muted">{t("home.videoBody")}</p>
+              <ul className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-fg-muted">
+                <li className="inline-flex items-center gap-2">
+                  <Clock aria-hidden="true" className="size-5" />
+                  {t("home.videoLength")}
+                </li>
+                {video.captions ? (
+                  <li className="inline-flex items-center gap-2">
+                    <Captions aria-hidden="true" className="size-5" />
+                    {t("home.videoCaptions")}
+                  </li>
+                ) : null}
+              </ul>
+            </div>
+            <DemoVideo locale={locale} assets={video} className="shadow-xl" />
+          </div>
+        </section>
+      ) : null}
 
       <section className="border-y border-border bg-surface py-16 sm:py-20" aria-labelledby="steps-title">
         <div className={container}>

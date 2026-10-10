@@ -1,36 +1,15 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
-
 import type { AnimationId } from "@agrorende/motion/lazy";
 import { Check } from "lucide-react";
 
 import { Animation } from "@/components/Animation";
 import { CtaGroup, StoreLinks } from "@/components/CtaGroup";
+import { DemoVideo } from "@/components/DemoVideo";
 import { card, container, sectionTitle } from "@/components/ui";
+import { demoVideoAssets, type DemoVideoAssets } from "@/lib/demoVideo";
 import { type SiteLocale } from "@/lib/locales";
 import { getTranslator, splitList } from "@/i18n/messages";
 
 import { PageIntro } from "./PageIntro";
-
-/** The product video and its captions are produced separately and dropped into public/video. */
-export const DEMO_VIDEO = {
-  src: "/video/agrorende-demo-pt-BR.mp4",
-  captions: "/video/agrorende-demo-pt-BR.vtt",
-  poster: "/video/agrorende-demo-pt-BR.jpg",
-} as const;
-
-function publicFileExists(publicPath: string): boolean {
-  return existsSync(path.join(process.cwd(), "public", publicPath));
-}
-
-/** Read at build time: the static export only ships a player when the video file is there. */
-export function demoVideoAssets() {
-  return {
-    video: publicFileExists(DEMO_VIDEO.src),
-    captions: publicFileExists(DEMO_VIDEO.captions),
-    poster: publicFileExists(DEMO_VIDEO.poster),
-  };
-}
 
 const JOBS: readonly { key: "job1" | "job2" | "job3"; animation: AnimationId }[] = [
   { key: "job1", animation: "report-offline" },
@@ -45,7 +24,7 @@ export function FeaturesView({
   assets = demoVideoAssets(),
 }: {
   readonly locale: SiteLocale;
-  readonly assets?: ReturnType<typeof demoVideoAssets>;
+  readonly assets?: DemoVideoAssets;
 }) {
   const t = getTranslator(locale);
   return (
@@ -59,24 +38,7 @@ export function FeaturesView({
         {assets.video ? (
           <>
             <p className="mt-4 max-w-[60ch] text-lg text-fg-muted">{t("features.videoBody")}</p>
-            <video
-              className="mt-8 aspect-video w-full rounded-[16px] border border-border bg-graphite-950"
-              controls
-              preload="none"
-              poster={assets.poster ? DEMO_VIDEO.poster : undefined}
-              data-video="demo"
-            >
-              <source src={DEMO_VIDEO.src} type="video/mp4" />
-              {assets.captions ? (
-                <track kind="captions" srcLang="pt-BR" src={DEMO_VIDEO.captions} label={t("features.captions")} default />
-              ) : null}
-              <p>
-                {t("features.videoUnsupported")}{" "}
-                <a className="prose-link" href={DEMO_VIDEO.src}>
-                  {t("features.videoDownload")}
-                </a>
-              </p>
-            </video>
+            <DemoVideo locale={locale} assets={assets} className="mt-8" />
           </>
         ) : (
           <div className="mt-8 grid items-center gap-8 md:grid-cols-[2fr_3fr]" data-video="soon">
