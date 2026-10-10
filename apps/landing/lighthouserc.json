@@ -12,7 +12,7 @@
         "http://localhost:3192/pt-br/ajuda/erros/first-sync-large/",
         "http://localhost:3192/pt-br/privacidade/"
       ],
-      "numberOfRuns": 1,
+      "numberOfRuns": 3,
       "settings": {
         "chromeFlags": "--headless=new --no-sandbox"
       }

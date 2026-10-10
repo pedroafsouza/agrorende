@@ -79,7 +79,7 @@ Everything is read at build time by `src/lib/config.ts`; changing a value means 
 | `pnpm --filter landing serve` | Serves `out/` on port 3301 with `scripts/serve.ts`, a small mirror of the Caddy site block: same redirects, 404 mapping, cache headers, security headers, gzip and case-sensitive paths. `--port` overrides the port. |
 | `pnpm check:only site` | Lint, typecheck and unit tests (Vitest, 57 tests). |
 | `pnpm --filter landing e2e` | Playwright against `out/` on port 3191 (`SITE_E2E_PORT` overrides it): smoke and axe on every page in both locales, desktop and Pixel 7, the link checker, SEO metadata, the EC-SITE journeys, JavaScript disabled and the same-origin, no-console-error and no-cookie assertions. |
-| `pnpm --filter landing lhci` | Lighthouse CI (mobile, simulated throttling) on port 3192 with the budgets in `lighthouserc.json`; the summary is written to `.data/lhci-site/`. |
+| `pnpm --filter landing lhci` | Lighthouse CI (mobile, simulated throttling, three runs per page so one slow run does not fail the budget) on port 3192 with the budgets in `lighthouserc.json`; the summary is written to `.data/lhci-site/`. |
 
 The canonical URLs are baked in at build time, so the end-to-end SEO test expects the build to use `SITE_URL=http://localhost:3191`, as CI does.
 
