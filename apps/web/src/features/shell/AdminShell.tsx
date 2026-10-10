@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, PanelLeftClose, PanelLeftOpen, Search, X } from "lucide-react";
+import { ChevronDown, Menu, PanelLeftClose, PanelLeftOpen, Search, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,7 +11,7 @@ import type { Role } from "@agrorende/contracts/enums";
 import { BrandMark } from "@/components/brand/BrandLogo";
 import { openCommandPalette } from "@/features/command-palette";
 import { RealtimeStatus } from "@/components/recovery/RealtimeStatus";
-import { isActive, visibleNav, type NavItem } from "@/components/shell/nav";
+import { isActive, navSections, visibleNav, type NavItem, type NavSection } from "@/components/shell/nav";
 import { cn } from "@/lib/cn";
 
 import { LanguageSwitch } from "./LanguageSwitch";
@@ -21,6 +21,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { useMe } from "./useMe";
 import { UserMenu } from "./UserMenu";
 import { useRealtime } from "./useRealtime";
+import { useClosedNavGroups } from "./useClosedNavGroups";
 import { useSidebarCollapsed } from "./useSidebarCollapsed";
 
 function NavLink({ item, pathname, attention, collapsed, nested = false, onNavigate }: { readonly item: NavItem; readonly pathname: string; readonly attention: number; readonly collapsed: boolean; readonly nested?: boolean; readonly onNavigate: () => void }) {
@@ -69,6 +70,47 @@ function NavLink({ item, pathname, attention, collapsed, nested = false, onNavig
   );
 }
 
+function containsActive(item: NavItem, pathname: string): boolean {
+  return isActive(pathname, item.href) || (item.children ?? []).some((child) => containsActive(child, pathname));
+}
+
+/**
+ * One sidebar category. The heading folds it; a folded category holding the current page shows a
+ * dot. On the icon rail the heading becomes a thin divider and every icon stays visible.
+ */
+function NavCategory({ section, first, pathname, attention, collapsed, folded, onToggle, onNavigate }: { readonly section: NavSection; readonly first: boolean; readonly pathname: string; readonly attention: number; readonly collapsed: boolean; readonly folded: boolean; readonly onToggle: () => void; readonly onNavigate: () => void }) {
+  const t = useTranslations("admin");
+  const label = t(`navGroups.${section.group}`);
+  const current = section.items.some((item) => containsActive(item, pathname));
+  const open = !folded;
+  const listId = `nav-group-${section.group}`;
+  return (
+    <li className={cn(!first && "mt-1")} data-nav-group={section.group}>
+      {collapsed && !first ? <hr aria-hidden="true" className="mx-2 mb-2 hidden border-[var(--ar-border)] lg:block" /> : null}
+      <button
+        aria-controls={listId}
+        aria-expanded={open}
+        aria-label={open ? t("shell.hideGroup", { group: label }) : t("shell.showGroup", { group: label })}
+        className={cn(
+          "flex min-h-12 w-full items-center gap-2 rounded-controls px-3 text-left text-xs font-semibold text-[var(--ar-text-muted)] hover:bg-[var(--ar-surface-muted)] hover:text-[var(--ar-text)]",
+          collapsed && "lg:hidden",
+        )}
+        onClick={onToggle}
+        type="button"
+      >
+        <span className="flex-1">{label}</span>
+        {!open && current ? <span aria-hidden="true" className="size-2 rounded-full bg-[var(--ar-primary)]" /> : null}
+        <ChevronDown aria-hidden="true" className={cn("size-4 transition-transform motion-reduce:transition-none", !open && "-rotate-90")} />
+      </button>
+      <ul aria-label={label} className={cn("flex flex-col gap-0.5", !open && "hidden", !open && collapsed && "lg:flex")} id={listId}>
+        {section.items.map((item) => (
+          <NavLink attention={attention} collapsed={collapsed} item={item} key={item.href} onNavigate={onNavigate} pathname={pathname} />
+        ))}
+      </ul>
+    </li>
+  );
+}
+
 export interface AdminShellProps {
   readonly role: Role | null;
   readonly ribbon: ReactNode;
@@ -87,9 +129,8 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
   const office = effectiveRole === "ADMIN" || effectiveRole === "MANAGER";
   const realtime = useRealtime(office);
   const attention = useAttentionCount(office);
-  const items = visibleNav(effectiveRole);
-  const primary = items.filter((i) => i.p1 !== true);
-  const more = items.filter((i) => i.p1 === true);
+  const sections = navSections(visibleNav(effectiveRole));
+  const [closedGroups, toggleGroup] = useClosedNavGroups();
   const close = () => setOpen(false);
 
   useEffect(() => {
@@ -130,22 +171,21 @@ export function AdminShell({ role, ribbon, banner, children }: AdminShellProps) 
             </button>
           </div>
           <nav aria-label={t("shell.mainNav")} className="flex-1">
-            <ul className="flex flex-col gap-0.5">
-              {primary.map((item) => (
-                <NavLink attention={attention} collapsed={collapsed} item={item} key={item.href} onNavigate={close} pathname={pathname} />
+            <ul>
+              {sections.map((section, index) => (
+                <NavCategory
+                  attention={attention}
+                  collapsed={collapsed}
+                  first={index === 0}
+                  folded={closedGroups.has(section.group)}
+                  key={section.group}
+                  onNavigate={close}
+                  onToggle={() => toggleGroup(section.group)}
+                  pathname={pathname}
+                  section={section}
+                />
               ))}
             </ul>
-            {more.length === 0 ? null : (
-              <>
-                <p className={cn("mt-4 px-3 text-xs font-semibold uppercase tracking-wide text-[var(--ar-text-muted)]", collapsed && "lg:sr-only")}>{t("shell.more")}</p>
-                {collapsed ? <hr aria-hidden="true" className="mx-2 mt-3 hidden border-[var(--ar-border)] lg:block" /> : null}
-                <ul className="mt-1 flex flex-col gap-0.5">
-                  {more.map((item) => (
-                    <NavLink attention={attention} collapsed={collapsed} item={item} key={item.href} onNavigate={close} pathname={pathname} />
-                  ))}
-                </ul>
-              </>
-            )}
           </nav>
         </aside>
         {open ? <button aria-label={t("shell.closeMenu")} className="fixed inset-0 z-30 bg-black/40 lg:hidden" onClick={close} type="button" /> : null}

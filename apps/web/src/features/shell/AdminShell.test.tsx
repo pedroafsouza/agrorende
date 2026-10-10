@@ -7,6 +7,7 @@ import { OPEN_COMMAND_PALETTE_EVENT } from "@/features/command-palette";
 import { renderWithProviders } from "@/features/ops/testing";
 
 import { AdminShell } from "./AdminShell";
+import { NAV_GROUPS_CLOSED_KEY } from "./useClosedNavGroups";
 import { SIDEBAR_COLLAPSED_KEY } from "./useSidebarCollapsed";
 
 vi.mock("next/navigation", () => ({
@@ -82,5 +83,44 @@ describe("AdminShell sidebar", () => {
 
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY)).toBe("0");
+  });
+});
+
+describe("AdminShell categories", () => {
+  function renderShell() {
+    return renderWithProviders(
+      <AdminShell ribbon={null} role="MANAGER">
+        <p>content</p>
+      </AdminShell>,
+    );
+  }
+
+  it("groups the pages into categories and leaves account and notifications to the top bar", () => {
+    const { container } = renderShell();
+    const groups = Array.from(container.querySelectorAll("[data-nav-group]")).map((el) => el.getAttribute("data-nav-group"));
+    expect(groups).toEqual(["overview", "service", "fleet", "customers", "finance", "admin"]);
+    const fleet = screen.getByRole("list", { name: "Fleet" });
+    expect(Array.from(fleet.querySelectorAll(":scope > li > a")).map((a) => a.textContent)).toEqual(["Assets", "Fuel", "Parts", "Stock"]);
+    const nav = screen.getByRole("navigation", { name: "Main navigation" });
+    expect(nav.querySelector('a[href="/account"]')).toBeNull();
+    expect(nav.querySelector('a[href="/notifications"]')).toBeNull();
+    expect(nav.querySelector('a[href="/seasons"]')).toBeNull();
+  });
+
+  it("folds a category and remembers it", async () => {
+    renderShell();
+    const heading = screen.getByRole("button", { name: "Hide Fleet" });
+    expect(heading.getAttribute("aria-expanded")).toBe("true");
+    await userEvent.click(heading);
+    expect(heading.getAttribute("aria-expanded")).toBe("false");
+    expect(heading.getAttribute("aria-label")).toBe("Show Fleet");
+    expect(window.localStorage.getItem(NAV_GROUPS_CLOSED_KEY)).toBe('["fleet"]');
+  });
+
+  it("starts with the remembered categories folded", async () => {
+    window.localStorage.setItem(NAV_GROUPS_CLOSED_KEY, '["finance","bogus"]');
+    renderShell();
+    expect((await screen.findByRole("button", { name: "Show Finance" })).getAttribute("aria-expanded")).toBe("false");
+    expect(screen.getByRole("button", { name: "Hide Service" }).getAttribute("aria-expanded")).toBe("true");
   });
 });

@@ -25,6 +25,14 @@
     "templates": "Checklists",
     "workOrders": "Work orders"
   },
+  "navGroups": {
+    "overview": "Overview",
+    "service": "Service",
+    "fleet": "Fleet",
+    "customers": "Customers and rentals",
+    "finance": "Finance",
+    "admin": "Administration"
+  },
   "notifications": {
     "emptyBody": "Updates about work orders, rentals and reports appear here.",
     "emptyTitle": "No notifications",
@@ -77,13 +85,14 @@
       "staging": "Staging — test data"
     },
     "expandMenu": "Expand menu",
+    "hideGroup": "Hide {group}",
     "language": "Language",
     "mainNav": "Main navigation",
-    "more": "More",
     "notificationsLabel": "{count, plural, =0 {Notifications} one {Notifications, # unread} other {Notifications, # unread}}",
     "openMenu": "Open menu",
     "search": "Search",
     "searchSoon": "Search or run a command (Ctrl+K)",
+    "showGroup": "Show {group}",
     "sidebar": "Sidebar",
     "signOut": "Sign out",
     "skipToContent": "Skip to content",
