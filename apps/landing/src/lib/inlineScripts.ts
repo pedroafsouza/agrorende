@@ -5,9 +5,12 @@ import { codeToSlug, HELP_ERRORS_BASE, PAGE_KEYS, PAGE_SLUGS } from "./routes";
 
 /**
  * Small inline scripts for progressive enhancement. The site is a static export, so these run
- * without hydration and stay readable without JavaScript (EC-SITE-05). None of them stores
- * anything, sets cookies or makes network requests.
+ * without hydration and stay readable without JavaScript (EC-SITE-05). They never set cookies or
+ * make network requests; the only thing stored is the visitor's theme choice in localStorage.
  */
+
+/** localStorage key holding `"dark"` when the visitor picked the dark theme. The default is light. */
+export const THEME_KEY = "agrorende.landing.theme";
 
 /** Lite mode after this long without the `load` event (EC-SITE-06). */
 export const SLOW_LOAD_MS = 4000;
@@ -18,6 +21,7 @@ export const SLOW_LOAD_MS = 4000;
  */
 export function headScript(): string {
   return `(function(){var d=document.documentElement;d.setAttribute("data-js","on");
+try{if(localStorage.getItem("${THEME_KEY}")==="dark")d.setAttribute("data-theme","dark")}catch(e){}
 function lite(){if(d.getAttribute("data-lite")!=="off")d.setAttribute("data-lite","on")}
 try{var q=location.search;var c=navigator.connection;
 if(/[?&]lite=1(&|$)/.test(q)||(c&&(c.saveData||/(^|-)2g$/.test(c.effectiveType||""))))lite();
@@ -28,12 +32,19 @@ document.addEventListener("error",function(e){var el=e.target;if(el&&el.tagName=
 }
 
 /**
- * Runs at the end of <body> on every page: the "load images" retry of lite mode and the
- * unsupported-locale banner (EC-SITE-01), which is revealed when `?unsupported=` is present.
+ * Runs at the end of <body> on every page: the light/dark theme toggle, the "load images" retry of
+ * lite mode and the unsupported-locale banner (EC-SITE-01), revealed when `?unsupported=` is present.
  */
 export function bodyScript(): string {
   return `(function(){var d=document.documentElement;
-document.addEventListener("click",function(e){var t=e.target;var b=t&&t.closest?t.closest("[data-lite-retry]"):null;
+function theme(){var dark=d.getAttribute("data-theme")==="dark";var b=document.querySelectorAll("[data-theme-toggle]");
+for(var i=0;i<b.length;i++)b[i].setAttribute("aria-pressed",dark?"true":"false");
+var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content",dark?"#111315":"#ffffff")}
+theme();
+document.addEventListener("click",function(e){var t=e.target;
+var g=t&&t.closest?t.closest("[data-theme-toggle]"):null;if(g){if(e.defaultPrevented)return;e.preventDefault();var dark=d.getAttribute("data-theme")!=="dark";
+if(dark)d.setAttribute("data-theme","dark");else d.removeAttribute("data-theme");
+try{localStorage.setItem("${THEME_KEY}",dark?"dark":"light")}catch(x){}theme();return}var b=t&&t.closest?t.closest("[data-lite-retry]"):null;
 if(b){d.setAttribute("data-lite","off");var imgs=document.querySelectorAll("img[data-failed]");
 for(var i=0;i<imgs.length;i++){var img=imgs[i];img.removeAttribute("data-failed");var s=img.getAttribute("src");if(s){img.setAttribute("src","");img.setAttribute("src",s)}}}
 var x=t&&t.closest?t.closest("[data-dismiss]"):null;if(x){var p=document.getElementById(x.getAttribute("data-dismiss"));if(p)p.hidden=true}});

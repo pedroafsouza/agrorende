@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { bodyScript, headScript, recoveryScript, SLOW_LOAD_MS } from "./inlineScripts";
+import { bodyScript, headScript, recoveryScript, SLOW_LOAD_MS, THEME_KEY } from "./inlineScripts";
 
 const replace = vi.fn();
 
@@ -32,6 +32,8 @@ beforeEach(() => {
   } as Location);
   document.documentElement.removeAttribute("data-lite");
   document.documentElement.removeAttribute("data-js");
+  document.documentElement.removeAttribute("data-theme");
+  window.localStorage.clear();
   document.body.innerHTML = "";
 });
 
@@ -120,5 +122,35 @@ describe("recoveryScript", () => {
     at("/pt-br/ajuda/erros/codigo-desconhecido/?code=NAO_EXISTE");
     run(recoveryScript());
     expect(replace).not.toHaveBeenCalled();
+  });
+});
+
+describe("theme", () => {
+  it("is light by default, even when the system prefers dark", () => {
+    vi.spyOn(window, "matchMedia").mockReturnValue({ matches: true } as MediaQueryList);
+    run(headScript());
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+  });
+
+  it("restores a remembered dark choice before first paint", () => {
+    window.localStorage.setItem(THEME_KEY, "dark");
+    run(headScript());
+    expect(document.documentElement.dataset.theme).toBe("dark");
+  });
+
+  it("toggles dark mode, updates every toggle and remembers the choice", () => {
+    document.head.innerHTML = '<meta name="theme-color" content="#ffffff">';
+    document.body.innerHTML = '<button data-theme-toggle aria-pressed="false">a</button><button data-theme-toggle aria-pressed="false">b</button>';
+    run(bodyScript());
+    const [first, second] = Array.from(document.querySelectorAll("button"));
+    first?.click();
+    expect(document.documentElement.dataset.theme).toBe("dark");
+    expect(second?.getAttribute("aria-pressed")).toBe("true");
+    expect(window.localStorage.getItem(THEME_KEY)).toBe("dark");
+    expect(document.querySelector("meta")?.getAttribute("content")).toBe("#111315");
+    second?.click();
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+    expect(first?.getAttribute("aria-pressed")).toBe("false");
+    expect(window.localStorage.getItem(THEME_KEY)).toBe("light");
   });
 });

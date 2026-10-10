@@ -1,4 +1,4 @@
-import { Languages, LogIn, Menu } from "lucide-react";
+import { Languages, LogIn, Menu, Moon } from "lucide-react";
 
 import { otherLocale, htmlLang, type SiteLocale } from "@/lib/locales";
 import { pagePath, pathFor, type SiteRoute } from "@/lib/routes";
@@ -30,6 +30,17 @@ export function LanguageSwitch({ locale, route }: { readonly locale: SiteLocale;
   );
 }
 
+/** Light/dark toggle. Light is the default; the body script wires the click and remembers the choice. */
+export function ThemeToggle({ locale }: { readonly locale: SiteLocale }) {
+  const t = getTranslator(locale);
+  return (
+    <button type="button" aria-pressed="false" suppressHydrationWarning title={t("nav.themeLabel")} className={`${navLink} cursor-pointer`} data-theme-toggle="true">
+      <Moon aria-hidden="true" className="mr-1.5 size-5" />
+      {t("nav.themeDark")}
+    </button>
+  );
+}
+
 export function Header({ locale, route }: { readonly locale: SiteLocale; readonly route: SiteRoute }) {
   const t = getTranslator(locale);
   const current = route.kind === "page" ? route.key : "help";
@@ -56,6 +67,7 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
           {links}
         </nav>
         <div className="hidden items-center gap-1 lg:flex">
+          <ThemeToggle locale={locale} />
           <LanguageSwitch locale={locale} route={route} />
           <a href={signInHref()} className={navLink} data-cta="signin">
             <LogIn aria-hidden="true" className="mr-1.5 size-5" />
@@ -75,6 +87,7 @@ export function Header({ locale, route }: { readonly locale: SiteLocale; readonl
               {links}
             </nav>
             <hr className="my-1 border-border" />
+            <ThemeToggle locale={locale} />
             <LanguageSwitch locale={locale} route={route} />
             <a href={signInHref()} className={navLink}>
               <LogIn aria-hidden="true" className="mr-1.5 size-5" />

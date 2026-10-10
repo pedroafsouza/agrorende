@@ -44,29 +44,29 @@
   --info: var(--info-light);
   --focus: var(--mata-800);
 
-  color-scheme: light dark;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg: var(--graphite-950);
-    --surface: var(--graphite-900);
-    --surface-strong: var(--graphite-900);
-    --fg: var(--graphite-50);
-    --fg-muted: var(--graphite-200);
-    --border: var(--graphite-700);
-    --action: var(--mata-400);
-    --action-hover: var(--mata-400);
-    --action-fg: var(--graphite-950);
-    --link: var(--mata-400);
-    --brand: var(--mata-400);
-    --accent-text: var(--terra-600);
-    --success: var(--mata-400);
-    --warning: var(--warning-fill);
-    --danger: var(--danger-dark);
-    --info: var(--info-dark);
-    --focus: var(--mata-400);
-  }
+/* White by default; dark only when the visitor picks it (data-theme is set by headScript). */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: var(--graphite-950);
+  --surface: var(--graphite-900);
+  --surface-strong: var(--graphite-900);
+  --fg: var(--graphite-50);
+  --fg-muted: var(--graphite-200);
+  --border: var(--graphite-700);
+  --action: var(--mata-400);
+  --action-hover: var(--mata-400);
+  --action-fg: var(--graphite-950);
+  --link: var(--mata-400);
+  --brand: var(--mata-400);
+  --accent-text: var(--terra-600);
+  --success: var(--mata-400);
+  --warning: var(--warning-fill);
+  --danger: var(--danger-dark);
+  --info: var(--info-dark);
+  --focus: var(--mata-400);
 }
 
 @theme inline {
@@ -149,6 +149,24 @@
     margin-bottom: 1.25rem;
     background: var(--accent);
     border-radius: 2px;
+  }
+
+  /* The theme toggle needs the body script, and the logo has a light and a dark variant. */
+  html:not([data-js="on"]) [data-theme-toggle] {
+    display: none;
+  }
+
+  [data-theme-toggle][aria-pressed="true"] {
+    background: var(--surface-strong);
+  }
+
+  .logo-dark,
+  html[data-theme="dark"] .logo-light {
+    display: none;
+  }
+
+  html[data-theme="dark"] .logo-dark {
+    display: block;
   }
 
   details.menu > summary {

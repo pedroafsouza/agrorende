@@ -9,7 +9,8 @@ interface LogoProps {
 export function Logo({ label, href }: LogoProps) {
   return (
     <a href={href} aria-label={label} className="inline-flex min-h-12 items-center gap-2.5 no-underline">
-      <img src="/brand/agrorende-logo.svg" alt="" width={185} height={40} className="h-10 w-auto" />
+      <img src="/brand/agrorende-logo.svg" alt="" width={185} height={40} className="logo-light h-10 w-auto" />
+      <img src="/brand/agrorende-logo-dark.svg" alt="" width={185} height={40} className="logo-dark h-10 w-auto" />
     </a>
   );
 }

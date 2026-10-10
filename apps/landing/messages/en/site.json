@@ -59,7 +59,9 @@
     "homeLink": "AgroRende, home page",
     "language": "Language",
     "switchTo": "Português",
-    "switchToLabel": "Ler esta página em português"
+    "switchToLabel": "Ler esta página em português",
+    "themeDark": "Dark mode",
+    "themeLabel": "Use dark mode"
   },
   "cta": {
     "primary": "Start free — 30 days",

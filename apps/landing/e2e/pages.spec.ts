@@ -21,10 +21,15 @@ for (const [locale, paths] of Object.entries(MAIN_PAGES)) {
   }
 }
 
-test("dark mode keeps the pages accessible", async ({ page }) => {
+test("pages are white by default and the dark theme stays accessible", async ({ page }) => {
   await page.emulateMedia({ colorScheme: "dark" });
+  await page.goto("/pt-br/?lite=0");
+  await expect(page.locator("html")).not.toHaveAttribute("data-theme", "dark");
+  await page.evaluate(() => localStorage.setItem("agrorende.landing.theme", "dark"));
   for (const path of ["/pt-br/", "/en/pricing/", "/pt-br/ajuda/erros/first-sync-large/"]) {
     await page.goto(`${path}?lite=0`);
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator("[data-theme-toggle]").first()).toHaveAttribute("aria-pressed", "true");
     await expectNoAxeViolations(page);
   }
 });

@@ -15,7 +15,7 @@ export function SiteDocument({ locale, children }: { readonly locale: SiteLocale
   return (
     <html lang={htmlLang(locale)} className={`${geistSans.variable} ${geistMono.variable}`} suppressHydrationWarning>
       <head>
-        <meta name="theme-color" content="#111315" />
+        <meta name="theme-color" content="#ffffff" />
         <script dangerouslySetInnerHTML={{ __html: headScript() }} />
       </head>
       <body className="flex min-h-dvh flex-col bg-bg font-sans text-fg antialiased">

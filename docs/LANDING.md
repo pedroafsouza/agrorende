@@ -6,7 +6,7 @@ The public landing site lives in `apps/landing` (package `landing`; it was calle
 
 - **Static export.** `next.config.ts` sets `output: "export"`. `pnpm --filter landing build` runs `next build --webpack` and then `scripts/postbuild.ts`, and the result in `apps/landing/out/` is plain HTML, CSS, JavaScript, fonts and images. There are no API routes, no middleware, no server actions, no cookies, no analytics and no third-party requests. Playwright fails the build in CI if any page makes a cross-origin request, logs a console error or sets a cookie.
 - **Two locales, prefixed paths.** Portuguese lives under `/pt-br/` and English under `/en/`. The route table in `src/lib/routes.ts` is the single source of every path, and the language switch in the header maps each page to its counterpart.
-- **Campo claro.** The visual direction is ARCHITECTURE §3.7: the one palette from `@agrorende/design-tokens`, 48 px minimum touch targets, outdoor contrast in light and dark mode, and an icon together with text on every action. Where the `frontend-design` skill suggested something else, §3.7 won.
+- **Campo claro.** The visual direction is ARCHITECTURE §3.7: the one palette from `@agrorende/design-tokens`, 48 px minimum touch targets, outdoor contrast in light and dark mode, and an icon together with text on every action. The pages are white by default whatever the operating system prefers; the "Dark mode" button in the header switches to the dark theme, and that choice is the only thing the site stores (`agrorende.landing.theme` in localStorage, never a cookie). Where the `frontend-design` skill suggested something else, §3.7 won.
 
 ### 1.1 Pages
 
