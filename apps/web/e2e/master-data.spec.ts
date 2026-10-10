@@ -27,7 +27,7 @@ test.describe("master data", () => {
     const modal = dialog(page, "QR label");
     await expect(modal).toBeVisible();
     await expect(modal.getByTestId("qr-label")).toContainText(code);
-    const download = page.waitForEvent("download");
+    const download = page.waitForEvent("download", { timeout: 60_000 });
     await modal.getByRole("button", { name: "Download PNG" }).click();
     const file = await download;
     expect(file.suggestedFilename()).toMatch(/\.png$/u);

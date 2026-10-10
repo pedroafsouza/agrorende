@@ -48,4 +48,9 @@ test("warms the dev server routes used by the suite", async ({ page }) => {
     const visit = await page.goto(path, { timeout: 300_000 });
     expect(visit?.status(), path).toBeLessThan(500);
   }
+  // API routes that render files (QR PNG, QR sheet PDF) compile on first hit too; a 4xx is enough to compile them.
+  const png = await page.request.get(`/api/v1/assets/${anyId}/qr.png`, { timeout: 300_000 });
+  expect(png.status()).toBeLessThan(500);
+  const sheet = await page.request.post("/api/v1/assets/qr-sheet", { data: { assetIds: [] }, timeout: 300_000 });
+  expect(sheet.status()).toBeLessThan(500);
 });

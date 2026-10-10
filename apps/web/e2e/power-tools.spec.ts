@@ -91,7 +91,7 @@ test.describe("power tools", () => {
     const modal = dialog(page, "2 QR labels");
     await expect(modal).toBeVisible();
     await expect(modal.getByTestId("qr-label")).toHaveCount(2);
-    const download = page.waitForEvent("download");
+    const download = page.waitForEvent("download", { timeout: 60_000 });
     await modal.getByRole("button", { name: "Download PDF" }).click();
     const file = await download;
     expect(file.suggestedFilename()).toBe("agrorende-qr.pdf");

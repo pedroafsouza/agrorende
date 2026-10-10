@@ -38,7 +38,7 @@ test.describe("work orders", () => {
     await signIn(page, SEED.manager, `/work-orders/${String(wo.id)}`);
     await expect(page.getByRole("main").getByText("WO-000012", { exact: true })).toBeVisible();
 
-    const download = page.waitForEvent("download");
+    const download = page.waitForEvent("download", { timeout: 60_000 });
     await page.getByRole("link", { name: "PDF report" }).click();
     const file = await download;
     expect(file.suggestedFilename()).toBe("WO-000012.pdf");
