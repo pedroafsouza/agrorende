@@ -230,6 +230,9 @@ write("app-icon.svg", svg((64, 64), f'<rect width="64" height="64" fill="{MATA6}
 SAFE = 66 / 108 * 64 * 0.94  # safe-circle diameter in master units, with a 6% margin
 GLYPH_RADIUS = math.hypot(32 - (MASTER.outer - MASTER.round / 2), GLYPH_BOX[1] - GLYPH_CY)  # the feet are farthest out
 write("adaptive-foreground.svg", svg((64, 64), scaled(glyph(MASTER), SAFE / 2 / GLYPH_RADIUS, cy=GLYPH_CY), 1024, 1024, label=False))
+# Android 13 themed icon: the system tints this layer and only reads its alpha, so it is the
+# one-colour glyph (core as a hole) at exactly the foreground's size and position.
+write("adaptive-monochrome.svg", svg((64, 64), scaled(glyph_mono(MASTER, "#000"), SAFE / 2 / GLYPH_RADIUS, cy=GLYPH_CY), 1024, 1024, label=False))
 write("splash-icon.svg", svg((64, 64), tile() + glyph(MASTER), 1024, 1024, label=False))
 
 # ---------------------------------------------------------------------------

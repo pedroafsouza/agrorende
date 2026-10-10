@@ -20,20 +20,6 @@ async function png(svg: string, size: number, out: string, height = size): Promi
   return buffer;
 }
 
-/** Renders a lockup at the given height and pads it on the right to the given width, so it stays left-aligned. */
-async function lockupPng(svg: string, width: number, height: number, out: string): Promise<Buffer> {
-  const rendered = await sharp(source(svg), { density: 600 }).resize({ height }).png().toBuffer();
-  const { width: drawn = width } = await sharp(rendered).metadata();
-  const buffer = await sharp(rendered)
-    .extend({ right: Math.max(0, width - drawn), background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .resize(width, height, { fit: "cover", position: "left" })
-    .png()
-    .toBuffer();
-  mkdirSync(dirname(out), { recursive: true });
-  writeFileSync(out, buffer);
-  return buffer;
-}
-
 /**
  * An ICO file whose entries are PNG images, which every current browser accepts. Entries up
  * to 32 px use the pixel-hinted favicon drawing; larger entries use the master mark.
@@ -94,7 +80,9 @@ await ico([16, 32, 48], join(web, "favicon.ico"));
 await png("app-icon.svg", 1024, join(mobile, "icon.png"));
 await png("adaptive-foreground.svg", 1024, join(mobile, "adaptive-icon.png"));
 await png("splash-icon.svg", 1024, join(mobile, "splash-icon.png"));
-await lockupPng("agrorende-logo.svg", 888, 192, join(mobile, "logo.png"));
-await lockupPng("agrorende-logo-dark.svg", 888, 192, join(mobile, "logo-dark.png"));
+await png("adaptive-monochrome.svg", 1024, join(mobile, "adaptive-icon-monochrome.png"));
+// Lockups keep the 287:64 ratio of the SVG at a 192 px height (LoginScreen shows them at 179 x 40).
+await png("agrorende-logo.svg", 861, join(mobile, "logo.png"), 192);
+await png("agrorende-logo-dark.svg", 861, join(mobile, "logo-dark.png"), 192);
 
 console.log("brand assets written");

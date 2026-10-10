@@ -5,11 +5,12 @@ Wave: post-W5 polish · Agent finished: 2026-10-10 13:36
 
 ## Done
 - Concept exploration, scoring, construction, clear space, minimum sizes, colour variants and do/don't rules for the new "Cabeceira" mark (`docs/brand/LOGO.md`). The mark is a capital A made of two converging furrows, with the headland row as crossbar and a live-report node (white ring, Terra core) on it, replacing the gear and leaf.
-- Deterministic generator rewritten (`packages/design-tokens/brand/generate.py`). Pure geometry on a 64-unit grid, a separately hinted 16-unit favicon drawing, and the wordmark outlined from Geist SemiBold with the font's own kerning. Output is byte-identical between runs. It writes `agrorende-mark.svg`, `agrorende-mark-mono.svg`, `agrorende-mark-reversed.svg`, `agrorende-favicon.svg`, `agrorende-logo.svg`, `agrorende-logo-dark.svg`, `app-icon.svg`, `adaptive-foreground.svg` and `splash-icon.svg`, and regenerates `apps/web/src/components/brand/BrandLogo.tsx` with the same exports and props.
-- Rasteriser updated (`apps/landing/scripts/brand.ts`): the favicon drawing is used for `icon.svg` and the 16 and 32 px `.ico` entries, and the lockup PNGs keep their 888 × 192 canvas with the logo left-aligned. All assets were regenerated with `pnpm --filter landing brand`:
+- Deterministic generator rewritten (`packages/design-tokens/brand/generate.py`). Pure geometry on a 64-unit grid, a separately hinted 16-unit favicon drawing, and the wordmark outlined from Geist SemiBold with the font's own kerning. Output is byte-identical between runs. It writes `agrorende-mark.svg`, `agrorende-mark-mono.svg`, `agrorende-mark-reversed.svg`, `agrorende-favicon.svg`, `agrorende-logo.svg`, `agrorende-logo-dark.svg`, `app-icon.svg`, `adaptive-foreground.svg`, `adaptive-monochrome.svg` and `splash-icon.svg`, and regenerates `apps/web/src/components/brand/BrandLogo.tsx` with the same exports and props.
+- Rasteriser updated (`apps/landing/scripts/brand.ts`): the favicon drawing is used for `icon.svg` and the 16 and 32 px `.ico` entries, and the mobile lockup PNGs are rendered at the lockup's own ratio (861 × 192, shown at 179 × 40 by `LoginScreen`). All assets were regenerated with `pnpm --filter landing brand`:
   - `apps/web/src/app/{icon.svg,favicon.ico,apple-icon.png}`
   - `apps/landing/public/{icon.svg,favicon.ico,icon-192.png,icon-512.png,apple-touch-icon.png,brand/*}`
-  - `apps/mobile/assets/images/{icon,adaptive-icon,splash-icon,logo,logo-dark}.png`
+  - `apps/mobile/assets/images/{icon,adaptive-icon,adaptive-icon-monochrome,splash-icon,logo,logo-dark}.png`
+- Mobile: `LoginScreen` logo width 185 → 179 (`apps/mobile/src/auth/ui/LoginScreen.tsx`); Android 13 themed icon wired with `android.adaptiveIcon.monochromeImage` (`apps/mobile/app.config.ts`, only that key changed).
 - `apps/landing/src/components/Logo.tsx`: the image width now matches the new lockup ratio (179 × 40). Props are unchanged.
 - Visual review in `.data/reviews/brand/`:
   - `sheet.png` is the contact sheet. It shows the mark at 16 to 192 px on white and on #0f1a14; the favicon drawing against the master; mono and reversed variants; circle, squircle and safe-zone masks; and both lockups.
@@ -18,6 +19,7 @@ Wave: post-W5 polish · Agent finished: 2026-10-10 13:36
   - Landing header screenshots, light and dark, at 1280 and 390 px.
 
 ## Tests
+- `pnpm check:only mobile` → failed on other agents' uncommitted `apps/mobile/src/ui/Lottie.web.tsx` only (lint `4:52 'StyleProp' is defined but never used`, `4:68 'ViewStyle' is defined but never used`; tsc `src/ui/Lottie.web.tsx(76,13): error TS2322`). `pnpm --filter mobile test` → 37 suites, 199 tests passed; ESLint on `app.config.ts` and `src/auth` is clean.
 - `pnpm check:only landing` → passed (typecheck, lint, tests, i18n).
 - `pnpm check:only web` → failed. The failures are all in other agents' uncommitted work; none touch brand files:
   - Lint: `apps/web/src/features/notifications/flyout/NotificationsFlyout.test.tsx 25:46 error import() type annotations are forbidden`.
@@ -34,9 +36,7 @@ Wave: post-W5 polish · Agent finished: 2026-10-10 13:36
 - The generator needs `fonttools` and `brotli` only to outline the wordmark. They are installed in a local virtual environment at `.data/brandenv`; no workspace dependency was added.
 
 ## Gaps
-- Mobile `LoginScreen` still styles the logo at 185 × 40. The PNG is padded on the right to the old 888 × 192 canvas, so it renders correctly, but the image box has about 6 px of empty space on the right. The fix is to set the width to 179 · owner of `apps/mobile`.
-- `apps/mobile/app.config.ts` was not touched, as instructed. The adaptive icon background colour is already #2B8A3E. There is no monochrome themed icon (Android 13) entry; `agrorende-mark-mono.svg` is ready for it · owner of `app.config.ts`.
-- `pnpm check:only web` is red because of other agents' in-flight work (see Tests).
+- `pnpm check:only web` and `pnpm check:only mobile` are red because of other agents' in-flight work (see Tests).
 
 ## Error cases added
 - None.

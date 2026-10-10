@@ -165,6 +165,7 @@ radius 3.5. It is used for `icon.svg` in the admin web app and the site and for 
 | `agrorende-logo-dark.svg` | Lockup for dark backgrounds: wordmark in white. |
 | `app-icon.svg` | iOS app icon: full-bleed Mata square (the system rounds the corners), glyph at 90 % of master size. |
 | `adaptive-foreground.svg` | Android adaptive icon foreground: transparent, glyph fitted inside the 66 dp safe circle of the 108 dp canvas with a 6 % margin; the Mata background colour is set in `apps/mobile/app.config.ts`. Works with circle, squircle and rounded-square masks. |
+| `adaptive-monochrome.svg` | Android 13 themed icon layer (`monochromeImage`): the one-colour glyph, core as a hole, at the foreground's exact size and position. The system tints it, so only its alpha matters. |
 | `splash-icon.svg` | Splash screen: the full-colour tile. |
 
 In the admin web app, `BrandMark` and `BrandLogo` (`apps/web/src/components/brand/`) render

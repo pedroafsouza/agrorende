@@ -134,6 +134,6 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   hero: { gap: space[2], paddingVertical: space[6] },
-  logo: { width: 185, height: 40, marginBottom: space[2] },
+  logo: { width: 179, height: 40, marginBottom: space[2] },
   center: { textAlign: "center" },
 });
