@@ -1,6 +1,7 @@
 import { ArrowRight, Building2, ChevronDown, ClipboardCheck, KeyRound, LayoutDashboard, Tractor, Wrench } from "lucide-react";
 
 import { CtaGroup, StoreLinks } from "@/components/CtaGroup";
+import { Demos } from "@/components/Demos";
 import { JsonLd } from "@/components/JsonLd";
 import { Picture } from "@/components/Picture";
 import { StatusChip } from "@/components/StatusChip";
@@ -136,6 +137,8 @@ export function HomeView({ locale }: { readonly locale: SiteLocale }) {
           </ol>
         </div>
       </section>
+
+      <Demos locale={locale} />
 
       <section className={`${container} grid items-center gap-10 py-20 lg:grid-cols-2`}>
         <div>
