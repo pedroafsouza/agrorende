@@ -1,3 +1,4 @@
+import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { Apple, KeyRound, LifeBuoy, LogIn, Ticket } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -6,12 +7,14 @@ import { Platform, StyleSheet, View } from "react-native";
 import type { AppErrorCode } from "@agrorende/contracts/errors";
 
 import { isAppleSignInAvailable, signInWithApple, signInWithGoogle } from "../oauth";
+import logoDark from "../../../assets/images/logo-dark.png";
+import logoLight from "../../../assets/images/logo.png";
 import { appConfig } from "../../lib/app/config";
 import { loadDevicePrefs } from "../../lib/app/prefs";
 import { getApiClient, getDeviceId, platform } from "../../lib/app/session";
 import { BottomSheet, Button, Card, Screen, Text, TextField } from "../../ui";
 import { AskOfficeButton, ErrorBanner } from "../../ui/recovery";
-import { space } from "../../ui/theme";
+import { space, useTheme } from "../../ui/theme";
 import { nativeDeviceUserSources } from "../deviceUsersNative";
 import { DeviceUsersCard } from "./DeviceUsersCard";
 import { finishLogin, loginErrorCode } from "./flow";
@@ -22,6 +25,7 @@ import { finishLogin, loginErrorCode } from "./flow";
  */
 export function LoginScreen() {
   const router = useRouter();
+  const theme = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState<"password" | "google" | "apple" | "invite" | undefined>(undefined);
@@ -61,6 +65,14 @@ export function LoginScreen() {
   return (
     <Screen testID="login">
       <View style={styles.hero}>
+        <Image
+          accessibilityIgnoresInvertColors
+          accessible={false}
+          contentFit="contain"
+          source={theme.name === "dark" ? logoDark : logoLight}
+          style={styles.logo}
+          testID="login-logo"
+        />
         <Text i18nKey="auth.login.title" variant="display" />
         <Text i18nKey="auth.login.subtitle" tone="secondary" />
       </View>
@@ -122,5 +134,6 @@ export function LoginScreen() {
 
 const styles = StyleSheet.create({
   hero: { gap: space[2], paddingVertical: space[6] },
+  logo: { width: 185, height: 40, marginBottom: space[2] },
   center: { textAlign: "center" },
 });

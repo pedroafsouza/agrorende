@@ -51,6 +51,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     scheme: variant.scheme,
     version: "0.1.0",
     orientation: "portrait",
+    icon: "./assets/images/icon.png",
     userInterfaceStyle: "automatic",
     locales: { "pt-BR": "./locales/pt-BR.json", en: "./locales/en.json" },
     runtimeVersion: { policy: "fingerprint" },
@@ -74,7 +75,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     android: {
       ...config.android,
       package: variant.packageName,
-      adaptiveIcon: { backgroundColor: "#FFFFFF" },
+      adaptiveIcon: { foregroundImage: "./assets/images/adaptive-icon.png", backgroundColor: "#2B8A3E" },
       config: { ...config.android?.config, googleMaps: { apiKey: process.env.GOOGLE_MAPS_ANDROID_API_KEY } },
     },
     plugins: [

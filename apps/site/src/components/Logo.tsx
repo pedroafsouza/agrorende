@@ -1,17 +1,15 @@
 interface LogoProps {
+  /** Kept for callers; the lettering is part of the SVG. */
   readonly name: string;
   readonly label: string;
   readonly href: string;
 }
 
-/** The wheel-arrow mark with the wordmark. The mark is decorative; the link carries the name. */
-export function Logo({ name, label, href }: LogoProps) {
+/** The AgroRende logo (gear-and-leaf symbol with outlined lettering). The link carries the accessible name. */
+export function Logo({ label, href }: LogoProps) {
   return (
     <a href={href} aria-label={label} className="inline-flex min-h-12 items-center gap-2.5 no-underline">
-      <img src="/icon.svg" alt="" width={36} height={36} className="size-9" />
-      <span aria-hidden="true" className="text-xl font-bold tracking-tight">
-        {name}
-      </span>
+      <img src="/brand/agrorende-logo.svg" alt="" width={185} height={40} className="h-10 w-auto" />
     </a>
   );
 }
