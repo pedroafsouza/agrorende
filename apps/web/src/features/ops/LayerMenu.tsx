@@ -17,12 +17,13 @@ import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 
 import { MAP_LAYERS, type BaseMap, type MapLayerKey } from "./filters";
+import { LegendMark } from "./mapPins";
 
 const ROW = "flex min-h-12 cursor-pointer items-center gap-3 rounded-[6px] px-3 text-sm hover:bg-[var(--ar-surface-muted)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--ar-focus)]";
 const BOX = "size-5 shrink-0 accent-[var(--ar-primary)] focus-visible:outline-none";
 const ICON = "size-5 shrink-0 text-[var(--ar-text-muted)]";
 
-/** What each layer shows; the marker shape glyph stays at the end of the row to match the map. */
+/** What each layer shows; the map pin stays at the end of the row to match the map. */
 export const LAYER_ICONS: Readonly<Record<MapLayerKey, LucideIcon>> = {
   operators: Users,
   reports: MessageSquareWarning,
@@ -88,8 +89,8 @@ export function LayerMenu({ layers, onToggleLayer, showBoundaries, onToggleBound
               <input checked={layers.has(layer)} className={BOX} onChange={() => onToggleLayer(layer)} type="checkbox" />
               <Icon aria-hidden="true" className={ICON} data-testid={`layer-icon-${layer}`} />
               <span className="flex-1">{t(`layers.${layer}`)}</span>
-              <span aria-hidden="true" className="w-4 text-center text-xs text-[var(--ar-text-muted)]">
-                {t(`legend.glyph.${layer}`)}
+              <span aria-hidden="true" className="flex w-5 justify-center text-xs text-[var(--ar-text-muted)]">
+                <LegendMark fallback={t(`legend.glyph.${layer}`)} item={layer} />
               </span>
             </label>
           );

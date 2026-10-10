@@ -280,12 +280,12 @@
     "items": {
       "operators": "Team member (ring colour shows status, initials inside)",
       "operatorsStale": "Team member with an out-of-date position (greyed)",
-      "reports": "Field report (circle)",
-      "reportsCritical": "Critical report (red circle)",
-      "workOrders": "Job (square)",
+      "reports": "Field report (yellow pin)",
+      "reportsCritical": "Critical report (red pin)",
+      "workOrders": "Job (blue pin with a wrench)",
       "workOrdersRisk": "Job with SLA at risk (yellow) or breached (red)",
-      "assets": "Machine (diamond)",
-      "rentals": "Rental with the customer (triangle, red when overdue)"
+      "assets": "Machine (grey pin with a tractor, blue when rented out)",
+      "rentals": "Rental with the customer (green pin with a calendar, red when overdue)"
     }
   },
   "gettingStarted": {

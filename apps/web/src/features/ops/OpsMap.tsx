@@ -17,6 +17,7 @@ import type { PlotBoundariesDTO } from "@agrorende/core/modules/ops/boundaries";
 import type { BaseMap, MapLayerKey, OpsView } from "./filters";
 import type { LngLatBounds, MapCenter } from "./mapBounds";
 import { trailSegments } from "./filters";
+import { addAllMapPins, addMapPin, isMapPinId, PIN_PAD } from "./mapPins";
 import { startFrameLoop, type OperatorStore, type PointCollection } from "./operatorStore";
 import type { TrailPointDTO } from "./types";
 
@@ -40,67 +41,20 @@ const EMPTY_BOUNDARIES = { type: "FeatureCollection", features: [] } as const;
 /** Operator ring colour follows `OperatorState`; the legend and side list repeat it in words. */
 const STATE_RING = ["match", ["get", "state"], "WORKING", COLORS.primary, "EN_ROUTE", COLORS.info, "ON_SITE", COLORS.info, "ON_HOLD", COLORS.warning, "IDLE", COLORS.neutral, COLORS.muted] as unknown as string;
 
-type ShapeKind = "square" | "diamond" | "triangle";
-const SHAPE_SIZE = 22;
-
-/** Rasterises a white-bordered shape so WO squares, asset diamonds and rental triangles need no sprite. */
-function shapeImage(shape: ShapeKind, hex: string): { width: number; height: number; data: Uint8Array } {
-  const size = SHAPE_SIZE;
-  const data = new Uint8Array(size * size * 4);
-  const r = Number.parseInt(hex.slice(1, 3), 16);
-  const g = Number.parseInt(hex.slice(3, 5), 16);
-  const b = Number.parseInt(hex.slice(5, 7), 16);
-  const c = (size - 1) / 2;
-  const inside = (x: number, y: number, inset: number): boolean => {
-    if (shape === "square") return x >= 2 + inset && x <= size - 3 - inset && y >= 2 + inset && y <= size - 3 - inset;
-    if (shape === "diamond") return Math.abs(x - c) + Math.abs(y - c) <= c - inset;
-    const top = 2 + inset * 1.6;
-    const bottom = size - 2 - inset;
-    if (y < top || y > bottom) return false;
-    const half = ((y - top) / (bottom - top)) * (c - inset);
-    return Math.abs(x - c) <= half;
-  };
-  for (let y = 0; y < size; y += 1) {
-    for (let x = 0; x < size; x += 1) {
-      const i = (y * size + x) * 4;
-      if (inside(x, y, 2)) {
-        data[i] = r;
-        data[i + 1] = g;
-        data[i + 2] = b;
-        data[i + 3] = 255;
-      } else if (inside(x, y, 0)) {
-        data[i] = 255;
-        data[i + 1] = 255;
-        data[i + 2] = 255;
-        data[i + 3] = 255;
-      }
-    }
-  }
-  return { width: size, height: size, data };
-}
-
-const SHAPE_IMAGES: readonly (readonly [string, ShapeKind, string])[] = [
-  ["wo-ok", "square", COLORS.info],
-  ["wo-risk", "square", COLORS.warning],
-  ["wo-breached", "square", COLORS.danger],
-  ["asset", "diamond", COLORS.neutral],
-  ["asset-rented", "diamond", COLORS.info],
-  ["rental", "triangle", COLORS.primary],
-  ["rental-overdue", "triangle", COLORS.danger],
-];
+/** Pins sit with their tip on the position; the offset cancels the shadow padding baked into the image. */
+const PIN_LAYOUT = { "icon-image": ["get", "icon"] as unknown as string, "icon-allow-overlap": true, "icon-anchor": "bottom" as const, "icon-offset": [0, PIN_PAD + 1] as [number, number] };
 
 /**
- * Registers the shape icons on demand. Symbol layers are added as soon as the style loads, which
+ * Registers the pin icons on demand. Symbol layers are added as soon as the style loads, which
  * can be before `onLoad`; without a resolver MapLibre warns that the icon is missing.
  */
-function ShapeImageResolver() {
+function PinImageResolver() {
   const { current } = useMap();
   useEffect(() => {
     const map = current?.getMap();
     if (map === undefined) return undefined;
     map.setMissingStyleImageResolver((id) => {
-      const entry = SHAPE_IMAGES.find(([name]) => name === id);
-      if (entry !== undefined && !map.hasImage(id)) map.addImage(id, shapeImage(entry[1], entry[2]));
+      if (isMapPinId(id)) void addMapPin(map, id);
     });
     return () => {
       map.setMissingStyleImageResolver(null);
@@ -188,7 +142,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
   const operatorFilter = useMemo(() => ["in", ["get", "userId"], ["literal", view.operators.map((o) => o.userId)]] as unknown as boolean, [view.operators]);
 
   const reports = useMemo(
-    () => collection(view.reports.map((r) => point(r.id, r.lng, r.lat, { kind: "report", critical: r.critical, label: r.number ?? r.title }))),
+    () => collection(view.reports.map((r) => point(r.id, r.lng, r.lat, { kind: "report", critical: r.critical, icon: r.critical ? "report-critical" : "report", label: r.number ?? r.title }))),
     [view.reports],
   );
   const workOrders = useMemo(
@@ -216,9 +170,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
   const onLoad = () => {
     const map = ref.current?.getMap();
     if (map === undefined) return;
-    for (const [name, shape, color] of SHAPE_IMAGES) {
-      if (!map.hasImage(name)) map.addImage(name, shapeImage(shape, color));
-    }
+    void addAllMapPins(map);
     const source = ref.current?.getSource(OPERATOR_SOURCE) as { setData?: (data: unknown) => void } | undefined;
     source?.setData?.(latest.current);
     setLoaded(true);
@@ -247,7 +199,7 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
           ref={ref}
           workerUrl={MAPLIBRE_WORKER_URL}
         >
-          <ShapeImageResolver />
+          <PinImageResolver />
           <NavigationControl position="top-right" />
           {satelliteUrl === null ? null : (
             <Source id="ops-satellite" maxzoom={19} tileSize={256} tiles={[satelliteUrl]} type="raster">
@@ -276,23 +228,22 @@ export function OpsMap({ store, view, visibleLayers, trail, onSelectOperator, on
             <Layer
               filter={["!", ["has", "point_count"]]}
               id="ops-reports-point"
-              layout={{ visibility: visibility("reports") }}
-              paint={{ "circle-color": ["case", ["get", "critical"], COLORS.danger, COLORS.warning] as unknown as string, "circle-radius": 9, "circle-stroke-color": COLORS.white, "circle-stroke-width": 2 }}
-              type="circle"
+              layout={{ visibility: visibility("reports"), ...PIN_LAYOUT }}
+              type="symbol"
             />
           </Source>
           <Source cluster clusterMaxZoom={14} clusterRadius={44} data={asData(workOrders)} id="ops-wos" type="geojson">
             <Layer filter={["has", "point_count"]} id="ops-wos-cluster" layout={{ visibility: visibility("workOrders") }} paint={{ "circle-color": COLORS.info, "circle-radius": 18, "circle-stroke-color": COLORS.white, "circle-stroke-width": 2 }} type="circle" />
             <Layer filter={["has", "point_count"]} id="ops-wos-count" layout={{ visibility: visibility("workOrders"), "text-field": ["get", "point_count_abbreviated"], "text-size": 13, "text-font": ["Noto Sans Bold"] }} paint={{ "text-color": COLORS.white }} type="symbol" />
-            <Layer filter={["!", ["has", "point_count"]]} id="ops-wos-point" layout={{ visibility: visibility("workOrders"), "icon-image": ["get", "icon"] as unknown as string, "icon-allow-overlap": true }} type="symbol" />
+            <Layer filter={["!", ["has", "point_count"]]} id="ops-wos-point" layout={{ visibility: visibility("workOrders"), ...PIN_LAYOUT }} type="symbol" />
           </Source>
           <Source cluster clusterMaxZoom={14} clusterRadius={44} data={asData(assets)} id="ops-assets" type="geojson">
             <Layer filter={["has", "point_count"]} id="ops-assets-cluster" layout={{ visibility: visibility("assets") }} paint={{ "circle-color": COLORS.neutral, "circle-radius": 18, "circle-stroke-color": COLORS.white, "circle-stroke-width": 2 }} type="circle" />
             <Layer filter={["has", "point_count"]} id="ops-assets-count" layout={{ visibility: visibility("assets"), "text-field": ["get", "point_count_abbreviated"], "text-size": 13, "text-font": ["Noto Sans Bold"] }} paint={{ "text-color": COLORS.white }} type="symbol" />
-            <Layer filter={["!", ["has", "point_count"]]} id="ops-assets-point" layout={{ visibility: visibility("assets"), "icon-image": ["get", "icon"] as unknown as string, "icon-allow-overlap": true }} type="symbol" />
+            <Layer filter={["!", ["has", "point_count"]]} id="ops-assets-point" layout={{ visibility: visibility("assets"), ...PIN_LAYOUT }} type="symbol" />
           </Source>
           <Source data={asData(rentals)} id="ops-rentals" type="geojson">
-            <Layer id="ops-rentals-point" layout={{ visibility: visibility("rentals"), "icon-image": ["get", "icon"] as unknown as string, "icon-allow-overlap": true }} type="symbol" />
+            <Layer id="ops-rentals-point" layout={{ visibility: visibility("rentals"), ...PIN_LAYOUT }} type="symbol" />
           </Source>
           <Source data={asData(trailData)} id="ops-trail" type="geojson">
             <Layer id="ops-trail-line" paint={{ "line-color": COLORS.primary, "line-width": 4, "line-opacity": 0.8 }} type="line" />

@@ -24,6 +24,7 @@ import { ExportsPanel } from "./exports/ExportsPanel";
 import { applyKpiFilter, filterAlerts, MAP_LAYERS, satelliteTilesUrl, type BaseMap, type MapLayerKey } from "./filters";
 import { KpiStrip } from "./KpiStrip";
 import { LayerMenu } from "./LayerMenu";
+import { LegendMark } from "./mapPins";
 import { dataBounds, fallbackCenter } from "./mapBounds";
 import { OperatorList, OperatorPanel } from "./OperatorPanel";
 import { OperatorStore } from "./operatorStore";
@@ -208,8 +209,8 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
           <dl aria-label={t("legend.label")} className="grid gap-x-6 gap-y-1.5 text-sm text-[var(--ar-text-muted)] sm:grid-cols-2">
             {(["operators", "operatorsStale", "reports", "reportsCritical", "workOrders", "workOrdersRisk", "assets", "rentals"] as const).map((k) => (
               <div className="flex items-center gap-2" key={k}>
-                <dt aria-hidden="true" className="w-4 shrink-0 text-center font-bold text-[var(--ar-text)]">
-                  {t(`legend.glyph.${k}`)}
+                <dt aria-hidden="true" className="flex w-5 shrink-0 justify-center font-bold text-[var(--ar-text)]">
+                  <LegendMark fallback={t(`legend.glyph.${k}`)} item={k} />
                 </dt>
                 <dd>{t(`legend.items.${k}`)}</dd>
               </div>

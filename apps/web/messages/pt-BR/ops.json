@@ -280,12 +280,12 @@
     "items": {
       "operators": "Membro da equipe (a cor do anel mostra a situação, iniciais no centro)",
       "operatorsStale": "Membro da equipe com posição desatualizada (acinzentado)",
-      "reports": "Relato de campo (círculo)",
-      "reportsCritical": "Relato crítico (círculo vermelho)",
-      "workOrders": "Ordem de serviço (quadrado)",
+      "reports": "Relato de campo (alfinete amarelo)",
+      "reportsCritical": "Relato crítico (alfinete vermelho)",
+      "workOrders": "Ordem de serviço (alfinete azul com chave)",
       "workOrdersRisk": "OS com SLA em risco (amarelo) ou estourado (vermelho)",
-      "assets": "Máquina (losango)",
-      "rentals": "Locação com o cliente (triângulo, vermelho quando atrasada)"
+      "assets": "Máquina (alfinete cinza com trator, azul quando locada)",
+      "rentals": "Locação com o cliente (alfinete verde com calendário, vermelho quando atrasada)"
     }
   },
   "gettingStarted": {
