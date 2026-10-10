@@ -72,15 +72,37 @@ export async function list(tx: Tx, ctx: Ctx, filters: WorkOrderListFilters = {})
   }
   const limit = clampLimit(filters.limit);
   const offset = parseCursor(filters.cursor);
-  let rows = (await scoped.db.work_orders
-    .find(filter, { sort: { dueAt: 1, createdAt: -1, _id: 1 } })
-    .toArray()) as WorkOrderDoc[];
-  // Jobs without a due date sort last.
-  rows = [...rows.filter((row) => row.dueAt != null), ...rows.filter((row) => row.dueAt == null)];
-  let items = rows.map((row) => ({ ...redactForRole(toWorkOrderDto(row), ctx.role, settings), sla: slaState(row, now, settings.sla) }));
-  if (due === "atRisk") items = items.filter((item) => item.sla === "AT_RISK" || item.sla === "BREACHED");
-  const page = pageOf(items.slice(offset, offset + limit + 1), offset, limit);
+  const toItem = (row: WorkOrderDoc): WorkOrderListItem => ({ ...redactForRole(toWorkOrderDto(row), ctx.role, settings), sla: slaState(row, now, settings.sla) });
+  if (due === "atRisk") {
+    // The SLA state is computed in code, so this view filters the (active, dated) jobs in memory.
+    const rows = (await scoped.db.work_orders.find(filter, { sort: LIST_SORT }).toArray()) as WorkOrderDoc[];
+    const items = rows.map(toItem).filter((item) => item.sla === "AT_RISK" || item.sla === "BREACHED");
+    const page = pageOf(items.slice(offset, offset + limit + 1), offset, limit);
+    return { ...page, items: await withNames(tx, page.items) };
+  }
+  const rows = await pageDatedThenUndated(scoped, filter, offset, limit + 1);
+  const page = pageOf(rows.map(toItem), offset, limit);
   return { ...page, items: await withNames(tx, page.items) };
+}
+
+const LIST_SORT = { dueAt: 1, createdAt: -1, _id: 1 } as const;
+
+/**
+ * Reads one page of the list order "due date ascending, jobs without a due date last" straight from
+ * the database: dated jobs first, then undated ones, each with skip and limit, so the list never
+ * loads the whole organisation.
+ */
+async function pageDatedThenUndated(scoped: ReturnType<typeof dbTx>, filter: Record<string, unknown>, offset: number, take: number): Promise<WorkOrderDoc[]> {
+  const wo = scoped.db.work_orders;
+  const datedFilter = filter.dueAt === undefined ? { ...filter, dueAt: { $ne: null } } : filter;
+  const dated = (await wo.find(datedFilter, { sort: LIST_SORT, skip: offset, limit: take }).toArray()) as WorkOrderDoc[];
+  // A due-date range already excludes undated jobs.
+  if (dated.length === take || filter.dueAt !== undefined) return dated;
+  const datedTotal = dated.length > 0 || offset === 0 ? offset + dated.length : (await wo.find(datedFilter, { projection: { _id: 1 } }).toArray()).length;
+  const undated = (await wo
+    .find({ ...filter, dueAt: null }, { sort: LIST_SORT, skip: Math.max(0, offset - datedTotal), limit: take - dated.length })
+    .toArray()) as WorkOrderDoc[];
+  return [...dated, ...undated];
 }
 
 async function withNames(tx: Tx, items: readonly WorkOrderListItem[]): Promise<WorkOrderListItem[]> {

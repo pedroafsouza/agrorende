@@ -123,3 +123,17 @@ describe.each(ANIMATION_IDS)("%s", (id) => {
     expect(await loadAnimation(id)).toEqual(json);
   });
 });
+
+describe("lazy entry (@agrorende/motion/lazy)", () => {
+  it("never imports animation JSON statically, so web bundles split every file", () => {
+    const source = readFileSync(join(import.meta.dirname, "..", "src", "lazy.ts"), "utf8");
+    expect(source).not.toMatch(/^import\s+\w+\s+from\s+"[^"]+\.json";/mu);
+    expect(source).not.toMatch(/from\s+"\.\/index/u);
+  });
+
+  it("is the same loader the package index re-exports", async () => {
+    const lazy = await import("../src/lazy");
+    expect(lazy.loadAnimation).toBe(loadAnimation);
+    expect(lazy.motionMeta).toBe(motionMeta);
+  });
+});

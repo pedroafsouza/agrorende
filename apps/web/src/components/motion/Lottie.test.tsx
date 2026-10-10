@@ -4,8 +4,8 @@ import { NextIntlClientProvider } from "next-intl";
 import type { ReactElement } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import type * as Motion from "@agrorende/motion";
-import { motionMeta } from "@agrorende/motion";
+import type * as Motion from "@agrorende/motion/lazy";
+import { motionMeta } from "@agrorende/motion/lazy";
 
 import en from "../../../messages/en/common.json";
 import { Lottie, needsPauseControl } from "./Lottie";
@@ -31,7 +31,7 @@ const player = vi.hoisted(() => {
 });
 
 vi.mock("lottie-web/build/player/lottie_light", () => ({ default: { loadAnimation: player.loadAnimation } }));
-vi.mock("@agrorende/motion", async (importOriginal) => ({
+vi.mock("@agrorende/motion/lazy", async (importOriginal) => ({
   ...(await importOriginal<typeof Motion>()),
   loadAnimation: vi.fn(async () => ({ v: "5.12.0", fr: 30, ip: 0, op: 60, w: 400, h: 300, layers: [] })),
 }));

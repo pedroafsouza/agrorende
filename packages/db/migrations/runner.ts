@@ -3,13 +3,14 @@ import type { Db } from "mongodb";
 import { closeClient, getDb } from "../src/client.js";
 import * as initial from "./0001_initial.js";
 import * as notificationPrefs from "./0002-T05-008.js";
+import * as perfQueryIndexes from "./0003-PERF-QUERIES.js";
 
 interface MigrationRecord {
   readonly _id: string;
   readonly appliedAt: Date;
 }
 
-const migrations = [initial, notificationPrefs] as const;
+const migrations = [initial, notificationPrefs, perfQueryIndexes] as const;
 
 export async function runMigrations(db: Db): Promise<readonly string[]> {
   const ledger = db.collection<MigrationRecord>("_migrations");

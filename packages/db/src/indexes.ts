@@ -17,7 +17,7 @@ const partialString = (field: string): CreateIndexesOptions => ({
   partialFilterExpression: { [field]: { $type: "string" } },
 });
 
-export const INDEXES: readonly IndexDefinition[] = [
+const ARCHITECTURE_INDEXES: readonly IndexDefinition[] = [
   index("users", { organizationId: 1, syncVersion: 1 }),
   index("users", { email: 1 }, partialString("email")),
   index("refresh_tokens", { organizationId: 1 }),
@@ -80,3 +80,24 @@ export const INDEXES: readonly IndexDefinition[] = [
   index("stock_movements", { organizationId: 1, syncVersion: 1 }),
   index("billing_documents", { organizationId: 1, syncVersion: 1 }),
 ];
+
+/**
+ * Sort-supporting indexes added by PERF-QUERIES (change request PERF-QUERIES-001). Each one lets a
+ * hot admin list or count read its page straight from the index instead of scanning the whole
+ * organisation and sorting in memory. Migration 0003-PERF-QUERIES creates them on existing databases.
+ */
+export const PERF_QUERY_INDEXES: readonly IndexDefinition[] = [
+  index("activity_events", { organizationId: 1, occurredAt: -1, _id: -1 }),
+  index("activity_events", { entityId: 1, occurredAt: -1, _id: -1 }),
+  index("activity_events", { "meta.assetId": 1, occurredAt: -1, _id: -1 }),
+  index("work_orders", { organizationId: 1, dueAt: 1, createdAt: -1, _id: 1 }),
+  index("work_orders", { organizationId: 1, status: 1, completedAt: 1 }),
+  index("field_reports", { organizationId: 1, status: 1, receivedAt: -1 }),
+  index("field_reports", { organizationId: 1, occurredAt: -1, _id: -1 }),
+  index("notifications", { userId: 1, createdAt: -1, _id: -1 }),
+  index("rental_charges", { rentalId: 1, isAuto: -1, createdAt: 1, _id: 1 }),
+  index("rentals", { organizationId: 1, plannedStart: -1, _id: 1 }),
+  index("media", { organizationId: 1, status: 1, createdAt: 1 }),
+];
+
+export const INDEXES: readonly IndexDefinition[] = [...ARCHITECTURE_INDEXES, ...PERF_QUERY_INDEXES];

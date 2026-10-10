@@ -8,6 +8,7 @@
   "sideEffects": false,
   "exports": {
     ".": "./src/index.ts",
+    "./lazy": "./src/lazy.ts",
     "./lottie/*.json": "./lottie/*.json"
   },
   "scripts": {

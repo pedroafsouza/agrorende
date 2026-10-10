@@ -4,7 +4,7 @@ import { Pause, Play } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
-import { loadAnimation, motionMeta, type AnimationId } from "@agrorende/motion";
+import { loadAnimation, motionMeta, type AnimationId } from "@agrorende/motion/lazy";
 
 import { cn } from "@/lib/cn";
 

@@ -361,6 +361,26 @@ describe("queries and suggestions", () => {
     expect(await codeOf(db.run((tx) => list(tx, carlos, {})))).toBe("OFFICE_ROLE_REQUIRED");
   });
 
+  it("pages in due-date order with undated jobs last, without loading the whole list", async () => {
+    for (const assetIndex of [433, 434, 435]) {
+      await db.raw("work_orders").updateOne({ _id: await freshJob(assetIndex) }, { $set: { dueAt: null } });
+    }
+    const raw = (await db.raw("work_orders").find({ organizationId: ORG_A, deletedAt: null }).sort({ dueAt: 1, createdAt: -1, _id: 1 }).toArray()) as Array<{ _id: string; dueAt?: Date | null }>;
+    const expected = [...raw.filter((row) => row.dueAt != null), ...raw.filter((row) => row.dueAt == null)].map((row) => row._id);
+    expect(raw.some((row) => row.dueAt == null)).toBe(true);
+    const seen: string[] = [];
+    let cursor: string | null = null;
+    do {
+      const page: Awaited<ReturnType<typeof list>> = await db.run((tx) => list(tx, admin, { limit: 3, cursor }));
+      seen.push(...page.items.map((item) => item.id));
+      cursor = page.nextCursor;
+    } while (cursor !== null);
+    expect(seen).toEqual(expected);
+    const datedCount = raw.filter((row) => row.dueAt != null).length;
+    const jumped = await db.run((tx) => list(tx, admin, { limit: 2, cursor: String(datedCount + 1) }));
+    expect(jumped.items.map((item) => item.id)).toEqual(expected.slice(datedCount + 1, datedCount + 3));
+  });
+
   it("ranks Carlos first for an engine report (A§6.4)", async () => {
     const result = await db.run((tx) =>
       suggestTechnicians(tx, admin, { fieldReportId: seedUuid(1015) }, { lastFixes: async () => new Map([[PEOPLE.carlos, { userId: PEOPLE.carlos, lat: -21.1, lng: -47.8, recordedAt: new Date() }]]) }),
