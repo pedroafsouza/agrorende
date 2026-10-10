@@ -9,7 +9,7 @@ export async function dockerAvailable(): Promise<string | undefined> {
 }
 
 export async function composeUp(): Promise<string | undefined> {
-  const result = await run(["docker", "compose", "up", "-d"], { timeoutMs: 60_000, streamPrefix: "compose" });
+  const result = await run(["docker", "compose", "up", "-d", "--wait", "--wait-timeout", "150"], { timeoutMs: 180_000, streamPrefix: "compose" });
   if (result.code !== 0) {
     return result.stderr.trim() || result.stdout.trim() || "docker compose up -d failed";
   }
@@ -37,7 +37,7 @@ export async function mongoHealthy(): Promise<string | undefined> {
     "mongosh",
     "--quiet",
     "--eval",
-    "try { const status = rs.status(); status.ok === 1 ? 'ok' : JSON.stringify(status) } catch (e) { String(e) }",
+    "try { const status = rs.status(); status.ok === 1 && db.hello().isWritablePrimary ? 'ok' : 'replica set rs0 has no primary yet' } catch (e) { String(e) }",
   ], { timeoutMs: 12_000 });
   if (result.code !== 0) {
     return result.stderr.trim() || result.stdout.trim() || "mongosh health check failed";

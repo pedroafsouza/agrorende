@@ -7,7 +7,8 @@ services:
     ulimits:
       nofile: { soft: 65536, hard: 65536 }
     healthcheck:
-      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }).ok }"]
+      # Healthy only once this node is PRIMARY; initiating the replica set alone is not enough.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status() } catch (e) { rs.initiate({ _id: 'rs0', members: [{ _id: 0, host: 'localhost:27017' }] }) } quit(db.hello().isWritablePrimary ? 0 : 1)"]
       interval: 5s
       timeout: 10s
       retries: 30

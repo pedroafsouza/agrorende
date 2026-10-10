@@ -33,7 +33,7 @@ async function databaseHasDocuments(): Promise<boolean | undefined> {
     dbName,
     "--quiet",
     "--eval",
-    "db.getCollectionNames().some((name) => db.getCollection(name).estimatedDocumentCount() > 0) ? 'yes' : 'no'",
+    "db.getCollectionNames().some((name) => !name.startsWith(\"_\") && db.getCollection(name).estimatedDocumentCount() > 0) ? 'yes' : 'no'",
   ], { timeoutMs: 15_000 });
   if (result.code !== 0) {
     warn(`seed precheck unavailable: ${result.stderr.trim() || result.stdout.trim() || "mongosh failed"}`);
@@ -75,7 +75,7 @@ export async function runDevSetup(): Promise<number> {
     error(composeError);
     return 1;
   }
-  ok("docker compose up -d completed");
+  ok("docker compose up -d --wait completed");
 
   section("Health gates");
   const health = await runEnvironmentCheck();
