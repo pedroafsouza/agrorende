@@ -2,11 +2,13 @@
  * Composer: turns the recordings, title cards and narration into the final video and captions.
  *
  * Every scene becomes one H.264 clip that lasts exactly as long as its narration (rounded to whole
- * frames). A recording that is shorter than the narration holds its last frame; a longer one is sped
- * up (at most 2.5x, then trimmed). The clips and the per-scene audio are then concatenated, the
+ * frames). A recording that is shorter than the narration holds its last frame. For a longer one, the
+ * idle tail (the screen held still after the scene's actions, found with ffmpeg `freezedetect`) is
+ * trimmed first, so the actions keep their real speed; only when the actions themselves are longer
+ * than the narration is the footage sped up (at most 2.5x, then trimmed). The clips and the per-scene audio are then concatenated, the
  * narration is loudness-normalised, and WebVTT captions are written from the measured sentence times.
  */
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -44,13 +46,35 @@ function segment(marks: Marks, source: string, mark: string): { start: number; l
   return { start, length: end - start };
 }
 
-/** Video filter that maps a recording of `length` seconds onto `duration` seconds. */
-function fit(length: number, duration: number): { inputLength: number; filter: string } {
-  if (length <= duration) {
-    return { inputLength: length, filter: `setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=${(duration - length + 1).toFixed(3)}` };
+/** Seconds of tail that the active part of a recording keeps, so the last action is seen settling. */
+const SETTLE = 0.6;
+
+/**
+ * Length of the active part of a recording segment: everything before the final still stretch (a
+ * freeze of at least 0.8 s that lasts to the end). Returns the full length when the segment never
+ * goes still at the end.
+ */
+function activeLength(file: string, start: number, length: number): number {
+  const result = spawnSync("ffmpeg", ["-hide_banner", "-ss", start.toFixed(3), "-t", length.toFixed(3), "-i", file, "-vf", "scale=480:-2,freezedetect=n=0.002:d=0.8", "-an", "-f", "null", "-"], { encoding: "utf8" });
+  let tail: number | undefined;
+  for (const line of result.stderr.split("\n")) {
+    const begin = /freeze_start: ([\d.]+)/u.exec(line);
+    if (begin?.[1] !== undefined) tail = Number(begin[1]);
+    if (line.includes("freeze_end:")) tail = undefined;
   }
-  const speed = Math.min(length / duration, MAX_SPEED);
-  return { inputLength: Math.min(length, duration * speed), filter: `setpts=(PTS-STARTPTS)/${speed.toFixed(4)}` };
+  return tail === undefined ? length : Math.min(length, tail + SETTLE);
+}
+
+/** Video filter that maps a recording of `length` seconds (`active` of them with motion) onto `duration` seconds. */
+function fit(length: number, duration: number, active = length): { inputLength: number; filter: string; speed: number } {
+  if (length <= duration) {
+    return { inputLength: length, speed: 1, filter: `setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=${(duration - length + 1).toFixed(3)}` };
+  }
+  if (active <= duration) {
+    return { inputLength: duration, speed: 1, filter: "setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=1" };
+  }
+  const speed = Math.min(active / duration, MAX_SPEED);
+  return { inputLength: Math.min(length, duration * speed), speed, filter: `setpts=(PTS-STARTPTS)/${speed.toFixed(4)}` };
 }
 
 const ENCODE = ["-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "17", "-pix_fmt", "yuv420p", "-an"];
@@ -98,6 +122,7 @@ export async function compose(): Promise<void> {
   const scenes = allScenes();
   const cues: Cue[] = [];
   const timeline: Array<{ id: string; start: number; duration: number }> = [];
+  const speeds: string[] = [];
   let clock = 0;
   try {
     for (const scene of scenes) {
@@ -113,8 +138,10 @@ export async function compose(): Promise<void> {
         ffmpeg(["-ss", t.toFixed(3), "-t", (duration + 0.5).toFixed(3), "-i", join(paths.raw, `title-${scene.id}.webm`), "-vf", "fps=30,setpts=PTS-STARTPTS,tpad=stop_mode=clone:stop_duration=1", "-t", duration.toFixed(3), ...ENCODE, clip]);
       } else if (v.kind === "clip") {
         const seg = segment(marks, v.source, v.mark);
-        const f = fit(seg.length, duration);
-        ffmpeg(["-ss", seg.start.toFixed(3), "-t", f.inputLength.toFixed(3), "-i", join(paths.raw, `${v.source}.webm`),
+        const file = join(paths.raw, `${v.source}.webm`);
+        const f = fit(seg.length, duration, activeLength(file, seg.start, seg.length));
+        speeds.push(`${v.source}:${v.mark} x${f.speed.toFixed(2)}`);
+        ffmpeg(["-ss", seg.start.toFixed(3), "-t", f.inputLength.toFixed(3), "-i", file,
           "-vf", `crop=${DESKTOP.width}:${DESKTOP.height}:0:0,scale=1920:1080:flags=lanczos,fps=30,${f.filter}`, "-t", duration.toFixed(3), ...ENCODE, clip]);
       } else {
         const layout = v.kind === "phone" ? "phone" : "split";
@@ -122,15 +149,19 @@ export async function compose(): Promise<void> {
         const bg = join(paths.clips, `${scene.id}-bg.png`);
         await renderHtml(browser, backgroundHtml(chapterOf(scene), v.caption ?? "", layout), bg, { width: 1920, height: 1080 });
         const seg = segment(marks, phoneSource, v.mark);
-        const f = fit(seg.length, duration);
+        const phoneFile = join(paths.raw, `${phoneSource}.webm`);
+        const f = fit(seg.length, duration, activeLength(phoneFile, seg.start, seg.length));
+        speeds.push(`${phoneSource}:${v.mark} x${f.speed.toFixed(2)}`);
         const px = PHONE_X[layout];
         const phoneChain = `[1:v]crop=${PHONE.width}:${PHONE.height}:0:0,scale=${PHONE_FRAME.screenW}:${PHONE_FRAME.screenH}:flags=lanczos,fps=30,${f.filter}[p]`;
-        const inputs = ["-loop", "1", "-i", bg, "-ss", seg.start.toFixed(3), "-t", f.inputLength.toFixed(3), "-i", join(paths.raw, `${phoneSource}.webm`)];
+        const inputs = ["-loop", "1", "-i", bg, "-ss", seg.start.toFixed(3), "-t", f.inputLength.toFixed(3), "-i", phoneFile];
         let graph: string;
         if (v.kind === "split") {
           const officeSeg = segment(marks, v.office, v.mark);
-          const g = fit(officeSeg.length, duration);
-          inputs.push("-ss", officeSeg.start.toFixed(3), "-t", g.inputLength.toFixed(3), "-i", join(paths.raw, `${v.office}.webm`), "-i", PHONE_BEZEL);
+          const officeFile = join(paths.raw, `${v.office}.webm`);
+          const g = fit(officeSeg.length, duration, activeLength(officeFile, officeSeg.start, officeSeg.length));
+          speeds.push(`${v.office}:${v.mark} x${g.speed.toFixed(2)}`);
+          inputs.push("-ss", officeSeg.start.toFixed(3), "-t", g.inputLength.toFixed(3), "-i", officeFile, "-i", PHONE_BEZEL);
           graph = `${phoneChain};[2:v]crop=${DESKTOP.width}:${DESKTOP.height}:0:0,scale=${OFFICE_BOX.w}:${OFFICE_BOX.h}:flags=lanczos,fps=30,${g.filter}[o];` +
             `[0:v][o]overlay=${OFFICE_BOX.x}:${OFFICE_BOX.y}[b1];[b1][p]overlay=${px + PHONE_FRAME.border}:${PHONE_Y + PHONE_FRAME.border}[b2];[b2][3:v]overlay=${px}:${PHONE_Y}[out]`;
         } else {
@@ -172,6 +203,7 @@ export async function compose(): Promise<void> {
   }
 
   writeFileSync(join(paths.clips, "timeline.json"), JSON.stringify({ timeline, cues }, null, 2));
+  console.log(`  footage speed: ${speeds.join(", ")}`);
   render(scenes.map((s) => s.id), paths.finalMp4, { width: 1920, height: 1080, crf: 20, preset: "medium" });
   writeFileSync(paths.finalVtt, vtt(cues));
   console.log(`  ${paths.finalMp4} ${clock.toFixed(1)}s`);
@@ -209,7 +241,7 @@ function vtt(cues: readonly Cue[]): string {
   return `WEBVTT\n\n${cues.map((c, i) => `${i + 1}\n${stamp(c.start)} --> ${stamp(c.end)}\n${c.text}\n`).join("\n")}`;
 }
 
-/** The ~3-minute highlights cut for the landing page: the scenes flagged `highlight`, 720p, at most 12 MB. */
+/** The ~3-minute highlights cut for the landing page: the scenes flagged `highlight`, 720p, at most 6 MB. */
 export function cut(): void {
   const { timeline, cues } = JSON.parse(readFileSync(join(paths.clips, "timeline.json"), "utf8")) as {
     timeline: Array<{ id: string; start: number; duration: number }>;
@@ -227,14 +259,14 @@ export function cut(): void {
   }
   mkdirSync(paths.landingDir, { recursive: true });
   const mp4 = join(paths.landingDir, "agrorende-demo-pt-BR.mp4");
-  // Bitrate budget: 12 MB minus audio, spread over the cut, with a safety margin.
-  const videoKbps = Math.floor(((11.2 * 8 * 1024) / clock) - 64);
+  // Bitrate budget: 6 MB minus audio, spread over the cut, with a safety margin.
+  const videoKbps = Math.floor(((5.6 * 8 * 1024) / clock) - 64);
   render(picked.map((t) => t.id), mp4, { width: 1280, height: 720, crf: 21, preset: "slow", maxrate: `${videoKbps}k`, audioBitrate: "64k" });
   writeFileSync(join(paths.landingDir, "agrorende-demo-pt-BR.vtt"), vtt(cutCues));
   ffmpeg(["-ss", "2", "-i", join(paths.clips, `${picked[0]?.id ?? "s01-intro"}.mp4`), "-frames:v", "1", "-vf", "scale=1280:720", "-q:v", "3", join(paths.landingDir, "agrorende-demo-pt-BR.jpg")]);
   const size = statSync(mp4).size / (1024 * 1024);
   console.log(`  ${mp4} ${clock.toFixed(1)}s ${size.toFixed(1)} MB`);
-  if (size > 12) throw new Error(`The highlights cut is ${size.toFixed(1)} MB, above the 12 MB budget.`);
+  if (size > 6) throw new Error(`The highlights cut is ${size.toFixed(1)} MB, above the 6 MB budget.`);
   // The full film writes its own captions; the highlights captions use a different timeline, so never substitute them.
   if (!existsSync(paths.finalVtt)) throw new Error(`Missing ${paths.finalVtt}: compose the full film before the highlights cut.`);
 }

@@ -24,7 +24,7 @@ async function main(): Promise<void> {
   }
   if (want("tts")) {
     console.log("• tts");
-    synthesise(force);
+    await synthesise(force);
   }
   if (want("record")) {
     console.log("• record");
