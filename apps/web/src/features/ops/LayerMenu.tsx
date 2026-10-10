@@ -1,6 +1,18 @@
 "use client";
 
-import { ChevronDown, Layers, Map as MapIcon, Satellite, Shapes } from "lucide-react";
+import {
+  CalendarRange,
+  ChevronDown,
+  LandPlot,
+  Layers,
+  type LucideIcon,
+  Map as MapIcon,
+  MessageSquareWarning,
+  Satellite,
+  Tractor,
+  Users,
+  Wrench,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef } from "react";
 
@@ -8,6 +20,16 @@ import { MAP_LAYERS, type BaseMap, type MapLayerKey } from "./filters";
 
 const ROW = "flex min-h-12 cursor-pointer items-center gap-3 rounded-[6px] px-3 text-sm hover:bg-[var(--ar-surface-muted)] has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-[var(--ar-focus)]";
 const BOX = "size-5 shrink-0 accent-[var(--ar-primary)] focus-visible:outline-none";
+const ICON = "size-5 shrink-0 text-[var(--ar-text-muted)]";
+
+/** What each layer shows; the marker shape glyph stays at the end of the row to match the map. */
+export const LAYER_ICONS: Readonly<Record<MapLayerKey, LucideIcon>> = {
+  operators: Users,
+  reports: MessageSquareWarning,
+  workOrders: Wrench,
+  assets: Tractor,
+  rentals: CalendarRange,
+};
 
 export interface LayerMenuProps {
   readonly layers: ReadonlySet<MapLayerKey>;
@@ -59,19 +81,23 @@ export function LayerMenu({ layers, onToggleLayer, showBoundaries, onToggleBound
       </summary>
       <fieldset className="absolute top-full left-0 z-20 mt-1 flex w-64 flex-col rounded-cards border border-[var(--ar-border)] bg-[var(--ar-surface)] p-1 shadow-lg">
         <legend className="sr-only">{t("layers.label")}</legend>
-        {MAP_LAYERS.map((layer) => (
-          <label className={ROW} key={layer}>
-            <input checked={layers.has(layer)} className={BOX} onChange={() => onToggleLayer(layer)} type="checkbox" />
-            <span aria-hidden="true" className="w-4 text-center text-xs text-[var(--ar-text-muted)]">
-              {t(`legend.glyph.${layer}`)}
-            </span>
-            <span>{t(`layers.${layer}`)}</span>
-          </label>
-        ))}
+        {MAP_LAYERS.map((layer) => {
+          const Icon = LAYER_ICONS[layer];
+          return (
+            <label className={ROW} key={layer}>
+              <input checked={layers.has(layer)} className={BOX} onChange={() => onToggleLayer(layer)} type="checkbox" />
+              <Icon aria-hidden="true" className={ICON} data-testid={`layer-icon-${layer}`} />
+              <span className="flex-1">{t(`layers.${layer}`)}</span>
+              <span aria-hidden="true" className="w-4 text-center text-xs text-[var(--ar-text-muted)]">
+                {t(`legend.glyph.${layer}`)}
+              </span>
+            </label>
+          );
+        })}
         <label className={ROW}>
           <input checked={showBoundaries} className={BOX} onChange={onToggleBoundaries} type="checkbox" />
-          <Shapes aria-hidden="true" className="size-4 text-[var(--ar-text-muted)]" />
-          <span>{t("layers.boundaries")}</span>
+          <LandPlot aria-hidden="true" className={ICON} />
+          <span className="flex-1">{t("layers.boundaries")}</span>
         </label>
         {satelliteAvailable ? (
           <>
