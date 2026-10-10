@@ -8,7 +8,7 @@ catalog:
   zod: ^4.1.0
   react: 19.x
   react-dom: 19.x
-  vitest: ^3.2.0
+  vitest: ^5.0.3
   "@types/node": ^24.0.0
   "@types/react": ^19.0.0
   mongodb: ^7.7.0
