@@ -90,31 +90,43 @@ test.describe("error journeys", () => {
 
     test(`EC-OPS-17 realtime loss shows the paused banner and recovers (${locale})`, async ({ page }) => {
       let blocked = false;
-      let handshakes = 0;
-      const sockets: { close: (options?: { code?: number; reason?: string }) => Promise<void> }[] = [];
+      // Only sockets that are still open count: a handshake from the page before a locale reload is not this page's connection.
+      const live = new Map<{ close: (options?: { code?: number; reason?: string }) => Promise<void> }, { ready: boolean }>();
       await page.routeWebSocket(/localhost:4101/u, (ws) => {
         if (blocked) {
           void ws.close({ code: 4000, reason: "e2e realtime loss" });
           return;
         }
+        const entry = { ready: false };
+        live.set(ws, entry);
         const server = ws.connectToServer();
         server.onMessage((message) => {
           // Socket.IO's CONNECT packet ("40…") means the namespace handshake completed.
-          if (typeof message === "string" && message.startsWith("40")) handshakes += 1;
+          if (typeof message === "string" && message.startsWith("40")) entry.ready = true;
           ws.send(message);
         });
-        sockets.push(ws);
+        // Setting onClose disables Playwright's automatic close forwarding, so forward it here.
+        ws.onClose((code, reason) => {
+          live.delete(ws);
+          void server.close({ code, reason });
+        });
+        server.onClose((code, reason) => {
+          live.delete(ws);
+          void ws.close({ code, reason });
+        });
       });
 
       await signIn(page, SEED.manager, "/ops", SEED_PASSWORD, uiLocale(locale));
       await expect(page.getByRole("heading", { name: msg(locale, "ops", "title"), level: 1 })).toBeVisible();
       // Cut the link only after a real connection; a handshake that never finished is not a lost connection.
-      await expect.poll(() => handshakes, { timeout: 30_000 }).toBeGreaterThan(0);
+      await expect.poll(() => [...live.values()].some((entry) => entry.ready), { timeout: 30_000 }).toBe(true);
       const banner = page.getByTestId("realtime-paused");
       await expect(banner).toHaveCount(0);
 
       blocked = true;
-      await Promise.all(sockets.splice(0).map((ws) => ws.close({ code: 4000, reason: "e2e realtime loss" })));
+      const open = [...live.keys()];
+      live.clear();
+      await Promise.all(open.map((ws) => ws.close({ code: 4000, reason: "e2e realtime loss" })));
       await expect(banner).toBeVisible({ timeout: 30_000 });
       await expect(banner).toContainText(msg(locale, "ops", "errors.REALTIME_DISCONNECTED.title"));
       await reviewShot(page, "EC-OPS-17-realtime-paused", locale);
