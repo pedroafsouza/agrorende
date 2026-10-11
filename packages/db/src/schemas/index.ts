@@ -7,6 +7,11 @@ import {
   AuthLinkKindEnum,
   AuthMethodEnum,
   AuthProviderEnum,
+  ProviderInviteStatusEnum,
+  ProviderPaymentMethodEnum,
+  ProviderReviewModerationStatusEnum,
+  ProviderReviewPartyEnum,
+  ProviderReviewThreadStatusEnum,
   BillingSourceEnum,
   BillingStatusEnum,
   ChargeTypeEnum,
@@ -775,6 +780,74 @@ export const BillingDocumentSchema = SyncDocSchema.extend({
   notes: OptionalStringSchema,
 });
 
+/** SUPPLIER-P1: an external provider invited to one work order through a magic link (only the token hash is stored). */
+export const ProviderInviteSchema = z.object({
+  _id: UuidSchema,
+  organizationId: UuidSchema,
+  workOrderId: UuidSchema,
+  tokenHash: z.string().min(1),
+  providerName: z.string().min(1),
+  phone: OptionalStringSchema,
+  email: OptionalStringSchema,
+  message: OptionalStringSchema,
+  status: ProviderInviteStatusEnum,
+  createdById: UuidSchema,
+  expiresAt: z.date(),
+  openedAt: OptionalDateSchema,
+  respondedAt: OptionalDateSchema,
+  declineReason: OptionalStringSchema,
+  proposedPriceCents: CentsSchema.nullable().optional(),
+  proposedDate: DateOnlySchema.nullable().optional(),
+  proposalNote: OptionalStringSchema,
+  acceptedAt: OptionalDateSchema,
+  completedAt: OptionalDateSchema,
+  completionNote: OptionalStringSchema,
+  revokedAt: OptionalDateSchema,
+  revokedById: OptionalUuidSchema,
+  agreedValueCents: CentsSchema.nullable().optional(),
+  paymentMethod: ProviderPaymentMethodEnum.nullable().optional(),
+  customerPaidAt: OptionalDateSchema,
+  customerPaidById: OptionalUuidSchema,
+  providerPaidAt: OptionalDateSchema,
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
+const ProviderReviewReplyDocSchema = z.object({
+  body: z.string().min(1),
+  at: z.date(),
+  byId: OptionalUuidSchema,
+});
+
+const ProviderReviewScore = z.number().int().min(1).max(5);
+
+/** SUPPLIER-P1: the customer's review of a completed invite, with a closed two-reply thread. */
+export const ProviderReviewSchema = z.object({
+  _id: UuidSchema,
+  organizationId: UuidSchema,
+  workOrderId: UuidSchema,
+  inviteId: UuidSchema,
+  providerName: z.string().min(1),
+  rating: ProviderReviewScore,
+  criteria: z.object({
+    punctuality: ProviderReviewScore,
+    quality: ProviderReviewScore,
+    price: ProviderReviewScore,
+    communication: ProviderReviewScore,
+  }),
+  comment: OptionalStringSchema,
+  createdById: UuidSchema,
+  providerReply: ProviderReviewReplyDocSchema.nullable().optional(),
+  customerReply: ProviderReviewReplyDocSchema.nullable().optional(),
+  threadStatus: ProviderReviewThreadStatusEnum,
+  moderationStatus: ProviderReviewModerationStatusEnum,
+  reports: z
+    .array(z.object({ by: ProviderReviewPartyEnum, reason: OptionalStringSchema, at: z.date() }))
+    .default([]),
+  createdAt: z.date(),
+  updatedAt: z.date(),
+});
+
 export const documentSchemas = {
   organizations: OrganizationSchema,
   sync_counters: SyncCounterSchema,
@@ -815,5 +888,7 @@ export const documentSchemas = {
   stock_levels: StockLevelSchema,
   stock_movements: StockMovementSchema,
   billing_documents: BillingDocumentSchema,
+  provider_invites: ProviderInviteSchema,
+  provider_reviews: ProviderReviewSchema,
 } as const;
 

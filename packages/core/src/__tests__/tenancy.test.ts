@@ -43,6 +43,7 @@ import * as fuelService from "../modules/fuel/service";
 import * as maintenanceService from "../modules/maintenance/service";
 import * as ops from "../modules/ops/service";
 import * as partsService from "../modules/parts/service";
+import * as providerService from "../modules/providers/service";
 import * as rentalQueries from "../modules/rentals/queries";
 import * as rentalService from "../modules/rentals/service";
 import * as seasonQueries from "../modules/seasons/queries";
@@ -405,6 +406,25 @@ const coreRows: readonly RestRow[] = [
   { route: "POST work-orders/[id]/release-hold", kind: "byId", run: () => write((tx) => workOrderField.releaseSafetyHold(tx, B, A.workOrder, {})) },
   { route: "GET work-orders/[id]/report.pdf", kind: "byId", run: () => write((tx) => workOrderReport.buildReportModel(tx, B, A.workOrder, {})) },
   { route: "GET work-orders/[id]/suggestions", kind: "byId", run: () => write((tx) => workOrderSuggest.suggestTechnicians(tx, B, { workOrderId: A.workOrder })) },
+  // Provider network (#63–#66): org A work order, invites and reviews
+  { route: "GET work-orders/[id]/provider-invites", kind: "byId", run: () => providerService.listInvites(B, A.workOrder) },
+  { route: "POST work-orders/[id]/provider-invites", kind: "byId", run: () => write((tx) => providerService.createInvite(tx, B, A.workOrder, { providerName: "Hijack", phone: "64999990000" })) },
+  { route: "POST work-orders/[id]/provider-invites/[inviteId]/reissue", kind: "byId", run: () => write((tx) => providerService.reissueInvite(tx, B, A.workOrder, randomUUID())) },
+  { route: "POST work-orders/[id]/provider-invites/[inviteId]/revoke", kind: "byId", run: () => write((tx) => providerService.revokeInvite(tx, B, A.workOrder, randomUUID())) },
+  {
+    route: "PATCH work-orders/[id]/provider-invites/[inviteId]/agreement",
+    kind: "byId",
+    run: () => write((tx) => providerService.setAgreement(tx, B, A.workOrder, randomUUID(), { agreedValueCents: 1000, paymentMethod: "PIX" })),
+  },
+  { route: "POST work-orders/[id]/provider-invites/[inviteId]/accept-counter", kind: "byId", run: () => write((tx) => providerService.acceptCounter(tx, B, A.workOrder, randomUUID())) },
+  { route: "POST work-orders/[id]/provider-invites/[inviteId]/paid", kind: "byId", run: () => write((tx) => providerService.markPaidByCustomer(tx, B, A.workOrder, randomUUID())) },
+  {
+    route: "POST work-orders/[id]/provider-invites/[inviteId]/review",
+    kind: "byId",
+    run: () => write((tx) => providerService.createReview(tx, B, A.workOrder, randomUUID(), { rating: 5, criteria: { punctuality: 5, quality: 5, price: 5, communication: 5 } })),
+  },
+  { route: "POST work-orders/[id]/provider-reviews/[reviewId]/reply", kind: "byId", run: () => write((tx) => providerService.customerReplyToReview(tx, B, A.workOrder, randomUUID(), { body: "x" })) },
+  { route: "POST work-orders/[id]/provider-reviews/[reviewId]/report", kind: "byId", run: () => write((tx) => providerService.reportReviewByCustomer(tx, B, A.workOrder, randomUUID(), {})) },
   { route: "GET work-orders/suggestions", kind: "byId", run: () => write((tx) => workOrderSuggest.suggestTechnicians(tx, B, { fieldReportId: A.fieldReport })) },
   { route: "GET work-orders", kind: "list", run: () => write((tx) => workOrderQueries.list(tx, B, {})) },
   {
@@ -843,6 +863,14 @@ const ALLOWLIST: Readonly<Record<string, string>> = {
   "GET media/[id]/blob": "authorised by the signed URL token only; covered by the signed media test",
   "PUT media/[id]/blob": "authorised by the signed URL token only; covered by the signed media test",
   "PUT media/[id]/blob/parts/[n]": "authorised by the signed URL token only; covered by the signed media test",
+  "GET provider-links/[token]": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/accept": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/decline": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/counter": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/complete": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/paid": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/review-reply": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
+  "POST provider-links/[token]/review-report": "public magic link keyed by a secret token (only its hash is stored), scoped to one invite; covered by the providers service tests",
 };
 
 const METHOD_PATTERN = /export\s+(?:const|async\s+function|function)\s+(GET|POST|PUT|PATCH|DELETE)\b/gu;

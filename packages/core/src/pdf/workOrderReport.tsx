@@ -123,6 +123,23 @@ export async function renderWorkOrderReport(model: WorkOrderReportModel, labels:
           );
         })();
 
+  const provider =
+    model.provider === null
+      ? null
+      : section(
+          labels.provider,
+          h(
+            View,
+            { style: styles.grid },
+            field(labels.providerName, model.provider.name),
+            field(labels.status, labels.enumLabel("providerInviteStatus", model.provider.status)),
+            field(labels.agreedValue, model.provider.agreedValueCents === null ? null : money(model.provider.agreedValueCents)),
+            field(labels.paymentMethod, model.provider.paymentMethod === null ? null : labels.enumLabel("providerPaymentMethod", model.provider.paymentMethod)),
+            field(labels.paidByCustomer, model.provider.customerPaidAt === null ? null : date(model.provider.customerPaidAt)),
+            field(labels.paidByProvider, model.provider.providerPaidAt === null ? null : date(model.provider.providerPaidAt)),
+          ),
+        );
+
   const photos =
     model.photoCount === 0
       ? null
@@ -195,6 +212,7 @@ export async function renderWorkOrderReport(model: WorkOrderReportModel, labels:
       checklist,
       parts,
       costs,
+      provider,
       photos,
       signature,
       timeline,

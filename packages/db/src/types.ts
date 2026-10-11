@@ -5,6 +5,8 @@ import type {
   AssetSchema,
   AuthLinkSchema,
   BillingDocumentSchema,
+  ProviderInviteSchema,
+  ProviderReviewSchema,
   ChecklistTemplateSchema,
   CommentSchema,
   CustomerSchema,
@@ -97,6 +99,8 @@ export type StockLocation = z.infer<typeof StockLocationSchema>;
 export type StockLevel = z.infer<typeof StockLevelSchema>;
 export type StockMovement = z.infer<typeof StockMovementSchema>;
 export type BillingDocument = z.infer<typeof BillingDocumentSchema>;
+export type ProviderInvite = z.infer<typeof ProviderInviteSchema>;
+export type ProviderReview = z.infer<typeof ProviderReviewSchema>;
 
 export interface CollectionDocumentMap {
   organizations: Organization;
@@ -138,6 +142,8 @@ export interface CollectionDocumentMap {
   stock_levels: StockLevel;
   stock_movements: StockMovement;
   billing_documents: BillingDocument;
+  provider_invites: ProviderInvite;
+  provider_reviews: ProviderReview;
 }
 
 export type CollectionName = keyof CollectionDocumentMap;

@@ -45,6 +45,12 @@ const LABEL_KEYS = [
   "signatureReason",
   "timeline",
   "none",
+  "provider",
+  "providerName",
+  "agreedValue",
+  "paymentMethod",
+  "paidByCustomer",
+  "paidByProvider",
 ] as const satisfies readonly Exclude<keyof WorkOrderReportLabels, "enumLabel">[];
 
 /** Resolves the PDF labels from `messages/<documentLocale>/jobs.json` (`report.*` and `enums.*`). */

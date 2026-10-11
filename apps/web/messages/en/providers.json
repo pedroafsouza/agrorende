@@ -1,0 +1,218 @@
+{
+  "panel": {
+    "title": "Who will do it?",
+    "subtitle": "Choose your own team or invite an outside provider for this job.",
+    "team": {
+      "title": "My team",
+      "body": "Assign one of your technicians.",
+      "action": "Assign my team",
+      "unavailable": "This job can no longer be assigned."
+    },
+    "network": {
+      "title": "AgroRende network",
+      "body": "Find rated providers near you. The directory arrives in the next phase.",
+      "badge": "Coming soon"
+    },
+    "external": {
+      "title": "Invite from outside",
+      "body": "Send a link by WhatsApp or email. No account needed for the provider.",
+      "action": "Invite provider",
+      "blocked": "There is already an active invite for this job. Revoke it to invite someone else.",
+      "closed": "Closed or cancelled jobs cannot receive new invites."
+    }
+  },
+  "form": {
+    "title": "Invite an outside provider",
+    "name": "Provider name",
+    "phone": "WhatsApp",
+    "phoneHint": "With area code, digits only. Example: 64 99999-0000",
+    "email": "Email",
+    "contactHint": "Fill in WhatsApp, email or both.",
+    "message": "Message (optional)",
+    "messagePlaceholder": "Example: tractor stopped on the north field, can you come tomorrow?",
+    "submit": "Create invite",
+    "errors": {
+      "nameRequired": "Enter the provider name.",
+      "contactRequired": "Enter a WhatsApp number or an email.",
+      "phoneInvalid": "Enter 10 to 15 digits, with area code.",
+      "emailInvalid": "Enter a valid email."
+    }
+  },
+  "share": {
+    "title": "Invite link ready",
+    "body": "The link works for 7 days and only shows this job. Anyone with the link can answer, so send it only to the provider.",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "whatsapp": "Send by WhatsApp",
+    "email": "Send by email",
+    "emailQueued": "We also queued the invite email.",
+    "close": "Done",
+    "whatsappText": "Hello {name}, you are invited to a job on AgroRende: {title}. Open the link to accept, decline or propose a price: {url}",
+    "whatsappTextWithMessage": "Hello {name}, you are invited to a job on AgroRende: {title}. {message} Open the link to accept, decline or propose a price: {url}",
+    "emailSubject": "Job invite: {title}",
+    "emailBody": "Hello {name},\n\nyou are invited to a job: {title}.\n\nOpen the link to accept, decline or propose a price:\n{url}\n\nThe link expires in 7 days."
+  },
+  "invite": {
+    "title": "External provider",
+    "sentAt": "Invited {date}",
+    "expiresAt": "Link valid until {date}",
+    "contact": "Contact",
+    "reissue": "New link",
+    "reissueConfirmTitle": "Create a new link?",
+    "reissueConfirmBody": "The previous link stops working right away. Send the new one to the provider.",
+    "revoke": "Revoke invite",
+    "revokeConfirmTitle": "Revoke this invite?",
+    "revokeConfirmBody": "The provider will no longer be able to open the link. You can invite someone else afterwards.",
+    "declined": "Declined",
+    "declineReason": "Reason: {reason}",
+    "counter": {
+      "title": "Counter-proposal",
+      "price": "Proposed price: {price}",
+      "date": "Proposed date: {date}",
+      "note": "Note: {note}",
+      "accept": "Accept proposal"
+    },
+    "completion": {
+      "title": "Provider marked the job as done",
+      "at": "Done {date}"
+    },
+    "history": "Earlier invites",
+    "statuses": {
+      "SENT": "Sent",
+      "OPENED": "Opened",
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined",
+      "COUNTERED": "Counter-proposal",
+      "EXPIRED": "Expired",
+      "REVOKED": "Revoked",
+      "COMPLETED": "Completed"
+    }
+  },
+  "agreement": {
+    "title": "Agreed value",
+    "notice": "Payment happens outside AgroRende. We only record what was agreed and who confirmed it.",
+    "value": "Agreed value",
+    "method": "Expected payment method",
+    "methodNone": "Not defined",
+    "save": "Save agreement",
+    "saved": "Agreement saved",
+    "none": "No value agreed yet.",
+    "locked": "The agreement is locked because a payment was already confirmed.",
+    "methods": {
+      "PIX": "Pix",
+      "BOLETO": "Boleto",
+      "CASH": "Cash",
+      "TRANSFER": "Bank transfer",
+      "OTHER": "Other"
+    }
+  },
+  "payment": {
+    "title": "Paid outside the platform",
+    "customer": "Customer confirmed",
+    "provider": "Provider confirmed",
+    "pending": "Not confirmed yet",
+    "confirmedAt": "Confirmed {date}",
+    "markCustomer": "Mark as paid",
+    "markProvider": "I received the payment",
+    "needsAgreement": "Set the agreed value before confirming the payment."
+  },
+  "review": {
+    "title": "Review",
+    "form": {
+      "title": "Review this provider",
+      "rating": "Overall rating",
+      "criteria": "Quick criteria",
+      "comment": "Comment (optional)",
+      "submit": "Publish review"
+    },
+    "criteria": {
+      "punctuality": "Punctuality",
+      "quality": "Quality",
+      "price": "Price",
+      "communication": "Communication"
+    },
+    "stars": "{count, plural, one {# star} other {# stars}}",
+    "providerReply": "Provider reply",
+    "customerReply": "Customer final reply",
+    "replyLabel": "Your reply",
+    "reply": "Send reply",
+    "finalReply": "Send final reply",
+    "awaitingProvider": "Waiting for the provider reply. You will be able to answer once.",
+    "closed": "This conversation is closed.",
+    "report": "Report",
+    "reportReason": "What is wrong? (optional)",
+    "reportSubmit": "Send report",
+    "reported": "Reported for moderation",
+    "onlyCompleted": "You can review once the provider marks the job as done.",
+    "replyRequired": "Write your reply."
+  },
+  "link": {
+    "title": "Job invite",
+    "from": "{org} invited you to this job",
+    "noLogin": "No account needed. Only you received this link.",
+    "job": "Job {number}",
+    "description": "Description",
+    "machine": "Machine",
+    "place": "Place",
+    "openMap": "Open in maps",
+    "requestedFor": "Requested for",
+    "notScheduled": "No date set",
+    "status": "Status",
+    "accept": "Accept job",
+    "decline": "Decline",
+    "declineReason": "Reason (optional)",
+    "declineSubmit": "Confirm decline",
+    "counter": "Propose price or date",
+    "counterPrice": "Your price",
+    "counterDate": "Date you can come",
+    "counterNote": "Note (optional)",
+    "counterSubmit": "Send proposal",
+    "counterRequired": "Enter a price, a date or both.",
+    "complete": "Mark job as done",
+    "completeNote": "What was done?",
+    "completeSubmit": "Confirm done",
+    "completeRequired": "Describe what was done.",
+    "cancel": "Cancel",
+    "answered": {
+      "ACCEPTED": "You accepted this job. When you finish, mark it as done here.",
+      "DECLINED": "You declined this job. Thank you for answering.",
+      "COUNTERED": "Your proposal was sent. The company will answer soon.",
+      "COMPLETED": "Job done. Thank you!"
+    },
+    "agreed": "Agreed value: {value}",
+    "method": "Payment method: {method}",
+    "cta": {
+      "title": "Get more jobs like this",
+      "body": "Create your free provider profile on AgroRende. The first 60 days are free.",
+      "action": "Create my free profile"
+    },
+    "toast": {
+      "accepted": "Job accepted",
+      "declined": "Answer sent",
+      "countered": "Proposal sent",
+      "completed": "Job marked as done",
+      "paid": "Payment confirmed",
+      "replied": "Reply sent",
+      "reported": "Report sent"
+    },
+    "recovery": {
+      "title": "This link no longer works",
+      "invalid": "We could not find this invite. Check that you opened the full link.",
+      "expired": "This invite expired. Invites are valid for 7 days.",
+      "revoked": "The company cancelled this invite.",
+      "next": "Ask the company that invited you for a new link.",
+      "home": "Go to AgroRende"
+    }
+  },
+  "toast": {
+    "invited": "Invite created",
+    "reissued": "New link created",
+    "revoked": "Invite revoked",
+    "counterAccepted": "Proposal accepted",
+    "paid": "Payment confirmed",
+    "reviewed": "Review published",
+    "replied": "Reply sent",
+    "reported": "Report sent",
+    "copyFailed": "Could not copy. Select the link and copy it by hand."
+  }
+}

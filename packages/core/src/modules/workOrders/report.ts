@@ -85,7 +85,18 @@ export interface WorkOrderReportModel {
     readonly image: ReportImage | null;
   };
   readonly timeline: readonly ReportTimelineRow[];
+  /** The latest external-provider engagement (#63/#65); `null` when there is none or costs are hidden. */
+  readonly provider: ReportProvider | null;
   readonly generatedAt: string;
+}
+
+export interface ReportProvider {
+  readonly name: string;
+  readonly status: string;
+  readonly agreedValueCents: number | null;
+  readonly paymentMethod: string | null;
+  readonly customerPaidAt: string | null;
+  readonly providerPaidAt: string | null;
 }
 
 /**
@@ -134,7 +145,13 @@ export interface WorkOrderReportLabels {
   readonly signatureReason: string;
   readonly timeline: string;
   readonly none: string;
-  /** Translates an enum value; `group` is `workOrderStatus`, `workOrderType`, `priority`, `signatureStatus`, `checklistValue` or `mediaTag`. */
+  readonly provider: string;
+  readonly providerName: string;
+  readonly agreedValue: string;
+  readonly paymentMethod: string;
+  readonly paidByCustomer: string;
+  readonly paidByProvider: string;
+  /** Translates an enum value; `group` is `workOrderStatus`, `workOrderType`, `priority`, `signatureStatus`, `checklistValue`, `mediaTag`, `providerInviteStatus` or `providerPaymentMethod`. */
   readonly enumLabel: (group: string, value: string) => string;
 }
 
@@ -219,6 +236,25 @@ export async function buildReportModel(tx: Tx, ctx: Ctx, id: string, options: Bu
           externalCents: wo.externalCostCents ?? null,
         };
 
+  const engagement =
+    costs === null
+      ? null
+      : await scoped.db.provider_invites.findOne(
+          { workOrderId: id, status: { $in: ["ACCEPTED", "COMPLETED"] } },
+          { sort: { createdAt: -1 }, projection: { providerName: 1, status: 1, agreedValueCents: 1, paymentMethod: 1, customerPaidAt: 1, providerPaidAt: 1 } },
+        );
+  const provider: ReportProvider | null =
+    engagement === null
+      ? null
+      : {
+          name: engagement.providerName,
+          status: engagement.status,
+          agreedValueCents: engagement.agreedValueCents ?? null,
+          paymentMethod: engagement.paymentMethod ?? null,
+          customerPaidAt: engagement.customerPaidAt?.toISOString() ?? null,
+          providerPaidAt: engagement.providerPaidAt?.toISOString() ?? null,
+        };
+
   return {
     locale,
     timezone: typeof org?.timezone === "string" ? org.timezone : "America/Sao_Paulo",
@@ -260,6 +296,7 @@ export async function buildReportModel(tx: Tx, ctx: Ctx, id: string, options: Bu
     timeline: view.timeline
       .filter((entry) => entry.toStatus !== null)
       .map((entry) => ({ action: entry.action, toStatus: entry.toStatus, actorName: entry.actorName, occurredAt: entry.occurredAt })),
+    provider,
     generatedAt: (options.now ?? new Date()).toISOString(),
   };
 }

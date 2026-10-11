@@ -5,13 +5,14 @@ import * as initial from "./0001_initial";
 import * as notificationPrefs from "./0002-T05-008";
 import * as perfQueryIndexes from "./0003-PERF-QUERIES";
 import * as dropRedundantIndexes from "./0004-DROP-REDUNDANT-INDEXES";
+import * as supplierP1 from "./0005-SUPPLIER-P1";
 
 interface MigrationRecord {
   readonly _id: string;
   readonly appliedAt: Date;
 }
 
-const migrations = [initial, notificationPrefs, perfQueryIndexes, dropRedundantIndexes] as const;
+const migrations = [initial, notificationPrefs, perfQueryIndexes, dropRedundantIndexes, supplierP1] as const;
 
 export async function runMigrations(db: Db): Promise<readonly string[]> {
   const ledger = db.collection<MigrationRecord>("_migrations");

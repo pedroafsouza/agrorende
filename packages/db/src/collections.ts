@@ -42,6 +42,8 @@ export const COLLECTION_NAMES = [
   "stock_levels",
   "stock_movements",
   "billing_documents",
+  "provider_invites",
+  "provider_reviews",
 ] as const satisfies readonly CollectionName[];
 
 export function collection<N extends CollectionName>(db: Db, name: N): Collection<CollectionDocumentMap[N]> {
@@ -88,4 +90,6 @@ export const collections = {
   stockLevels: (db: Db) => collection(db, "stock_levels"),
   stockMovements: (db: Db) => collection(db, "stock_movements"),
   billingDocuments: (db: Db) => collection(db, "billing_documents"),
+  providerInvites: (db: Db) => collection(db, "provider_invites"),
+  providerReviews: (db: Db) => collection(db, "provider_reviews"),
 };

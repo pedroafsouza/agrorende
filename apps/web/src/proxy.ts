@@ -1,7 +1,7 @@
 import { DEFAULT_LOCALE, resolveLocale } from "@agrorende/i18n/locales";
 import { NextResponse, type NextRequest } from "next/server";
 
-const PUBLIC_PREFIXES = ["/login", "/change-password", "/signup", "/i/", "/r/", "/api/v1/health", "/api/v1/auth", "/api/v1/signup", "/platform/login", "/platform/auth"] as const;
+const PUBLIC_PREFIXES = ["/login", "/change-password", "/signup", "/i/", "/r/", "/p", "/api/v1/provider-links", "/api/v1/health", "/api/v1/auth", "/api/v1/signup", "/platform/login", "/platform/auth"] as const;
 const ADMIN_PREFIXES = ["/ops", "/getting-started", "/attention", "/reports", "/work-orders", "/rentals", "/assets", "/sites", "/customers", "/team", "/templates", "/seasons", "/costs", "/imports", "/settings", "/account", "/office-role-required", "/notifications", "/analytics", "/parts", "/stock", "/maintenance", "/fuel", "/billing"] as const;
 const BLOB_ROUTE = /^\/api\/v1\/media\/[^/]+\/blob(?:\/.*)?$/;
 

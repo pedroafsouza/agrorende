@@ -130,6 +130,8 @@ const TENANT_COLLECTIONS = [
   "stock_levels",
   "stock_movements",
   "billing_documents",
+  "provider_invites",
+  "provider_reviews",
 ] as const satisfies readonly TenantCollectionName[];
 
 export function scoped(ctx: TenantCtx, db: Db, session?: ClientSession): ScopedDb {

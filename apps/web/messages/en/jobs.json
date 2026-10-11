@@ -254,6 +254,23 @@
       "HIGH": "High",
       "MEDIUM": "Medium",
       "LOW": "Low"
+    },
+    "providerInviteStatus": {
+      "SENT": "Sent",
+      "OPENED": "Opened",
+      "ACCEPTED": "Accepted",
+      "DECLINED": "Declined",
+      "COUNTERED": "Counter-proposal",
+      "EXPIRED": "Expired",
+      "REVOKED": "Revoked",
+      "COMPLETED": "Completed"
+    },
+    "providerPaymentMethod": {
+      "PIX": "Pix",
+      "BOLETO": "Boleto",
+      "CASH": "Cash",
+      "TRANSFER": "Bank transfer",
+      "OTHER": "Other"
     }
   },
   "report": {
@@ -297,7 +314,13 @@
     "witness": "Witness",
     "signatureReason": "Reason",
     "timeline": "History",
-    "none": "—"
+    "none": "—",
+    "provider": "Outside provider",
+    "providerName": "Provider",
+    "agreedValue": "Agreed value",
+    "paymentMethod": "Payment method",
+    "paidByCustomer": "Paid outside the platform (customer)",
+    "paidByProvider": "Paid outside the platform (provider)"
   },
   "activity": {
     "workOrder": {
@@ -329,6 +352,25 @@
       "cancel": "Cancelled",
       "cancelled": "Cancelled",
       "resumed": "Released by the office"
+    },
+    "provider": {
+      "invited": "Invited an outside provider",
+      "reissued": "Sent a new provider link",
+      "revoked": "Revoked the provider invite",
+      "opened": "Provider opened the invite",
+      "accepted": "Provider accepted the job",
+      "declined": "Provider declined the job",
+      "countered": "Provider sent a counter-proposal",
+      "counterAccepted": "Accepted the provider proposal",
+      "completed": "Provider marked the job as done",
+      "expired": "Provider invite expired",
+      "agreementSet": "Recorded the agreed value",
+      "paidCustomer": "Customer confirmed payment outside the platform",
+      "paidProvider": "Provider confirmed payment outside the platform",
+      "reviewed": "Reviewed the provider",
+      "reviewReplied": "Provider replied to the review",
+      "reviewAnswered": "Customer sent the final reply",
+      "reviewReported": "Review reported for moderation"
     }
   }
 }

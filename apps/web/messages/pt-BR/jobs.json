@@ -254,6 +254,23 @@
       "HIGH": "Alta",
       "MEDIUM": "Média",
       "LOW": "Baixa"
+    },
+    "providerInviteStatus": {
+      "SENT": "Enviado",
+      "OPENED": "Aberto",
+      "ACCEPTED": "Aceito",
+      "DECLINED": "Recusado",
+      "COUNTERED": "Contraproposta",
+      "EXPIRED": "Expirado",
+      "REVOKED": "Revogado",
+      "COMPLETED": "Concluído"
+    },
+    "providerPaymentMethod": {
+      "PIX": "Pix",
+      "BOLETO": "Boleto",
+      "CASH": "Dinheiro",
+      "TRANSFER": "Transferência",
+      "OTHER": "Outra"
     }
   },
   "report": {
@@ -297,7 +314,13 @@
     "witness": "Testemunha",
     "signatureReason": "Motivo",
     "timeline": "Histórico",
-    "none": "—"
+    "none": "—",
+    "provider": "Prestador externo",
+    "providerName": "Prestador",
+    "agreedValue": "Valor combinado",
+    "paymentMethod": "Forma de pagamento",
+    "paidByCustomer": "Pago fora da plataforma (cliente)",
+    "paidByProvider": "Pago fora da plataforma (prestador)"
   },
   "activity": {
     "workOrder": {
@@ -329,6 +352,25 @@
       "cancel": "Cancelada",
       "cancelled": "Cancelada",
       "resumed": "Liberada pela central"
+    },
+    "provider": {
+      "invited": "Convidou um prestador de fora",
+      "reissued": "Enviou um novo link ao prestador",
+      "revoked": "Revogou o convite do prestador",
+      "opened": "O prestador abriu o convite",
+      "accepted": "O prestador aceitou o serviço",
+      "declined": "O prestador recusou o serviço",
+      "countered": "O prestador enviou uma contraproposta",
+      "counterAccepted": "Aceitou a proposta do prestador",
+      "completed": "O prestador marcou o serviço como feito",
+      "expired": "O convite do prestador expirou",
+      "agreementSet": "Registrou o valor combinado",
+      "paidCustomer": "Cliente confirmou pagamento fora da plataforma",
+      "paidProvider": "Prestador confirmou pagamento fora da plataforma",
+      "reviewed": "Avaliou o prestador",
+      "reviewReplied": "O prestador respondeu à avaliação",
+      "reviewAnswered": "Cliente enviou a resposta final",
+      "reviewReported": "Avaliação denunciada para moderação"
     }
   }
 }

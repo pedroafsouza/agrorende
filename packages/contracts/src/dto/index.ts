@@ -25,3 +25,4 @@ export * from "./maintenancePlans";
 export * from "./fuelLogs";
 export * from "./ops";
 export * from "./costs";
+export * from "./providers";

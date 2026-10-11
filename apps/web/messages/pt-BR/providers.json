@@ -1,0 +1,218 @@
+{
+  "panel": {
+    "title": "Quem vai atender?",
+    "subtitle": "Escolha sua equipe ou convide um prestador de fora para esta OS.",
+    "team": {
+      "title": "Minha equipe",
+      "body": "Atribua a um dos seus técnicos.",
+      "action": "Atribuir à minha equipe",
+      "unavailable": "Esta OS não pode mais ser atribuída."
+    },
+    "network": {
+      "title": "Rede AgroRende",
+      "body": "Encontre prestadores avaliados perto de você. O diretório chega na próxima fase.",
+      "badge": "Em breve"
+    },
+    "external": {
+      "title": "Convidar de fora",
+      "body": "Envie um link por WhatsApp ou e-mail. O prestador não precisa de conta.",
+      "action": "Convidar prestador",
+      "blocked": "Já existe um convite ativo para esta OS. Revogue-o para convidar outra pessoa.",
+      "closed": "OS concluídas ou canceladas não recebem novos convites."
+    }
+  },
+  "form": {
+    "title": "Convidar prestador de fora",
+    "name": "Nome do prestador",
+    "phone": "WhatsApp",
+    "phoneHint": "Com DDD, só números. Exemplo: 64 99999-0000",
+    "email": "E-mail",
+    "contactHint": "Preencha WhatsApp, e-mail ou os dois.",
+    "message": "Mensagem (opcional)",
+    "messagePlaceholder": "Exemplo: trator parado no talhão norte, consegue vir amanhã?",
+    "submit": "Criar convite",
+    "errors": {
+      "nameRequired": "Informe o nome do prestador.",
+      "contactRequired": "Informe um WhatsApp ou um e-mail.",
+      "phoneInvalid": "Informe de 10 a 15 dígitos, com DDD.",
+      "emailInvalid": "Informe um e-mail válido."
+    }
+  },
+  "share": {
+    "title": "Link do convite pronto",
+    "body": "O link vale por 7 dias e mostra só esta OS. Quem tiver o link pode responder, então envie apenas ao prestador.",
+    "copy": "Copiar link",
+    "copied": "Link copiado",
+    "whatsapp": "Enviar por WhatsApp",
+    "email": "Enviar por e-mail",
+    "emailQueued": "Também colocamos o e-mail do convite na fila de envio.",
+    "close": "Pronto",
+    "whatsappText": "Olá {name}, você foi convidado para um serviço no AgroRende: {title}. Abra o link para aceitar, recusar ou propor um valor: {url}",
+    "whatsappTextWithMessage": "Olá {name}, você foi convidado para um serviço no AgroRende: {title}. {message} Abra o link para aceitar, recusar ou propor um valor: {url}",
+    "emailSubject": "Convite de serviço: {title}",
+    "emailBody": "Olá {name},\n\nvocê foi convidado para um serviço: {title}.\n\nAbra o link para aceitar, recusar ou propor um valor:\n{url}\n\nO link expira em 7 dias."
+  },
+  "invite": {
+    "title": "Prestador externo",
+    "sentAt": "Convidado em {date}",
+    "expiresAt": "Link válido até {date}",
+    "contact": "Contato",
+    "reissue": "Novo link",
+    "reissueConfirmTitle": "Criar um novo link?",
+    "reissueConfirmBody": "O link anterior para de funcionar na hora. Envie o novo ao prestador.",
+    "revoke": "Revogar convite",
+    "revokeConfirmTitle": "Revogar este convite?",
+    "revokeConfirmBody": "O prestador não conseguirá mais abrir o link. Depois você pode convidar outra pessoa.",
+    "declined": "Recusado",
+    "declineReason": "Motivo: {reason}",
+    "counter": {
+      "title": "Contraproposta",
+      "price": "Valor proposto: {price}",
+      "date": "Data proposta: {date}",
+      "note": "Observação: {note}",
+      "accept": "Aceitar proposta"
+    },
+    "completion": {
+      "title": "O prestador marcou o serviço como feito",
+      "at": "Concluído em {date}"
+    },
+    "history": "Convites anteriores",
+    "statuses": {
+      "SENT": "Enviado",
+      "OPENED": "Aberto",
+      "ACCEPTED": "Aceito",
+      "DECLINED": "Recusado",
+      "COUNTERED": "Contraproposta",
+      "EXPIRED": "Expirado",
+      "REVOKED": "Revogado",
+      "COMPLETED": "Concluído"
+    }
+  },
+  "agreement": {
+    "title": "Valor combinado",
+    "notice": "O pagamento acontece fora do AgroRende. Só registramos o combinado e quem confirmou.",
+    "value": "Valor combinado",
+    "method": "Forma de pagamento prevista",
+    "methodNone": "Não definida",
+    "save": "Salvar combinado",
+    "saved": "Combinado salvo",
+    "none": "Nenhum valor combinado ainda.",
+    "locked": "O combinado está travado porque um pagamento já foi confirmado.",
+    "methods": {
+      "PIX": "Pix",
+      "BOLETO": "Boleto",
+      "CASH": "Dinheiro",
+      "TRANSFER": "Transferência",
+      "OTHER": "Outra"
+    }
+  },
+  "payment": {
+    "title": "Pago fora da plataforma",
+    "customer": "Cliente confirmou",
+    "provider": "Prestador confirmou",
+    "pending": "Ainda não confirmado",
+    "confirmedAt": "Confirmado em {date}",
+    "markCustomer": "Marcar como pago",
+    "markProvider": "Recebi o pagamento",
+    "needsAgreement": "Defina o valor combinado antes de confirmar o pagamento."
+  },
+  "review": {
+    "title": "Avaliação",
+    "form": {
+      "title": "Avaliar este prestador",
+      "rating": "Nota geral",
+      "criteria": "Critérios rápidos",
+      "comment": "Comentário (opcional)",
+      "submit": "Publicar avaliação"
+    },
+    "criteria": {
+      "punctuality": "Pontualidade",
+      "quality": "Qualidade",
+      "price": "Preço",
+      "communication": "Comunicação"
+    },
+    "stars": "{count, plural, one {# estrela} other {# estrelas}}",
+    "providerReply": "Resposta do prestador",
+    "customerReply": "Resposta final do cliente",
+    "replyLabel": "Sua resposta",
+    "reply": "Enviar resposta",
+    "finalReply": "Enviar resposta final",
+    "awaitingProvider": "Aguardando a resposta do prestador. Você poderá responder uma vez.",
+    "closed": "Esta conversa está encerrada.",
+    "report": "Denunciar",
+    "reportReason": "O que está errado? (opcional)",
+    "reportSubmit": "Enviar denúncia",
+    "reported": "Denunciada para moderação",
+    "onlyCompleted": "Você pode avaliar quando o prestador marcar o serviço como feito.",
+    "replyRequired": "Escreva sua resposta."
+  },
+  "link": {
+    "title": "Convite de serviço",
+    "from": "{org} convidou você para este serviço",
+    "noLogin": "Não precisa de conta. Só você recebeu este link.",
+    "job": "OS {number}",
+    "description": "Descrição",
+    "machine": "Máquina",
+    "place": "Local",
+    "openMap": "Abrir no mapa",
+    "requestedFor": "Data pedida",
+    "notScheduled": "Sem data definida",
+    "status": "Situação",
+    "accept": "Aceitar serviço",
+    "decline": "Recusar",
+    "declineReason": "Motivo (opcional)",
+    "declineSubmit": "Confirmar recusa",
+    "counter": "Propor valor ou data",
+    "counterPrice": "Seu valor",
+    "counterDate": "Data em que pode vir",
+    "counterNote": "Observação (opcional)",
+    "counterSubmit": "Enviar proposta",
+    "counterRequired": "Informe um valor, uma data ou os dois.",
+    "complete": "Marcar serviço como feito",
+    "completeNote": "O que foi feito?",
+    "completeSubmit": "Confirmar conclusão",
+    "completeRequired": "Descreva o que foi feito.",
+    "cancel": "Cancelar",
+    "answered": {
+      "ACCEPTED": "Você aceitou este serviço. Quando terminar, marque como feito aqui.",
+      "DECLINED": "Você recusou este serviço. Obrigado por responder.",
+      "COUNTERED": "Sua proposta foi enviada. A empresa responde em breve.",
+      "COMPLETED": "Serviço concluído. Obrigado!"
+    },
+    "agreed": "Valor combinado: {value}",
+    "method": "Forma de pagamento: {method}",
+    "cta": {
+      "title": "Receba mais serviços como este",
+      "body": "Crie seu perfil de prestador grátis no AgroRende. Os primeiros 60 dias são grátis.",
+      "action": "Criar meu perfil grátis"
+    },
+    "toast": {
+      "accepted": "Serviço aceito",
+      "declined": "Resposta enviada",
+      "countered": "Proposta enviada",
+      "completed": "Serviço marcado como feito",
+      "paid": "Pagamento confirmado",
+      "replied": "Resposta enviada",
+      "reported": "Denúncia enviada"
+    },
+    "recovery": {
+      "title": "Este link não funciona mais",
+      "invalid": "Não encontramos este convite. Confira se abriu o link completo.",
+      "expired": "Este convite expirou. Os convites valem por 7 dias.",
+      "revoked": "A empresa cancelou este convite.",
+      "next": "Peça um novo link à empresa que convidou você.",
+      "home": "Ir para o AgroRende"
+    }
+  },
+  "toast": {
+    "invited": "Convite criado",
+    "reissued": "Novo link criado",
+    "revoked": "Convite revogado",
+    "counterAccepted": "Proposta aceita",
+    "paid": "Pagamento confirmado",
+    "reviewed": "Avaliação publicada",
+    "replied": "Resposta enviada",
+    "reported": "Denúncia enviada",
+    "copyFailed": "Não foi possível copiar. Selecione o link e copie manualmente."
+  }
+}

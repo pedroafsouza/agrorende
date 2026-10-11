@@ -172,7 +172,9 @@ export function WorkOrderDetailPage({ id }: { readonly id: string }) {
                 entry.toStatus === null
                   ? typeof entry.meta.reason === "string"
                     ? entry.meta.reason
-                    : null
+                    : typeof entry.meta.providerName === "string"
+                      ? entry.meta.providerName
+                      : null
                   : `${entry.fromStatus === null ? "—" : common(`status.workOrder.${entry.fromStatus}`)} → ${common(`status.workOrder.${entry.toStatus}`)}${typeof entry.meta.reason === "string" ? ` · ${entry.meta.reason}` : ""}`,
             }))}
         />

@@ -107,4 +107,15 @@ export const REDUNDANT_INDEXES: readonly IndexDefinition[] = [
   index("activity_events", { organizationId: 1, occurredAt: 1 }),
 ];
 
-export const INDEXES: readonly IndexDefinition[] = [...ARCHITECTURE_INDEXES, ...PERF_QUERY_INDEXES];
+/**
+ * Provider network indexes (SUPPLIER-P1): magic-link lookup by token hash and the per-work-order
+ * invite and review lists. Migration 0005-SUPPLIER-P1 creates them on existing databases.
+ */
+export const PROVIDER_INDEXES: readonly IndexDefinition[] = [
+  index("provider_invites", { tokenHash: 1 }, { unique: true }),
+  index("provider_invites", { organizationId: 1, workOrderId: 1, createdAt: -1 }),
+  index("provider_reviews", { inviteId: 1 }, { unique: true }),
+  index("provider_reviews", { organizationId: 1, workOrderId: 1 }),
+];
+
+export const INDEXES: readonly IndexDefinition[] = [...ARCHITECTURE_INDEXES, ...PERF_QUERY_INDEXES, ...PROVIDER_INDEXES];

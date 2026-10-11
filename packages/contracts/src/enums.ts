@@ -316,3 +316,29 @@ export type BillingSource = z.infer<typeof BillingSourceEnum>;
 
 export const BillingStatusEnum = z.enum(["DRAFT", "ISSUED", "PAID", "CANCELLED"]);
 export type BillingStatus = z.infer<typeof BillingStatusEnum>;
+
+// ───────── Provider network (SUPPLIER-P1) ─────────
+
+export const ProviderInviteStatusEnum = z.enum([
+  "SENT",
+  "OPENED",
+  "ACCEPTED",
+  "DECLINED",
+  "COUNTERED",
+  "EXPIRED",
+  "REVOKED",
+  "COMPLETED",
+]);
+export type ProviderInviteStatus = z.infer<typeof ProviderInviteStatusEnum>;
+
+export const ProviderPaymentMethodEnum = z.enum(["PIX", "BOLETO", "CASH", "TRANSFER", "OTHER"]);
+export type ProviderPaymentMethod = z.infer<typeof ProviderPaymentMethodEnum>;
+
+export const ProviderReviewThreadStatusEnum = z.enum(["OPEN", "CLOSED"]);
+export type ProviderReviewThreadStatus = z.infer<typeof ProviderReviewThreadStatusEnum>;
+
+export const ProviderReviewModerationStatusEnum = z.enum(["NONE", "FLAGGED"]);
+export type ProviderReviewModerationStatus = z.infer<typeof ProviderReviewModerationStatusEnum>;
+
+export const ProviderReviewPartyEnum = z.enum(["CUSTOMER", "PROVIDER"]);
+export type ProviderReviewParty = z.infer<typeof ProviderReviewPartyEnum>;
