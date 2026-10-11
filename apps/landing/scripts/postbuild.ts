@@ -5,9 +5,10 @@
  * - copies the Portuguese 404 page to `out/404.html`;
  * - removes the React Server Components payload files, which the site never fetches because it
  *   has no client-side navigation;
- * - checks that every error code has a help page in both locales at the path `helpUrl()` returns.
+ * - checks that every error code has a help page in both locales at the path `helpUrl()` returns;
+ * - starts the React runtime download after the page has loaded (see `deferRuntimeScripts`).
  */
-import { copyFileSync, existsSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -46,6 +47,42 @@ function removeFlightFiles(dir: string): number {
   return removed;
 }
 
+/**
+ * Every page reads without JavaScript (PRD SITE-05), so the ~120 KB runtime only powers extras such as
+ * Lottie, help search and copy buttons. Loading it after `load` keeps it from competing with the HTML,
+ * font and hero image for bandwidth on slow mobile networks, which is what LCP measures.
+ */
+export function deferRuntimeScripts(html: string): string {
+  const scripts: { src: string; id?: string }[] = [];
+  const stripped = html
+    .replace(/<link rel="preload" as="script"[^>]*href="\/_next\/[^"]*"[^>]*>/gu, "")
+    .replace(/<script src="(\/_next\/[^"]+)"(?: id="([^"]+)")? async=""><\/script>/gu, (_match, src: string, id?: string) => {
+      scripts.push(id === undefined ? { src } : { src, id });
+      return "";
+    });
+  if (scripts.length === 0 || !stripped.includes("</body>")) return html;
+  const loader = `<script>(function(){var s=${JSON.stringify(scripts)};function go(){for(var i=0;i<s.length;i++){var e=document.createElement("script");e.src=s[i].src;if(s[i].id)e.id=s[i].id;e.async=true;document.body.appendChild(e)}}if(document.readyState==="complete")go();else addEventListener("load",go,{once:true})})()</script>`;
+  return stripped.replace("</body>", `${loader}</body>`);
+}
+
+function deferAll(dir: string): number {
+  let changed = 0;
+  for (const entry of readdirSync(dir)) {
+    const full = path.join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      if (entry !== "_next") changed += deferAll(full);
+    } else if (entry.endsWith(".html")) {
+      const html = readFileSync(full, "utf8");
+      const next = deferRuntimeScripts(html);
+      if (next !== html) {
+        writeFileSync(full, next);
+        changed += 1;
+      }
+    }
+  }
+  return changed;
+}
+
 function htmlFor(urlPath: string): string {
   return path.join(out, ...urlPath.split("/").filter((part) => part.length > 0), "index.html");
 }
@@ -57,6 +94,7 @@ function main(): void {
   copyFileSync(htmlFor("/pt-br/404/"), path.join(out, "404.html"));
   rmSync(path.join(out, "_not-found"), { recursive: true, force: true });
   const removed = removeFlightFiles(out);
+  const deferred = deferAll(out);
 
   const missing: string[] = [];
   for (const locale of SITE_LOCALES) {
@@ -74,7 +112,7 @@ function main(): void {
 
   const indexable = allRoutes().filter(isIndexable).length * SITE_LOCALES.length;
   console.log(
-    `postbuild: ${allRoutes().length * SITE_LOCALES.length} pages, ${indexable} indexable, ${ALL_ERROR_CODES.length} error codes per locale, ${removed} payload files removed`,
+    `postbuild: ${allRoutes().length * SITE_LOCALES.length} pages, ${indexable} indexable, ${ALL_ERROR_CODES.length} error codes per locale, ${removed} payload files removed, ${deferred} pages with a deferred runtime`,
   );
 }
 
