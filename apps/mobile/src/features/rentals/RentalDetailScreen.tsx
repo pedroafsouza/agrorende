@@ -94,7 +94,7 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
       onRefresh={query.reload}
       refreshing={false}
       banner={
-        <View style={styles.stack}>
+        <>
           <OfflineBanner />
           {overdue ? (
             <Banner
@@ -110,7 +110,7 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
             <MeterJumpReview ns="rentals" testID="rental-meter-jump" conflict={meterJump} onResubmit={(input) => resubmitInspection(meterJump, input)} />
           )}
           {hasDraft ? <Banner testID="rental-draft" tone="info" titleKey="errors.RENTAL_DRAFT_INTERRUPTED.title" bodyKey="errors.RENTAL_DRAFT_INTERRUPTED.body" /> : null}
-        </View>
+        </>
       }
     >
       <View style={styles.head}>
@@ -152,5 +152,4 @@ export function RentalDetailScreen({ rentalId }: { readonly rentalId: string }) 
 const styles = StyleSheet.create({
   head: { alignItems: "center", flexDirection: "row", gap: 12, justifyContent: "space-between" },
   pills: { alignItems: "flex-end", gap: 4 },
-  stack: { gap: 8 },
 });

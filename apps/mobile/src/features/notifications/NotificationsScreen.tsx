@@ -59,7 +59,7 @@ export function NotificationsScreen() {
           icon={item.read ? Bell : BellDot}
           title={item.title}
           subtitle={[item.body, formatRelative(item.createdAt, now)].filter((part) => part.length > 0).join(" · ")}
-          right={item.read ? undefined : <StatusPill labelKey="common.notificationCentre.unreadLabel" tone="info" />}
+          badges={item.read ? undefined : <StatusPill labelKey="common.notificationCentre.unreadLabel" tone="info" />}
           onPress={() => void open(item)}
         />
       ))}

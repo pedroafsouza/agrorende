@@ -37,7 +37,7 @@ export function NextJobCard() {
           titleKey="jobs.widget.title"
           subtitle={[job.number, job.title, job.assetName].filter((part): part is string => part !== null && part.length > 0).join(" · ")}
           icon={ClipboardList}
-          right={<StatusPill labelKey={`jobs.status.${job.status}`} tone={STATUS_TONE[job.status]} />}
+          badges={<StatusPill labelKey={`jobs.status.${job.status}`} tone={STATUS_TONE[job.status]} />}
           onPress={() => router.push(`/jobs/${job.id}`)}
         />
       )}

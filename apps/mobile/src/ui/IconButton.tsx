@@ -5,7 +5,7 @@ import type { MessageKey } from "../i18n/messages";
 import { useT } from "../i18n/useT";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { minTouchTarget, radius, useTheme } from "./theme";
+import { minTouchTarget, radius, space, useTheme } from "./theme";
 
 export type IconButtonProps = {
   readonly icon: LucideIcon;
@@ -39,6 +39,6 @@ export function IconButton({ icon, labelKey, onPress, disabled = false, tone = "
 }
 
 const styles = StyleSheet.create({
-  base: { alignItems: "center", borderRadius: radius.controls, flexDirection: "row", gap: 6, justifyContent: "center", minHeight: minTouchTarget, minWidth: minTouchTarget, paddingHorizontal: 8 },
+  base: { alignItems: "center", borderRadius: radius.controls, flexDirection: "row", gap: space[1], justifyContent: "center", minHeight: minTouchTarget, minWidth: minTouchTarget, paddingHorizontal: space[2] },
   disabled: { opacity: 0.5 },
 });

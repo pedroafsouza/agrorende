@@ -1,7 +1,6 @@
 import { formatDateTime } from "@agrorende/i18n";
 import { useRouter } from "expo-router";
 import { AlarmClock, ArrowDownToLine, ArrowUpFromLine, Truck, type LucideIcon } from "lucide-react-native";
-import { StyleSheet, View } from "react-native";
 
 import { useLocale, useT } from "../../i18n/useT";
 import { ListItem, StatusPill } from "../../ui";
@@ -34,17 +33,13 @@ export function RentalRow({ rental, kind, timeZone }: { readonly rental: RentalS
       danger={kind === "overdue"}
       title={title.length > 0 ? title : t("rentals.row.noNumber")}
       subtitle={[rental.customerName, whenLabel].filter((part) => part.length > 0).join(" · ")}
-      right={
-        <View style={styles.pills}>
+      badges={
+        <>
           {kind === "overdue" ? <StatusPill labelKey="rentals.status.OVERDUE" tone="danger" /> : <StatusPill labelKey={`rentals.status.${rental.status}`} tone={STATUS_TONE[rental.status]} />}
           {rental.pending ? <StatusPill labelKey="rentals.list.pending" tone="warning" /> : null}
-        </View>
+        </>
       }
       onPress={() => router.push(`/rentals/${rental.id}`)}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  pills: { alignItems: "flex-end", gap: 4 },
-});

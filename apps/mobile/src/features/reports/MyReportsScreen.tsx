@@ -1,6 +1,5 @@
 import { useRouter } from "expo-router";
 import { CircleAlert, FilePlus2, FileText } from "lucide-react-native";
-import { View } from "react-native";
 
 import { useServices } from "../../lib/services";
 import { useLocalQuery } from "../../lib/useLocalQuery";
@@ -35,11 +34,11 @@ export function MyReportsScreen() {
           icon={report.machineOperable ? FileText : CircleAlert}
           title={report.number === null ? report.title : `${report.number} · ${report.title}`}
           subtitle={[report.assetName, formatRelative(report.createdAt, now)].filter((part) => part !== null && part.length > 0).join(" · ")}
-          right={
-            <View style={{ alignItems: "flex-end", gap: 4 }}>
+          badges={
+            <>
               <StatusPill labelKey={`reports.status.${report.status}`} tone={STATUS_TONE[report.status] ?? "neutral"} />
               {report.pending ? <StatusPill labelKey="reports.list.pending" tone="warning" /> : null}
-            </View>
+            </>
           }
           onPress={() => router.push(`/reports/${report.id}`)}
         />

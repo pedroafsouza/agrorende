@@ -6,7 +6,7 @@ import type { MessageKey, MessageValues } from "../i18n/messages";
 import { useT } from "../i18n/useT";
 import { IconButton } from "./IconButton";
 import { Text } from "./Text";
-import { radius, useTheme } from "./theme";
+import { radius, space, useTheme } from "./theme";
 
 /** OS "reduce motion" setting, read without Reanimated so the kit bundles with core React Native only. */
 export function useReducedMotion(): boolean {
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 12,
   },
-  head: { alignItems: "center", flexDirection: "row", gap: 8, paddingHorizontal: 16, paddingTop: 12 },
+  head: { alignItems: "center", flexDirection: "row", gap: space[2], paddingHorizontal: space[4], paddingTop: space[3] },
   title: { flex: 1 },
-  body: { gap: 12, padding: 16, paddingBottom: 32 },
+  body: { gap: space[3], padding: space[4], paddingBottom: space[8] },
 });

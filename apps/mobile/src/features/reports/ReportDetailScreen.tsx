@@ -119,7 +119,7 @@ export function ReportDetailScreen({ id }: { readonly id: string }) {
       ) : (
         <Text i18nKey="reports.detail.unregistered" values={{ description: String(report.unregisteredAssetDesc ?? "") }} selectable />
       )}
-      {workOrder !== undefined ? <ListItem icon={ClipboardList} titleKey="reports.detail.workOrder" titleValues={{ number: String(workOrder.number ?? "") }} right={<StatusPill labelKey={`assets.status.${String(workOrder.status)}`} tone="info" />} onPress={() => router.push(`/jobs/${String(workOrder.id)}`)} /> : null}
+      {workOrder !== undefined ? <ListItem icon={ClipboardList} titleKey="reports.detail.workOrder" titleValues={{ number: String(workOrder.number ?? "") }} badges={<StatusPill labelKey={`assets.status.${String(workOrder.status)}`} tone="info" />} onPress={() => router.push(`/jobs/${String(workOrder.id)}`)} /> : null}
       {typeof report.description === "string" && report.description.length > 0 ? (
         <>
           <Text i18nKey="reports.detail.description" variant="heading" />

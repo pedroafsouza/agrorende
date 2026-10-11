@@ -36,9 +36,9 @@ export function TodayScreen() {
       testID="today"
       refreshing={false}
       onRefresh={() => void services.syncNow?.()}
+      ribbon={<EnvironmentRibbon />}
       banner={
         <>
-          <EnvironmentRibbon />
           <OfflineBanner onOpenSyncCenter={() => router.push("/sync-center")} />
           {auth.org === undefined ? null : <OrgStatusBanner status={auth.org.status} />}
         </>

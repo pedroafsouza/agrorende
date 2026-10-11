@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 import type { MessageKey } from "../i18n/messages";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { statusTone, useTheme, type StatusTone } from "./theme";
+import { space, statusTone, useTheme, type StatusTone } from "./theme";
 
 export type StatusPillProps = { readonly labelKey: MessageKey; readonly tone: StatusTone; readonly testID?: string };
 
@@ -20,6 +20,6 @@ export function StatusPill({ labelKey, tone, testID }: StatusPillProps) {
 }
 
 const styles = StyleSheet.create({
-  base: { alignItems: "center", alignSelf: "flex-start", borderRadius: 999, borderWidth: 2, flexDirection: "row", gap: 6, minHeight: 32, paddingHorizontal: 12 },
+  base: { alignItems: "center", alignSelf: "flex-start", borderRadius: 999, borderWidth: 2, flexDirection: "row", gap: space[1], minHeight: space[8], paddingHorizontal: space[3] },
   text: { fontWeight: "600" },
 });

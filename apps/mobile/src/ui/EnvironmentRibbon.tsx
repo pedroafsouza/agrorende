@@ -1,6 +1,6 @@
 import { StyleSheet, View } from "react-native";
 
-import { campoClaro } from "./theme";
+import { campoClaro, space } from "./theme";
 import { Text } from "./Text";
 
 export type AppEnv = "development" | "preview" | "staging" | "production" | string;
@@ -21,6 +21,6 @@ export function EnvironmentRibbon({ env = appEnv() }: { readonly env?: AppEnv })
 }
 
 const styles = StyleSheet.create({
-  ribbon: { alignItems: "center", backgroundColor: campoClaro.palette.warning.fill, paddingVertical: 4 },
+  ribbon: { alignItems: "center", backgroundColor: campoClaro.palette.warning.fill, paddingVertical: space[1] },
   text: { fontWeight: "700" },
 });

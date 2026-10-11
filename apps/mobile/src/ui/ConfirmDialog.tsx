@@ -3,7 +3,7 @@ import { Modal, StyleSheet, View } from "react-native";
 import type { MessageKey, MessageValues } from "../i18n/messages";
 import { Button } from "./Button";
 import { Text } from "./Text";
-import { radius, useTheme } from "./theme";
+import { radius, space, useTheme } from "./theme";
 
 export type ConfirmDialogProps = {
   readonly visible: boolean;
@@ -34,6 +34,6 @@ export function ConfirmDialog({ visible, titleKey, bodyKey, bodyValues, confirmL
 }
 
 const styles = StyleSheet.create({
-  scrim: { alignItems: "center", backgroundColor: "rgba(17,19,21,0.5)", flex: 1, justifyContent: "center", padding: 24 },
-  box: { borderRadius: radius.sheets, borderWidth: 1, gap: 12, maxWidth: 480, padding: 20, width: "100%" },
+  scrim: { alignItems: "center", backgroundColor: "rgba(17,19,21,0.5)", flex: 1, justifyContent: "center", padding: space[6] },
+  box: { borderRadius: radius.sheets, borderWidth: 1, gap: space[3], maxWidth: 480, padding: space[5], width: "100%" },
 });

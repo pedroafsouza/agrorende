@@ -1,6 +1,5 @@
 import { CalendarCheck, CalendarClock, CircleCheck, List, Map as MapIcon, RefreshCw } from "lucide-react-native";
 import { lazy, Suspense, useState } from "react";
-import { StyleSheet, View } from "react-native";
 
 import { useServices } from "../../lib/services";
 import { useLocalQuery } from "../../lib/useLocalQuery";
@@ -31,10 +30,10 @@ export function JobsScreen() {
   const [view, setView] = useState<"list" | "map">("list");
   const query = useLocalQuery(async (db) => (userId === undefined ? [] : listMyJobs(db, userId)), [userId]);
   const segmented = (
-    <View style={styles.banner}>
+    <>
       <Segmented testID="jobs-tabs" options={TABS} value={tab} onChange={setTab} />
       <Segmented testID="jobs-view" options={VIEWS} value={view} onChange={setView} />
-    </View>
+    </>
   );
 
   if (query.status === "loading") return <Screen testID="jobs-loading"><Skeleton lines={6} /></Screen>;
@@ -61,4 +60,3 @@ export function JobsScreen() {
   );
 }
 
-const styles = StyleSheet.create({ banner: { gap: 8 } });

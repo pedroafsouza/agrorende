@@ -37,7 +37,7 @@ function AssetRow({ asset, selected, onPress }: { readonly asset: AssetSummary; 
       {...(asset.distanceM === undefined || !Number.isFinite(asset.distanceM)
         ? { subtitle: asset.code }
         : { subtitleKey: "assets.picker.distance", subtitleValues: { code: asset.code, km: Math.round(asset.distanceM / 100) / 10 } })}
-      right={<StatusPill labelKey={selected ? "assets.picker.selected" : `assets.condition.${asset.condition}`} tone={selected ? "success" : (CONDITION_TONE[asset.condition] ?? "neutral")} />}
+      badges={<StatusPill labelKey={selected ? "assets.picker.selected" : `assets.condition.${asset.condition}`} tone={selected ? "success" : (CONDITION_TONE[asset.condition] ?? "neutral")} />}
       onPress={onPress}
     />
   );

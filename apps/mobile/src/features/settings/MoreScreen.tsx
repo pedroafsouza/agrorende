@@ -32,7 +32,7 @@ export function MoreScreen() {
   const pending = snapshot.pendingMutations + snapshot.pendingUploads;
   const unread = useUnreadNotifications();
   return (
-    <Screen testID="more" banner={<EnvironmentRibbon />}>
+    <Screen testID="more" ribbon={<EnvironmentRibbon />}>
       {auth.user === undefined ? null : (
         <Card>
           <Text variant="title">{auth.user.name}</Text>

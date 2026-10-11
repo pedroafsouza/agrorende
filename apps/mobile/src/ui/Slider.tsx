@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from "react-native";
 import type { MessageKey } from "../i18n/messages";
 import { useT } from "../i18n/useT";
 import { Text } from "./Text";
-import { minTouchTarget, useTheme } from "./theme";
+import { minTouchTarget, space, useTheme } from "./theme";
 
 export type SliderProps = {
   readonly labelKey: MessageKey;
@@ -41,8 +41,8 @@ export function Slider({ labelKey, value, steps = 8, onChange, testID }: SliderP
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: 6 },
+  wrap: { gap: space[2] },
   head: { flexDirection: "row", justifyContent: "space-between" },
-  track: { flexDirection: "row", gap: 4 },
+  track: { flexDirection: "row", gap: space[1] },
   cell: { borderRadius: 4, borderWidth: 1, flex: 1, minHeight: minTouchTarget },
 });

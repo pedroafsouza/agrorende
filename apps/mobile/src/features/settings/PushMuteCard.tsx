@@ -1,6 +1,6 @@
 import { BellOff } from "lucide-react-native";
 import { useCallback, useEffect, useState } from "react";
-import { Switch, View } from "react-native";
+import { Switch } from "react-native";
 
 import { useT } from "../../i18n";
 import { getApiClient } from "../../lib/app/session";
@@ -63,12 +63,12 @@ export function PushMuteCard() {
           <ErrorState titleKey={state.offline ? "settings.push.offlineTitle" : "ui.error.title"} bodyKey={state.offline ? "settings.push.offlineBody" : "ui.error.body"} onRetry={() => void load()} />
         </>
       ) : (
-        <View style={{ flexDirection: "row", alignItems: "center", minHeight: 48 }}>
-          <View style={{ flex: 1 }}>
-            <ListItem icon={BellOff} titleKey="settings.push.title" subtitleKey="settings.push.body" />
-          </View>
-          <Switch testID="settings-push-muted" accessibilityLabel={t("settings.push.title")} disabled={saving || offline} value={state.pushMuted} onValueChange={(next) => void change(next)} />
-        </View>
+        <ListItem
+          icon={BellOff}
+          titleKey="settings.push.title"
+          subtitleKey="settings.push.body"
+          right={<Switch testID="settings-push-muted" accessibilityLabel={t("settings.push.title")} disabled={saving || offline} value={state.pushMuted} onValueChange={(next) => void change(next)} />}
+        />
       )}
     </Card>
   );

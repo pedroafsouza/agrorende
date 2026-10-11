@@ -1,11 +1,11 @@
 import { CircleCheck, CloudOff, Hourglass, RefreshCw, TriangleAlert, type LucideIcon } from "lucide-react-native";
 import { useSyncExternalStore } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { badgeStateOf, syncStore, type SyncBadgeState, type SyncStore } from "../sync/store";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { minTouchTarget, statusTone, useTheme, type StatusTone } from "./theme";
+import { minTouchTarget, space, statusTone, useTheme, type StatusTone } from "./theme";
 
 const LOOK: Readonly<Record<SyncBadgeState, { readonly icon: LucideIcon; readonly tone: StatusTone; readonly key: string }>> = {
   synced: { icon: CircleCheck, tone: "success", key: "sync.badge.synced" },
@@ -43,7 +43,23 @@ export function SyncBadge({ state, store = syncStore, onPress, count }: SyncBadg
   );
 }
 
+export type HeaderSyncBadgeProps = { readonly onPress: () => void; readonly nativeHeader?: boolean };
+
+/**
+ * The sync badge as a header button. The JavaScript header puts header buttons flush against the
+ * screen edge, so the badge brings its own inset; native stack headers already inset it.
+ */
+export function HeaderSyncBadge({ onPress, nativeHeader = false }: HeaderSyncBadgeProps) {
+  const inset = nativeHeader && Platform.OS !== "web" ? 0 : space[4];
+  return (
+    <View style={[styles.header, { paddingEnd: inset }]}>
+      <SyncBadge onPress={onPress} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  base: { alignItems: "center", alignSelf: "flex-start", borderRadius: 999, borderWidth: 2, flexDirection: "row", gap: 6, paddingHorizontal: 12 },
+  header: { justifyContent: "center", paddingStart: space[2] },
+  base: { alignItems: "center", alignSelf: "flex-start", borderRadius: 999, borderWidth: 2, flexDirection: "row", gap: space[1], paddingHorizontal: space[3] },
   text: { fontWeight: "600" },
 });

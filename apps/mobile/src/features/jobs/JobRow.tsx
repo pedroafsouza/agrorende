@@ -1,6 +1,5 @@
 import { useRouter } from "expo-router";
 import { ClipboardList, PauseCircle, Wrench } from "lucide-react-native";
-import { StyleSheet, View } from "react-native";
 
 import { ListItem, StatusPill } from "../../ui";
 import { formatRelative } from "../sync/format";
@@ -18,16 +17,14 @@ export function JobRow({ job, now }: { readonly job: JobListItem; readonly now: 
       icon={job.status === "ON_HOLD" ? PauseCircle : job.status === "IN_PROGRESS" ? Wrench : ClipboardList}
       title={job.number === null ? job.title : `${job.number} · ${job.title}`}
       subtitle={subtitle}
-      right={
-        <View style={styles.pills}>
+      badges={
+        <>
           <StatusPill labelKey={`jobs.status.${job.status}`} tone={STATUS_TONE[job.status]} />
           {isOverdue(job, now) ? <StatusPill testID={`job-overdue-${job.id}`} labelKey="jobs.list.overdue" tone="danger" /> : job.priority === "CRITICAL" || job.priority === "HIGH" ? <StatusPill labelKey={`jobs.priority.${job.priority}`} tone={PRIORITY_TONE[job.priority]} /> : null}
           {job.pending ? <StatusPill labelKey="jobs.list.pending" tone="warning" /> : null}
-        </View>
+        </>
       }
       onPress={() => router.push(`/jobs/${job.id}`)}
     />
   );
 }
-
-const styles = StyleSheet.create({ pills: { alignItems: "flex-end", gap: 4 } });

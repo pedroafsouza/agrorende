@@ -1,7 +1,7 @@
 import { StyleSheet, View } from "react-native";
 
 import { useT } from "../i18n/useT";
-import { radius, useTheme } from "./theme";
+import { radius, space, useTheme } from "./theme";
 
 export type SkeletonProps = { readonly lines?: number; readonly height?: number };
 
@@ -18,4 +18,4 @@ export function Skeleton({ lines = 3, height = 20 }: SkeletonProps) {
   );
 }
 
-const styles = StyleSheet.create({ wrap: { gap: 10 }, line: { borderRadius: radius.controls, borderWidth: StyleSheet.hairlineWidth } });
+const styles = StyleSheet.create({ wrap: { gap: space[3] }, line: { borderRadius: radius.controls, borderWidth: StyleSheet.hairlineWidth } });

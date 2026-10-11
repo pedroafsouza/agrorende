@@ -2,7 +2,7 @@ import { SUPPORTED_LOCALES } from "@agrorende/i18n";
 import { useRouter } from "expo-router";
 import { CircleHelp, Download, Languages, LogOut, Navigation, Palette, RefreshCw, Send, Trash2, Wifi } from "lucide-react-native";
 import { useState } from "react";
-import { Platform, Switch, View } from "react-native";
+import { Platform, Switch } from "react-native";
 
 import { authStore } from "../../auth/session";
 import { setLocale, useLocale, useT, type AppLocale } from "../../i18n";
@@ -136,20 +136,22 @@ export function SettingsScreen() {
             />
           </Card>
           <Card>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <View style={{ flex: 1 }}>
-                <ListItem icon={Wifi} titleKey="settings.wifiVideo.title" subtitleKey="settings.wifiVideo.body" />
-              </View>
-              <Switch
-                testID="settings-wifi-video"
-                accessibilityLabel={t("settings.wifiVideo.title")}
-                value={query.data.wifiOnlyVideo}
-                onValueChange={(next) => {
-                  if (services.db === undefined) return;
-                  void saveWifiOnlyVideo(services.db, next).then(bumpLocalData);
-                }}
-              />
-            </View>
+            <ListItem
+              icon={Wifi}
+              titleKey="settings.wifiVideo.title"
+              subtitleKey="settings.wifiVideo.body"
+              right={
+                <Switch
+                  testID="settings-wifi-video"
+                  accessibilityLabel={t("settings.wifiVideo.title")}
+                  value={query.data.wifiOnlyVideo}
+                  onValueChange={(next) => {
+                    if (services.db === undefined) return;
+                    void saveWifiOnlyVideo(services.db, next).then(bumpLocalData);
+                  }}
+                />
+              }
+            />
           </Card>
         </>
       )}

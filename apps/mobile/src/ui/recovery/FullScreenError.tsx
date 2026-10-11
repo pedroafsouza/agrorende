@@ -6,7 +6,7 @@ import { Button } from "../Button";
 import { Icon } from "../Icon";
 import { Screen } from "../Screen";
 import { Text } from "../Text";
-import { useTheme } from "../theme";
+import { space, useTheme } from "../theme";
 import { AskOfficeButton } from "./AskOfficeButton";
 import { useRecovery, type RecoveryHandlers } from "./useRecovery";
 
@@ -35,4 +35,4 @@ export function FullScreenError({ code, handlers }: FullScreenErrorProps) {
   );
 }
 
-const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: 12, paddingVertical: 32 }, center: { textAlign: "center" } });
+const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: space[3], paddingVertical: space[8] }, center: { textAlign: "center" } });

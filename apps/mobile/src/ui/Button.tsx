@@ -6,7 +6,7 @@ import { useT } from "../i18n/useT";
 import { hapticSuccess } from "./haptics";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { minTouchTarget, primaryButtonHeight, radius, useTheme } from "./theme";
+import { minTouchTarget, primaryButtonHeight, radius, space, useTheme } from "./theme";
 
 export type ButtonVariant = "primary" | "secondary" | "danger" | "ghost";
 
@@ -57,8 +57,8 @@ export function Button({ labelKey, labelValues, variant = "primary", icon, loadi
 }
 
 const styles = StyleSheet.create({
-  base: { alignItems: "center", borderRadius: radius.controls, justifyContent: "center", paddingHorizontal: 20, paddingVertical: 8 },
-  row: { alignItems: "center", flexDirection: "row", gap: 10, justifyContent: "center" },
+  base: { alignItems: "center", borderRadius: radius.controls, justifyContent: "center", paddingHorizontal: space[4], paddingVertical: space[2] },
+  row: { alignItems: "center", flexDirection: "row", gap: space[2], justifyContent: "center" },
   label: { textAlign: "center", flexShrink: 1 },
   pressed: { opacity: 0.8 },
   disabled: { opacity: 0.5 },

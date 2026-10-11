@@ -6,7 +6,7 @@ import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { IconButton } from "./IconButton";
 import { Text } from "./Text";
-import { radius, statusTone, useTheme, type StatusTone } from "./theme";
+import { radius, space, statusTone, useTheme, type StatusTone } from "./theme";
 
 export type BannerTone = "info" | "warning" | "error" | "offline" | "success";
 
@@ -57,8 +57,8 @@ export function Banner({ tone = "info", titleKey, titleValues, bodyKey, bodyValu
 }
 
 const styles = StyleSheet.create({
-  base: { borderRadius: radius.cards, borderWidth: 2, gap: 8, padding: 12 },
-  row: { alignItems: "flex-start", flexDirection: "row", gap: 10 },
+  base: { borderRadius: radius.cards, borderWidth: 2, gap: space[2], padding: space[3] },
+  row: { alignItems: "flex-start", flexDirection: "row", gap: space[3] },
   text: { flex: 1, gap: 2 },
-  actions: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  actions: { flexDirection: "row", flexWrap: "wrap", gap: space[2] },
 });

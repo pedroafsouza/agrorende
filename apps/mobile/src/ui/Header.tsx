@@ -3,6 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import type { MessageKey, MessageValues } from "../i18n/messages";
 import { Text } from "./Text";
+import { space } from "./theme";
 
 export type HeaderProps = { readonly titleKey: MessageKey; readonly titleValues?: MessageValues; readonly subtitleKey?: MessageKey; readonly subtitle?: string; readonly right?: ReactNode };
 
@@ -18,4 +19,4 @@ export function Header({ titleKey, titleValues, subtitleKey, subtitle, right }: 
   );
 }
 
-const styles = StyleSheet.create({ row: { alignItems: "center", flexDirection: "row", gap: 12 }, text: { flex: 1, gap: 4 } });
+const styles = StyleSheet.create({ row: { alignItems: "center", flexDirection: "row", gap: space[3] }, text: { flex: 1, gap: space[1] } });

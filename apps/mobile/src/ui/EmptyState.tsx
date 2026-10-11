@@ -6,7 +6,7 @@ import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { Lottie, type AnimationId } from "./Lottie";
 import { Text } from "./Text";
-import { useTheme } from "./theme";
+import { space, useTheme } from "./theme";
 
 export type EmptyStateProps = {
   /** Static icon for "not found" and blocked states. Without it, the empty state shows an animation. */
@@ -30,4 +30,4 @@ export function EmptyState({ icon, animation, titleKey = "ui.empty.title", bodyK
   );
 }
 
-const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: 10, paddingHorizontal: 16, paddingVertical: 32 }, center: { textAlign: "center" } });
+const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: space[3], paddingHorizontal: space[4], paddingVertical: space[8] }, center: { textAlign: "center" } });

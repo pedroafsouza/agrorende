@@ -3,7 +3,7 @@ import { StyleSheet, TextInput, View, type TextInputProps } from "react-native";
 import type { MessageKey } from "../i18n/messages";
 import { useT } from "../i18n/useT";
 import { Text } from "./Text";
-import { minTouchTarget, radius, useTheme } from "./theme";
+import { minTouchTarget, radius, space, useTheme } from "./theme";
 
 export type TextFieldProps = Omit<TextInputProps, "placeholder"> & {
   readonly labelKey: MessageKey;
@@ -39,7 +39,7 @@ export function TextField({ labelKey, hintKey, placeholderKey, errorKey, style, 
 }
 
 const styles = StyleSheet.create({
-  wrap: { gap: 6 },
-  input: { borderRadius: radius.controls, fontSize: 17, minHeight: minTouchTarget + 4, paddingHorizontal: 12, paddingVertical: 10 },
+  wrap: { gap: space[2] },
+  input: { borderRadius: radius.controls, fontSize: 17, minHeight: minTouchTarget + 4, paddingHorizontal: space[3], paddingVertical: space[3] },
   multiline: { minHeight: 112, textAlignVertical: "top" },
 });

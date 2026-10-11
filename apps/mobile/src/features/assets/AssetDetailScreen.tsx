@@ -74,7 +74,7 @@ export function AssetDetailScreen({ id }: { readonly id: string }) {
           titleKey="fuel.history.row"
           titleValues={{ liters: log.liters }}
           subtitle={formatRelative(log.filledAt, Date.now())}
-          right={log.dirty ? <StatusPill labelKey="fuel.history.pending" tone="warning" /> : undefined}
+          badges={log.dirty ? <StatusPill labelKey="fuel.history.pending" tone="warning" /> : undefined}
         />
       ))}
       <Text i18nKey="assets.detail.history" variant="heading" />
@@ -86,7 +86,7 @@ export function AssetDetailScreen({ id }: { readonly id: string }) {
           title={item.title ?? item.number ?? undefined}
           titleKey={item.title === null && item.number === null ? `assets.history.${item.kind}` : undefined}
           subtitle={formatRelative(item.at, Date.now())}
-          right={<StatusPill labelKey={`assets.status.${item.status}`} tone="neutral" />}
+          badges={<StatusPill labelKey={`assets.status.${item.status}`} tone="neutral" />}
           onPress={() => router.push(item.kind === "report" ? `/reports/${item.id}` : item.kind === "job" ? `/jobs/${item.id}` : `/rentals/${item.id}`)}
         />
       ))}

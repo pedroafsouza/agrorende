@@ -5,7 +5,7 @@ import { Pressable, StyleSheet } from "react-native";
 import type { MessageKey } from "../i18n/messages";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { minTouchTarget, useTheme } from "./theme";
+import { minTouchTarget, space, useTheme } from "./theme";
 
 export type ChipProps = { readonly labelKey?: MessageKey; /** Data text (e.g. a localized checklist option), used when there is no key. */ readonly label?: string; readonly selected?: boolean; readonly onPress?: () => void; readonly icon?: LucideIcon; readonly testID?: string };
 
@@ -32,4 +32,4 @@ export function Chip({ labelKey, label, selected = false, onPress, icon, testID 
   );
 }
 
-const styles = StyleSheet.create({ base: { alignItems: "center", borderRadius: 999, flexDirection: "row", gap: 6, minHeight: minTouchTarget, paddingHorizontal: 16 } });
+const styles = StyleSheet.create({ base: { alignItems: "center", borderRadius: 999, flexDirection: "row", gap: space[2], minHeight: minTouchTarget, paddingHorizontal: space[4] } });

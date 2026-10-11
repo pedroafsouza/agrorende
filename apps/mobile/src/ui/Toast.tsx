@@ -6,7 +6,7 @@ import type { MessageKey, MessageValues } from "../i18n/messages";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { radius, statusTone, useTheme, type StatusTone } from "./theme";
+import { radius, space, statusTone, type StatusTone, useTheme } from "./theme";
 
 export interface ToastInput {
   readonly messageKey: MessageKey;
@@ -68,6 +68,6 @@ export function ToastHost() {
 
 const styles = StyleSheet.create({
   host: { bottom: 96, left: 16, position: "absolute", right: 16 },
-  toast: { alignItems: "center", borderRadius: radius.cards, borderWidth: 2, elevation: 8, flexDirection: "row", gap: 10, padding: 12, shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 8 },
+  toast: { alignItems: "center", borderRadius: radius.cards, borderWidth: 2, elevation: 8, flexDirection: "row", gap: space[3], padding: space[3], shadowColor: "#000", shadowOpacity: 0.2, shadowRadius: 8 },
   text: { flex: 1 },
 });

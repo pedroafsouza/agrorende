@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import { Icon } from "../Icon";
 import { Text } from "../Text";
-import { useTheme } from "../theme";
+import { space, useTheme } from "../theme";
 
 export type InlineErrorProps = { readonly code?: string; readonly messageKey?: string; readonly testID?: string };
 
@@ -19,4 +19,4 @@ export function InlineError({ code, messageKey, testID = "inline-error" }: Inlin
   );
 }
 
-const styles = StyleSheet.create({ row: { alignItems: "center", flexDirection: "row", gap: 6 }, text: { flex: 1 } });
+const styles = StyleSheet.create({ row: { alignItems: "center", flexDirection: "row", gap: space[2] }, text: { flex: 1 } });

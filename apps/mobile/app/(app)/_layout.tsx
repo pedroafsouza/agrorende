@@ -3,7 +3,7 @@ import { useSyncExternalStore } from "react";
 
 import { authStore } from "../../src/auth/session";
 import { routeKeys, useT } from "../../src/i18n";
-import { SyncBadge, useTheme } from "../../src/ui";
+import { HeaderSyncBadge, useTheme } from "../../src/ui";
 
 /** Auth guard plus the global sync indicator in every header (UX-08). */
 export default function AppLayout() {
@@ -19,7 +19,8 @@ export default function AppLayout() {
         headerTintColor: theme.text,
         headerStyle: { backgroundColor: theme.background },
         contentStyle: { backgroundColor: theme.background },
-        headerRight: () => <SyncBadge onPress={() => router.push("/sync-center")} />,
+        headerRight: () => <HeaderSyncBadge nativeHeader onPress={() => router.push("/sync-center")} />,
+        headerTitleStyle: { fontWeight: "600" },
       }}
     >
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

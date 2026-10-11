@@ -5,7 +5,7 @@ import type { MessageKey } from "../i18n/messages";
 import { Button } from "./Button";
 import { Icon } from "./Icon";
 import { Text } from "./Text";
-import { useTheme } from "./theme";
+import { space, useTheme } from "./theme";
 
 export type ErrorStateProps = { readonly titleKey?: MessageKey; readonly bodyKey?: MessageKey; readonly onRetry?: () => void };
 
@@ -21,4 +21,4 @@ export function ErrorState({ titleKey = "ui.error.title", bodyKey = "ui.error.bo
   );
 }
 
-const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: 10, paddingHorizontal: 16, paddingVertical: 32 }, center: { textAlign: "center" } });
+const styles = StyleSheet.create({ wrap: { alignItems: "center", gap: space[3], paddingHorizontal: space[4], paddingVertical: space[8] }, center: { textAlign: "center" } });

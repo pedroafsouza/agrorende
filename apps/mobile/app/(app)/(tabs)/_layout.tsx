@@ -4,7 +4,7 @@ import { ClipboardList, FileText, Home, Menu, Truck, type LucideIcon } from "luc
 import { useUnreadNotifications } from "../../../src/features/notifications";
 import { usePushNotifications } from "../../../src/features/notifications/pushNative";
 import { routeKeys, useT } from "../../../src/i18n";
-import { Icon, SyncBadge, useTheme } from "../../../src/ui";
+import { HeaderSyncBadge, Icon, useTheme } from "../../../src/ui";
 import { minTouchTarget } from "../../../src/ui/theme";
 
 const TAB_ICONS: Readonly<Record<string, LucideIcon>> = { today: Home, reports: FileText, jobs: ClipboardList, rentals: Truck, more: Menu };
@@ -25,7 +25,8 @@ export default function TabsLayout() {
         headerShown: true,
         headerTintColor: theme.text,
         headerStyle: { backgroundColor: theme.background },
-        headerRight: () => <SyncBadge onPress={() => router.push("/sync-center")} />,
+        headerRight: () => <HeaderSyncBadge onPress={() => router.push("/sync-center")} />,
+        headerTitleStyle: { fontWeight: "600" },
         tabBarActiveTintColor: theme.primary,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: { backgroundColor: theme.surfaceRaised, borderTopColor: theme.border, minHeight: minTouchTarget + 16 },
