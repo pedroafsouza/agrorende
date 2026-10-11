@@ -157,7 +157,7 @@ export function OpsCenter({ store: injected, satelliteUrl = satelliteTilesUrl() 
     });
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4" data-realtime={realtime.state}>
       <PageHeader actions={<RealtimeStatus state={realtime.state} />} subtitle={t("subtitle")} title={t("title")} />
       <GuideProgressCard />
       {realtime.paused ? (

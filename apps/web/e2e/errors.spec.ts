@@ -118,7 +118,8 @@ test.describe("error journeys", () => {
 
       await signIn(page, SEED.manager, "/ops", SEED_PASSWORD, uiLocale(locale));
       await expect(page.getByRole("heading", { name: msg(locale, "ops", "title"), level: 1 })).toBeVisible();
-      // Cut the link only after a real connection; a handshake that never finished is not a lost connection.
+      // Cut the link only after this page's socket connected; a socket left over from the page before a locale reload does not count.
+      await expect(page.locator('[data-realtime="connected"]')).toBeVisible({ timeout: 30_000 });
       await expect.poll(() => [...live.values()].some((entry) => entry.ready), { timeout: 30_000 }).toBe(true);
       const banner = page.getByTestId("realtime-paused");
       await expect(banner).toHaveCount(0);
