@@ -39,6 +39,8 @@ export interface DataTableSelection<T> {
   readonly pageLabel: string;
 }
 
+const NO_ROWS: never[] = [];
+
 function toggled(current: ReadonlySet<string>, ids: readonly string[], on: boolean): ReadonlySet<string> {
   const next = new Set(current);
   for (const id of ids) {
@@ -51,7 +53,9 @@ function toggled(current: ReadonlySet<string>, ids: readonly string[], on: boole
 /** TanStack table with cursor paging; filters live in the URL via `useUrlState` (A§14.2). */
 export function DataTable<T>({ columns, rows, rowKey, isLoading, error, onRetry, empty, onRowClick, nextCursor, onNext, onFirst, hasPrevious = false, caption, toolbar, selection, isRefreshing = false }: DataTableProps<T>) {
   const t = useTranslations("common");
-  const table = useReactTable({ data: rows as T[] ?? [], columns, getCoreRowModel: getCoreRowModel(), getRowId: rowKey });
+  // A fresh `[]` on every loading render makes TanStack queue a page-index reset per render, an
+  // endless synchronous re-render that freezes the tab; paging is by cursor, so the reset is off too.
+  const table = useReactTable({ data: (rows as T[] | undefined) ?? NO_ROWS, columns, getCoreRowModel: getCoreRowModel(), getRowId: rowKey, autoResetPageIndex: false });
   const pageIds = (rows ?? []).map(rowKey);
   const allOnPage = selection !== undefined && pageIds.length > 0 && pageIds.every((id) => selection.selectedIds.has(id));
   return (

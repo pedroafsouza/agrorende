@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import { randomUUID } from "node:crypto";
 
 import { Api, unique } from "./support/api";
@@ -152,7 +152,7 @@ test.describe("authentication", () => {
     try {
       await pickOption(status, "Paused");
       await reason.fill("E2E: payment overdue for 30 days.");
-      await save.click();
+      await saveAndWait(page, save);
       await expect(toast(page, "Changes saved.")).toBeVisible();
 
       const context = await browser.newContext({ locale: "en-US" });
@@ -168,10 +168,17 @@ test.describe("authentication", () => {
     } finally {
       await status.selectOption(initial);
       await reason.fill("E2E: payment received.");
-      await save.click();
-      await expect(toast(page, "Changes saved.")).toBeVisible();
+      // The first save's toast can still be on screen, so wait for the restore request itself.
+      await saveAndWait(page, save);
     }
     const writable = await admin.raw("POST", "/customers", { name: unique("After restore") });
     expect(writable.ok(), await writable.text()).toBe(true);
   });
 });
+
+/** Clicks save and waits for the platform PATCH to succeed, so later API calls see the new state. */
+async function saveAndWait(page: Page, save: Locator): Promise<void> {
+  const response = page.waitForResponse((r) => r.request().method() === "PATCH" && /\/platform\/orgs\/[^/]+$/u.test(new URL(r.url()).pathname));
+  await save.click();
+  expect((await response).ok()).toBe(true);
+}

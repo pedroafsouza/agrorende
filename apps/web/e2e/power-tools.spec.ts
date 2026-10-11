@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
 
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 
 import { Api, unique } from "./support/api";
 import { signIn } from "./support/auth";
@@ -13,6 +13,14 @@ import { dialog, toast } from "./support/ui";
  */
 
 const PALETTE = "Search and commands";
+
+/** Ctrl+K before hydration attaches the shortcut listener does nothing, so press until the palette shows. */
+async function openPalette(page: Page, palette: Locator): Promise<void> {
+  await expect(async () => {
+    if (!(await palette.isVisible())) await page.keyboard.press("Control+k");
+    await expect(palette).toBeVisible({ timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
+}
 
 async function moveSelectionTo(page: Page, text: string | RegExp): Promise<void> {
   const palette = dialog(page, PALETTE);
@@ -33,9 +41,8 @@ test.describe("power tools", () => {
     await signIn(page, SEED.manager, "/ops");
     await expect(page.getByRole("heading", { name: "Overview" })).toBeVisible();
 
-    await page.keyboard.press("Control+k");
     const palette = dialog(page, PALETTE);
-    await expect(palette).toBeVisible();
+    await openPalette(page, palette);
     const input = palette.getByRole("combobox");
     await expect(input).toBeFocused();
     await page.keyboard.type(String(asset.code));
@@ -52,8 +59,7 @@ test.describe("power tools", () => {
     await signIn(page, SEED.manager, "/assets");
     await expect(page.getByRole("heading", { name: "Assets" })).toBeVisible();
 
-    await page.keyboard.press("Control+k");
-    await expect(dialog(page, PALETTE)).toBeVisible();
+    await openPalette(page, dialog(page, PALETTE));
     await page.keyboard.type("analyt");
     await moveSelectionTo(page, "Analytics");
     await page.keyboard.press("Enter");

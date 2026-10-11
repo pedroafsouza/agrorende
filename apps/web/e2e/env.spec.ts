@@ -43,10 +43,19 @@ test("warms the dev server routes used by the suite", async ({ page }) => {
   expect(response.status()).toBe(200);
   // Detail routes too: a create flow that `router.push`es into an uncompiled `[id]` route can wait on the dev compiler for longer than an assertion.
   const anyId = "00000000-0000-7000-8000-000000000000";
+  // Turbopack compiles API routes lazily, and a page's first client fetches can stall while several compile at once, so compile them one at a time first.
+  for (const api of ["/auth/me", "/attention", "/notifications?unread=true", "/sites?limit=1", "/customers?limit=1", "/assets?limit=1", "/work-orders?limit=1", "/rentals?limit=1", "/users?limit=1", "/checklist-templates?limit=1", "/field-reports?limit=1", "/ops/summary", "/org", "/settings", "/search?q=a"]) {
+    const warm = await page.request.get(`/api/v1${api}`, { timeout: 300_000 });
+    expect(warm.status(), api).toBeLessThan(500);
+  }
+  const socket = await page.request.post("/api/v1/auth/socket-token", { timeout: 300_000 });
+  expect(socket.status()).toBeLessThan(500);
   const details = ["/assets", "/sites", "/rentals", "/customers", "/work-orders", "/team", "/templates"].map((base) => `${base}/${anyId}`);
   for (const path of ["/login", "/ops", "/reports", "/work-orders", "/rentals", "/rentals/new", "/assets", "/assets/new", "/sites", "/customers", "/templates", "/team", "/settings", "/account", "/attention", "/analytics", ...details]) {
     const visit = await page.goto(path, { timeout: 300_000 });
     expect(visit?.status(), path).toBeLessThan(500);
+    // Let the page's own fetches (and any route they compile) finish before the next visit.
+    await page.waitForLoadState("networkidle", { timeout: 120_000 });
   }
   // API routes that render files (QR PNG, QR sheet PDF) compile on first hit too; a 4xx is enough to compile them.
   const png = await page.request.get(`/api/v1/assets/${anyId}/qr.png`, { timeout: 300_000 });

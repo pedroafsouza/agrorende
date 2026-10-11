@@ -2,7 +2,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { cleanup, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useState } from "react";
+import { Profiler, useState } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { renderWithProviders } from "@/features/ops/testing";
@@ -106,6 +106,29 @@ describe("DataTable loading and refreshing (FILTERS-ALIGN)", () => {
     rerender(table({ isRefreshing: false }));
     expect(screen.getByTestId("refreshing-frame").hasAttribute("aria-busy")).toBe(false);
     expect(screen.getByTestId("refreshing-frame").className).not.toContain("opacity-60");
+  });
+
+  it("does not loop re-rendering when the parent updates while rows are still loading", async () => {
+    let renders = 0;
+    function Parent() {
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <button onClick={() => setOpen((o) => !o)} type="button">
+            {open ? "Close form" : "Open form"}
+          </button>
+          <Profiler id="table" onRender={() => (renders += 1)}>
+            <DataTable caption="Machines" columns={columns} empty={null} error={null} isLoading onRetry={() => undefined} rowKey={(row) => row.id} rows={undefined} />
+          </Profiler>
+        </>
+      );
+    }
+    renderWithProviders(<Parent />);
+    await userEvent.click(screen.getByRole("button", { name: "Open form" }));
+    await userEvent.click(screen.getByRole("button", { name: "Close form" }));
+    expect(screen.getByTestId("table-loading")).toBeTruthy();
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(renders).toBeLessThan(10);
   });
 
   it("shows the table skeleton on first load with the toolbar already mounted", () => {
