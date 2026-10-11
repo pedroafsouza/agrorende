@@ -1,3 +1,5 @@
+import { preload } from "react-dom";
+
 import { DEMO_VIDEO_FILES, type DemoVideoAssets } from "@/lib/demoVideo";
 import { type SiteLocale } from "@/lib/locales";
 import { getTranslator } from "@/i18n/messages";
@@ -13,6 +15,8 @@ export function DemoVideo({
   readonly className?: string;
 }) {
   const t = getTranslator(locale);
+  // The poster is the page's largest paint; fetch it early instead of after the video tag parses.
+  if (assets.poster) preload(DEMO_VIDEO_FILES.poster, { as: "image", fetchPriority: "high" });
   return (
     <video
       className={`aspect-video w-full rounded-[16px] border border-border bg-graphite-950 ${className}`}
